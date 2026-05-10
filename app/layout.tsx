@@ -1,19 +1,13 @@
-import './globals.css'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-
 export const metadata = {
-  title: 'NexaFX Trade',
-  description: 'Trade Beyond Limits',
+  title: "NexaPayTradeFX",
+  description: "Forex & Wallet Platform"
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <Navbar />
+      <body style={{ background: "#050505", color: "white" }}>
         {children}
-        <Footer />
       </body>
     </html>
   )
