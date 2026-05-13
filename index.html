@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexafxtrade | Buy Low Sell High</title>
+    <!-- Link to your updated style.css -->
     <link rel="stylesheet" href="style.css">
+    <!-- Essential: Chart.js Library for the live graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Top Navigation -->
+        <!-- Top Navigation with Balance and Actions -->
         <header class="main-header">
             <div class="brand">Nexafxtrade</div>
             <div class="nav-controls">
@@ -17,44 +19,55 @@
                     <span class="label">KES</span>
                     <span id="user-balance" class="value">0.00</span>
                 </div>
-                <button class="btn-deposit">Deposit</button>
-                <button class="btn-withdraw">Withdraw</button>
+                <!-- Automated Deposit/Withdrawal Buttons -->
+                <button class="btn-deposit" onclick="window.location.href='#deposit'">Deposit</button>
+                <button class="btn-withdraw" onclick="window.location.href='#withdraw'">Withdraw</button>
                 <div class="menu-icon">☰</div>
             </div>
         </header>
 
         <main class="content-grid">
-            <!-- Live Activity Sidebar -->
+            <!-- Live Activity Sidebar (Chat Feed) -->
             <section class="chat-section">
                 <div class="chat-header">Chat</div>
+                <!-- script.js looks for 'chat-feed' to push "CONGRATULATIONS" messages -->
                 <div id="chat-feed" class="chat-body">
-                    <!-- Notifications will appear here -->
+                    <!-- Notifications will appear here automatically via script.js -->
                 </div>
                 <div class="chat-input">
-                    <input type="text" placeholder="Write your message!">
-                    <button>SEND</button>
+                    <input type="text" id="chat-input-field" placeholder="Write your message!">
+                    <button id="send-chat">SEND</button>
                 </div>
             </section>
 
-            <!-- Trading Center -->
+            <!-- Trading Center with Live Graph -->
             <section class="trade-section">
+                <!-- script.js looks for 'current-rate' to update the moving rate -->
                 <div class="rate-overlay">Rate: <span id="current-rate">0.0331</span></div>
+                
                 <div class="chart-container">
+                    <!-- script.js looks for 'tradeChart' to draw the live moving graph -->
                     <canvas id="tradeChart"></canvas>
                 </div>
 
                 <div class="trade-controls">
+                    <!-- Amount Selection Logic -->
                     <div class="amount-input-row">
-                        <button class="adj-btn">-</button>
+                        <button class="adj-btn" onclick="adjustAmount(-10)">-</button>
                         <input type="number" id="trade-amount" value="100">
-                        <button class="adj-btn">+</button>
-                        <button class="x2-btn">x2</button>
+                        <button class="adj-btn" onclick="adjustAmount(10)">+</button>
+                        <button class="x2-btn" onclick="adjustAmount('double')">x2</button>
                     </div>
+                    
                     <div class="quick-sums">
                         <button onclick="setSum(100)">100</button>
                         <button onclick="setSum(200)">200</button>
                         <button onclick="setSum(500)">500</button>
+                        <!-- Back/Undo button icon matching image_2.png -->
+                        <button class="undo-btn">↺</button>
                     </div>
+
+                    <!-- Buy/Sell Interaction Area -->
                     <div class="action-buttons">
                         <button id="buy-btn" class="buy-btn">BUY</button>
                         <button id="sell-btn" class="sell-btn">SELL</button>
@@ -63,11 +76,31 @@
             </section>
         </main>
 
+        <!-- Footer with Business Details -->
         <footer class="legal-footer">
-            <p>Nexafxtrade is a registered entity. Located at Binaa Mall, 2nd Floor, Langata Rd, Nairobi.</p>
-            <p>Support: support@unasemeje.com | &copy; 2026 Nexafxtrade. All rights reserved.</p>
+            <p>Nexafxtrade is a fully licensed and regulated entity operating with transparency and integrity.</p>
+            <p>Physical Address: Binaa Mall, 2nd Floor, Langata Rd, Nairobi, Kenya.</p>
+            <p>Contact Support: support@unasemeje.com | &copy; 2026 Nexafxtrade. Powered by Prosport Africa Ltd.</p>
+            <div class="terms-links">
+                <a href="#">Terms & Conditions</a> apply | All rights reserved.
+            </div>
         </footer>
     </div>
+
+    <!-- Ensure script.js is at the very bottom -->
     <script src="script.js"></script>
+    
+    <!-- Inline helpers for quick amount adjustments -->
+    <script>
+        function adjustAmount(val) {
+            const input = document.getElementById('trade-amount');
+            let current = parseInt(input.value);
+            if(val === 'double') {
+                input.value = current * 2;
+            } else {
+                input.value = current + val;
+            }
+        }
+    </script>
 </body>
 </html>
