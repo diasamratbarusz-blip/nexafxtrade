@@ -1,133 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NexaPayFX</title>
+  <meta charset="UTF-8">
+  <title>NexaPayFX Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Basic styling -->
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
+      font-family: Arial;
       background: #0f172a;
       color: white;
-      text-align: center;
     }
 
     header {
-      padding: 20px;
       background: #1e293b;
-    }
-
-    h1 {
-      margin: 0;
+      padding: 15px;
+      text-align: center;
     }
 
     .container {
-      margin-top: 50px;
       padding: 20px;
-    }
-
-    input {
-      padding: 10px;
-      margin: 5px;
-      width: 250px;
-      border-radius: 5px;
-      border: none;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin-top: 10px;
-      background: #22c55e;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      color: white;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: #16a34a;
     }
 
     .card {
       background: #1e293b;
       padding: 20px;
       border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    a {
+      color: #38bdf8;
+      text-decoration: none;
+      margin: 10px;
       display: inline-block;
     }
 
-    .result {
-      margin-top: 15px;
-      color: #38bdf8;
+    button {
+      padding: 10px;
+      background: #22c55e;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>NexaPayFX</h1>
-    <p>Connected to Backend API</p>
-  </header>
+<header>
+  <h1>NexaPayFX Dashboard</h1>
+  <p>Welcome (Guest Mode)</p>
+</header>
 
-  <div class="container">
+<div class="container">
 
-    <div class="card">
-      <h2>Register User</h2>
+  <div class="card">
+    <h2>Account Status</h2>
+    <p>You are currently not logged in.</p>
 
-      <input type="text" id="name" placeholder="Name" /><br/>
-      <input type="email" id="email" placeholder="Email" /><br/>
-      <input type="password" id="password" placeholder="Password" /><br/>
-
-      <button onclick="registerUser()">Register</button>
-
-      <div class="result" id="result"></div>
-    </div>
-
+    <a href="login.html"><button>Login</button></a>
+    <a href="register.html"><button>Register</button></a>
   </div>
 
-  <script>
-    // ✅ Your backend URL
-    const API_BASE = "https://nexapayfx-backend.onrender.com/api";
+  <div class="card">
+    <h2>Market Overview</h2>
+    <p>Forex trading dashboard preview...</p>
+  </div>
 
-    // ✅ Register function
-    async function registerUser() {
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const result = document.getElementById("result");
-
-      try {
-        const response = await fetch(`${API_BASE}/auth/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            password
-          })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          result.innerText = "✅ Registration successful!";
-        } else {
-          result.innerText = "❌ " + (data.message || "Error occurred");
-        }
-
-      } catch (error) {
-        result.innerText = "❌ Server error";
-        console.error(error);
-      }
-    }
-  </script>
+</div>
 
 </body>
 </html>
