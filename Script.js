@@ -1,56 +1,66 @@
-// Initialize Chart
 const ctx = document.getElementById('tradeChart').getContext('2d');
-let chartData = Array(50).fill(0).map(() => Math.random() * 0.1);
+
+// Gradient for the "Green" area seen in image_2.png
+const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+gradient.addColorStop(0, 'rgba(0, 255, 0, 0.3)');
+gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+let chartData = Array(60).fill(0.00); // 60 data points for 1 minute of movement
+let labels = Array(60).fill('');
 
 const tradeChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: Array(50).fill(''),
+        labels: labels,
         datasets: [{
+            label: 'Live Rate',
             data: chartData,
-            borderColor: '#00ff00',
+            borderColor: '#00ff00', // Neon green line
             borderWidth: 2,
-            pointRadius: 0,
+            pointRadius: 0, // Hides the dots for a clean line
             fill: true,
-            backgroundColor: 'rgba(0, 200, 83, 0.1)'
+            backgroundColor: gradient,
+            tension: 0.4, // Creates the smooth wave look from image_2.png
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        scales: { x: { display: false }, y: { grid: { color: '#222' }, ticks: { color: '#666' } } },
-        animation: false
+        animation: {
+            duration: 0 // Set to 0 for instant, "live" feeling movement
+        },
+        scales: {
+            x: { display: false },
+            y: {
+                min: -0.12, // Matches the scale in image_2.png
+                max: 0.12,
+                grid: { color: '#222' },
+                ticks: { color: '#666' }
+            }
+        },
+        plugins: { legend: { display: false } }
     }
 });
 
-// Update Chart & Rate every second
-setInterval(() => {
-    const newRate = (Math.random() * 0.12).toFixed(4);
-    document.getElementById('current-rate').innerText = newRate;
-    
+// Function to simulate or fetch live market movement
+function updateLiveGraph() {
+    // Generate a random fluctuation similar to the image
+    const lastValue = chartData[chartData.length - 1];
+    const fluctuation = (Math.random() - 0.5) * 0.05;
+    let newValue = lastValue + fluctuation;
+
+    // Keep it within the bounds of the chart (-0.12 to 0.12)
+    newValue = Math.max(-0.12, Math.min(0.12, newValue));
+
+    // Update UI Rate Display
+    document.getElementById('current-rate').innerText = newValue.toFixed(4);
+
+    // Shift data to create movement
     chartData.shift();
-    chartData.push(parseFloat(newRate));
+    chartData.push(newValue);
+    
     tradeChart.update();
-}, 1000);
-
-// Set Quick Sums
-function setSum(val) {
-    document.getElementById('trade-amount').value = val;
 }
 
-// Simulated Live Notifications
-const users = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1'];
-const feed = document.getElementById('chat-feed');
-
-function addNotification() {
-    const user = users[Math.floor(Math.random() * users.length)];
-    const amount = (Math.random() * 500 + 100).toFixed(2);
-    const div = document.createElement('div');
-    div.style.marginBottom = "8px";
-    div.innerHTML = `<span style="color:white">System:</span> CONGRATULATIONS ${user} on your withdrawal of ${amount} 🤑🔥`;
-    feed.appendChild(div);
-    feed.scrollTop = feed.scrollHeight;
-}
-
-// Add a notification every 5 seconds for social proof
-setInterval(addNotification, 5000);
+// Update every 500ms for a fast, "active" trading feel
+setInterval(updateLiveGraph, 500);
