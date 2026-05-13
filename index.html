@@ -6,8 +6,11 @@
     <title>Nexafxtrade | Buy Low Sell High</title>
     <!-- Link to your updated style.css -->
     <link rel="stylesheet" href="style.css">
-    <!-- Essential: Chart.js Library for the live graph -->
+    
+    <!-- Essential: Libraries for live functionality -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- This links your frontend to the Socket.io engine in server.js -->
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -30,28 +33,25 @@
             <!-- Live Activity Sidebar (Chat Feed) -->
             <section class="chat-section">
                 <div class="chat-header">Chat</div>
-                <!-- script.js looks for 'chat-feed' to push "CONGRATULATIONS" messages -->
                 <div id="chat-feed" class="chat-body">
-                    <!-- Notifications will appear here automatically via script.js -->
+                    <!-- Notifications and user messages will appear here -->
                 </div>
                 <div class="chat-input">
                     <input type="text" id="chat-input-field" placeholder="Write your message!">
-                    <button id="send-chat">SEND</button>
+                    <button id="send-chat-btn">SEND</button>
                 </div>
             </section>
 
             <!-- Trading Center with Live Graph -->
             <section class="trade-section">
-                <!-- script.js looks for 'current-rate' to update the moving rate -->
-                <div class="rate-overlay">Rate: <span id="current-rate">0.0331</span></div>
+                <!-- Updates live via Socket.io -->
+                <div class="rate-overlay">Rate: <span id="current-rate">0.0000</span></div>
                 
                 <div class="chart-container">
-                    <!-- script.js looks for 'tradeChart' to draw the live moving graph -->
                     <canvas id="tradeChart"></canvas>
                 </div>
 
                 <div class="trade-controls">
-                    <!-- Amount Selection Logic -->
                     <div class="amount-input-row">
                         <button class="adj-btn" onclick="adjustAmount(-10)">-</button>
                         <input type="number" id="trade-amount" value="100">
@@ -63,11 +63,9 @@
                         <button onclick="setSum(100)">100</button>
                         <button onclick="setSum(200)">200</button>
                         <button onclick="setSum(500)">500</button>
-                        <!-- Back/Undo button icon matching image_2.png -->
-                        <button class="undo-btn">↺</button>
+                        <button class="undo-btn" onclick="setSum(100)">↺</button>
                     </div>
 
-                    <!-- Buy/Sell Interaction Area -->
                     <div class="action-buttons">
                         <button id="buy-btn" class="buy-btn">BUY</button>
                         <button id="sell-btn" class="sell-btn">SELL</button>
@@ -87,19 +85,80 @@
         </footer>
     </div>
 
-    <!-- Ensure script.js is at the very bottom -->
-    <script src="script.js"></script>
-    
-    <!-- Inline helpers for quick amount adjustments -->
+    <!-- Script logic to handle live updates -->
     <script>
+        // Connect to the Node server
+        const socket = io();
+        
+        // Initialize the Graph (Chart.js)
+        const ctx = document.getElementById('tradeChart').getContext('2d');
+        const labels = Array.from({length: 20}, () => "");
+        const dataPoints = Array.from({length: 20}, () => 0);
+
+        const tradeChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: dataPoints,
+                    borderColor: '#00ff00',
+                    backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                    fill: true,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { min: -0.12, max: 0.12, grid: { color: '#222' } },
+                    x: { display: false }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Listen for live rate updates from Node.js
+        socket.on('market-update', (data) => {
+            document.getElementById('current-rate').innerText = data.rate.toFixed(4);
+            
+            // Move graph
+            tradeChart.data.datasets[0].data.shift();
+            tradeChart.data.datasets[0].data.push(data.rate);
+            tradeChart.update('none');
+        });
+
+        // Live Chat Logic
+        const chatFeed = document.getElementById('chat-feed');
+        const chatInput = document.getElementById('chat-input-field');
+        const sendBtn = document.getElementById('send-chat-btn');
+
+        sendBtn.onclick = () => {
+            if(chatInput.value) {
+                socket.emit('send-chat', { user: 'Me', message: chatInput.value });
+                chatInput.value = '';
+            }
+        };
+
+        socket.on('receive-chat', (data) => {
+            const div = document.createElement('div');
+            div.style.marginBottom = "5px";
+            div.innerHTML = `<span style="color: #00ff00;">${data.user}:</span> ${data.message}`;
+            chatFeed.appendChild(div);
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+        });
+
+        // Amount Adjusters
         function adjustAmount(val) {
             const input = document.getElementById('trade-amount');
             let current = parseInt(input.value);
-            if(val === 'double') {
-                input.value = current * 2;
-            } else {
-                input.value = current + val;
-            }
+            if(val === 'double') input.value = current * 2;
+            else input.value = current + val;
+        }
+        function setSum(val) {
+            document.getElementById('trade-amount').value = val;
         }
     </script>
 </body>
