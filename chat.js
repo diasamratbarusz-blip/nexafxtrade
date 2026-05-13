@@ -1,67 +1,125 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Live Trading Chart</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { background-color: #000; display: flex; justify-content: center; padding: 20px; }
-        .chart-container { width: 600px; height: 300px; background: #0a0a0a; border-radius: 8px; padding: 10px; }
-    </style>
-</head>
-<body>
+/**
+ * Nexafxtrade Real-Time Interface Logic
+ * Handles: Live Moving Graph, Live Chat, and Amount Adjustments
+ */
 
-<div class="chart-container">
-    <canvas id="tradeChart"></canvas>
-</div>
+// 1. Initialize Socket.io connection
+const socket = io();
 
-<script>
-    const ctx = document.getElementById('tradeChart').getContext('2d');
-    
-    // Initial data: 20 points set to 0
-    const labels = Array.from({length: 20}, (_, i) => "");
-    const dataPoints = Array.from({length: 20}, () => 0.03);
+// 2. Setup the Live Moving Graph (Chart.js)
+const ctx = document.getElementById('tradeChart').getContext('2d');
 
-    const tradeChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Rate',
-                data: dataPoints,
-                borderColor: '#00ff00', // Neon green like image.png
-                backgroundColor: 'rgba(0, 255, 0, 0.2)', // Transparent fill
-                fill: true,
-                borderWidth: 2,
-                pointRadius: 0, // Hides the dots for a smooth line
-                tension: 0.4 // Curves the line
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: { duration: 300 }, // Smooth transition
-            scales: {
-                y: { min: -0.12, max: 0.12, grid: { color: '#222' } },
-                x: { grid: { display: false } }
+// Start with 20 empty points to create the "scrolling" effect
+const labels = Array.from({ length: 20 }, () => "");
+const dataPoints = Array.from({ length: 20 }, () => 0);
+
+const tradeChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Rate',
+            data: dataPoints,
+            borderColor: '#00ff00', // Neon green matching image.png
+            backgroundColor: 'rgba(0, 255, 0, 0.1)', // Semi-transparent fill
+            fill: true,
+            borderWidth: 2,
+            pointRadius: 0, // Hides dots for a clean line
+            tension: 0.4 // Creates the smooth curves seen in image_2.png
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 }, // Disable animations for instant "live" feel
+        scales: {
+            y: { 
+                min: -0.12, 
+                max: 0.12, 
+                grid: { color: '#222' },
+                ticks: { color: '#888' }
             },
-            plugins: { legend: { display: false } }
+            x: { display: false }
+        },
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+
+/**
+ * 3. LISTEN FOR LIVE UPDATES
+ * These events must match the 'io.emit' names in your server.js
+ */
+
+// Handle Market Rate Updates
+socket.on('market-update', (data) => {
+    // Update the numerical display above the graph
+    const rateDisplay = document.getElementById('current-rate');
+    if (rateDisplay) {
+        rateDisplay.innerText = data.rate.toFixed(4);
+    }
+
+    // Shift the graph to the left
+    tradeChart.data.datasets[0].data.shift();
+    tradeChart.data.datasets[0].data.push(data.rate);
+    
+    // Update the chart without re-rendering the whole page
+    tradeChart.update('none');
+});
+
+// Handle Live Chat Feed
+const chatFeed = document.getElementById('chat-feed');
+const chatInput = document.getElementById('chat-input-field');
+const sendBtn = document.getElementById('send-chat-btn');
+
+socket.on('receive-chat', (data) => {
+    if (chatFeed) {
+        const messageElement = document.createElement('div');
+        messageElement.style.padding = "5px 0";
+        messageElement.style.fontSize = "0.9rem";
+        
+        // Highlight system messages in yellow/gold like image.png
+        if (data.user === "System") {
+            messageElement.innerHTML = `<span style="color: #ffcc00; font-weight: bold;">System:</span> ${data.message}`;
+        } else {
+            messageElement.innerHTML = `<span style="color: #00ff00;">${data.user}:</span> ${data.message}`;
+        }
+
+        chatFeed.appendChild(messageElement);
+        
+        // Auto-scroll to the bottom of the chat
+        chatFeed.scrollTop = chatFeed.scrollHeight;
+    }
+});
+
+// 4. Interaction Handlers
+if (sendBtn) {
+    sendBtn.addEventListener('click', () => {
+        const text = chatInput.value.trim();
+        if (text !== "") {
+            socket.emit('send-chat', { user: "User", message: text });
+            chatInput.value = "";
         }
     });
+}
 
-    // Simulate live data movement
-    setInterval(() => {
-        // Remove oldest point
-        tradeChart.data.labels.shift();
-        tradeChart.data.datasets[0].data.shift();
+/**
+ * Helper Functions for Trade Controls
+ */
+function adjustAmount(val) {
+    const input = document.getElementById('trade-amount');
+    if (!input) return;
 
-        // Add newest point (Randomized for demo)
-        const nextValue = (Math.random() * 0.1) - 0.02; 
-        tradeChart.data.labels.push("");
-        tradeChart.data.datasets[0].data.push(nextValue);
+    let current = parseInt(input.value) || 0;
+    if (val === 'double') {
+        input.value = current * 2;
+    } else {
+        input.value = Math.max(0, current + val); // Prevent negative amounts
+    }
+}
 
-        tradeChart.update('none'); // Update without full re-render for speed
-    }, 500); // Updates every 500ms
-</script>
-
-</body>
-</html>
+function setSum(val) {
+    const input = document.getElementById('trade-amount');
+    if (input) input.value = val;
+}
