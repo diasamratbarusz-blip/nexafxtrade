@@ -1,7 +1,10 @@
 /**
- * Nexafxtrade Live Graph Logic
- * Specifically designed for image_2.png aesthetics
+ * Nexafxtrade Integrated Logic
+ * Handles: Live Socket Graph, System Notifications, and User Chat
  */
+
+// 1. Initialize Socket.io connection to the Node server
+const socket = io(); 
 
 const ctx = document.getElementById('tradeChart').getContext('2d');
 
@@ -10,7 +13,7 @@ const greenGradient = ctx.createLinearGradient(0, 0, 0, 400);
 greenGradient.addColorStop(0, 'rgba(0, 200, 83, 0.4)');
 greenGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
-// Initialize with 60 points (1 minute of data if updated every second)
+// Initialize with 60 points for the "scrolling" effect
 let chartData = Array(60).fill(0.00); 
 let labels = Array(60).fill('');
 
@@ -32,11 +35,11 @@ const tradeChart = new Chart(ctx, {
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: false, // Set to false for instant "live" movement
+        animation: false, // Essential for high-speed "live" movement
         scales: {
             x: { display: false },
             y: {
-                min: -0.12, // Matches the Y-axis scale in image_2.png
+                min: -0.12, 
                 max: 0.12,
                 grid: { color: '#222' },
                 ticks: { color: '#666' }
@@ -49,17 +52,11 @@ const tradeChart = new Chart(ctx, {
 });
 
 /**
- * Update Function: Moves the graph every 500ms
+ * 2. REAL-TIME DATA HANDLING
+ * Listens for 'market-update' events from server.js
  */
-function updateLiveGraph() {
-    const lastValue = chartData[chartData.length - 1];
-    
-    // Simulate market fluctuation
-    const fluctuation = (Math.random() - 0.5) * 0.04;
-    let newValue = lastValue + fluctuation;
-
-    // Constrain within the visual bounds of the chart
-    newValue = Math.max(-0.12, Math.min(0.12, newValue));
+socket.on('market-update', (data) => {
+    const newValue = data.rate;
 
     // Update the "Rate" display overlay
     const rateDisplay = document.getElementById('current-rate');
@@ -67,36 +64,83 @@ function updateLiveGraph() {
         rateDisplay.innerText = newValue.toFixed(4);
     }
 
-    // Shift the data to create the moving effect
+    // Shift data for the moving effect
     chartData.shift();
     chartData.push(newValue);
     
-    tradeChart.update();
-}
-
-// Set the movement speed to half a second
-setInterval(updateLiveGraph, 500);
+    // Efficiently update only the points without full re-render
+    tradeChart.update('none');
+});
 
 /**
- * Social Proof: Automated Live Withdrawal Notifications
+ * 3. SOCIAL PROOF & CHAT SYSTEM
  */
 const chatFeed = document.getElementById('chat-feed');
-const users = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lodenyi100'];
+const chatInput = document.getElementById('chat-input-field');
+const sendBtn = document.getElementById('send-chat');
 
-function addNotification() {
+// Automated System Notifications (Social Proof)
+const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lodenyi100'];
+
+function addSystemNotification() {
     if (!chatFeed) return;
-    const user = users[Math.floor(Math.random() * users.length)];
+    const user = systemUsers[Math.floor(Math.random() * systemUsers.length)];
     const amount = (Math.random() * 400 + 100).toFixed(2);
     
     const div = document.createElement('div');
     div.style.marginBottom = "10px";
+    div.style.fontSize = "13px";
     div.innerHTML = `<span style="color:#ffab00; font-weight:bold;">System:</span> CONGRATULATIONS ${user} on your withdrawal of ${amount} 🤑🔥`;
     
     chatFeed.appendChild(div);
     chatFeed.scrollTop = chatFeed.scrollHeight;
 
-    if (chatFeed.children.length > 10) chatFeed.removeChild(chatFeed.children[0]);
+    // Keep the chat clean: remove old messages if list is too long
+    if (chatFeed.children.length > 15) chatFeed.removeChild(chatFeed.children[0]);
 }
 
-// Generate a fake withdrawal every 6 seconds
-setInterval(addNotification, 6000);
+// Generate a system notification every 7 seconds
+setInterval(addSystemNotification, 7000);
+
+// Handling User-Sent Messages
+if (sendBtn) {
+    sendBtn.onclick = () => {
+        const text = chatInput.value.trim();
+        if (text !== "") {
+            socket.emit('send-chat', { user: "Me", message: text });
+            chatInput.value = "";
+        }
+    };
+}
+
+// Receiving User Messages from Socket
+socket.on('receive-chat', (data) => {
+    if (chatFeed) {
+        const div = document.createElement('div');
+        div.style.marginBottom = "5px";
+        div.style.fontSize = "14px";
+        div.innerHTML = `<span style="color: #00ff00; font-weight: bold;">${data.user}:</span> ${data.message}`;
+        chatFeed.appendChild(div);
+        chatFeed.scrollTop = chatFeed.scrollHeight;
+    }
+});
+
+/**
+ * 4. UI INTERACTION HELPERS
+ */
+function adjustAmount(val) {
+    const input = document.getElementById('trade-amount');
+    if (!input) return;
+
+    let current = parseInt(input.value) || 0;
+    if (val === 'double') {
+        input.value = current * 2;
+    } else {
+        input.value = Math.max(0, current + val);
+    }
+}
+
+function setSum(val) {
+    const input = document.getElementById('trade-amount');
+    if (input) input.value = val;
+}
