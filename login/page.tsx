@@ -1,61 +1,42 @@
-"use client"
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - NexaPayFX</title>
+</head>
+<body style="background:#0f172a;color:white;text-align:center;padding:50px;">
 
-import { useState } from "react"
-import API from "../../lib/api"
+<h2>Login</h2>
 
-export default function Login() {
+<input id="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+<button onclick="login()">Login</button>
 
-  const handleLogin = async () => {
+<p id="msg"></p>
 
-    try {
+<script>
+const API = "https://nexapayfx-backend.onrender.com/api";
 
-      const res = await API.post("/auth/login", {
-        email,
-        password
-      })
+async function login(){
+  const res = await fetch(`${API}/auth/login`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  });
 
-      localStorage.setItem(
-        "token",
-        res.data.token
-      )
+  const data = await res.json();
 
-      alert("Login Successful")
-
-      window.location.href = "/dashboard"
-
-    } catch (error) {
-      console.log(error)
-      alert("Login Failed")
-    }
+  if(res.ok){
+    localStorage.setItem("token", data.token);
+    window.location.href = "index.html";
+  } else {
+    document.getElementById("msg").innerText = "Login failed";
   }
-
-  return (
-    <div style={{ padding: 40 }}>
-
-      <h1>Login</h1>
-
-      <input
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <br /><br />
-
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <br /><br />
-
-      <button onClick={handleLogin}>
-        Login
-      </button>
-
-    </div>
-  )
 }
+</script>
+
+</body>
+</html>
