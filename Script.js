@@ -1,3 +1,8 @@
+/**
+ * Nexafxtrade Core Logic
+ * Handles Real-time Graphing, Live Chat Feed, and Automated Balance UI
+ */
+
 const ctx = document.getElementById('tradeChart').getContext('2d');
 
 // Gradient for the "Green" area seen in image_2.png
@@ -42,9 +47,10 @@ const tradeChart = new Chart(ctx, {
     }
 });
 
-// Function to simulate or fetch live market movement
+/**
+ * LIVE GRAPH LOGIC
+ */
 function updateLiveGraph() {
-    // Generate a random fluctuation similar to the image
     const lastValue = chartData[chartData.length - 1];
     const fluctuation = (Math.random() - 0.5) * 0.05;
     let newValue = lastValue + fluctuation;
@@ -53,7 +59,8 @@ function updateLiveGraph() {
     newValue = Math.max(-0.12, Math.min(0.12, newValue));
 
     // Update UI Rate Display
-    document.getElementById('current-rate').innerText = newValue.toFixed(4);
+    const rateElement = document.getElementById('current-rate');
+    if(rateElement) rateElement.innerText = newValue.toFixed(4);
 
     // Shift data to create movement
     chartData.shift();
@@ -64,3 +71,54 @@ function updateLiveGraph() {
 
 // Update every 500ms for a fast, "active" trading feel
 setInterval(updateLiveGraph, 500);
+
+/**
+ * LIVE CHAT & SOCIAL PROOF LOGIC
+ * Mimics the withdrawal notifications in image_2.png
+ */
+const chatFeed = document.getElementById('chat-feed');
+const kenyanUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lodenyi100', '@Lucid', '@Evarist'];
+
+function addSystemNotification() {
+    if (!chatFeed) return;
+
+    const user = kenyanUsers[Math.floor(Math.random() * kenyanUsers.length)];
+    const amount = (Math.random() * (500 - 100) + 100).toFixed(2);
+    
+    const notification = document.createElement('div');
+    notification.className = 'user-msg';
+    notification.innerHTML = `
+        <span class="system-msg">System:</span> 
+        CONGRATULATIONS ${user} on your withdrawal of ${amount} 🤑🔥
+    `;
+
+    chatFeed.appendChild(notification);
+    
+    // Auto-scroll to bottom
+    chatFeed.scrollTop = chatFeed.scrollHeight;
+
+    // Remove old messages to keep performance high
+    if (chatFeed.children.length > 15) {
+        chatFeed.removeChild(chatFeed.children[0]);
+    }
+}
+
+// Add a new "withdrawal" every 4-7 seconds
+setInterval(addSystemNotification, Math.random() * (7000 - 4000) + 4000);
+
+/**
+ * UI CONTROL LOGIC
+ */
+function setSum(amount) {
+    const input = document.getElementById('trade-amount');
+    if (input) input.value = amount;
+}
+
+// Placeholder for Buy/Sell Actions
+document.getElementById('buy-btn')?.addEventListener('click', () => {
+    console.log("Buy order placed at: " + document.getElementById('current-rate').innerText);
+});
+
+document.getElementById('sell-btn')?.addEventListener('click', () => {
+    console.log("Sell order placed at: " + document.getElementById('current-rate').innerText);
+});
