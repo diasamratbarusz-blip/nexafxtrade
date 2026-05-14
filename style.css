@@ -1,211 +1,261 @@
+/**
+ * Nexafxtrade Premium Stylesheet
+ * Optimized for the "image_3.png" aesthetic & high-performance wavy charts
+ */
+
 :root {
-    --bg-dark: #0b0b0b;
-    --panel-dark: #151515;
-    --accent-green: #00c853;
-    --accent-red: #d50000;
-    --border-color: #333;
-    --header-green: #006400; /* Matching the Chat header in image_2.png */
+    --bg-dark: #000000;
+    --panel-dark: #0a0a0a;
+    --accent-green: #00ff00; /* Neon Green */
+    --accent-red: #ff0000;   /* Pure Red */
+    --gold-text: #ffcc00;
+    --border-color: #222222;
+    --chat-header-green: #008000; 
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     background-color: var(--bg-dark);
-    color: white;
-    font-family: 'Segoe UI', Roboto, sans-serif;
+    color: #ffffff;
+    font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
     margin: 0;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden; /* Critical for single-page app feel */
 }
 
-/* Header & Navigation */
+/* App Layout */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Navigation Header */
 .main-header {
-    background: #000;
-    padding: 10px 20px;
+    background: #111;
+    padding: 10px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
+    height: 60px;
 }
 
-.brand { color: var(--accent-green); font-weight: bold; font-size: 1.2rem; }
+.brand { 
+    color: var(--accent-green); 
+    font-weight: 900; 
+    font-size: 1.4rem; 
+    letter-spacing: -1px;
+    text-transform: uppercase;
+}
 
 .nav-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .balance-box { 
     background: #222; 
-    padding: 5px 15px; 
+    padding: 6px 14px; 
     border-radius: 4px; 
-    border: 1px solid #444; 
-    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.balance-box .value { color: #fbc02d; font-weight: bold; margin-left: 5px; }
+.balance-box .label { font-size: 0.65rem; color: #888; text-transform: uppercase; }
+.balance-box .value { color: var(--gold-text); font-weight: bold; font-size: 0.95rem; }
 
-.btn-deposit, .btn-withdraw {
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-}
+.btn-deposit { background: var(--accent-green); color: #000; border: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+.btn-withdraw { background: #333; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
 
-.btn-deposit { background-color: var(--accent-green); color: black; }
-.btn-withdraw { background-color: #333; color: white; }
-
-/* Main Layout */
+/* Main Functional Grid */
 .content-grid {
     display: grid;
-    grid-template-columns: 320px 1fr; /* Widened slightly to match image_2.png */
-    height: calc(100vh - 120px);
-    gap: 10px;
-    padding: 10px;
-}
-
-/* Chat & Social Proof Styles */
-.chat-section { 
-    background: #000; 
-    border: 1px solid var(--border-color); 
-    border-radius: 8px;
-    display: flex; 
-    flex-direction: column;
+    grid-template-columns: 320px 1fr;
+    flex: 1;
     overflow: hidden;
 }
 
+/* Chat Sidebar (Reflecting Social Proof System) */
+.chat-section { 
+    background: var(--panel-dark); 
+    border-right: 1px solid var(--border-color);
+    display: flex; 
+    flex-direction: column;
+}
+
 .chat-header { 
-    background: var(--header-green); 
+    background: var(--chat-header-green); 
     padding: 12px; 
     text-align: center; 
     font-weight: bold; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+    font-size: 1rem;
+    box-shadow: inset 0 -2px 10px rgba(0,0,0,0.2);
 }
-
-.chat-header::before { content: '💬'; }
 
 .chat-body { 
     flex: 1; 
     overflow-y: auto; 
     padding: 15px; 
-    font-size: 0.85rem; 
-    line-height: 1.4;
-    background: linear-gradient(to bottom, #000, #050505);
+    font-size: 0.85rem;
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
 }
 
-/* System Message Styling from image.png */
-.chat-body .system-msg { color: #ffab00; font-weight: bold; margin-bottom: 4px; }
-.chat-body .user-msg { color: #fff; margin-bottom: 10px; border-bottom: 1px solid #111; padding-bottom: 5px; }
+.chat-input {
+    padding: 10px;
+    background: #0f0f0f;
+    border-top: 1px solid #222;
+    display: flex;
+    gap: 8px;
+}
 
-/* Trading & Graph Section */
-.trade-section { 
+.chat-input input {
+    flex: 1;
     background: #000;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 20px; 
-    position: relative; 
+    border: 1px solid #333;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.chat-input button {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 0 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Graph Area */
+.trade-section { 
+    padding: 10px;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .chart-container {
     flex: 1;
-    min-height: 300px;
     position: relative;
+    background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
 }
 
 .rate-overlay { 
     position: absolute; 
-    top: 10px; 
+    top: 20px; 
     left: 50%; 
     transform: translateX(-50%); 
-    background: rgba(0,0,0,0.85); 
-    border: 1px solid #fff; 
-    padding: 8px 25px; 
-    border-radius: 5px; 
+    background: rgba(0,0,0,0.8); 
+    border: 1.5px solid #fff; 
+    padding: 6px 20px; 
+    border-radius: 6px; 
     z-index: 10; 
-    font-family: 'Courier New', monospace;
-    font-size: 1.4rem;
-    letter-spacing: 2px;
+    font-family: 'monospace';
+    font-size: 1.2rem;
+    color: #fff;
 }
 
-/* Controls & Inputs */
+/* Trading Interface Controls */
 .trade-controls {
-    margin-top: auto;
-    padding-top: 20px;
+    background: #0a0a0a;
+    padding: 20px;
+    border-top: 1px solid var(--border-color);
 }
 
 .amount-input-row {
     display: flex;
-    background: #000;
-    border: 1px solid var(--accent-green);
-    border-radius: 4px;
-    margin-bottom: 10px;
+    justify-content: center;
     align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
 }
 
 .amount-input-row input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: white;
+    background: #000;
+    border: 1px solid #fff;
+    color: #fff;
     text-align: center;
     font-size: 1.2rem;
-    padding: 10px;
+    padding: 8px;
+    width: 140px;
 }
 
-.adj-btn, .x2-btn {
-    background: #1a1a1a;
-    color: var(--accent-green);
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.quick-sums {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 15px;
-}
-
-.quick-sums button {
-    flex: 1;
-    background: #003300;
+.adj-btn {
+    background: none;
     border: 1px solid var(--accent-green);
     color: var(--accent-green);
-    padding: 8px;
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
     border-radius: 4px;
     cursor: pointer;
 }
 
-/* Buy/Sell Action Buttons */
-.action-buttons { display: flex; gap: 10px; }
-
-.buy-btn, .sell-btn { 
-    flex: 1; 
-    padding: 18px; 
-    border: none; 
-    border-radius: 6px; 
-    font-weight: bold; 
-    cursor: pointer; 
-    font-size: 1.2rem;
-    transition: transform 0.1s;
+.quick-sums {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 50px;
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
-.buy-btn { background: var(--accent-green); color: black; }
-.sell-btn { background: var(--accent-red); color: white; }
+.quick-sums button {
+    background: #003300;
+    border: 1px solid var(--accent-green);
+    color: #fff;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-.buy-btn:active, .sell-btn:active { transform: scale(0.98); }
+.quick-sums .undo-btn {
+    background: #440000;
+    border-color: var(--accent-red);
+}
 
-/* Footer */
+.action-buttons { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px; 
+}
+
+.buy-btn, .sell-btn { 
+    padding: 18px; 
+    border: none; 
+    border-radius: 4px; 
+    font-weight: 900; 
+    font-size: 1.3rem;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.buy-btn { background: var(--accent-green); color: #000; }
+.sell-btn { background: var(--accent-red); color: #fff; }
+
+/* Footer Styling */
 .legal-footer { 
-    font-size: 0.75rem; 
-    color: #888; 
+    background: #050505;
+    font-size: 0.65rem; 
+    color: #555; 
     text-align: center; 
-    padding: 30px 15%; 
-    border-top: 1px solid #222;
-    line-height: 1.6;
+    padding: 15px; 
+    border-top: 1px solid #111;
+}
+
+.legal-footer p { margin: 4px 0; }
+.terms-links a { color: #888; text-decoration: none; }
+
+/* Responsive Adjustments for Mobile */
+@media (max-width: 768px) {
+    .content-grid { grid-template-columns: 1fr; }
+    .chat-section { display: none; } /* Mobile focus on graph */
 }
