@@ -1,6 +1,6 @@
 /**
  * Nexafxtrade Integrated Logic
- * Handles: Live Socket Graph, System Notifications, and User Chat
+ * Optimized for wavy movement and color-split fill as seen in image_3.png
  */
 
 // 1. Initialize Socket.io connection to the Node server
@@ -8,12 +8,7 @@ const socket = io();
 
 const ctx = document.getElementById('tradeChart').getContext('2d');
 
-// Create the green glow gradient to match image_2.png
-const greenGradient = ctx.createLinearGradient(0, 0, 0, 400);
-greenGradient.addColorStop(0, 'rgba(0, 200, 83, 0.4)');
-greenGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-// Initialize with 60 points for the "scrolling" effect
+// Initialize with 60 points for a smooth, high-resolution wave
 let chartData = Array(60).fill(0.00); 
 let labels = Array(60).fill('');
 
@@ -27,22 +22,28 @@ const tradeChart = new Chart(ctx, {
             borderColor: '#00ff00', // Neon green line
             borderWidth: 2,
             pointRadius: 0, 
-            fill: true,
-            backgroundColor: greenGradient,
-            tension: 0.4, // Smooth wavy appearance
+            fill: {
+                target: 'origin',
+                above: 'rgba(0, 255, 0, 0.2)',   // Green when above 0.00
+                below: 'rgba(255, 0, 0, 0.2)'    // Red when below 0.00 (matches image_3.png)
+            },
+            tension: 0.4, // Essential for the smooth "Wavy" appearance
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: false, // Essential for high-speed "live" movement
+        animation: {
+            duration: 400, // Smooth transition for wave movement
+            easing: 'linear'
+        },
         scales: {
             x: { display: false },
             y: {
-                min: -0.12, 
+                min: -0.12, // Matches the Y-axis scale in image_3.png
                 max: 0.12,
-                grid: { color: '#222' },
-                ticks: { color: '#666' }
+                grid: { color: '#333' },
+                ticks: { color: '#888' }
             }
         },
         plugins: { 
@@ -53,23 +54,24 @@ const tradeChart = new Chart(ctx, {
 
 /**
  * 2. REAL-TIME DATA HANDLING
- * Listens for 'market-update' events from server.js
+ * Listens for 'market-update' events from your Node server
  */
 socket.on('market-update', (data) => {
     const newValue = data.rate;
 
-    // Update the "Rate" display overlay
+    // Update the "Rate" text display overlay
     const rateDisplay = document.getElementById('current-rate');
     if (rateDisplay) {
         rateDisplay.innerText = newValue.toFixed(4);
     }
 
-    // Shift data for the moving effect
+    // Shift data for the continuous scrolling wave effect
     chartData.shift();
     chartData.push(newValue);
     
-    // Efficiently update only the points without full re-render
-    tradeChart.update('none');
+    // Update the chart using the 'none' mode for performance, 
+    // or leave empty for the smooth 400ms transition
+    tradeChart.update();
 });
 
 /**
@@ -79,8 +81,8 @@ const chatFeed = document.getElementById('chat-feed');
 const chatInput = document.getElementById('chat-input-field');
 const sendBtn = document.getElementById('send-chat');
 
-// Automated System Notifications (Social Proof)
-const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lodenyi100'];
+// Automated System Notifications matching the style of image_3.png
+const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lodenyi100', '@Lucid@juicewrld'];
 
 function addSystemNotification() {
     if (!chatFeed) return;
@@ -90,7 +92,7 @@ function addSystemNotification() {
     const div = document.createElement('div');
     div.style.marginBottom = "10px";
     div.style.fontSize = "13px";
-    div.innerHTML = `<span style="color:#ffab00; font-weight:bold;">System:</span> CONGRATULATIONS ${user} on your withdrawal of ${amount} 🤑🔥`;
+    div.innerHTML = `<span style="color:#ffcc00; font-weight:bold;">System:</span> CONGRATULATIONS ${user} on your withdrawal of ${amount} 🤑🔥`;
     
     chatFeed.appendChild(div);
     chatFeed.scrollTop = chatFeed.scrollHeight;
@@ -99,7 +101,7 @@ function addSystemNotification() {
     if (chatFeed.children.length > 15) chatFeed.removeChild(chatFeed.children[0]);
 }
 
-// Generate a system notification every 7 seconds
+// Generate a system notification every 6-8 seconds
 setInterval(addSystemNotification, 7000);
 
 // Handling User-Sent Messages
@@ -126,7 +128,7 @@ socket.on('receive-chat', (data) => {
 });
 
 /**
- * 4. UI INTERACTION HELPERS
+ * 4. UI INTERACTION HELPERS (Amounts & Sums)
  */
 function adjustAmount(val) {
     const input = document.getElementById('trade-amount');
