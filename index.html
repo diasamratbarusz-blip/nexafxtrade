@@ -4,82 +4,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexafxtrade | Buy Low Sell High</title>
-    <!-- Link to your external stylesheet -->
     <link rel="stylesheet" href="style.css">
     
-    <!-- Essential: Libraries for high-performance live visuals -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Connects frontend to the Socket.io engine in server.js -->
     <script src="/socket.io/socket.io.js"></script>
     
     <style>
         /* Embedded critical styles to ensure layout matches image_3.png */
-        body { background-color: #000; color: #fff; font-family: 'Arial', sans-serif; margin: 0; }
+        body { background-color: #000; color: #fff; font-family: 'Arial', sans-serif; margin: 0; overflow: hidden; }
         .app-container { display: flex; flex-direction: column; height: 100vh; }
-        .main-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: #111; border-bottom: 1px solid #333; }
-        .brand { color: #00ff00; font-weight: bold; font-size: 1.2rem; }
-        .content-grid { display: grid; grid-template-columns: 320px 1fr; flex: 1; overflow: hidden; }
+        
+        .main-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 10px 15px; 
+            background: #111; 
+            border-bottom: 1px solid #333; 
+            height: 60px;
+        }
+        .brand { color: #00ff00; font-weight: 900; font-size: 1.4rem; letter-spacing: -1px; }
+
+        .content-grid { 
+            display: grid; 
+            grid-template-columns: 320px 1fr; 
+            flex: 1; 
+            overflow: hidden; 
+        }
+
+        /* Chat Section */
         .chat-section { background: #0a0a0a; border-right: 1px solid #222; display: flex; flex-direction: column; }
-        .chat-header { background: #008000; padding: 10px; text-align: center; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .chat-body { flex: 1; overflow-y: auto; padding: 10px; font-size: 0.85rem; }
+        .chat-header { 
+            background: #008000; 
+            padding: 12px; 
+            text-align: center; 
+            font-weight: bold; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+        }
+        .chat-body { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.85rem; scrollbar-width: thin; }
+
+        /* Trading Section */
         .trade-section { position: relative; display: flex; flex-direction: column; background: #000; padding: 10px; }
-        .chart-container { flex: 1; min-height: 300px; position: relative; }
-        .rate-overlay { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); border: 1px solid #fff; padding: 5px 15px; border-radius: 5px; z-index: 10; font-family: monospace; }
-        .trade-controls { padding: 15px; background: #0a0a0a; border-top: 1px solid #222; }
-        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .buy-btn { background: #00ff00; color: #000; border: none; padding: 15px; font-weight: bold; border-radius: 5px; cursor: pointer; }
-        .sell-btn { background: #ff0000; color: #fff; border: none; padding: 15px; font-weight: bold; border-radius: 5px; cursor: pointer; }
-        .legal-footer { font-size: 10px; color: #666; text-align: center; padding: 10px; background: #050505; }
+        .chart-container { flex: 1; min-height: 300px; position: relative; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); }
+        .rate-overlay { 
+            position: absolute; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: rgba(0,0,0,0.85); 
+            border: 1.5px solid #fff; 
+            padding: 8px 25px; 
+            border-radius: 6px; 
+            z-index: 10; 
+            font-family: monospace; 
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+        }
+
+        /* Controls */
+        .trade-controls { padding: 20px; background: #0a0a0a; border-top: 1px solid #222; }
+        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        
+        .buy-btn, .sell-btn { 
+            padding: 18px; 
+            border: none; 
+            font-weight: 900; 
+            font-size: 1.3rem; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            text-transform: uppercase;
+        }
+        .buy-btn { background: #00ff00; color: #000; }
+        .sell-btn { background: #ff0000; color: #fff; }
+
+        .legal-footer { font-size: 11px; color: #555; text-align: center; padding: 15px; background: #050505; border-top: 1px solid #111; }
+        
+        .adj-btn { width: 35px; height: 35px; border: 1px solid #00ff00; background: none; color: #00ff00; border-radius: 4px; cursor: pointer; font-size: 1.2rem; }
+        .quick-sum-btn { flex: 1; background: #003300; border: 1px solid #00ff00; color: #fff; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        
+        @media (max-width: 768px) {
+            .content-grid { grid-template-columns: 1fr; }
+            .chat-section { display: none; }
+        }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Top Navigation -->
         <header class="main-header">
-            <div class="brand">Nexafxtrade</div>
-            <div class="nav-controls" style="display: flex; align-items: center; gap: 10px;">
-                <div class="balance-box" style="background: #222; padding: 5px 10px; border-radius: 4px;">
-                    <span style="color: #888; font-size: 0.7rem;">KES</span>
-                    <span id="user-balance" style="color: #ffcc00; font-weight: bold;">0.00</span>
+            <div class="brand">NEXAFXTRADE</div>
+            <div class="nav-controls" style="display: flex; align-items: center; gap: 12px;">
+                <div class="balance-box" style="background: #222; padding: 6px 14px; border-radius: 4px; border: 1px solid #444;">
+                    <span style="color: #888; font-size: 0.65rem; display: block; text-transform: uppercase;">Balance (KES)</span>
+                    <span id="user-balance" style="color: #ffcc00; font-weight: bold; font-size: 1.1rem;">0.00</span>
                 </div>
-                <button style="background: #00ff00; border: none; border-radius: 4px; padding: 6px 12px; font-weight: bold; cursor: pointer;">Deposit</button>
-                <button style="background: #333; border: none; color: #fff; border-radius: 4px; padding: 6px 12px; cursor: pointer;">Withdraw</button>
-                <div style="font-size: 1.5rem; cursor: pointer;">☰</div>
+                <button style="background: #00ff00; border: none; border-radius: 4px; padding: 10px 18px; font-weight: bold; cursor: pointer; color: #000;">Deposit</button>
+                <button style="background: #333; border: none; color: #fff; border-radius: 4px; padding: 10px 18px; cursor: pointer; font-weight: bold;">Withdraw</button>
+                <div style="font-size: 1.8rem; cursor: pointer; color: #fff;">☰</div>
             </div>
         </header>
 
         <main class="content-grid">
-            <!-- Live Activity Sidebar (Social Proof Chat) -->
             <section class="chat-section">
-                <div class="chat-header"><span>💬</span> Chat</div>
+                <div class="chat-header"><span>💬</span> LIVE ACTIVITY</div>
                 <div id="chat-feed" class="chat-body"></div>
-                <div style="padding: 10px; border-top: 1px solid #222; display: flex; gap: 5px;">
-                    <input type="text" id="chat-input-field" placeholder="Write message..." style="flex: 1; background: #111; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 4px;">
-                    <button id="send-chat-btn" style="background: #444; border: none; color: #fff; padding: 0 10px; border-radius: 4px; cursor: pointer;">SEND</button>
+                <div style="padding: 10px; background: #0f0f0f; border-top: 1px solid #222; display: flex; gap: 8px;">
+                    <input type="text" id="chat-input-field" placeholder="Write message..." style="flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px; outline: none;">
+                    <button id="send-chat-btn" style="background: #444; border: none; color: #fff; padding: 0 15px; border-radius: 4px; font-weight: bold; cursor: pointer;">SEND</button>
                 </div>
             </section>
 
-            <!-- Trading Center -->
             <section class="trade-section">
-                <div class="rate-overlay">Rate: <span id="current-rate">0.0000</span></div>
+                <div class="rate-overlay">RATE: <span id="current-rate">0.0000</span></div>
                 
                 <div class="chart-container">
                     <canvas id="tradeChart"></canvas>
                 </div>
 
                 <div class="trade-controls">
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
-                        <button class="adj-btn" onclick="adjustAmount(-10)" style="width:30px; height:30px; border:1px solid #00ff00; background:none; color:#00ff00;">-</button>
-                        <input type="number" id="trade-amount" value="100" style="background:#000; border:1px solid #fff; color:#fff; text-align:center; padding:5px; width:100px;">
-                        <button class="adj-btn" onclick="adjustAmount(10)" style="width:30px; height:30px; border:1px solid #00ff00; background:none; color:#00ff00;">+</button>
-                        <button onclick="adjustAmount('double')" style="background:#333; border:none; color:#fff; padding:5px 10px; border-radius:3px;">x2</button>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
+                        <button class="adj-btn" onclick="adjustAmount(-10)">-</button>
+                        <input type="number" id="trade-amount" value="100" style="background:#000; border:1px solid #fff; color:#fff; text-align:center; padding:10px; width:120px; font-size: 1.2rem; border-radius: 4px;">
+                        <button class="adj-btn" onclick="adjustAmount(10)">+</button>
+                        <button onclick="adjustAmount('double')" style="background:#333; border:none; color:#fff; padding:10px 15px; border-radius:4px; font-weight: bold; cursor: pointer;">x2</button>
                     </div>
                     
-                    <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 15px;">
-                        <button onclick="setSum(100)" style="flex:1; background:#004d00; border:1px solid #00ff00; color:#fff; padding:5px;">100</button>
-                        <button onclick="setSum(200)" style="flex:1; background:#004d00; border:1px solid #00ff00; color:#fff; padding:5px;">200</button>
-                        <button onclick="setSum(500)" style="flex:1; background:#004d00; border:1px solid #00ff00; color:#fff; padding:5px;">500</button>
-                        <button onclick="setSum(100)" style="width:40px; background:#440000; border:1px solid #ff0000; color:#fff;">↺</button>
+                    <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 20px;">
+                        <button class="quick-sum-btn" onclick="setSum(100)">100</button>
+                        <button class="quick-sum-btn" onclick="setSum(200)">200</button>
+                        <button class="quick-sum-btn" onclick="setSum(500)">500</button>
+                        <button onclick="setSum(100)" style="width:50px; background:#440000; border:1px solid #ff0000; color:#fff; border-radius: 4px; cursor: pointer;">↺</button>
                     </div>
 
                     <div class="action-buttons">
@@ -92,13 +148,19 @@
 
         <footer class="legal-footer">
             <p>Nexafxtrade is a fully licensed entity under Prosport Africa Ltd. Physical Address: Binaa Mall, 2nd Floor, Nairobi, Kenya.</p>
-            <p>&copy; 2026 Nexafxtrade | support@unasemeje.com</p>
+            <p>&copy; 2026 Nexafxtrade | support@unasemeje.com | Fully Regulated Trading Platform</p>
         </footer>
     </div>
 
     <script>
         const socket = io();
         const ctx = document.getElementById('tradeChart').getContext('2d');
+        
+        // Setup gradient for wavy fill
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(0, 255, 0, 0.2)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
         let chartData = Array(60).fill(0.00); 
         let labels = Array(60).fill('');
 
@@ -111,8 +173,8 @@
                     borderColor: '#00ff00',
                     borderWidth: 2,
                     pointRadius: 0,
-                    fill: { target: 'origin', above: 'rgba(0, 255, 0, 0.2)', below: 'rgba(255, 0, 0, 0.2)' },
-                    tension: 0.4 // Smooth wavy movement
+                    fill: { target: 'origin', above: 'rgba(0, 255, 0, 0.15)', below: 'rgba(255, 0, 0, 0.15)' },
+                    tension: 0.45 // Optimized for that image_3.png wavy look
                 }]
             },
             options: {
@@ -121,7 +183,12 @@
                 animation: { duration: 400, easing: 'linear' },
                 scales: {
                     x: { display: false },
-                    y: { min: -0.12, max: 0.12, grid: { color: '#222' }, ticks: { color: '#666' } }
+                    y: { 
+                        min: -0.15, 
+                        max: 0.15, 
+                        grid: { color: 'rgba(255,255,255,0.05)' }, 
+                        ticks: { color: '#666', font: { size: 10 } } 
+                    }
                 },
                 plugins: { legend: { display: false } }
             }
@@ -131,45 +198,51 @@
             document.getElementById('current-rate').innerText = data.rate.toFixed(4);
             chartData.shift();
             chartData.push(data.rate);
+            
+            // Dynamic color change: red if negative, green if positive
+            tradeChart.data.datasets[0].borderColor = data.rate >= 0 ? '#00ff00' : '#ff0000';
             tradeChart.update('none');
         });
 
         // Chat & Social Proof Logic
         const chatFeed = document.getElementById('chat-feed');
-        const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lucid@juicewrld'];
+        const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lucid@juicewrld', '@KenyanTrader'];
 
         function addSystemNotification() {
             const user = systemUsers[Math.floor(Math.random() * systemUsers.length)];
             const amount = (Math.random() * 400 + 100).toFixed(2);
             const div = document.createElement('div');
-            div.style.marginBottom = "10px";
-            div.innerHTML = `<span style="color:#ffcc00; font-weight:bold;">System:</span> CONGRATULATIONS ${user} on your withdrawal of ${amount} 🤑🔥`;
+            div.style.marginBottom = "12px";
+            div.style.borderBottom = "1px solid #111";
+            div.style.paddingBottom = "5px";
+            div.innerHTML = `<span style="color:#ffcc00; font-weight:bold;">[SYSTEM]</span> CONGRATULATIONS ${user} on your withdrawal of <span style="color:#00ff00">KES ${amount}</span> 🤑🔥`;
             chatFeed.appendChild(div);
             chatFeed.scrollTop = chatFeed.scrollHeight;
-            if (chatFeed.children.length > 15) chatFeed.removeChild(chatFeed.children[0]);
+            if (chatFeed.children.length > 20) chatFeed.removeChild(chatFeed.children[0]);
         }
-        setInterval(addSystemNotification, 7000);
+        setInterval(addSystemNotification, 8000);
 
         document.getElementById('send-chat-btn').onclick = () => {
             const input = document.getElementById('chat-input-field');
-            if(input.value) {
-                socket.emit('send-chat', { user: 'Me', message: input.value });
+            if(input.value.trim() !== '') {
+                socket.emit('send-chat', { user: 'Trader_' + Math.floor(Math.random()*100), message: input.value });
                 input.value = '';
             }
         };
 
         socket.on('receive-chat', (data) => {
             const div = document.createElement('div');
-            div.style.marginBottom = "5px";
+            div.style.marginBottom = "8px";
             div.innerHTML = `<span style="color: #00ff00; font-weight:bold;">${data.user}:</span> ${data.message}`;
             chatFeed.appendChild(div);
             chatFeed.scrollTop = chatFeed.scrollHeight;
         });
 
+        // UI Handlers
         function adjustAmount(val) {
             const input = document.getElementById('trade-amount');
             let current = parseInt(input.value) || 0;
-            input.value = (val === 'double') ? current * 2 : current + val;
+            input.value = (val === 'double') ? current * 2 : Math.max(0, current + val);
         }
         function setSum(val) { document.getElementById('trade-amount').value = val; }
     </script>
