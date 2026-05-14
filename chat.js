@@ -1,5 +1,6 @@
 /**
  * Nexafxtrade Real-Time Interface Logic
+ * File: chat.js
  * Handles: Live Moving Graph, Live Chat, and Amount Adjustments
  */
 
@@ -20,12 +21,12 @@ const tradeChart = new Chart(ctx, {
         datasets: [{
             label: 'Rate',
             data: dataPoints,
-            borderColor: '#00ff00', // Neon green matching image.png
+            borderColor: '#00ff00', // Neon green
             backgroundColor: 'rgba(0, 255, 0, 0.1)', // Semi-transparent fill
             fill: true,
             borderWidth: 2,
             pointRadius: 0, // Hides dots for a clean line
-            tension: 0.4 // Creates the smooth curves seen in image_2.png
+            tension: 0.4 // Creates the smooth curves
         }]
     },
     options: {
@@ -49,7 +50,6 @@ const tradeChart = new Chart(ctx, {
 
 /**
  * 3. LISTEN FOR LIVE UPDATES
- * These events must match the 'io.emit' names in your server.js
  */
 
 // Handle Market Rate Updates
@@ -78,36 +78,62 @@ socket.on('receive-chat', (data) => {
         const messageElement = document.createElement('div');
         messageElement.style.padding = "5px 0";
         messageElement.style.fontSize = "0.9rem";
+        messageElement.style.borderBottom = "1px solid #111"; // Cleaner look
         
-        // Highlight system messages in yellow/gold like image.png
+        // Highlight system messages (Wins/Withdrawals) in gold
         if (data.user === "System") {
-            messageElement.innerHTML = `<span style="color: #ffcc00; font-weight: bold;">System:</span> ${data.message}`;
+            messageElement.innerHTML = `<span style="color: #ffcc00; font-weight: bold;">System:</span> <span style="color: #fff;">${data.message}</span>`;
         } else {
-            messageElement.innerHTML = `<span style="color: #00ff00;">${data.user}:</span> ${data.message}`;
+            // Standard User message
+            messageElement.innerHTML = `<span style="color: #00ff00; font-weight: bold;">${data.user}:</span> <span style="color: #eee;">${data.message}</span>`;
         }
 
         chatFeed.appendChild(messageElement);
         
-        // Auto-scroll to the bottom of the chat
+        // Auto-scroll to the bottom
         chatFeed.scrollTop = chatFeed.scrollHeight;
+
+        // Clean memory: remove old messages if list exceeds 30
+        if (chatFeed.children.length > 30) {
+            chatFeed.removeChild(chatFeed.children[0]);
+        }
     }
 });
 
-// 4. Interaction Handlers
+/**
+ * 4. INTERACTION HANDLERS
+ */
+
+// Handle Sending Chat
 if (sendBtn) {
     sendBtn.addEventListener('click', () => {
         const text = chatInput.value.trim();
         if (text !== "") {
-            socket.emit('send-chat', { user: "User", message: text });
+            // For now, we use "Me" or a random ID until Auth is finished
+            socket.emit('send-chat', { user: "Me", message: text });
             chatInput.value = "";
         }
     });
 }
 
+// Support for "Enter" key to send message
+if (chatInput) {
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendBtn.click();
+    });
+}
+
+// Handle Win/Loss Results from server.js
+socket.on('trade-result', (data) => {
+    // You can trigger a popup or sound here
+    console.log(`Trade Result: ${data.status} | Payout: KES ${data.payout}`);
+});
+
 /**
- * Helper Functions for Trade Controls
+ * HELPER FUNCTIONS (Global Scope)
  */
-function adjustAmount(val) {
+
+window.adjustAmount = (val) => {
     const input = document.getElementById('trade-amount');
     if (!input) return;
 
@@ -117,9 +143,9 @@ function adjustAmount(val) {
     } else {
         input.value = Math.max(0, current + val); // Prevent negative amounts
     }
-}
+};
 
-function setSum(val) {
+window.setSum = (val) => {
     const input = document.getElementById('trade-amount');
     if (input) input.value = val;
-}
+};
