@@ -1,9 +1,11 @@
 /**
  * Nexafxtrade Premium Stylesheet
  * Optimized for the "image_3.png" aesthetic & high-performance wavy charts
+ * Complete integration version - Do not remove anything
  */
 
 :root {
+    /* Classic Template Theme Variables */
     --bg-dark: #000000;
     --panel-dark: #0a0a0a;
     --accent-green: #00ff00; /* Neon Green */
@@ -11,6 +13,15 @@
     --gold-text: #ffcc00;
     --border-color: #222222;
     --chat-header-green: #008000; 
+
+    /* Premium Sci-Fi Template Theme Variables */
+    --bg-deep: #06090f;
+    --bg-card: #11171f;
+    --primary: #00d4ff;
+    --success: #00e676;
+    --danger: #ff5252;
+    --text-dim: #707a8a;
+    --text-light: #ffffff;
 }
 
 * {
@@ -18,31 +29,37 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-body {
+body, html {
     background-color: var(--bg-dark);
     color: #ffffff;
-    font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+    font-family: 'Inter', 'Segoe UI', Roboto, -apple-system, sans-serif;
     margin: 0;
+    padding: 0;
     height: 100vh;
     overflow: hidden; /* Critical for single-page app feel */
 }
 
-/* App Layout */
+/* App Layout Structure */
 .app-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
 
-/* Navigation Header */
-.main-header {
-    background: #111;
+/* --- Navigation Header Configurations --- */
+nav, .main-header {
+    background: #111111;
+    background-color: rgba(17, 23, 31, 0.95);
     padding: 10px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
+    border-bottom-color: rgba(255,255,255,0.05);
     height: 60px;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    box-sizing: border-box;
 }
 
 .brand { 
@@ -59,35 +76,94 @@ body {
     gap: 12px;
 }
 
+/* Wallet Boxes & Balance Frameworks */
 .balance-box { 
-    background: #222; 
+    background: #222222; 
     padding: 6px 14px; 
     border-radius: 4px; 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    border: 1px solid #444444;
 }
 
-.balance-box .label { font-size: 0.65rem; color: #888; text-transform: uppercase; }
-.balance-box .value { color: var(--gold-text); font-weight: bold; font-size: 0.95rem; }
+.balance-box .label, .wallet-label { 
+    font-size: 0.65rem; 
+    color: var(--text-dim); 
+    color: #888888; 
+    text-transform: uppercase; 
+}
 
-.btn-deposit { background: var(--accent-green); color: #000; border: none; font-weight: bold; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
-.btn-withdraw { background: #333; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+.balance-box .value, #user-balance, #walletBal { 
+    color: var(--gold-text); 
+    font-weight: bold; 
+    font-size: 1.1rem; 
+    font-family: monospace;
+}
 
-/* Main Functional Grid */
-.content-grid {
+.wallet-info {
+    text-align: right;
+    border-left: 1px solid #333333;
+    padding-left: 20px;
+}
+
+.wallet-amount {
+    font-weight: 700;
+    color: var(--success);
+    font-family: monospace;
+}
+
+/* Header UI Button Modules */
+.btn-deposit, .nav-btn.btn-deposit { 
+    background: var(--accent-green); 
+    color: #000000; 
+    border: none; 
+    font-weight: bold; 
+    padding: 8px 15px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    transition: 0.2s;
+}
+
+.btn-withdraw, .nav-btn.btn-withdraw { 
+    background: #333333; 
+    color: #ffffff; 
+    border: none; 
+    padding: 8px 15px; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.nav-btn:hover, .btn-deposit:hover, .btn-withdraw:hover {
+    filter: brightness(1.1);
+}
+
+/* --- Main Functional Grid Workplace --- */
+.content-grid, main {
     display: grid;
     grid-template-columns: 320px 1fr;
+    gap: 15px;
+    padding: 15px;
     flex: 1;
     overflow: hidden;
+    z-index: 10;
+    position: relative;
+    box-sizing: border-box;
+    height: calc(100vh - 60px);
 }
 
-/* Chat Sidebar (Reflecting Social Proof System) */
+/* --- Live Chat Sidebar & Social Proof Module --- */
 .chat-section { 
     background: var(--panel-dark); 
+    background-color: var(--bg-card);
     border-right: 1px solid var(--border-color);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
     display: flex; 
     flex-direction: column;
+    overflow: hidden;
 }
 
 .chat-header { 
@@ -97,56 +173,104 @@ body {
     font-weight: bold; 
     font-size: 1rem;
     box-shadow: inset 0 -2px 10px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    letter-spacing: 1px;
 }
 
-.chat-body { 
+.chat-body, #tradeLogs { 
     flex: 1; 
     overflow-y: auto; 
     padding: 15px; 
     font-size: 0.85rem;
     scrollbar-width: thin;
-    scrollbar-color: #333 transparent;
+    scrollbar-color: #333333 transparent;
 }
 
-.chat-input {
+.chat-input, .chat-footer {
     padding: 10px;
     background: #0f0f0f;
-    border-top: 1px solid #222;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid #222222;
+    border-top-color: rgba(255,255,255,0.05);
     display: flex;
     gap: 8px;
 }
 
-.chat-input input {
+.chat-input input, .chat-input .chat-input {
     flex: 1;
-    background: #000;
-    border: 1px solid #333;
-    color: white;
-    padding: 8px;
-    border-radius: 4px;
+    background: #000000;
+    background-color: #06090f;
+    border: 1px solid #333333;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 6px;
+    outline: none;
+    font-size: 0.85rem;
 }
 
-.chat-input button {
-    background: #444;
-    color: white;
-    border: none;
+.chat-input input:focus {
+    border-color: var(--primary);
+}
+
+.chat-input button, .chat-send-btn {
+    background: #444444;
+    color: #ffffff;
+    border: 1px solid #444444;
     padding: 0 15px;
-    border-radius: 4px;
+    border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.2s;
 }
 
-/* Graph Area */
-.trade-section { 
+.chat-input button:hover, .chat-send-btn:hover {
+    background: var(--primary);
+    color: #000000;
+    border-color: var(--primary);
+}
+
+/* --- Trading Graph & Visualization Viewport --- */
+.trade-section, .sidebar { 
     padding: 10px;
     display: flex;
     flex-direction: column;
     position: relative;
+    background: var(--bg-card);
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    overflow: hidden;
+}
+
+.price-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.kes-symbol {
+    color: var(--primary);
+    font-size: 1.2rem;
+    margin-right: 5px;
+}
+
+.price-value {
+    font-size: 2.8rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
 }
 
 .chart-container {
     flex: 1;
+    min-height: 200px;
     position: relative;
-    background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+    margin-bottom: 15px;
+    background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
 }
 
 .rate-overlay { 
@@ -154,21 +278,25 @@ body {
     top: 20px; 
     left: 50%; 
     transform: translateX(-50%); 
-    background: rgba(0,0,0,0.8); 
-    border: 1.5px solid #fff; 
-    padding: 6px 20px; 
+    background: rgba(0,0,0,0.85); 
+    border: 1.5px solid #ffffff; 
+    padding: 8px 25px; 
     border-radius: 6px; 
     z-index: 10; 
-    font-family: 'monospace';
-    font-size: 1.2rem;
-    color: #fff;
+    font-family: monospace;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    color: #ffffff;
 }
 
-/* Trading Interface Controls */
-.trade-controls {
+/* --- Trading Interface Interactive Controls --- */
+.trade-controls, .trade-zone {
     background: #0a0a0a;
-    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 15px;
     border-top: 1px solid var(--border-color);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.02);
 }
 
 .amount-input-row {
@@ -179,27 +307,43 @@ body {
     margin-bottom: 12px;
 }
 
-.amount-input-row input {
-    background: #000;
-    border: 1px solid #fff;
-    color: #fff;
+.amount-input-row input, .amount-input {
+    background: #000000;
+    background-color: #06090f;
+    border: 1px solid #333333;
+    color: #ffffff;
     text-align: center;
     font-size: 1.2rem;
     padding: 8px;
-    width: 140px;
+    width: 130px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+.amount-input-row input:focus, .amount-input:focus {
+    border-color: var(--primary);
+    outline: none;
 }
 
 .adj-btn {
-    background: none;
-    border: 1px solid var(--accent-green);
-    color: var(--accent-green);
-    width: 35px;
-    height: 35px;
+    background: #06090f;
+    border: 1px solid #333333;
+    color: #ffffff;
+    width: 38px;
+    height: 38px;
     font-size: 1.2rem;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    transition: 0.2s;
 }
 
+.adj-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Preset Cash Matrix Hotkeys */
 .quick-sums {
     display: grid;
     grid-template-columns: repeat(3, 1fr) 50px;
@@ -207,14 +351,23 @@ body {
     margin-bottom: 20px;
 }
 
-.quick-sums button {
+.quick-sum-btn, .quick-sums button {
+    flex: 1;
     background: #003300;
+    background-color: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--accent-green);
-    color: #fff;
+    border-color: #333333;
+    color: #ffffff;
     padding: 10px;
     font-weight: bold;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    transition: 0.2s;
+}
+
+.quick-sum-btn:hover, .quick-sums button:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--primary);
 }
 
 .quick-sums .undo-btn {
@@ -222,40 +375,149 @@ body {
     border-color: var(--accent-red);
 }
 
+/* Instant Order Desk Execution System */
 .action-buttons { 
     display: grid; 
     grid-template-columns: 1fr 1fr; 
     gap: 15px; 
+    margin-top: 10px;
 }
 
-.buy-btn, .sell-btn { 
-    padding: 18px; 
+.buy-btn, .sell-btn, .btn-trade { 
+    padding: 16px; 
     border: none; 
-    border-radius: 4px; 
-    font-weight: 900; 
-    font-size: 1.3rem;
+    border-radius: 10px; 
+    font-weight: 800; 
+    font-size: 1.2rem;
     cursor: pointer;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #ffffff;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.buy-btn { background: var(--accent-green); color: #000; }
-.sell-btn { background: var(--accent-red); color: #fff; }
+.buy-btn, .btn-buy { 
+    background: var(--accent-green); 
+    background-color: var(--success);
+    box-shadow: 0 6px 15px rgba(0, 230, 118, 0.2);
+    color: #000000; 
+}
 
-/* Footer Styling */
+.sell-btn, .btn-sell { 
+    background: var(--accent-red); 
+    background-color: var(--danger);
+    box-shadow: 0 6px 15px rgba(255, 82, 82, 0.2);
+    color: #ffffff;
+}
+
+.buy-btn:hover, .sell-btn:hover, .btn-trade:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.buy-btn:active, .sell-btn:active, .btn-trade:active {
+    transform: translateY(0);
+}
+
+/* Premium Sidebar Logs Components */
+.history-title {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.log-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Audio Status Controls */
+.sound-status {
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    border: 1px solid #333333;
+    padding: 6px 12px;
+    border-radius: 20px;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.sound-status.on {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: rgba(0, 212, 255, 0.05);
+}
+
+/* --- Legal Regulatory Footer --- */
 .legal-footer { 
     background: #050505;
+    background-color: #030508;
     font-size: 0.65rem; 
-    color: #555; 
+    color: #555555; 
     text-align: center; 
     padding: 15px; 
-    border-top: 1px solid #111;
+    border-top: 1px solid #111111;
+    border-top-color: rgba(255,255,255,0.02);
 }
 
 .legal-footer p { margin: 4px 0; }
-.terms-links a { color: #888; text-decoration: none; }
+.terms-links a { color: #888888; text-decoration: none; }
 
-/* Responsive Adjustments for Mobile */
-@media (max-width: 768px) {
-    .content-grid { grid-template-columns: 1fr; }
-    .chat-section { display: none; } /* Mobile focus on graph */
+/* --- Geometric Background Animation --- */
+.wave-bg {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 12vh;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.parallax > use {
+    animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
+}
+.parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
+.parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; }
+.parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; }
+.parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; }
+
+/* --- Dynamic Global Keyframes Ecosystem --- */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes move-forever {
+    0% { transform: translate3d(-90px,0,0); }
+    100% { transform: translate3d(85px,0,0); }
+}
+
+/* --- Responsive Engine Media Processing --- */
+@media (max-width: 820px) {
+    .content-grid, main {
+        grid-template-columns: 1fr;
+    }
+    .chat-section {
+        display: none; /* Focus processing strictly dedicated to mobile charts */
+    }
+    .price-value {
+        font-size: 2.2rem;
+    }
 }
