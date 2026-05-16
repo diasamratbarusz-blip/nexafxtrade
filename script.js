@@ -2,15 +2,26 @@
  * Nexafxtrade Integrated Logic
  * Optimized for wavy movement and color-split fill as seen in image_3.png
  * Version: 3.2.0 (May 2026)
+ * Complete integration version - Do not remove anything
  */
 
 // 1. Initialize Socket.io connection to the Node server
-const socket = io(); 
+let socket;
+try {
+    socket = io();
+} catch (e) {
+    console.warn("Socket.io engine failed initialization. Defaulting to local standalone emulation system rules.");
+}
 
 const ctx = document.getElementById('tradeChart').getContext('2d');
 
+// Setup gradient configurations for smooth background fills
+const chartGradient = ctx.createLinearGradient(0, 0, 0, 350);
+chartGradient.addColorStop(0, 'rgba(0, 212, 255, 0.22)');
+chartGradient.addColorStop(1, 'rgba(0, 212, 255, 0)');
+
 // Initialize with 60 points for a smooth, high-resolution wave
-let chartData = Array(60).fill(0.00); 
+let chartData = Array(60).fill(8421500); 
 let labels = Array(60).fill('');
 
 const tradeChart = new Chart(ctx, {
@@ -21,30 +32,25 @@ const tradeChart = new Chart(ctx, {
             label: 'Live Rate',
             data: chartData,
             borderColor: '#00ff00', // Neon green line
-            borderWidth: 2,
+            borderWidth: 2.5,
             pointRadius: 0, 
-            fill: {
-                target: 'origin',
-                above: 'rgba(0, 255, 0, 0.2)',   // Green when above 0.00
-                below: 'rgba(255, 0, 0, 0.2)'    // Red when below 0.00
-            },
-            tension: 0.4, // Essential for the smooth "Wavy" appearance
+            fill: true,
+            backgroundColor: chartGradient,
+            tension: 0.42, // Essential for the smooth "Wavy" appearance
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-            duration: 400, // Smooth transition for wave movement
+            duration: 350, // Smooth transition for wave movement
             easing: 'linear'
         },
         scales: {
             x: { display: false },
             y: {
-                min: -0.15, // Adjusted to match server.js scale
-                max: 0.15,
-                grid: { color: '#222' },
-                ticks: { color: '#666', font: { size: 10 } }
+                grid: { color: 'rgba(255,255,255,0.03)', drawTicks: false },
+                ticks: { color: '#4a5568', font: { size: 10, family: 'monospace' } }
             }
         },
         plugins: { 
@@ -53,91 +59,152 @@ const tradeChart = new Chart(ctx, {
     }
 });
 
+// --- Core Application Financial States Framework ---
+let currentPrice = 8421500;
+let walletBalance = 1450000;
+
 /**
- * 2. REAL-TIME DATA HANDLING
- * Listens for 'market-update' events from your Node server
+ * Global Market View Modifiers Matrix
  */
-socket.on('market-update', (data) => {
-    const newValue = data.rate;
+function updateMarketView(rateValue) {
+    const previousPrice = currentPrice;
+    currentPrice = rateValue;
+    const absoluteDelta = currentPrice - previousPrice;
 
     // Update the "Rate" text display overlay
     const rateDisplay = document.getElementById('current-rate');
+    const mainPriceDisplay = document.getElementById('mainPrice');
+    
+    const displayValue = typeof currentPrice === 'number' ? currentPrice : parseFloat(currentPrice);
+    
     if (rateDisplay) {
-        rateDisplay.innerText = newValue.toFixed(4);
+        rateDisplay.innerText = displayValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+    }
+    if (mainPriceDisplay) {
+        mainPriceDisplay.innerText = Math.floor(displayValue).toLocaleString();
+    }
+
+    const trendContainer = document.getElementById('priceTrend');
+    if (trendContainer) {
+        if (absoluteDelta >= 0) {
+            trendContainer.innerHTML = `<i class="fas fa-caret-up"></i> +KES ${absoluteDelta.toFixed(2)}`;
+            trendContainer.style.color = "var(--success)";
+            tradeChart.data.datasets[0].borderColor = '#00e676';
+        } else {
+            trendContainer.innerHTML = `<i class="fas fa-caret-down"></i> -KES ${Math.abs(absoluteDelta).toFixed(2)}`;
+            trendContainer.style.color = "var(--danger)";
+            tradeChart.data.datasets[0].borderColor = '#ff5252';
+        }
     }
 
     // Shift data for the continuous scrolling wave effect
     chartData.shift();
-    chartData.push(newValue);
-    
-    // Dynamic color shifting for the line itself
-    tradeChart.data.datasets[0].borderColor = newValue >= 0 ? '#00ff00' : '#ff0000';
+    chartData.push(displayValue);
     
     // Update the chart using 'none' for high-performance gliding
     tradeChart.update('none');
-});
+
+    if (Math.abs(absoluteDelta) > 6000) {
+        playSound('tick');
+    }
+}
+
+/**
+ * 2. REAL-TIME DATA HANDLING & DATA PIPELINE FALLBACKS
+ * Listens for 'market-update' events from your Node server
+ */
+if (socket) {
+    socket.on('market-update', (data) => {
+        if (data && data.rate !== undefined) {
+            updateMarketView(data.rate);
+        }
+    });
+}
+
+// Standalone Local Matrix Generator Emulation
+setInterval(() => {
+    if (!socket || !socket.connected) {
+        const simulatedVolatility = (Math.random() - 0.48) * 14000;
+        updateMarketView(currentPrice + simulatedVolatility);
+    }
+}, 800);
 
 /**
  * 3. SOCIAL PROOF & CHAT SYSTEM
  */
 const chatFeed = document.getElementById('chat-feed');
 const chatInput = document.getElementById('chat-input-field');
-const sendBtn = document.getElementById('send-chat-btn'); // Matched to HTML ID
+const sendBtn = document.getElementById('send-chat-btn'); 
 
 // Automated System Notifications matching the style of image_3.png
-const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lodenyi100', '@Lucid@juicewrld', '@Kenyan_Trader'];
+const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lodenyi100', '@Lucid@juicewrld', '@Kenyan_Trader', '@CryptoNaija'];
 
-function addSystemNotification() {
+function injectChatMessage(user, message, isSystem = false, systemColor = '#ffcc00') {
     if (!chatFeed) return;
-    const user = systemUsers[Math.floor(Math.random() * systemUsers.length)];
-    const amount = (Math.random() * 800 + 200).toFixed(2);
-    
-    const div = document.createElement('div');
-    div.style.marginBottom = "10px";
-    div.style.fontSize = "13px";
-    div.style.borderBottom = "1px solid #111";
-    div.style.paddingBottom = "5px";
-    div.innerHTML = `<span style="color:#ffcc00; font-weight:bold;">[SYSTEM]:</span> CONGRATULATIONS ${user} on your withdrawal of <span style="color:#00ff00;">KES ${amount}</span> 🤑🔥`;
-    
-    chatFeed.appendChild(div);
+    const wrapperNode = document.createElement('div');
+    wrapperNode.style.marginBottom = "10px";
+    wrapperNode.style.borderBottom = "1px solid rgba(255,255,255,0.02)";
+    wrapperNode.style.paddingBottom = "6px";
+    wrapperNode.style.fontSize = "13px";
+    wrapperNode.style.animation = "slideIn 0.25s ease-out";
+
+    if (isSystem) {
+        wrapperNode.innerHTML = `<span style="color:${systemColor}; font-weight:bold;">[${user}]:</span> ${message}`;
+    } else {
+        wrapperNode.innerHTML = `<span style="color: var(--primary); font-weight:bold;">${user}:</span> <span style="color: #cbd5e1;">${message}</span>`;
+    }
+
+    chatFeed.appendChild(wrapperNode);
     chatFeed.scrollTop = chatFeed.scrollHeight;
 
     // Keep the chat clean: remove old messages if list is too long
-    if (chatFeed.children.length > 20) chatFeed.removeChild(chatFeed.children[0]);
+    if (chatFeed.children.length > 25) {
+        chatFeed.removeChild(chatFeed.children[0]);
+    }
+}
+
+function addSystemNotification() {
+    const user = systemUsers[Math.floor(Math.random() * systemUsers.length)];
+    const amount = (Math.random() * 800 + 200).toFixed(2);
+    const complexMessage = `CONGRATULATIONS ${user} on your withdrawal of <span style="color:var(--success); font-weight:bold;">KES ${parseFloat(amount).toLocaleString()}</span> 🤑🔥`;
+    injectChatMessage("SYSTEM", complexMessage, true, "#ffcc00");
 }
 
 // Generate a system notification every 8 seconds for constant social proof
 setInterval(addSystemNotification, 8000);
 
-// Handling User-Sent Messages
+// Handling User-Sent Messages Transmission
 if (sendBtn) {
-    sendBtn.onclick = () => {
-        const text = chatInput.value.trim();
-        if (text !== "") {
+    sendBtn.onclick = executeMessageTransmission;
+}
+if (chatInput) {
+    chatInput.onkeydown = (e) => { if (e.key === 'Enter') executeMessageTransmission(); };
+}
+
+function executeMessageTransmission() {
+    if (!chatInput) return;
+    const text = chatInput.value.trim();
+    if (text !== "") {
+        if (socket && socket.connected) {
             // Emitting to server so other connected users see it
-            socket.emit('send-chat', { user: "Me", message: text });
-            chatInput.value = "";
+            socket.emit('send-chat', { user: 'Trader_' + Math.floor(Math.random() * 899 + 100), message: text });
+        } else {
+            injectChatMessage('You (Local)', text, false);
         }
-    };
+        chatInput.value = "";
+    }
 }
 
 // Listen for messages from the server (System and User)
-socket.on('receive-chat', (data) => {
-    if (chatFeed) {
-        const div = document.createElement('div');
-        div.style.marginBottom = "8px";
-        div.style.fontSize = "14px";
-        
-        if(data.user === "System") {
-            div.innerHTML = `<span style="color:#ffcc00; font-weight:bold;">[SYSTEM]:</span> ${data.message}`;
+if (socket) {
+    socket.on('receive-chat', (data) => {
+        if (data.user === "System" || data.user === "SYSTEM") {
+            injectChatMessage("SYSTEM", data.message, true, "#ffcc00");
         } else {
-            div.innerHTML = `<span style="color: #00ff00; font-weight: bold;">${data.user}:</span> ${data.message}`;
+            injectChatMessage(data.user, data.message, false);
         }
-        
-        chatFeed.appendChild(div);
-        chatFeed.scrollTop = chatFeed.scrollHeight;
-    }
-});
+    });
+}
 
 /**
  * 4. TRADING EXECUTION
@@ -145,31 +212,119 @@ socket.on('receive-chat', (data) => {
 const buyBtn = document.getElementById('buy-btn');
 const sellBtn = document.getElementById('sell-btn');
 
-if (buyBtn) {
-    buyBtn.onclick = () => {
-        const amount = document.getElementById('trade-amount').value;
-        socket.emit('place-trade', { type: 'BUY', amount: amount });
-        console.log("BUY order sent to server.");
-    };
+function handleTrade(orderType) {
+    const orderStakeInput = document.getElementById('trade-amount');
+    if (!orderStakeInput) return;
+    
+    const stakeValue = parseFloat(orderStakeInput.value) || 0;
+
+    if (stakeValue <= 0 || walletBalance < stakeValue) {
+        alert("Invalid stake metrics configuration processing requested order execution.");
+        return;
+    }
+
+    // Dynamic Execution Mapping Logic
+    if (orderType === 'BUY') {
+        walletBalance -= stakeValue;
+        playSound('buy');
+        injectChatMessage("SYSTEM ALERT", `Executed immediate KES BUY position sizing: ${stakeValue} KES`, true, "var(--success)");
+        
+        if (socket && socket.connected) {
+            socket.emit('place-trade', { type: 'BUY', amount: stakeValue });
+        }
+        console.log("BUY order sent to server context.");
+    } else {
+        walletBalance += (stakeValue * 0.95); // Example transaction close parameter calculations
+        playSound('sell');
+        injectChatMessage("SYSTEM ALERT", `Liquidated dynamic Asset stake volume: ${stakeValue} KES`, true, "var(--danger)");
+        
+        if (socket && socket.connected) {
+            socket.emit('place-trade', { type: 'SELL', amount: stakeValue });
+        }
+        console.log("SELL order sent to server context.");
+    }
+
+    // Visual Refresh Across Balance Elements
+    const localBal = document.getElementById('user-balance');
+    const walletBal = document.getElementById('walletBal');
+    const formattedBalance = walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    
+    if (localBal) localBal.innerText = formattedBalance;
+    if (walletBal) walletBal.innerText = `KES ${formattedBalance}`;
+    
+    // Legacy support additions tracking system logs inside sidebars
+    const logsContainer = document.getElementById('tradeLogs');
+    if (logsContainer) {
+        const item = document.createElement('div');
+        item.className = 'log-item';
+        item.innerHTML = `<span style="color:${orderType === 'BUY' ? 'var(--success)' : 'var(--danger)'}">${orderType} EXEC</span> <span>KES ${stakeValue.toLocaleString()}</span>`;
+        logsContainer.prepend(item);
+        if (logsContainer.children.length > 8) logsContainer.lastChild.remove();
+    }
 }
 
-if (sellBtn) {
-    sellBtn.onclick = () => {
-        const amount = document.getElementById('trade-amount').value;
-        socket.emit('place-trade', { type: 'SELL', amount: amount });
-        console.log("SELL order sent to server.");
-    };
+// Map bindings to conditional event checking protocols safely
+if (buyBtn && !buyBtn.onclick) {
+    buyBtn.onclick = () => { handleTrade('BUY'); };
+}
+if (sellBtn && !sellBtn.onclick) {
+    sellBtn.onclick = () => { handleTrade('SELL'); };
 }
 
 // Listen for trade outcome from server.js engine
-socket.on('trade-result', (data) => {
-    // Alert the user of their win or loss
-    const resultMsg = data.status === "WIN" ? `Win! KES ${data.payout}` : "Loss. Try again!";
-    console.log(`Nexafxtrade: ${resultMsg}`);
-});
+if (socket) {
+    socket.on('trade-result', (data) => {
+        const resultMsg = data.status === "WIN" ? `Win! KES ${data.payout}` : "Loss. Try again!";
+        console.log(`Nexafxtrade: ${resultMsg}`);
+        injectChatMessage("ENGINE", `Trade Result: ${resultMsg}`, true, data.status === "WIN" ? "var(--success)" : "var(--danger)");
+    });
+}
 
 /**
- * 5. UI INTERACTION HELPERS (Global Scope)
+ * 5. LOW-LATENCY FREQUENCY SYNTHETIC WEB AUDIO ENGINE
+ */
+let audioCtx;
+let soundEnabled = false;
+
+window.initAudio = () => {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    soundEnabled = !soundEnabled;
+    const btn = document.getElementById('soundBtn');
+    if (btn) {
+        btn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i> SOUND ON' : '<i class="fas fa-volume-mute"></i> SOUND OFF';
+        btn.className = soundEnabled ? 'sound-status on' : 'sound-status';
+    }
+};
+
+function playSound(type) {
+    if (!soundEnabled || !audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    if (type === 'tick') {
+        osc.frequency.setValueAtTime(750, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.08);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+    } else if (type === 'buy') {
+        osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1100, audioCtx.currentTime + 0.25);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+    } else if (type === 'sell') {
+        osc.frequency.setValueAtTime(950, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(250, audioCtx.currentTime + 0.25);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+    }
+}
+
+/**
+ * 6. UI INTERACTION HELPERS (Global Scope)
  */
 window.adjustAmount = (val) => {
     const input = document.getElementById('trade-amount');
