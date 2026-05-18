@@ -7,6 +7,10 @@
 // 1. Initialize Socket.io connection
 const socket = io();
 
+// Global runtime holders for chart boundary constraints
+let customMinY = null;
+let customMaxY = null;
+
 // 2. Setup the Live Moving Graph (Chart.js)
 const ctx = document.getElementById('tradeChart').getContext('2d');
 
@@ -35,8 +39,8 @@ const tradeChart = new Chart(ctx, {
         animation: { duration: 0 }, // Disable animations for instant "live" feel
         scales: {
             y: { 
-                min: -0.12, 
-                max: 0.12, 
+                min: 8400000, // Updated safe starting defaults for KES base rate scales
+                max: 8450000, 
                 grid: { color: '#222' },
                 ticks: { color: '#888' }
             },
@@ -61,6 +65,22 @@ socket.on('admin-force-market-trend', (data) => {
     }
 });
 
+// NEW REAL-TIME ADMIN HOOK: Remotely intercept chart min and max axis constraints
+socket.on('admin-update-graph-limits', (data) => {
+    if (data) {
+        if (typeof data.min === 'number') {
+            customMinY = data.min;
+            tradeChart.options.scales.y.min = customMinY;
+        }
+        if (typeof data.max === 'number') {
+            customMaxY = data.max;
+            tradeChart.options.scales.y.max = customMaxY;
+        }
+        tradeChart.update('none');
+        console.log(`Graph bounds modified remotely. Min: ${customMinY} | Max: ${customMaxY}`);
+    }
+});
+
 // Handle Market Rate Updates
 socket.on('market-update', (data) => {
     let finalRate = data.rate;
@@ -73,13 +93,13 @@ socket.on('market-update', (data) => {
 
     // Dynamic wave transformation based on administrative panel state execution
     if (activeAdminControlTrend === "HIGH") {
-        // Intercept and smoothly slide the wave upside
-        finalRate = Math.abs(finalRate) + (Math.random() * 0.02 + 0.005);
+        // Intercept and smoothly slide the wave upside (Scaled appropriately for higher KES numbers)
+        finalRate = Math.abs(finalRate) + Math.floor(Math.random() * 1200 + 300);
         tradeChart.data.datasets[0].borderColor = '#00ff00'; // Keep green for high/up trend
         tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
     } else if (activeAdminControlTrend === "LOW") {
-        // Intercept and smoothly slide the wave downside
-        finalRate = -Math.abs(finalRate) - (Math.random() * 0.02 + 0.005);
+        // Intercept and smoothly slide the wave downside (Scaled appropriately for higher KES numbers)
+        finalRate = -Math.abs(finalRate) - Math.floor(Math.random() * 1200 + 300);
         tradeChart.data.datasets[0].borderColor = '#ff0000'; // Turn wave red for forced downward movement
         tradeChart.data.datasets[0].backgroundColor = 'rgba(255, 0, 0, 0.1)';
     } else {
@@ -88,18 +108,28 @@ socket.on('market-update', (data) => {
         tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
     }
 
-    // Dynamically scale the y-axis bounds if the rate spikes beyond default limitations to prevent graph clipping
-    if (finalRate > tradeChart.options.scales.y.max) {
-        tradeChart.options.scales.y.max = finalRate + 0.05;
+    // Dynamic Scaling System: Only calculates automatically if the admin has NOT set fixed custom bounds
+    if (customMaxY === null) {
+        if (finalRate >= tradeChart.options.scales.y.max) {
+            tradeChart.options.scales.y.max = finalRate + Math.floor(finalRate * 0.005);
+        }
+    } else {
+        tradeChart.options.scales.y.max = customMaxY;
     }
-    if (finalRate < tradeChart.options.scales.y.min) {
-        tradeChart.options.scales.y.min = finalRate - 0.05;
+
+    if (customMinY === null) {
+        if (finalRate <= tradeChart.options.scales.y.min) {
+            tradeChart.options.scales.y.min = finalRate - Math.floor(finalRate * 0.005);
+        }
+    } else {
+        tradeChart.options.scales.y.min = customMinY;
     }
 
     // Update the numerical display above the graph
     const rateDisplay = document.getElementById('current-rate');
     if (rateDisplay) {
-        rateDisplay.innerText = finalRate.toFixed(4);
+        // Changed to locale string format to elegantly display full clean Kenyan currency integers
+        rateDisplay.innerText = Math.floor(finalRate).toLocaleString();
     }
 
     // Shift the graph to the left
