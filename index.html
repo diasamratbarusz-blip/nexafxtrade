@@ -3,578 +3,358 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexafxtrade | Premium KES Exchange</title>
+    <title>NEXAFX | Pro KES Exchange</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            /* Legacy variables matching image_3.png guidelines */
-            --bg-dark: #000000;
-            --panel-dark: #0a0a0a;
-            --accent-green: #00ff00; 
-            --accent-red: #ff0000;   
-            --gold-text: #ffcc00;
-            --border-color: #222222;
-            --chat-header-green: #008000; 
-
-            /* Premium structural fallback context specs */
-            --bg-deep: #06090f;
-            --bg-card: #11171f;
-            --primary: #00d4ff;
-            --success: #00e676;
-            --danger: #ff5252;
-            --text-dim: #707a8a;
-            --text-light: #ffffff;
+            --high-green: #00ff88;
+            --low-red: #ff3366;
+            --neon-blue: #00d4ff;
+            --bg-black: #06080a;
+            --panel: #11151c;
+            --gold: #ffcc00;
         }
 
         body, html {
-            margin: 0; padding: 0;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            font-family: 'Inter', -apple-system, system-ui, sans-serif;
-            overflow: hidden; height: 100vh;
-            min-height: -webkit-fill-available;
+            margin: 0; padding: 0; background: var(--bg-black); color: white;
+            font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden;
+            user-select: none;
         }
 
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            height: -webkit-fill-available;
+        /* --- Header Section --- */
+        header {
+            height: 65px; background: var(--panel); display: flex; align-items: center;
+            justify-content: space-between; padding: 0 20px; border-bottom: 2px solid #222;
+            z-index: 100;
         }
 
-        /* --- Navigation Header Configurations --- */
-        nav, .main-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 15px; background: rgba(17, 23, 31, 0.95);
-            border-bottom: 1px solid var(--border-color); z-index: 100;
-            backdrop-filter: blur(10px);
-            height: 60px;
-            box-sizing: border-box;
-            flex-shrink: 0;
+        .brand { font-size: 1.5rem; font-weight: 900; letter-spacing: -1px; }
+        .brand span { color: var(--high-green); }
+
+        .balance-container {
+            background: #000; border: 1px solid var(--high-green);
+            padding: 8px 20px; border-radius: 10px; text-align: right;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+        }
+        .balance-label { font-size: 0.65rem; color: #888; display: block; font-weight: bold; }
+        .balance-val { color: var(--gold); font-family: monospace; font-size: 1.2rem; font-weight: 900; }
+
+        /* --- Momentum Status Banner --- */
+        #market-status-bar {
+            height: 30px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 2px; transition: 0.5s; background: #1a1a1a;
+        }
+        .status-high { background: var(--high-green) !important; color: #000; box-shadow: 0 0 20px var(--high-green); }
+        .status-low { background: var(--low-red) !important; color: #fff; box-shadow: 0 0 20px var(--low-red); }
+
+        /* --- Layout --- */
+        main {
+            display: grid; grid-template-columns: 280px 1fr; height: calc(100vh - 95px);
+            background: #111; gap: 1px;
         }
 
-        .brand { font-size: clamp(1.1rem, 4vw, 1.4rem); font-weight: 900; color: var(--accent-green); letter-spacing: -1px; text-transform: uppercase; }
-        
-        .nav-controls { display: flex; align-items: center; gap: 8px; }
-        
-        /* Wallet Boxes & Balance Frameworks */
-        .balance-box { 
-            background: #222222; padding: 4px 10px; border-radius: 4px; 
-            display: flex; flex-direction: column; align-items: flex-start;
-            border: 1px solid #444444;
-        }
-        .balance-box .label, .wallet-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; }
-        .balance-box .value, #user-balance, #walletBal { color: var(--gold-text); font-weight: bold; font-size: clamp(0.9rem, 3vw, 1.1rem); font-family: monospace; }
-
-        .wallet-info { text-align: right; border-left: 1px solid #333; padding-left: 15px; }
-        .wallet-amount { font-weight: 700; color: var(--success); font-family: monospace; }
-
-        /* Header UI Button Modules */
-        .nav-btn, .btn-deposit, .btn-withdraw {
-            border: none; border-radius: 4px; padding: 6px 12px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.85rem;
-        }
-        .btn-deposit { background: var(--accent-green); color: #000; }
-        .btn-withdraw { background: #333333; color: #fff; }
-        .nav-btn:hover, .btn-deposit:hover, .btn-withdraw:hover { filter: brightness(1.1); }
-
-        /* --- Main Functional Grid Workplace --- */
-        main, .content-grid {
-            display: grid; 
-            grid-template-columns: 320px 1fr;
-            gap: 15px; padding: 15px; 
-            flex: 1;
-            overflow: hidden;
-            z-index: 10; position: relative;
-            box-sizing: border-box;
-            height: calc(100vh - 60px);
+        .side-activity { background: var(--panel); display: flex; flex-direction: column; overflow: hidden; }
+        .trading-zone { 
+            background: var(--bg-black); display: flex; flex-direction: column; 
+            position: relative; transition: 0.5s; 
         }
 
-        /* --- Live Chat Sidebar & Social Proof Module --- */
-        .chat-section { 
-            background: var(--panel-dark); border-radius: 16px; 
-            display: flex; flex-direction: column; 
-            border: 1px solid rgba(255,255,255,0.05);
-            overflow: hidden;
-        }
-        .chat-header { 
-            background: var(--chat-header-green); padding: 12px; 
-            text-align: center; font-size: 1rem; font-weight: bold; 
-            display: flex; align-items: center; justify-content: center; gap: 8px; 
-            box-shadow: inset 0 -2px 10px rgba(0,0,0,0.2);
-            letter-spacing: 1px; color: #ffffff;
-            flex-shrink: 0;
-        }
-        .chat-body, #tradeLogs { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.85rem; scrollbar-width: thin; scrollbar-color: #333333 transparent; }
-        .chat-footer, .chat-input-wrapper { padding: 10px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 8px; flex-shrink: 0; }
-        .chat-input { flex: 1; background: #06090f; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 6px; outline: none; font-size: 0.85rem; }
-        .chat-input:focus { border-color: var(--primary); }
-        .chat-send-btn { background: #444444; border: 1px solid #444444; color: #fff; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .chat-send-btn:hover { background: var(--primary); color: #000; border-color: var(--primary); }
-
-        /* --- Trading Graph & Visualization Viewport --- */
-        .trade-section, .sidebar {
-            background: var(--bg-card); border-radius: 16px; padding: 15px;
-            display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            overflow: hidden;
+        /* Dynamic Background Glow for High/Low Market */
+        .market-glow {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; opacity: 0.05; transition: 0.8s; z-index: 0;
         }
 
-        .price-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-shrink: 0; }
-        .kes-symbol { color: var(--primary); font-size: clamp(1rem, 3vw, 1.2rem); margin-right: 5px; }
-        .price-value { font-size: clamp(1.8rem, 6vw, 2.8rem); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -1px; line-height: 1; }
+        /* --- Price Display --- */
+        .price-hero { padding: 20px; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; }
+        .ticker-val { font-size: 3.2rem; font-weight: 900; font-family: 'Courier New', monospace; letter-spacing: -2px; }
 
-        .chart-container { flex: 1; min-height: 180px; position: relative; margin-bottom: 15px; background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%); width: 100%; }
-        .rate-overlay { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); border: 1.5px solid #ffffff; padding: 6px 18px; border-radius: 6px; z-index: 10; font-family: monospace; font-size: clamp(1rem, 3vw, 1.3rem); letter-spacing: 1px; color: #ffffff; white-space: nowrap; }
+        /* --- Chart Wrapper --- */
+        #chart-container { flex: 1; padding: 0 20px; position: relative; z-index: 1; }
 
-        /* --- Trading Interface Interactive Controls --- */
-        .trade-controls, .trade-zone { 
-            background: rgba(0,0,0,0.25); padding: 15px; 
-            border-radius: 12px; border: 1px solid rgba(255,255,255,0.04);
-            flex-shrink: 0;
+        /* --- Trade Desktop --- */
+        .bottom-controls {
+            background: var(--panel); padding: 25px; border-top: 1px solid #333;
+            display: flex; flex-direction: column; gap: 20px; z-index: 1;
+        }
+
+        .stake-box {
+            background: #000; border: 1px solid #333; border-radius: 15px;
+            padding: 15px; display: flex; align-items: center; justify-content: space-between;
+        }
+        .stake-box input {
+            background: transparent; border: none; color: white; font-size: 2rem;
+            font-weight: 900; width: 100%; text-align: center; outline: none;
+        }
+
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .btn {
+            height: 75px; border: none; border-radius: 15px; font-size: 1.5rem; font-weight: 900;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
+            gap: 10px; position: relative; overflow: hidden; text-transform: uppercase;
         }
         
-        .amount-input-row { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .adj-btn { width: 38px; height: 38px; border: 1px solid #333; background: #06090f; color: #fff; border-radius: 6px; cursor: pointer; font-size: 1.2rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
-        .adj-btn:hover { border-color: var(--primary); color: var(--primary); }
-        
-        .amount-input { background:#06090f; border:1px solid #333; color:#fff; text-align:center; padding:8px; width:100%; max-width:140px; font-size: 1.2rem; border-radius: 6px; font-weight: bold; font-family: monospace; }
-        .amount-input:focus { border-color: var(--primary); outline: none; }
+        .btn-buy { background: var(--high-green); color: #000; box-shadow: 0 6px 0 #008844; }
+        .btn-sell { background: var(--low-red); color: #fff; box-shadow: 0 6px 0 #991133; }
+        .btn:active { transform: translateY(3px); box-shadow: none; }
+        .btn:disabled { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; }
 
-        /* Preset Cash Matrix Hotkeys */
-        .quick-sums { display: grid; grid-template-columns: repeat(3, 1fr) 50px; gap: 8px; margin-bottom: 15px; }
-        .quick-sum-btn, .quick-sums button { background: rgba(255, 255, 255, 0.02); border: 1px solid #333; color: #fff; padding: 10px 5px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .quick-sum-btn:hover, .quick-sums button:hover { background: rgba(0, 212, 255, 0.1); border-color: var(--primary); }
-        .quick-sums .undo-btn { background: #440000; border-color: var(--accent-red); color: var(--accent-red); }
-
-        /* Instant Order Desk Execution System */
-        .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 5px; }
-        .btn-trade, .buy-btn, .sell-btn {
-            padding: 14px; border: none; border-radius: 10px;
-            font-size: clamp(1rem, 3.5vw, 1.2rem); font-weight: 800; cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: white; display: flex; align-items: center; justify-content: center; gap: 8px;
-            text-transform: uppercase;
+        /* 5-Second Cooldown Bar */
+        .cooldown-overlay {
+            position: absolute; left: 0; top: 0; height: 100%; width: 0%;
+            background: rgba(0,0,0,0.4); z-index: 1; transition: none;
         }
-        .btn-buy, .buy-btn { background: var(--success); box-shadow: 0 4px 12px rgba(0, 230, 118, 0.2); color: #000; }
-        .btn-sell, .sell-btn { background: var(--danger); box-shadow: 0 4px 12px rgba(255, 82, 82, 0.2); }
-        .btn-trade:hover, .buy-btn:hover, .sell-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        .btn-trade:active, .buy-btn:active, .sell-btn:active { transform: translateY(0); }
 
-        /* Premium Sidebar Logs Components */
-        .history-title { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .log-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; margin-bottom: 8px; background: rgba(255, 255, 255, 0.02); border-radius: 8px; font-size: 0.85rem; animation: slideIn 0.3s ease-out; }
-
-        /* --- Audio Status Controls --- */
-        .sound-status { cursor: pointer; font-size: 0.75rem; color: var(--text-dim); border: 1px solid #333; padding: 6px 12px; border-radius: 20px; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
-        .sound-status.on { color: var(--primary); border-color: var(--primary); background: rgba(0, 212, 255, 0.05); }
-
-        /* --- Legal Regulatory Footer --- */
-        .legal-footer { font-size: 0.65rem; color: #555555; text-align: center; padding: 12px; background: #030508; border-top: 1px solid rgba(255,255,255,0.02); flex-shrink: 0; }
-        .legal-footer p { margin: 4px 0; }
-
-        /* --- Background Animation --- */
-        .wave-bg { position: fixed; bottom: 0; left: 0; width: 100%; height: 12vh; z-index: 1; pointer-events: none; opacity: 0.3; }
-        .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
-        .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
-        .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; }
-        .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; }
-        .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; }
-        
-        /* Dynamic Global Keyframes Ecosystem */
-        @keyframes move-forever { 0% { transform: translate3d(-90px,0,0); } 100% { transform: translate3d(85px,0,0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-
-        /* Responsive Engine Media Processing */
-        @media (max-width: 991px) {
-            main, .content-grid { grid-template-columns: 280px 1fr; gap: 10px; padding: 10px; }
-        }
-        @media (max-width: 768px) {
-            body, html { overflow-y: auto; }
-            main, .content-grid { grid-template-columns: 1fr; height: auto; overflow-y: visible; }
-            .chat-section { height: 350px; order: 2; }
-            .trade-section, .sidebar { order: 1; height: auto; min-height: 480px; }
-            .chart-container { min-height: 220px; }
-        }
-        @media (max-width: 480px) {
-            nav, .main-header { padding: 5px 10px; }
-            .wallet-info { display: none; }
-            .trade-section, .sidebar { padding: 10px; }
-            .quick-sums { grid-template-columns: repeat(4, 1fr); }
-            .quick-sums .undo-btn { grid-column: span 1; }
+        /* --- Mobile Optimization --- */
+        @media (max-width: 850px) {
+            main { grid-template-columns: 1fr; }
+            .side-activity { display: none; }
+            .ticker-val { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- Main Top Bar Nav -->
-        <nav class="main-header">
-            <div class="brand">NEXAFX<span style="color:white">TRADE</span></div>
-            <div class="nav-controls">
-                <!-- Starts styled inside "SOUND ON" premium format out of the box -->
-                <div class="sound-status on" id="soundBtn" onclick="initAudio()">
-                    <i class="fas fa-volume-up"></i> SOUND ON
-                </div>
-                <div class="balance-box">
-                    <div class="wallet-label">Balance (KES)</div>
-                    <div class="wallet-amount" id="user-balance">1,450,000.00</div>
-                </div>
-                <button class="nav-btn btn-deposit">Deposit</button>
-                <button class="nav-btn btn-withdraw">Withdraw</button>
-            </div>
-        </nav>
-
-        <!-- Platform Workspace Layout Grid -->
-        <main class="content-grid">
-            <!-- Social Feed Engine Module -->
-            <section class="chat-section">
-                <div class="chat-header">
-                    <i class="fas fa-circle-notch fa-spin" style="color: var(--success); font-size: 8px;"></i> 
-                    LIVE SYSTEM ACTIVITY
-                </div>
-                <div id="chat-feed" class="chat-body"></div>
-                <div class="chat-footer chat-input-wrapper">
-                    <input type="text" id="chat-input-field" placeholder="Write message..." class="chat-input">
-                    <button id="send-chat-btn" class="chat-send-btn">SEND</button>
-                </div>
-            </section>
-
-            <!-- Active Chart & Order Desk -->
-            <section class="trade-section">
-                <div class="price-header">
-                    <div>
-                        <div style="color:var(--text-dim); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Live BTC / KES Exchange Rate</div>
-                        <div style="display: flex; align-items: center; margin-top: 2px;">
-                            <span class="kes-symbol">KES</span>
-                            <span class="price-value" id="current-rate">8,421,500</span>
-                        </div>
-                    </div>
-                    <div id="priceTrend" style="font-weight: 600; color: var(--success); font-size: 0.95rem; margin-top: 5px; background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 6px;">
-                        <i class="fas fa-caret-up"></i> +KES 0.00
-                    </div>
-                </div>
-
-                <div class="chart-container">
-                    <canvas id="tradeChart"></canvas>
-                </div>
-
-                <div class="trade-controls trade-zone">
-                    <!-- Adjustment Stake Desk -->
-                    <div class="amount-input-row">
-                        <button class="adj-btn" onclick="adjustAmount(-10)">-</button>
-                        <input type="number" id="trade-amount" value="100" class="amount-input">
-                        <button class="adj-btn" onclick="adjustAmount(10)">+</button>
-                        <button class="adj-btn" onclick="adjustAmount('double')" style="width: auto; padding: 0 12px; font-weight: bold;">x2</button>
-                    </div>
-                    
-                    <!-- Quick Preset Hotkeys -->
-                    <div class="quick-sums">
-                        <button class="quick-sum-btn" onclick="setSum(100)">100</button>
-                        <button class="quick-sum-btn" onclick="setSum(200)">200</button>
-                        <button class="quick-sum-btn" onclick="setSum(500)">500</button>
-                        <button class="undo-btn" onclick="setSum(100)">↺</button>
-                    </div>
-
-                    <!-- Direct Instant Orders Execution Buttons -->
-                    <div class="action-buttons">
-                        <button id="buy-btn" class="btn-trade buy-btn btn-buy" onclick="handleTrade('BUY')">
-                            <i class="fas fa-arrow-trend-up"></i> Buy
-                        </button>
-                        <button id="sell-btn" class="btn-trade sell-btn btn-sell" onclick="handleTrade('SELL')">
-                            <i class="fas fa-arrow-trend-down"></i> Sell
-                        </button>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer class="legal-footer">
-            <p>Nexafxtrade is a fully licensed entity under Prosport Africa Ltd. Physical Address: Binaa Mall, 2nd Floor, Nairobi, Kenya.</p>
-            <p>&copy; 2026 Nexafxtrade | support@unasemeje.com | Fully Regulated Trading Platform</p>
-        </footer>
+<header>
+    <div class="brand">NEXAFX<span>TRADE</span></div>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="audio-btn" onclick="initBeats()" style="background: var(--neon-blue); border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+            <i class="fas fa-play"></i> ACTIVATE SOUND
+        </button>
+        <div class="balance-container">
+            <span class="balance-label">WALLET BALANCE</span>
+            <span class="balance-val" id="balance">1,450,000.00</span>
+        </div>
     </div>
+</header>
 
-    <!-- Decorative Web Graphics Layers -->
-    <div class="wave-bg">
-        <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none">
-            <defs>
-                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-            </defs>
-            <g class="parallax">
-                <use href="#gentle-wave" x="48" y="0" fill="rgba(0, 212, 255, 0.03)" />
-                <use href="#gentle-wave" x="48" y="3" fill="rgba(0, 212, 255, 0.06)" />
-                <use href="#gentle-wave" x="48" y="5" fill="rgba(0, 212, 255, 0.01)" />
-                <use href="#gentle-wave" x="48" y="7" fill="rgba(0, 212, 255, 0.08)" />
-            </g>
-        </svg>
-    </div>
+<div id="market-status-bar">Monitoring Market Neutrality...</div>
 
-    <script>
-        // --- Web Sockets Protocol Context Initialization ---
-        let socket;
-        try {
-            socket = io();
-        } catch(e) {
-            console.warn("Socket.io engine failed initialization. Defaulting to local standalone emulation system rules.");
-        }
+<main>
+    <section class="side-activity">
+        <div style="padding: 15px; background: #1c222b; font-weight: bold; font-size: 0.8rem; color: var(--high-green);">
+            <i class="fas fa-broadcast-tower"></i> LIVE WITHDRAWALS
+        </div>
+        <div id="payout-feed" style="padding: 10px; font-size: 0.85rem; line-height: 1.8;"></div>
+    </section>
 
-        // --- Low-Latency Frequency Web Audio Synthetic Engine ---
-        let audioCtx;
-        let soundEnabled = true; // CHANGED: Set to true natively so sounds trigger on load!
-
-        // Attempts early initialization out-of-the-box
-        function tryInitializeAudioContext() {
-            if (!audioCtx) {
-                try {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                } catch(e) {
-                    console.error("Audio API error", e);
-                }
-            }
-        }
-
-        function initAudio() {
-            tryInitializeAudioContext();
-            soundEnabled = !soundEnabled;
-            const btn = document.getElementById('soundBtn');
-            btn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i> SOUND ON' : '<i class="fas fa-volume-mute"></i> SOUND OFF';
-            btn.className = soundEnabled ? 'sound-status on' : 'sound-status';
-            
-            // Trigger feedback sound if unmuting manually
-            if (soundEnabled) {
-                playSound('buy');
-            }
-        }
-
-        function playSound(type) {
-            if (!soundEnabled) return;
-            tryInitializeAudioContext();
-            if (!audioCtx) return;
-
-            // Silently wake up the engine context if the browser suspended it
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            if (type === 'tick') {
-                osc.frequency.setValueAtTime(750, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.08);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.08);
-            } else if (type === 'buy') {
-                osc.frequency.setValueAtTime(450, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1100, audioCtx.currentTime + 0.25);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.25);
-            } else if (type === 'sell') {
-                osc.frequency.setValueAtTime(950, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(250, audioCtx.currentTime + 0.25);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.25);
-            }
-        }
-
-        // --- ALWAYS ON INTERACTION LISTENER ENGINE ---
-        // Catches user interactions on viewport instantly to clear policy restrictions silently
-        function forceAudioWakePipeline() {
-            tryInitializeAudioContext();
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume().then(() => {
-                    console.log("Audio pipeline woke up successfully via interaction event.");
-                });
-            }
-            // Safely remove listeners after first fire so execution loops clear cleanly
-            window.removeEventListener('click', forceAudioWakePipeline);
-            window.removeEventListener('touchstart', forceAudioWakePipeline);
-            window.removeEventListener('keydown', forceAudioWakePipeline);
-        }
-        window.addEventListener('click', forceAudioWakePipeline);
-        window.addEventListener('touchstart', forceAudioWakePipeline);
-        window.addEventListener('keydown', forceAudioWakePipeline);
-
-
-        // --- Chart Matrix Canvas Settings ---
-        const ctx = document.getElementById('tradeChart').getContext('2d');
-        const chartGradient = ctx.createLinearGradient(0, 0, 0, 350);
-        chartGradient.addColorStop(0, 'rgba(0, 212, 255, 0.22)');
-        chartGradient.addColorStop(1, 'rgba(0, 212, 255, 0)');
-
-        let dataPoints = Array(50).fill(8421500);
-        const tradeChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Array(50).fill(''),
-                datasets: [{
-                    data: dataPoints,
-                    borderColor: '#00d4ff',
-                    borderWidth: 2.5,
-                    fill: true,
-                    backgroundColor: chartGradient,
-                    tension: 0.42,
-                    pointRadius: 0
-                }]
-            },
-            options: {
-                responsive: true, 
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { display: false },
-                    y: { 
-                        grid: { color: 'rgba(255,255,255,0.03)', drawTicks: false }, 
-                        ticks: { color: '#4a5568', font: { size: 10, family: 'monospace' } } 
-                    }
-                },
-                animation: { duration: 350, easing: 'linear' }
-            }
-        });
-
-        // --- Core Application Financial States Framework ---
-        let currentPrice = 8421500;
-        let walletBalance = 1450000;
-
-        function updateMarketView(rateValue) {
-            const previousPrice = currentPrice;
-            currentPrice = rateValue;
-            const absoluteDelta = currentPrice - previousPrice;
-
-            // Interface Content Mapping
-            document.getElementById('current-rate').innerText = Math.floor(currentPrice).toLocaleString();
-            const trendContainer = document.getElementById('priceTrend');
-            
-            if (absoluteDelta >= 0) {
-                trendContainer.innerHTML = `<i class="fas fa-caret-up"></i> +KES ${absoluteDelta.toFixed(2)}`;
-                trendContainer.style.color = "var(--success)";
-                tradeChart.data.datasets[0].borderColor = '#00e676';
-            } else {
-                trendContainer.innerHTML = `<i class="fas fa-caret-down"></i> -KES ${Math.abs(absoluteDelta).toFixed(2)}`;
-                trendContainer.style.color = "var(--danger)";
-                tradeChart.data.datasets[0].borderColor = '#ff5252';
-            }
-
-            dataPoints.push(currentPrice);
-            dataPoints.shift();
-            tradeChart.update('none');
-
-            if (Math.abs(absoluteDelta) > 6000) {
-                playSound('tick');
-            }
-        }
-
-        // Native WebSocket Events Data Pipeline Fallbacks
-        if (socket) {
-            socket.on('market-update', (data) => {
-                if(data && data.rate) updateMarketView(data.rate);
-            });
-            
-            socket.on('receive-chat', (data) => {
-                injectChatMessage(data.user, data.message, false);
-            });
-        }
-
-        // Standalone Local Matrix Generator Emulation 
-        setInterval(() => {
-            if (!socket || !socket.connected) {
-                const simulatedVolatility = (Math.random() - 0.48) * 14000;
-                updateMarketView(currentPrice + simulatedVolatility);
-            }
-        }, 800);
-
-        // --- Trade Balance Action Desks ---
-        function handleTrade(orderType) {
-            const orderStakeInput = document.getElementById('trade-amount');
-            const stakeValue = parseFloat(orderStakeInput.value) || 0;
-
-            if (stakeValue <= 0 || walletBalance < stakeValue) {
-                alert("Invalid stake metrics configuration processing requested order execution.");
-                return;
-            }
-
-            if (orderType === 'BUY') {
-                walletBalance -= stakeValue;
-                playSound('buy');
-                injectChatMessage("SYSTEM ALERT", `Executed immediate KES BUY position sizing: ${stakeValue} KES`, true, "var(--success)");
-            } else {
-                walletBalance += (stakeValue * 0.95); 
-                playSound('sell');
-                injectChatMessage("SYSTEM ALERT", `Liquidated dynamic Asset stake volume: ${stakeValue} KES`, true, "var(--danger)");
-            }
-
-            document.getElementById('user-balance').innerText = walletBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        }
-
-        // --- Chat Feeds Engine Architecture ---
-        const chatFeed = document.getElementById('chat-feed');
-        const nativeSimulatedUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@LucidJuice', '@KenyanTrader', '@CryptoNaija'];
-
-        function injectChatMessage(user, message, isSystem = false, systemColor = '#ffcc00') {
-            const wrapperNode = document.createElement('div');
-            wrapperNode.style.marginBottom = "10px";
-            wrapperNode.style.borderBottom = "1px solid rgba(255,255,255,0.02)";
-            wrapperNode.style.paddingBottom = "6px";
-            wrapperNode.style.animation = "slideIn 0.25s ease-out";
-
-            if (isSystem) {
-                wrapperNode.innerHTML = `<span style="color:${systemColor}; font-weight:bold;">[${user}]</span> ${message}`;
-            } else {
-                wrapperNode.innerHTML = `<span style="color: var(--primary); font-weight:bold;">${user}:</span> <span style="color: #cbd5e1;">${message}</span>`;
-            }
-
-            chatFeed.appendChild(wrapperNode);
-            chatFeed.scrollTop = chatFeed.scrollHeight;
-
-            if (chatFeed.children.length > 25) {
-                chatFeed.removeChild(chatFeed.children[0]);
-            }
-        }
-
-        // Automated System Conversion Pushes Setup
-        setInterval(() => {
-            const dynamicUser = nativeSimulatedUsers[Math.floor(Math.random() * nativeSimulatedUsers.length)];
-            const dynamicPayout = (Math.random() * 450 + 120).toFixed(2);
-            injectChatMessage("SYSTEM", `CONGRATULATIONS ${dynamicUser} on your immediate withdrawal of <span style="color:var(--success); font-weight:bold;">KES ${parseFloat(dynamicPayout).toLocaleString()}</span> 🎉🔥`, true);
-        }, 7500);
-
-        // Messaging Submission Event Bindings
-        document.getElementById('send-chat-btn').onclick = executeMessageTransmission;
-        document.getElementById('chat-input-field').onkeydown = (e) => { if(e.key === 'Enter') executeMessageTransmission(); };
-
-        function executeMessageTransmission() {
-            const inputElement = document.getElementById('chat-input-field');
-            const dataString = inputElement.value.trim();
-            if (dataString !== '') {
-                if (socket && socket.connected) {
-                    socket.emit('send-chat', { user: 'Trader_' + Math.floor(Math.random() * 899 + 100), message: dataString });
-                } else {
-                    injectChatMessage('You (Local)', dataString, false);
-                }
-                inputElement.value = '';
-            }
-        }
-
-        // --- Numeric Modifier Mechanics ---
-        function adjustAmount(factorValue) {
-            const interfaceInput = document.getElementById('trade-amount');
-            let numericalValue = parseInt(interfaceInput.value) || 0;
-            if (factorValue === 'double') {
-                interfaceInput.value = numericalValue * 2;
-            } else {
-                interfaceInput.value = Math.max(10, numericalValue + factorValue);
-            }
-        }
+    <section class="trading-zone" id="zone-bg">
+        <div class="market-glow" id="market-glow"></div>
         
-        function setSum(explicitSumValue) { 
-            document.getElementById('trade-amount').value = explicitSumValue; 
+        <div class="price-hero">
+            <div>
+                <span style="color: #666; font-size: 0.8rem; font-weight: bold;">BTC/KES REALTIME</span>
+                <div class="ticker-val" id="ticker-price">8,421,500</div>
+            </div>
+            <div id="market-trend" style="background: rgba(0,255,136,0.1); padding: 10px 20px; border-radius: 10px; font-weight: 900; color: var(--high-green);">
+                +0.00%
+            </div>
+        </div>
+
+        <div id="chart-container">
+            <canvas id="liveGraph"></canvas>
+        </div>
+
+        <div class="bottom-controls">
+            <div class="stake-box">
+                <span style="color: #444; font-weight: bold;">KES</span>
+                <input type="number" id="stake-amount" value="500">
+                <span style="color: var(--high-green); font-weight: bold;">STAKE</span>
+            </div>
+            <div class="action-btns">
+                <button class="btn btn-buy" id="buy-btn" onclick="executeBuy()">
+                    <i class="fas fa-bolt"></i> BUY
+                </button>
+                <button class="btn btn-sell" id="sell-btn" disabled onclick="executeSell()">
+                    <div class="cooldown-overlay" id="sell-timer-bar"></div>
+                    <span id="sell-label"><i class="fas fa-hand-holding-usd"></i> SELL</span>
+                </button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    // --- APP CORE ---
+    let balance = 1450000;
+    let price = 8421500;
+    let isLocked = false;
+    let audioCtx = null;
+    let isMarketHigh = false;
+
+    // --- BEAST AUDIO ENGINE ---
+    function initBeats() {
+        if (audioCtx) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        document.getElementById('audio-btn').innerHTML = '<i class="fas fa-volume-up"></i> BEATS ACTIVE';
+        document.getElementById('audio-btn').style.background = "var(--high-green)";
+        startAfroLoop();
+    }
+
+    function playSynth(freq, type, dur, vol) {
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+        osc.start(); osc.stop(audioCtx.currentTime + dur);
+    }
+
+    function startAfroLoop() {
+        // Dynamic Bassline based on Market state
+        setInterval(() => {
+            if (isMarketHigh) {
+                // Fast aggressive kick for HIGH market
+                playSynth(65, 'sine', 0.3, 0.4); 
+                setTimeout(() => playSynth(65, 'sine', 0.3, 0.4), 250); 
+            } else {
+                // Deep slow pulse for LOW market
+                playSynth(45, 'sine', 0.8, 0.3);
+            }
+        }, 1000);
+    }
+
+    // --- GRAPH ENGINE ---
+    const ctx = document.getElementById('liveGraph').getContext('2d');
+    let dataPoints = Array(50).fill(price);
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dataPoints.map(() => ''),
+            datasets: [{
+                data: dataPoints,
+                borderColor: '#00ff88',
+                borderWidth: 4,
+                pointRadius: 0,
+                fill: true,
+                backgroundColor: 'rgba(0, 255, 136, 0.05)',
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            animation: { duration: 0 },
+            plugins: { legend: { display: false } },
+            scales: { x: { display: false }, y: { position: 'right', grid: { color: '#222' }, ticks: { color: '#555' } } }
         }
-    </script>
+    });
+
+    // Market Generator (High Speed Jitter)
+    setInterval(() => {
+        const volatility = isMarketHigh ? 25000 : 8000;
+        const change = (Math.random() - 0.48) * (volatility / 15);
+        price += change;
+
+        // Determine Market State
+        isMarketHigh = change > 0;
+        const status = document.getElementById('market-status-bar');
+        const glow = document.getElementById('market-glow');
+        
+        if (isMarketHigh) {
+            status.innerText = "🔥 HIGH MARKET VOLATILITY - BULLISH MOMENTUM 🔥";
+            status.className = "status-high";
+            glow.style.background = "var(--high-green)";
+            glow.style.opacity = "0.15";
+            chart.data.datasets[0].borderColor = "var(--high-green)";
+            playSynth(400, 'triangle', 0.1, 0.02); // Ticker sound
+        } else {
+            status.innerText = "❄️ LOW MARKET STRENGTH - BEARISH MOMENTUM ❄️";
+            status.className = "status-low";
+            glow.style.background = "var(--low-red)";
+            glow.style.opacity = "0.15";
+            chart.data.datasets[0].borderColor = "var(--low-red)";
+        }
+
+        document.getElementById('ticker-price').innerText = Math.floor(price).toLocaleString();
+        document.getElementById('market-trend').innerText = (change > 0 ? '+' : '') + (change/1000).toFixed(2) + '%';
+        document.getElementById('market-trend').style.color = change > 0 ? 'var(--high-green)' : 'var(--low-red)';
+
+        dataPoints.push(price);
+        dataPoints.shift();
+        chart.update('none');
+    }, 150);
+
+    // --- TRADE LOGIC ---
+    function executeBuy() {
+        const amt = parseFloat(document.getElementById('stake-amount').value);
+        if (amt > balance) return alert("Insufficient Balance");
+
+        balance -= amt;
+        updateBalance();
+        playSynth(100, 'sine', 1, 0.6); // Impact sound
+
+        // LOCK SELL BUTTON FOR 5s
+        isLocked = true;
+        const buyBtn = document.getElementById('buy-btn');
+        const sellBtn = document.getElementById('sell-btn');
+        const bar = document.getElementById('sell-timer-bar');
+        const label = document.getElementById('sell-label');
+
+        buyBtn.disabled = true;
+        sellBtn.disabled = true;
+        bar.style.width = "100%";
+        bar.style.transition = "width 5s linear";
+        
+        let count = 5;
+        const countdown = setInterval(() => {
+            count--;
+            label.innerHTML = `<i class="fas fa-lock"></i> WAIT ${count}s`;
+            if (count <= 0) {
+                clearInterval(countdown);
+                isLocked = false;
+                buyBtn.disabled = false;
+                sellBtn.disabled = false;
+                label.innerHTML = `<i class="fas fa-hand-holding-usd"></i> SELL`;
+                bar.style.transition = "none";
+                bar.style.width = "0%";
+                playSynth(800, 'sine', 0.1, 0.2); // Unlock sound
+            }
+        }, 1000);
+
+        setTimeout(() => { bar.style.width = "0%"; }, 50);
+    }
+
+    function executeSell() {
+        if (isLocked) return;
+        const amt = parseFloat(document.getElementById('stake-amount').value);
+        const profit = isMarketHigh ? amt * 1.95 : amt * 0.4; // High market pays more
+        balance += profit;
+        updateBalance();
+        
+        // Success Sound
+        playSynth(1000, 'sine', 0.2, 0.2);
+        setTimeout(() => playSynth(1500, 'sine', 0.3, 0.2), 100);
+        
+        addPayoutLog(`User Cashout: KES ${profit.toFixed(2)}`);
+    }
+
+    function updateBalance() {
+        document.getElementById('balance').innerText = balance.toLocaleString(undefined, {minimumFractionDigits: 2});
+    }
+
+    function addPayoutLog(msg) {
+        const feed = document.getElementById('payout-feed');
+        const div = document.createElement('div');
+        div.style.color = "var(--neon-blue)";
+        div.innerHTML = `• ${msg}`;
+        feed.prepend(div);
+        if (feed.children.length > 15) feed.lastChild.remove();
+    }
+
+    // Fake Social Proof
+    const names = ["Amani", "Kenyatta_254", "User_77", "Trader_Leo", "Boss_Lady"];
+    setInterval(() => {
+        const n = names[Math.floor(Math.random() * names.length)];
+        const amt = (Math.random() * 10000 + 100).toLocaleString();
+        addPayoutLog(`<span style="color:#666">${n}</span> withdrew KES ${amt}`);
+    }, 8000);
+
+</script>
 </body>
-                        </html>
+    </html>
