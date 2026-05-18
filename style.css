@@ -1,7 +1,7 @@
 /**
  * Nexafxtrade Premium Stylesheet
  * Optimized for the "image_3.png" aesthetic & high-performance wavy charts
- * Complete integration version - Do not remove anything
+ * Complete integration version - Fully Flexible For All Mobile & Desktop Viewports
  */
 
 :root {
@@ -522,6 +522,152 @@ nav, .main-header {
     100% { transform: translate3d(85px,0,0); }
 }
 
+/* ==========================================================================
+   NEW ADDITIONS: PERSISTENT RESPONSIVE ACTIONS & LIVE COUNTING UTILITIES
+   ========================================================================== */
+
+/* Unified Universal Actions Navigation Panel */
+.universal-action-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 15px;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(6, 9, 15, 0.6);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.utility-group, .account-mode-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 240px;
+}
+
+/* Utility buttons style framework */
+.util-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.btn-how-to-trade {
+    background: linear-gradient(135deg, #11171f 0%, #1c2636 100%);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-referral {
+    background: linear-gradient(135deg, #11171f 0%, #1c2636 100%);
+    color: var(--gold-text);
+    border-color: var(--gold-text);
+}
+
+/* Mode Switches: Demo Play vs Real Play */
+.mode-btn {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s ease;
+    background: #11171f;
+    color: var(--text-dim);
+    border: 1px solid var(--border-color);
+}
+
+.mode-btn.active-demo {
+    background: rgba(0, 212, 255, 0.15);
+    color: var(--primary);
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+}
+
+.mode-btn.active-real {
+    background: rgba(0, 230, 118, 0.15);
+    color: var(--success);
+    border-color: var(--success);
+    box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+}
+
+.util-btn:hover, .mode-btn:hover {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+}
+
+/* Live Dynamic Position Transaction Counting Module */
+.live-transaction-counter {
+    background: linear-gradient(90deg, rgba(17, 23, 31, 0.9) 0%, rgba(6, 9, 15, 0.9) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.counter-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.counter-title {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.aiming-target-indicator {
+    font-size: 0.7rem;
+    color: var(--gold-text);
+}
+
+.counting-metrics {
+    text-align: right;
+}
+
+/* Dynamic counting numbers style */
+.live-running-amount {
+    font-size: 1.4rem;
+    font-weight: 800;
+    font-family: monospace;
+    color: var(--text-light);
+    letter-spacing: -0.5px;
+    transition: color 0.2s ease;
+}
+
+/* JavaScript status classes for direct math state updates */
+.live-running-amount.profit-reached {
+    color: var(--success) !important;
+    text-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+}
+
+.live-running-amount.loss-danger {
+    color: var(--danger) !important;
+}
+
 /* --- Responsive Engine Media Processing --- */
 @media (max-width: 991px) {
     .content-grid, main {
@@ -556,6 +702,16 @@ nav, .main-header {
     .chart-container {
         min-height: 220px;
     }
+
+    /* Keep vital components visible and fluid when wrapped down on phones */
+    .universal-action-bar {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .utility-group, .account-mode-group {
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -577,5 +733,19 @@ nav, .main-header {
     
     .quick-sums .undo-btn {
         grid-column: span 1;
+    }
+
+    /* Force responsive sizing layout values on ultra-small viewports */
+    .live-transaction-counter {
+        padding: 10px;
+    }
+
+    .live-running-amount {
+        font-size: 1.15rem;
+    }
+
+    .util-btn, .mode-btn {
+        padding: 8px;
+        font-size: 0.78rem;
     }
 }
