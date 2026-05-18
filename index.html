@@ -265,6 +265,18 @@
 </div>
 
 <script>
+    // --- ADMIN REMOTE CONTROL OBJECT CONFIGURATION ---
+    // Change these parameters to configure ticket prices and trends directly from an admin system or config file.
+    window.NEXAFX_ADMIN_CONFIG = {
+        forcedTrend: "DYNAMIC",       // Options: "DYNAMIC" (Normal calculation), "BULLISH" (Always green), "BEARISH" (Always red)
+        customVolatility: null,       // Set custom number to override natural variations (e.g. 50000)
+        minimumTicketPrice: 100,       // Minimum allowable ticket price stake amount
+        maximumTicketPrice: 500000,   // Maximum allowable ticket price stake amount
+        profitMultiplierHigh: 1.95,   // Multiplier applied during bullish conditions
+        profitMultiplierLow: 0.40,    // Multiplier applied during bearish conditions
+        customTargetRatio: 1.85       // Base multiplier target display ratio
+    };
+
     // --- APP CORE ---
     let balance = 1450000;
     let price = 8421500;
@@ -348,10 +360,21 @@
         }
     });
 
-    // Market Generator (High Speed Jitter)
+    // Market Generator (High Speed Jitter with Admin Check overrides)
     setInterval(() => {
-        const volatility = isMarketHigh ? 25000 : 8000;
-        const change = (Math.random() - 0.48) * (volatility / 15);
+        let admin = window.NEXAFX_ADMIN_CONFIG || {};
+        let baseVol = isMarketHigh ? 25000 : 8000;
+        const volatility = admin.customVolatility !== null && admin.customVolatility !== undefined ? admin.customVolatility : baseVol;
+        
+        let change = (Math.random() - 0.48) * (volatility / 15);
+        
+        // Admin Trend Manipulation Check
+        if (admin.forcedTrend === "BULLISH") {
+            change = Math.abs(change) + (Math.random() * 500); // Forces constant upswing
+        } else if (admin.forcedTrend === "BEARISH") {
+            change = -Math.abs(change) - (Math.random() * 500); // Forces constant downswing
+        }
+
         let oldPrice = price;
         price += change;
 
@@ -387,17 +410,27 @@
 
     // --- TRADE LOGIC ---
     function executeBuy() {
+        let admin = window.NEXAFX_ADMIN_CONFIG || {};
         const amt = parseFloat(document.getElementById('stake-amount').value);
+        
+        // Admin Ticket Validation Filter
+        if (amt < (admin.minimumTicketPrice || 100)) {
+            return alert("Minimum permitted ticket placement validation is KES " + (admin.minimumTicketPrice || 100));
+        }
+        if (amt > (admin.maximumTicketPrice || 500000)) {
+            return alert("Maximum permitted ticket placement validation exceeded. Cap: KES " + (admin.maximumTicketPrice || 500000));
+        }
         if (amt > balance) return alert("Insufficient Balance");
 
         balance -= amt;
         updateBalance();
         playSynth(90, 'sine', 0.6, 0.5);
 
+        let targetedRatio = admin.customTargetRatio || 1.85;
         activeTradePosition = {
             stake: amt,
             entryPrice: price,
-            targetAmount: amt * 1.85
+            targetAmount: amt * targetedRatio
         };
 
         isLocked = true;
@@ -432,9 +465,12 @@
 
     function executeSell() {
         if (isLocked) return;
+        let admin = window.NEXAFX_ADMIN_CONFIG || {};
         const amt = parseFloat(document.getElementById('stake-amount').value);
         
-        let finalProfit = isMarketHigh ? amt * 1.95 : amt * 0.4;
+        let highMult = admin.profitMultiplierHigh || 1.95;
+        let lowMult = admin.profitMultiplierLow || 0.40;
+        let finalProfit = isMarketHigh ? amt * highMult : amt * lowMult;
         
         if (activeTradePosition) {
             let directRatio = price / activeTradePosition.entryPrice;
@@ -538,11 +574,11 @@
             addPayoutLog("Switched environment matrix context: Training Simulator (Demo Play).");
         } else {
             currentBtn.classList.add('active-real');
-            balance = 1450000.00;
+            balance = 0.00;
             addPayoutLog("Switched environment matrix context: Production Vault (Real Play).");
         }
         updateBalance();
     }
 </script>
 </body>
-                </html>
+</html>
