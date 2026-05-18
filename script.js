@@ -132,9 +132,10 @@ setInterval(() => {
 /**
  * 3. SOCIAL PROOF & CHAT SYSTEM
  */
-const chatFeed = document.getElementById('chat-feed');
-const chatInput = document.getElementById('chat-input-field');
-const sendBtn = document.getElementById('send-chat-btn'); 
+// Target matching elements from both structural layout architectures securely
+const chatFeed = document.getElementById('chat-feed') || document.getElementById('tradeLogs');
+const chatInput = document.getElementById('chat-input-field') || document.querySelector('.chat-input input');
+const sendBtn = document.getElementById('send-chat-btn') || document.querySelector('.chat-send-btn') || document.querySelector('.chat-input button'); 
 
 // Automated System Notifications matching the style of image_3.png
 const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lodenyi100', '@Lucid@juicewrld', '@Kenyan_Trader', '@CryptoNaija'];
@@ -209,11 +210,11 @@ if (socket) {
 /**
  * 4. TRADING EXECUTION
  */
-const buyBtn = document.getElementById('buy-btn');
-const sellBtn = document.getElementById('sell-btn');
+const buyBtn = document.getElementById('buy-btn') || document.querySelector('.buy-btn') || document.querySelector('.btn-buy');
+const sellBtn = document.getElementById('sell-btn') || document.querySelector('.sell-btn') || document.querySelector('.btn-sell');
 
 function handleTrade(orderType) {
-    const orderStakeInput = document.getElementById('trade-amount');
+    const orderStakeInput = document.getElementById('trade-amount') || document.querySelector('.amount-input');
     if (!orderStakeInput) return;
     
     const stakeValue = parseFloat(orderStakeInput.value) || 0;
@@ -245,12 +246,18 @@ function handleTrade(orderType) {
     }
 
     // Visual Refresh Across Balance Elements
-    const localBal = document.getElementById('user-balance');
-    const walletBal = document.getElementById('walletBal');
+    const localBal = document.getElementById('user-balance') || document.getElementById('walletBal');
+    const walletBal = document.getElementById('walletBal') || document.querySelector('.wallet-amount');
     const formattedBalance = walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     
     if (localBal) localBal.innerText = formattedBalance;
-    if (walletBal) walletBal.innerText = `KES ${formattedBalance}`;
+    if (walletBal) {
+        if (walletBal.tagName === 'INPUT') {
+            walletBal.value = `KES ${formattedBalance}`;
+        } else {
+            walletBal.innerText = walletBal.id === 'walletBal' ? `KES ${formattedBalance}` : formattedBalance;
+        }
+    }
     
     // Legacy support additions tracking system logs inside sidebars
     const logsContainer = document.getElementById('tradeLogs');
@@ -289,7 +296,7 @@ let soundEnabled = false;
 window.initAudio = () => {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     soundEnabled = !soundEnabled;
-    const btn = document.getElementById('soundBtn');
+    const btn = document.getElementById('soundBtn') || document.querySelector('.sound-status');
     if (btn) {
         btn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i> SOUND ON' : '<i class="fas fa-volume-mute"></i> SOUND OFF';
         btn.className = soundEnabled ? 'sound-status on' : 'sound-status';
@@ -327,7 +334,7 @@ function playSound(type) {
  * 6. UI INTERACTION HELPERS (Global Scope)
  */
 window.adjustAmount = (val) => {
-    const input = document.getElementById('trade-amount');
+    const input = document.getElementById('trade-amount') || document.querySelector('.amount-input');
     if (!input) return;
 
     let current = parseInt(input.value) || 0;
@@ -339,7 +346,7 @@ window.adjustAmount = (val) => {
 };
 
 window.setSum = (val) => {
-    const input = document.getElementById('trade-amount');
+    const input = document.getElementById('trade-amount') || document.querySelector('.amount-input');
     if (input) input.value = val;
 };
 
