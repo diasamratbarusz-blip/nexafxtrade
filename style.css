@@ -50,14 +50,12 @@ body, html {
 
 /* --- Navigation Header Configurations --- */
 nav, .main-header {
-    background: #111111;
     background-color: rgba(17, 23, 31, 0.95);
     padding: 10px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    border-bottom-color: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
     height: 60px;
     z-index: 100;
     backdrop-filter: blur(10px);
@@ -93,7 +91,6 @@ nav, .main-header {
 .balance-box .label, .wallet-label { 
     font-size: 0.6rem; 
     color: var(--text-dim); 
-    color: #888888; 
     text-transform: uppercase; 
 }
 
@@ -161,9 +158,7 @@ nav, .main-header {
 
 /* --- Live Chat Sidebar & Social Proof Module --- */
 .chat-section { 
-    background: var(--panel-dark); 
     background-color: var(--bg-card);
-    border-right: 1px solid var(--border-color);
     border: 1px solid rgba(255,255,255,0.05);
     border-radius: 16px;
     display: flex; 
@@ -195,12 +190,20 @@ nav, .main-header {
     scrollbar-color: #333333 transparent;
 }
 
-.chat-input, .chat-footer {
+.chat-footer {
     padding: 10px;
-    background: #0f0f0f;
     background-color: rgba(0, 0, 0, 0.2);
-    border-top: 1px solid #222222;
-    border-top-color: rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Retaining alternate legacy structural selector definitions safely */
+.chat-input {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255,255,255,0.05);
     display: flex;
     gap: 8px;
     flex-shrink: 0;
@@ -208,7 +211,6 @@ nav, .main-header {
 
 .chat-input input, .chat-input .chat-input {
     flex: 1;
-    background: #000000;
     background-color: #06090f;
     border: 1px solid #333333;
     color: #ffffff;
@@ -302,10 +304,8 @@ nav, .main-header {
 
 /* --- Trading Interface Interactive Controls --- */
 .trade-controls, .trade-zone {
-    background: #0a0a0a;
     background-color: rgba(0, 0, 0, 0.25);
     padding: 15px;
-    border-top: 1px solid var(--border-color);
     border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.04);
     flex-shrink: 0;
@@ -320,7 +320,6 @@ nav, .main-header {
 }
 
 .amount-input-row input, .amount-input {
-    background: #000000;
     background-color: #06090f;
     border: 1px solid #333333;
     color: #ffffff;
@@ -368,10 +367,8 @@ nav, .main-header {
 }
 
 .quick-sum-btn, .quick-sums button {
-    background: #003300;
     background-color: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--accent-green);
-    border-color: #333333;
+    border: 1px solid #333333;
     color: #ffffff;
     padding: 10px 5px;
     font-weight: bold;
@@ -419,14 +416,12 @@ nav, .main-header {
 }
 
 .buy-btn, .btn-buy { 
-    background: var(--accent-green); 
     background-color: var(--success);
     box-shadow: 0 4px 12px rgba(0, 230, 118, 0.2);
     color: #000000; 
 }
 
 .sell-btn, .btn-sell { 
-    background: var(--accent-red); 
     background-color: var(--danger);
     box-shadow: 0 4px 12px rgba(255, 82, 82, 0.2);
     color: #ffffff;
@@ -484,14 +479,12 @@ nav, .main-header {
 
 /* --- Legal Regulatory Footer --- */
 .legal-footer { 
-    background: #050505;
     background-color: #030508;
     font-size: 0.65rem; 
     color: #555555; 
     text-align: center; 
     padding: 12px; 
-    border-top: 1px solid #111111;
-    border-top-color: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.02);
     flex-shrink: 0;
 }
 
