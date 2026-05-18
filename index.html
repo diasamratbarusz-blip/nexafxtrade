@@ -193,17 +193,36 @@
         startAfroLoop();
     }
 
+    // Completely smoothed synth pipeline to completely eradicate clicks and pops
     function playSynth(freq, type, dur, vol) {
         if(!audioCtx) return;
+        
+        // Safety resume logic if modern browsers suspend context mid-session
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = type;
-        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.connect(gain); 
+        gain.connect(audioCtx.destination);
+        
+        // Clean linear/exponential frequency scheduling
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
-        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
-        osc.start(); osc.stop(audioCtx.currentTime + dur);
+        if (freq > 100) {
+            osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+        } else {
+            osc.frequency.linearRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+        }
+        
+        // Smooth Volume Envelope Engine - Always starts and ends at explicit absolute zero
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.005); // Smooth initial click
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur); // Natural Exponential Tail
+        
+        osc.start(); 
+        osc.stop(audioCtx.currentTime + dur);
     }
 
     function startAfroLoop() {
@@ -211,11 +230,13 @@
         setInterval(() => {
             if (isMarketHigh) {
                 // Fast aggressive kick for HIGH market
-                playSynth(65, 'sine', 0.3, 0.4); 
-                setTimeout(() => playSynth(65, 'sine', 0.3, 0.4), 250); 
+                playSynth(65, 'sine', 0.25, 0.4); 
+                setTimeout(() => {
+                    if (isMarketHigh) playSynth(65, 'sine', 0.25, 0.4);
+                }, 250); 
             } else {
                 // Deep slow pulse for LOW market
-                playSynth(45, 'sine', 0.8, 0.3);
+                playSynth(45, 'sine', 0.75, 0.3);
             }
         }, 1000);
     }
@@ -262,7 +283,9 @@
             glow.style.background = "var(--high-green)";
             glow.style.opacity = "0.15";
             chart.data.datasets[0].borderColor = "var(--high-green)";
-            playSynth(400, 'triangle', 0.1, 0.02); // Ticker sound
+            
+            // Clean smoothed non-intrusive high ticker speed pulse
+            playSynth(380, 'triangle', 0.04, 0.015); 
         } else {
             status.innerText = "❄️ LOW MARKET STRENGTH - BEARISH MOMENTUM ❄️";
             status.className = "status-low";
@@ -287,7 +310,7 @@
 
         balance -= amt;
         updateBalance();
-        playSynth(100, 'sine', 1, 0.6); // Impact sound
+        playSynth(90, 'sine', 0.6, 0.5); // Smoothed Heavy Impact Bass
 
         // LOCK SELL BUTTON FOR 5s
         isLocked = true;
@@ -313,7 +336,7 @@
                 label.innerHTML = `<i class="fas fa-hand-holding-usd"></i> SELL`;
                 bar.style.transition = "none";
                 bar.style.width = "0%";
-                playSynth(800, 'sine', 0.1, 0.2); // Unlock sound
+                playSynth(720, 'sine', 0.08, 0.15); // Clean digital unlock chime
             }
         }, 1000);
 
@@ -327,9 +350,11 @@
         balance += profit;
         updateBalance();
         
-        // Success Sound
-        playSynth(1000, 'sine', 0.2, 0.2);
-        setTimeout(() => playSynth(1500, 'sine', 0.3, 0.2), 100);
+        // Success Sound Chain (Completely smoothed transitions)
+        playSynth(900, 'sine', 0.15, 0.2);
+        setTimeout(() => {
+            playSynth(1350, 'sine', 0.25, 0.2);
+        }, 80);
         
         addPayoutLog(`User Cashout: KES ${profit.toFixed(2)}`);
     }
@@ -357,4 +382,4 @@
 
 </script>
 </body>
-    </html>
+</html>
