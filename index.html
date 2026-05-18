@@ -19,15 +19,31 @@
 
         body, html {
             margin: 0; padding: 0; background: var(--bg-black); color: white;
-            font-family: 'Inter', sans-serif; height: 100vh; overflow-x: hidden;
-            user-select: none;
+            font-family: 'Inter', sans-serif; height: 100vh;
+            user-select: none; display: flex; justify-content: center; align-items: center;
+        }
+
+        /* --- Global Medium Size App Container Wrapper --- */
+        .app-container {
+            width: 100%;
+            max-width: 1200px; /* Restricts layout from stretching too wide on big screens */
+            height: 100vh;
+            max-height: 900px; /* Restricts layout from getting vertically bloated */
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-black);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            border-left: 1px solid #222;
+            border-right: 1px solid #222;
+            overflow: hidden;
+            position: relative;
         }
 
         /* --- Header Section --- */
         header {
             height: 65px; background: var(--panel); display: flex; align-items: center;
             justify-content: space-between; padding: 0 20px; border-bottom: 2px solid #222;
-            z-index: 100;
+            z-index: 100; flex-shrink: 0;
         }
 
         .brand { font-size: 1.5rem; font-weight: 900; letter-spacing: -1px; }
@@ -45,15 +61,15 @@
         #market-status-bar {
             height: 30px; display: flex; align-items: center; justify-content: center;
             font-size: 0.75rem; font-weight: 900; text-transform: uppercase;
-            letter-spacing: 2px; transition: 0.5s; background: #1a1a1a;
+            letter-spacing: 2px; transition: 0.5s; background: #1a1a1a; flex-shrink: 0;
         }
         .status-high { background: var(--high-green) !important; color: #000; box-shadow: 0 0 20px var(--high-green); }
         .status-low { background: var(--low-red) !important; color: #fff; box-shadow: 0 0 20px var(--low-red); }
 
-        /* --- Layout --- */
-        main {
-            display: grid; grid-template-columns: 280px 1fr; height: calc(100vh - 95px);
-            background: #111; gap: 1px;
+        /* --- Layout Grid --- */
+        .main-layout {
+            display: grid; grid-template-columns: 280px 1fr; flex: 1;
+            background: #111; gap: 1px; overflow: hidden;
         }
 
         .side-activity { background: var(--panel); display: flex; flex-direction: column; overflow: hidden; }
@@ -73,19 +89,19 @@
         .ticker-val { font-size: 3.2rem; font-weight: 900; font-family: 'Courier New', monospace; letter-spacing: -2px; }
 
         /* --- Chart Wrapper --- */
-        #chart-container { flex: 1; min-height: 250px; padding: 0 20px; position: relative; z-index: 1; }
+        #chart-container { flex: 1; min-height: 220px; padding: 0 20px; position: relative; z-index: 1; }
 
-        /* --- NEW ADDITIONS: UNIVERSAL ACTION HUB SYSTEM --- */
+        /* --- UNIVERSAL ACTION HUB SYSTEM --- */
         .universal-action-bar {
-            display: flex; flex-wrap: wrap; gap: 10px; padding: 15px 20px; z-index: 2;
+            display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 20px; z-index: 2;
             justify-content: space-between; align-items: center; background: rgba(17, 21, 28, 0.6);
             border-bottom: 1px solid #222; border-top: 1px solid #222;
         }
         .utility-group, .account-mode-group {
-            display: flex; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 250px;
+            display: flex; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 240px;
         }
         .util-btn {
-            flex: 1; min-width: 110px; padding: 10px 14px; font-size: 0.8rem; font-weight: 800;
+            flex: 1; min-width: 100px; padding: 10px 12px; font-size: 0.8rem; font-weight: 800;
             text-transform: uppercase; border-radius: 8px; cursor: pointer; text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.2s ease; color: #fff;
         }
@@ -103,7 +119,7 @@
         .mode-btn.active-real { background: rgba(0, 255, 136, 0.15); color: var(--high-green); border-color: var(--high-green); }
         .util-btn:hover, .mode-btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
 
-        /* --- NEW ADDITIONS: LIVE TRANSECTION COUNTING MODULE --- */
+        /* --- LIVE TRANSACTION COUNTING MODULE --- */
         .live-transaction-counter {
             background: linear-gradient(90deg, rgba(17, 21, 28, 0.9) 0%, rgba(6, 8, 10, 0.9) 100%);
             border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid var(--neon-blue);
@@ -117,10 +133,10 @@
         .live-running-amount.profit-reached { color: var(--high-green) !important; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
         .live-running-amount.loss-danger { color: var(--low-red) !important; }
 
-        /* --- Trade Desktop --- */
+        /* --- Trade Desktop Controls --- */
         .bottom-controls {
             background: var(--panel); padding: 25px; border-top: 1px solid #333;
-            display: flex; flex-direction: column; gap: 20px; z-index: 1;
+            display: flex; flex-direction: column; gap: 20px; z-index: 1; flex-shrink: 0;
         }
 
         .stake-box {
@@ -144,15 +160,15 @@
         .btn:active { transform: translateY(3px); box-shadow: none; }
         .btn:disabled { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; }
 
-        /* 5-Second Cooldown Bar */
         .cooldown-overlay {
             position: absolute; left: 0; top: 0; height: 100%; width: 0%;
             background: rgba(0,0,0,0.4); z-index: 1; transition: none;
         }
 
-        /* --- Mobile Optimization --- */
+        /* --- Full Screen Size Responsiveness --- */
         @media (max-width: 850px) {
-            main { grid-template-columns: 1fr; height: auto; }
+            .app-container { height: 100vh; max-height: none; border: none; }
+            .main-layout { grid-template-columns: 1fr; height: auto; }
             .side-activity { display: none; }
             .ticker-val { font-size: 2.2rem; }
             .universal-action-bar { flex-direction: column; gap: 12px; }
@@ -164,87 +180,89 @@
 </head>
 <body>
 
-<header>
-    <div class="brand">NEXAFX<span>TRADE</span></div>
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <button id="audio-btn" onclick="initBeats()" style="background: var(--neon-blue); border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer;">
-            <i class="fas fa-play"></i> ACTIVATE SOUND
-        </button>
-        <div class="balance-container">
-            <span class="balance-label">WALLET BALANCE</span>
-            <span class="balance-val" id="balance">1,450,000.00</span>
+<div class="app-container">
+    <header>
+        <div class="brand">NEXAFX<span>TRADE</span></div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button id="audio-btn" onclick="initBeats()" style="background: var(--neon-blue); border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                <i class="fas fa-play"></i> ACTIVATE SOUND
+            </button>
+            <div class="balance-container">
+                <span class="balance-label">WALLET BALANCE</span>
+                <span class="balance-val" id="balance">1,450,000.00</span>
+            </div>
         </div>
+    </header>
+
+    <div id="market-status-bar">Monitoring Market Neutrality...</div>
+
+    <div class="main-layout">
+        <section class="side-activity">
+            <div style="padding: 15px; background: #1c222b; font-weight: bold; font-size: 0.8rem; color: var(--high-green);">
+                <i class="fas fa-broadcast-tower"></i> LIVE WITHDRAWALS
+            </div>
+            <div id="payout-feed" style="padding: 10px; font-size: 0.85rem; line-height: 1.8;"></div>
+        </section>
+
+        <section class="trading-zone" id="zone-bg">
+            <div class="market-glow" id="market-glow"></div>
+            
+            <div class="price-hero">
+                <div>
+                    <span style="color: #666; font-size: 0.8rem; font-weight: bold;">BTC/KES REALTIME</span>
+                    <div class="ticker-val" id="ticker-price">8,421,500</div>
+                </div>
+                <div id="market-trend" style="background: rgba(0,255,136,0.1); padding: 10px 20px; border-radius: 10px; font-weight: 900; color: var(--high-green);">
+                    +0.00%
+                </div>
+            </div>
+
+            <!-- UNIVERSAL ACTIONS BAR HUB -->
+            <div class="universal-action-bar">
+                <div class="utility-group">
+                    <button class="util-btn btn-deposit-nav" onclick="executeDepositRoute()">Deposit</button>
+                    <button class="util-btn btn-withdraw-nav" onclick="executeWithdrawalRoute()">Withdrawal</button>
+                    <button class="util-btn btn-how-to-trade" onclick="toggleHowToTradeModal()">How to Trade</button>
+                    <button class="util-btn btn-referral" onclick="triggerReferralSystem()">Referral</button>
+                </div>
+                <div class="account-mode-group">
+                    <button class="mode-btn" onclick="switchAccountMode('DEMO', this)">Demo Play</button>
+                    <button class="mode-btn active-real" onclick="switchAccountMode('REAL', this)">Real Play</button>
+                </div>
+            </div>
+
+            <!-- LIVE POSITION TRANSACTION DISPLAY -->
+            <div class="live-transaction-counter">
+                <div class="counter-details">
+                    <span class="counter-title">Live Position Counter</span>
+                    <span id="aiming-target-indicator">No active trade counting</span>
+                </div>
+                <div class="live-running-amount" id="live-running-amount">KES 0.00</div>
+            </div>
+
+            <div id="chart-container">
+                <canvas id="liveGraph"></canvas>
+            </div>
+
+            <div class="bottom-controls">
+                <div class="stake-box">
+                    <span style="color: #444; font-weight: bold;">KES</span>
+                    <input type="number" id="stake-amount" value="500">
+                    <span style="color: var(--high-green); font-weight: bold;">STAKE</span>
+                </div>
+                <div class="action-btns">
+                    <button class="btn btn-buy" id="buy-btn" onclick="executeBuy()">
+                        <i class="fas fa-bolt"></i> BUY
+                    </button>
+                    <button class="btn btn-sell" id="sell-btn" disabled onclick="executeSell()">
+                        <div class="cooldown-overlay" id="sell-timer-bar"></div>
+                        <span id="sell-label"><i class="fas fa-hand-holding-usd"></i> SELL</span>
+                    </button>
+                </div>
+            </div>
+        </section>
     </div>
-</header>
-
-<div id="market-status-bar">Monitoring Market Neutrality...</div>
-
-<main>
-    <section class="side-activity">
-        <div style="padding: 15px; background: #1c222b; font-weight: bold; font-size: 0.8rem; color: var(--high-green);">
-            <i class="fas fa-broadcast-tower"></i> LIVE WITHDRAWALS
-        </div>
-        <div id="payout-feed" style="padding: 10px; font-size: 0.85rem; line-height: 1.8;"></div>
-    </section>
-
-    <section class="trading-zone" id="zone-bg">
-        <div class="market-glow" id="market-glow"></div>
-        
-        <div class="price-hero">
-            <div>
-                <span style="color: #666; font-size: 0.8rem; font-weight: bold;">BTC/KES REALTIME</span>
-                <div class="ticker-val" id="ticker-price">8,421,500</div>
-            </div>
-            <div id="market-trend" style="background: rgba(0,255,136,0.1); padding: 10px 20px; border-radius: 10px; font-weight: 900; color: var(--high-green);">
-                +0.00%
-            </div>
-        </div>
-
-        <!-- NEW UNIVERSAL ACTIONS BAR HUB -->
-        <div class="universal-action-bar">
-            <div class="utility-group">
-                <button class="util-btn btn-deposit-nav" onclick="executeDepositRoute()">Deposit</button>
-                <button class="util-btn btn-withdraw-nav" onclick="executeWithdrawalRoute()">Withdrawal</button>
-                <button class="util-btn btn-how-to-trade" onclick="toggleHowToTradeModal()">How to Trade</button>
-                <button class="util-btn btn-referral" onclick="triggerReferralSystem()">Referral</button>
-            </div>
-            <div class="account-mode-group">
-                <button class="mode-btn" onclick="switchAccountMode('DEMO', this)">Demo Play</button>
-                <button class="mode-btn active-real" onclick="switchAccountMode('REAL', this)">Real Play</button>
-            </div>
-        </div>
-
-        <!-- NEW LIVE POSITION TRANSECTION TRANSLATION DISPLAY -->
-        <div class="live-transaction-counter">
-            <div class="counter-details">
-                <span class="counter-title">Live Position Counter</span>
-                <span id="aiming-target-indicator">No active trade counting</span>
-            </div>
-            <div class="live-running-amount" id="live-running-amount">KES 0.00</div>
-        </div>
-
-        <div id="chart-container">
-            <canvas id="liveGraph"></canvas>
-        </div>
-
-        <div class="bottom-controls">
-            <div class="stake-box">
-                <span style="color: #444; font-weight: bold;">KES</span>
-                <input type="number" id="stake-amount" value="500">
-                <span style="color: var(--high-green); font-weight: bold;">STAKE</span>
-            </div>
-            <div class="action-btns">
-                <button class="btn btn-buy" id="buy-btn" onclick="executeBuy()">
-                    <i class="fas fa-bolt"></i> BUY
-                </button>
-                <button class="btn btn-sell" id="sell-btn" disabled onclick="executeSell()">
-                    <div class="cooldown-overlay" id="sell-timer-bar"></div>
-                    <span id="sell-label"><i class="fas fa-hand-holding-usd"></i> SELL</span>
-                </button>
-            </div>
-        </div>
-    </section>
-</main>
+</div>
 
 <script>
     // --- APP CORE ---
@@ -254,7 +272,6 @@
     let audioCtx = null;
     let isMarketHigh = false;
     
-    // Position Data Variables Tracking Array Frameworks
     let activeTradePosition = null;
 
     // --- BEAST AUDIO ENGINE ---
@@ -266,11 +283,8 @@
         startAfroLoop();
     }
 
-    // Completely smoothed synth pipeline to completely eradicate clicks and pops
     function playSynth(freq, type, dur, vol) {
         if(!audioCtx) return;
-        
-        // Safety resume logic if modern browsers suspend context mid-session
         if (audioCtx.state === 'suspended') {
             audioCtx.resume();
         }
@@ -281,7 +295,6 @@
         osc.connect(gain); 
         gain.connect(audioCtx.destination);
         
-        // Clean linear/exponential frequency scheduling
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
         if (freq > 100) {
             osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
@@ -289,26 +302,22 @@
             osc.frequency.linearRampToValueAtTime(0.01, audioCtx.currentTime + dur);
         }
         
-        // Smooth Volume Envelope Engine - Always starts and ends at explicit absolute zero
         gain.gain.setValueAtTime(0, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.005); // Smooth initial click
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur); // Natural Exponential Tail
+        gain.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
         
         osc.start(); 
         osc.stop(audioCtx.currentTime + dur);
     }
 
     function startAfroLoop() {
-        // Dynamic Bassline based on Market state
         setInterval(() => {
             if (isMarketHigh) {
-                // Fast aggressive kick for HIGH market
                 playSynth(65, 'sine', 0.25, 0.4); 
                 setTimeout(() => {
                     if (isMarketHigh) playSynth(65, 'sine', 0.25, 0.4);
                 }, 250); 
             } else {
-                // Deep slow pulse for LOW market
                 playSynth(45, 'sine', 0.75, 0.3);
             }
         }, 1000);
@@ -346,7 +355,6 @@
         let oldPrice = price;
         price += change;
 
-        // Determine Market State
         isMarketHigh = change > 0;
         const status = document.getElementById('market-status-bar');
         const glow = document.getElementById('market-glow');
@@ -357,8 +365,6 @@
             glow.style.background = "var(--high-green)";
             glow.style.opacity = "0.15";
             chart.data.datasets[0].borderColor = "var(--high-green)";
-            
-            // Clean smoothed non-intrusive high ticker speed pulse
             playSynth(380, 'triangle', 0.04, 0.015); 
         } else {
             status.innerText = "❄️ LOW MARKET STRENGTH - BEARISH MOMENTUM ❄️";
@@ -376,7 +382,6 @@
         dataPoints.shift();
         chart.update('none');
 
-        // Continuous updating sequence injection processing calculations
         processLiveCountingTransaction(oldPrice);
     }, 150);
 
@@ -387,16 +392,14 @@
 
         balance -= amt;
         updateBalance();
-        playSynth(90, 'sine', 0.6, 0.5); // Smoothed Heavy Impact Bass
+        playSynth(90, 'sine', 0.6, 0.5);
 
-        // Capture live trade parameters tracking target aiming parameters
         activeTradePosition = {
             stake: amt,
             entryPrice: price,
-            targetAmount: amt * 1.85 // System target aim trigger
+            targetAmount: amt * 1.85
         };
 
-        // LOCK SELL BUTTON FOR 5s
         isLocked = true;
         const buyBtn = document.getElementById('buy-btn');
         const sellBtn = document.getElementById('sell-btn');
@@ -420,7 +423,7 @@
                 label.innerHTML = `<i class="fas fa-hand-holding-usd"></i> SELL`;
                 bar.style.transition = "none";
                 bar.style.width = "0%";
-                playSynth(720, 'sine', 0.08, 0.15); // Clean digital unlock chime
+                playSynth(720, 'sine', 0.08, 0.15);
             }
         }, 1000);
 
@@ -433,7 +436,6 @@
         
         let finalProfit = isMarketHigh ? amt * 1.95 : amt * 0.4;
         
-        // Dynamic payout matching the calculation output metrics of running position tracking
         if (activeTradePosition) {
             let directRatio = price / activeTradePosition.entryPrice;
             finalProfit = activeTradePosition.stake * directRatio;
@@ -442,11 +444,9 @@
         balance += finalProfit;
         updateBalance();
         
-        // Reset positional states arrays configuration fields
         activeTradePosition = null;
         processLiveCountingTransaction();
         
-        // Success Sound Chain (Completely smoothed transitions)
         playSynth(900, 'sine', 0.15, 0.2);
         setTimeout(() => {
             playSynth(1350, 'sine', 0.25, 0.2);
@@ -469,7 +469,6 @@
         if (feed.children.length > 15) feed.lastChild.remove();
     }
 
-    // Fake Social Proof
     const names = ["Amani", "Kenyatta_254", "User_77", "Trader_Leo", "Boss_Lady"];
     setInterval(() => {
         const n = names[Math.floor(Math.random() * names.length)];
@@ -477,11 +476,7 @@
         addPayoutLog(`<span style="color:#666">${n}</span> withdrew KES ${amt}`);
     }, 8000);
 
-    /**
-     * ==========================================================================
-     * INTERACTIVE EXPLICIT UI INTEGRATIONS DEK CHANNELS
-     * ==========================================================================
-     */
+    // --- INTERACTIVE UI FUNCTIONS ---
     function processLiveCountingTransaction() {
         const liveAmountText = document.getElementById('live-running-amount');
         const targetText = document.getElementById('aiming-target-indicator');
