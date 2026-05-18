@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NEXAFX | Pro KES Exchange</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Explicitly import socket.io client side asset library dependency -->
-    <script src="/socket.io/socket.io.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -267,16 +265,12 @@
 </div>
 
 <script>
-    // --- SOCKET.IO CORE CONNECTOR ---
-    const socket = io();
-
     // --- APP CORE ---
     let balance = 1450000;
     let price = 8421500;
     let isLocked = false;
     let audioCtx = null;
     let isMarketHigh = false;
-    let activeAdminControlTrend = "AUTO";
     
     let activeTradePosition = null;
 
@@ -354,36 +348,14 @@
         }
     });
 
-    // Listen for forced overrides from admin panel across live channel
-    socket.on('admin-force-market-trend', (data) => {
-        if (data && data.trend) {
-            activeAdminControlTrend = data.trend;
-            localStorage.setItem('admin_market_control', data.trend);
-        }
-    });
-
-    // Market Generator (High Speed Jitter Connected with Socket Stream Channel Data)
+    // Market Generator (High Speed Jitter)
     setInterval(() => {
-        // Fallback validation checking for local testing storage on matching node channels
-        const localControl = localStorage.getItem('admin_market_control');
-        if (localControl) {
-            activeAdminControlTrend = localControl;
-        }
-
         const volatility = isMarketHigh ? 25000 : 8000;
-        let change = (Math.random() - 0.48) * (volatility / 15);
+        const change = (Math.random() - 0.48) * (volatility / 15);
         let oldPrice = price;
-
-        // Apply admin panel live interceptor logic values
-        if (activeAdminControlTrend === "HIGH") {
-            change = Math.abs(change) + (Math.random() * 2500 + 500);
-        } else if (activeAdminControlTrend === "LOW") {
-            change = -Math.abs(change) - (Math.random() * 2500 + 500);
-        }
-
         price += change;
+
         isMarketHigh = change > 0;
-        
         const status = document.getElementById('market-status-bar');
         const glow = document.getElementById('market-glow');
         
@@ -393,7 +365,6 @@
             glow.style.background = "var(--high-green)";
             glow.style.opacity = "0.15";
             chart.data.datasets[0].borderColor = "var(--high-green)";
-            chart.data.datasets[0].backgroundColor = "rgba(0, 255, 136, 0.05)";
             playSynth(380, 'triangle', 0.04, 0.015); 
         } else {
             status.innerText = "❄️ LOW MARKET STRENGTH - BEARISH MOMENTUM ❄️";
@@ -401,7 +372,6 @@
             glow.style.background = "var(--low-red)";
             glow.style.opacity = "0.15";
             chart.data.datasets[0].borderColor = "var(--low-red)";
-            chart.data.datasets[0].backgroundColor = "rgba(255, 51, 102, 0.05)";
         }
 
         document.getElementById('ticker-price').innerText = Math.floor(price).toLocaleString();
@@ -412,27 +382,8 @@
         dataPoints.shift();
         chart.update('none');
 
-        // Broadcast current runtime telemetry changes up to network server metrics counters
-        socket.emit('market-update', { rate: price });
-
         processLiveCountingTransaction(oldPrice);
     }, 150);
-
-    // Socket incoming stream listener for administrative forced balance parameters
-    socket.on('admin-force-balance', (data) => {
-        if (data && typeof data.balance === 'number') {
-            balance = data.balance;
-            updateBalance();
-            addPayoutLog(`Wallet Sync: Updated server credit parameters.`);
-        }
-    });
-
-    // Socket incoming broadcast channel for manual global administration alert strings
-    socket.on('admin-global-broadcast', (data) => {
-        if (data && data.msg) {
-            alert("SYSTEM ALERT BROADCAST:\n\n" + data.msg);
-        }
-    });
 
     // --- TRADE LOGIC ---
     function executeBuy() {
@@ -502,9 +453,6 @@
         }, 80);
         
         addPayoutLog(`User Cashout: KES ${finalProfit.toFixed(2)}`);
-
-        // Emit trace outcome metrics payload up through system event pipes
-        socket.emit('trade-result', { status: 'CASHOUT', payout: finalProfit });
     }
 
     function updateBalance() {
@@ -597,4 +545,4 @@
     }
 </script>
 </body>
-</html>
+                </html>
