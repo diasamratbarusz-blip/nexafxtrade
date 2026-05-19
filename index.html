@@ -287,7 +287,7 @@
 
     // --- STRATEGIC USER CONTROL VARIABLES ---
     let tradeTicksElapsed = 0;
-    let currentHighTicksLimit = 45; // Dynamically updated upon entry placement
+    let currentHighTicksLimit = 45; 
 
     // --- BEAST AUDIO ENGINE ---
     function initBeats() {
@@ -379,7 +379,7 @@
             tradeTicksElapsed++;
 
             if (tradeTicksElapsed <= currentHighTicksLimit) {
-                // Phase 1: Market stays high and steady. High step pump vectors so counter value surges up to 1000+
+                // Phase 1: Market stays high and steady. High step pump vectors so counter value surges up into hundreds and thousands
                 change = Math.abs(change) + (Math.random() * 2600 + 1200);
             } else {
                 // Phase 2: High Market duration ends. Force crash downwards instantly hitting low points
@@ -453,13 +453,24 @@
         updateBalance();
         playSynth(90, 'sine', 0.6, 0.5);
 
-        // Random selection logic for high point window durations: 6, 8, 10, or 20 seconds
-        const secondsOptions = [6, 8, 10, 20];
-        const chosenHighSeconds = secondsOptions[Math.floor(Math.random() * secondsOptions.length)];
+        // All full time points seconds options requested array
+        const secondsOptions = [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+        
+        // Dynamic Probability Vector Weight Matrix: Mostly pick numbers below 20 seconds
+        let chosenHighSeconds;
+        if (Math.random() < 0.78) {
+            // 78% probability of selecting an option below 20 seconds
+            const optionsBelow20 = secondsOptions.filter(s => s < 20);
+            chosenHighSeconds = optionsBelow20[Math.floor(Math.random() * optionsBelow20.length)];
+        } else {
+            // 22% probability of selecting an option 20 seconds and above
+            const optionsAboveEqual20 = secondsOptions.filter(s => s >= 20);
+            chosenHighSeconds = optionsAboveEqual20[Math.floor(Math.random() * optionsAboveEqual20.length)];
+        }
         
         // Convert selected execution seconds into total loop counts (1 second = ~6.66 loops at 150ms intervals)
         currentHighTicksLimit = Math.floor((chosenHighSeconds * 1000) / 150);
-        console.log(`High Market Window assigned for this trade: ${chosenHighSeconds} seconds (${currentHighTicksLimit} total loops).`);
+        console.log(`High Market Window assigned: ${chosenHighSeconds}s (${currentHighTicksLimit} loops).`);
 
         let targetedRatio = admin.customTargetRatio || 1.85;
         
@@ -468,8 +479,7 @@
         activeTradePosition = {
             stake: amt,
             entryPrice: price,
-            targetAmount: amt * targetedRatio,
-            durationSeconds: chosenHighSeconds
+            targetAmount: amt * targetedRatio
         };
 
         isLocked = true;
@@ -510,8 +520,9 @@
         
         // Calculate the grown scale counter valuation achieved during the high point phase
         let progressPercent = tradeTicksElapsed / currentHighTicksLimit;
-        // Make scale factor tick up all the way towards KSh 1000+ scaling from base stake
-        let multiplierScale = 1 + (progressPercent * 4.5); 
+        
+        // Scaled multiplier growth engine (Ticks smoothly upwards, matching stakes like 50, 100, 200, 500 up towards KSh 1000+)
+        let multiplierScale = 1 + (progressPercent * 5.2); 
         let finalProfit = activeTradePosition.stake * multiplierScale;
         
         balance += finalProfit;
@@ -589,13 +600,15 @@
             let progressPercent = tradeTicksElapsed / currentHighTicksLimit;
             if (progressPercent > 1) progressPercent = 1;
             
-            // Scaled counter engine ticks upwards to reach high points around 1000+ depending on the initial stake size
-            let multiplierScale = 1 + (progressPercent * 4.5);
+            // Multiplier curve engine scales up nicely into the hundreds and thousands
+            let multiplierScale = 1 + (progressPercent * 5.2);
             let dynamicCountingValue = activeTradePosition.stake * multiplierScale;
             
             liveAmountText.innerText = `KES ${dynamicCountingValue.toFixed(2)}`;
+            
+            // Hides the countdown time entirely from view, replacing it with a secured position status tracking note
             if (targetText) {
-                targetText.innerText = `High Market Time Remaining: ${Math.max(0, Math.ceil((currentHighTicksLimit - tradeTicksElapsed) * 0.15))}s`;
+                targetText.innerHTML = `<span style="color: var(--high-green);"><i class="fas fa-shield-alt"></i> ⚡ MARKET POSITION SECURED</span>`;
             }
 
             if (dynamicCountingValue >= activeTradePosition.stake * 2) {
