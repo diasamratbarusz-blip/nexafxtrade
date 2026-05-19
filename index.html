@@ -357,7 +357,6 @@
         
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        // Volume pipeline maximization output capacity
         masterGainNode = audioCtx.createGain();
         masterGainNode.gain.setValueAtTime(1.0, audioCtx.currentTime); 
         masterGainNode.connect(audioCtx.destination);
@@ -384,7 +383,6 @@
         subOsc.connect(gain);
         gain.connect(masterGainNode);
         
-        // MODERATE BASS FILTER
         let targetedFreq = freq;
         let targetedSubFreq = freq / 2;
         if(freq < 90) {
@@ -466,9 +464,12 @@
         if (activeTradePosition) {
             tradeTicksElapsed++;
 
-            if (tradeTicksElapsed <= currentHighTicksLimit) {
+            // Check if the running ticks have crossed the completely randomized loss point
+            if (tradeTicksElapsed <= activeTradePosition.lossTickThreshold) {
+                // Keep pumping green upward momentum while within the safe zone
                 change = Math.abs(change) + (Math.random() * 2600 + 1200);
             } else {
+                // CRASH STAGE TRIGGERED: Instantly reverse graph into heavy drop
                 change = -Math.abs(change) - (Math.random() * 5200 + 3200);
                 handleTradeExpirationLoss();
                 return;
@@ -537,21 +538,24 @@
         updateBalance();
         playSynth(180, 'sawtooth', 0.45, 0.95); 
 
-        // CRITICAL UPDATE: UNLIMITED CONTINUOUS RANDOM PROBABILITY ENGINE
+        // 1. CHOOSE TOTAL LIFESPAN SEAMLESSLY (5s to 30s)
         let chosenHighSeconds;
         let rollWeight = Math.random();
 
         if (rollWeight < 0.75) {
-            // 75% Probability Vector target: Infinite random float scale between 5.00s and 10.00s
             chosenHighSeconds = Math.random() * (10 - 5) + 5;
         } else {
-            // 25% Probability Vector target: Infinite random float scale between 10.01s and 30.00s
             chosenHighSeconds = Math.random() * (30 - 10.01) + 10.01;
         }
         
-        // Loop ticks generation mapping down to absolute exact milliseconds floats
         currentHighTicksLimit = Math.floor((chosenHighSeconds * 1000) / 150);
-        console.log(`High Market window assigned cleanly: ${chosenHighSeconds.toFixed(2)} seconds (${currentHighTicksLimit} loop ticks total).`);
+
+        // 2. NEW CRITICAL RANDOMIZED LOSS ENGINE INTEGRATION:
+        // Picks an unpredictable cutoff drop threshold percentage between 20% and 95% of total timeframe
+        let randomLossPercentage = Math.random() * (0.95 - 0.20) + 0.20;
+        let chosenLossTickThreshold = Math.floor(currentHighTicksLimit * randomLossPercentage);
+
+        console.log(`Total life: ${chosenHighSeconds.toFixed(2)}s (${currentHighTicksLimit} Ticks). Sudden random drop point configured at frame: ${chosenLossTickThreshold} (${(randomLossPercentage*100).toFixed(0)}% into runtime).`);
 
         let targetedRatio = admin.customTargetRatio || 1.85;
         
@@ -561,7 +565,8 @@
             entryPrice: price,
             targetAmount: amt * targetedRatio,
             hasSold: false,
-            soldAmount: 0
+            soldAmount: 0,
+            lossTickThreshold: chosenLossTickThreshold // Stored inside structural context safely
         };
 
         document.getElementById('live-history-ribbon-content').innerHTML = `<span style="color: var(--neon-blue); font-size: 0.75rem; font-weight: bold;"><i class="fas fa-spinner fa-spin"></i> Stream tracking live...</span>`;
@@ -611,7 +616,7 @@
         updateBalance();
         
         alert(`🎉 Congratulations! You won KES ${finalProfit.toFixed(2)}.`);
-        addPayoutLog(`User Cashout: KES ${finalProfit.toFixed(2)}`);
+        addPayoutLog("User Cashout: KES " + finalProfit.toFixed(2));
 
         document.getElementById('sell-btn').disabled = true;
         
@@ -654,7 +659,7 @@
                 liveAmountText.innerText = "KES 0.00";
                 liveAmountText.className = "live-running-amount loss-danger";
             }
-            alert("❌ You lost, try next chance!");
+            alert("❌ Market Crashed. You lost, try next chance!");
         }
         
         activeTradePosition = null;
