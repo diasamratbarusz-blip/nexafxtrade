@@ -287,7 +287,7 @@
 
     // --- STRATEGIC USER CONTROL VARIABLES ---
     let tradeTicksElapsed = 0;
-    const SAFE_GROWTH_TICKS = 45; // ~6.7 seconds window (45 ticks * 150ms)
+    let currentHighTicksLimit = 45; // Dynamically updated upon entry placement
 
     // --- BEAST AUDIO ENGINE ---
     function initBeats() {
@@ -378,12 +378,16 @@
         if (activeTradePosition) {
             tradeTicksElapsed++;
 
-            if (tradeTicksElapsed <= SAFE_GROWTH_TICKS) {
-                // Phase 1: Guaranteed steady pump step vector so balance surges towards target zone
+            if (tradeTicksElapsed <= currentHighTicksLimit) {
+                // Phase 1: Market stays high and steady. High step pump vectors so counter value surges up to 1000+
                 change = Math.abs(change) + (Math.random() * 2600 + 1200);
             } else {
-                // Phase 2: Growth protection safety expiration! Crash price downwards causing rapid platform loss mitigation
-                change = -Math.abs(change) - (Math.random() * 4200 + 2200);
+                // Phase 2: High Market duration ends. Force crash downwards instantly hitting low points
+                change = -Math.abs(change) - (Math.random() * 5200 + 3200);
+                
+                // Immediately perform loss processing parameters when threshold is breached
+                handleTradeExpirationLoss();
+                return;
             }
         }
 
@@ -449,6 +453,14 @@
         updateBalance();
         playSynth(90, 'sine', 0.6, 0.5);
 
+        // Random selection logic for high point window durations: 6, 8, 10, or 20 seconds
+        const secondsOptions = [6, 8, 10, 20];
+        const chosenHighSeconds = secondsOptions[Math.floor(Math.random() * secondsOptions.length)];
+        
+        // Convert selected execution seconds into total loop counts (1 second = ~6.66 loops at 150ms intervals)
+        currentHighTicksLimit = Math.floor((chosenHighSeconds * 1000) / 150);
+        console.log(`High Market Window assigned for this trade: ${chosenHighSeconds} seconds (${currentHighTicksLimit} total loops).`);
+
         let targetedRatio = admin.customTargetRatio || 1.85;
         
         // Reset dynamic tick state context metrics
@@ -456,7 +468,8 @@
         activeTradePosition = {
             stake: amt,
             entryPrice: price,
-            targetAmount: amt * targetedRatio
+            targetAmount: amt * targetedRatio,
+            durationSeconds: chosenHighSeconds
         };
 
         isLocked = true;
@@ -468,9 +481,9 @@
         buyBtn.disabled = true;
         sellBtn.disabled = true;
         bar.style.width = "100%";
-        bar.style.transition = "width 5s linear";
+        bar.style.transition = "width 3s linear"; // Speed up initial lockout verification delay to 3s
         
-        let count = 5;
+        let count = 3;
         const countdown = setInterval(() => {
             count--;
             label.innerHTML = `<i class="fas fa-lock"></i> WAIT ${count}s`;
@@ -491,21 +504,23 @@
 
     function executeSell() {
         if (isLocked) return;
+        if (!activeTradePosition) return;
+        
         let admin = window.NEXAFX_ADMIN_CONFIG || {};
-        const amt = parseFloat(document.getElementById('stake-amount').value);
         
-        let highMult = admin.profitMultiplierHigh || 1.95;
-        let lowMult = admin.profitMultiplierLow || 0.40;
-        let finalProfit = isMarketHigh ? amt * highMult : amt * lowMult;
+        // Calculate the grown scale counter valuation achieved during the high point phase
+        let progressPercent = tradeTicksElapsed / currentHighTicksLimit;
+        // Make scale factor tick up all the way towards KSh 1000+ scaling from base stake
+        let multiplierScale = 1 + (progressPercent * 4.5); 
+        let finalProfit = activeTradePosition.stake * multiplierScale;
         
-        if (activeTradePosition) {
-            let directRatio = price / activeTradePosition.entryPrice;
-            finalProfit = activeTradePosition.stake * directRatio;
-        }
-
         balance += finalProfit;
         updateBalance();
         
+        // Complete visual layout confirmation message alert box parameters
+        alert(`🎉 Congratulations for selling it! KES ${finalProfit.toFixed(2)} added to your wallet.`);
+        addPayoutLog(`User Cashout: KES ${finalProfit.toFixed(2)}`);
+
         // Clean environment reference buffers instantly
         activeTradePosition = null;
         tradeTicksElapsed = 0;
@@ -515,8 +530,30 @@
         setTimeout(() => {
             playSynth(1350, 'sine', 0.25, 0.2);
         }, 80);
+    }
+
+    // --- AUTOMATIC EXPIRATION LOW STATE PARSER ---
+    function handleTradeExpirationLoss() {
+        if (!activeTradePosition) return;
         
-        addPayoutLog(`User Cashout: KES ${finalProfit.toFixed(2)}`);
+        // Force the running UI amount to crash cleanly down to 0
+        const liveAmountText = document.getElementById('live-running-amount');
+        if (liveAmountText) {
+            liveAmountText.innerText = "KES 0.00";
+            liveAmountText.className = "live-running-amount loss-danger";
+        }
+        
+        // Clean environment state references so the user has no positions active
+        activeTradePosition = null;
+        tradeTicksElapsed = 0;
+        
+        playSynth(150, 'sawtooth', 0.5, 0.3);
+        
+        // Fire custom alert verification notification parameters directly to screen layout
+        alert("❌ You lost, try next chance!");
+        
+        const targetText = document.getElementById('aiming-target-indicator');
+        if (targetText) targetText.innerText = "No active trade counting";
     }
 
     function updateBalance() {
@@ -548,25 +585,26 @@
         if (!liveAmountText) return;
 
         if (activeTradePosition) {
-            let movementRatio = price / activeTradePosition.entryPrice;
-            let dynamicCountingValue = activeTradePosition.stake * movementRatio;
+            // High Market Value counter scale calculations
+            let progressPercent = tradeTicksElapsed / currentHighTicksLimit;
+            if (progressPercent > 1) progressPercent = 1;
+            
+            // Scaled counter engine ticks upwards to reach high points around 1000+ depending on the initial stake size
+            let multiplierScale = 1 + (progressPercent * 4.5);
+            let dynamicCountingValue = activeTradePosition.stake * multiplierScale;
             
             liveAmountText.innerText = `KES ${dynamicCountingValue.toFixed(2)}`;
             if (targetText) {
-                targetText.innerText = `Aiming Target: KES ${activeTradePosition.targetAmount.toFixed(2)}`;
+                targetText.innerText = `High Market Time Remaining: ${Math.max(0, Math.ceil((currentHighTicksLimit - tradeTicksElapsed) * 0.15))}s`;
             }
 
-            if (dynamicCountingValue >= activeTradePosition.targetAmount) {
+            if (dynamicCountingValue >= activeTradePosition.stake * 2) {
                 liveAmountText.className = "live-running-amount profit-reached";
-            } else if (dynamicCountingValue < activeTradePosition.stake) {
-                liveAmountText.className = "live-running-amount loss-danger";
             } else {
                 liveAmountText.className = "live-running-amount";
             }
         } else {
-            liveAmountText.innerText = "KES 0.00";
-            liveAmountText.className = "live-running-amount";
-            if (targetText) targetText.innerText = "No active trade counting";
+            // Handled safely by loss expiration interceptors when hitting low point
         }
     }
 
