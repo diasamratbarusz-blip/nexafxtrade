@@ -84,9 +84,43 @@
             pointer-events: none; opacity: 0.05; transition: 0.8s; z-index: 0;
         }
 
-        /* --- Price Display --- */
+        /* --- Price Display & Top Graph Auth Buttons --- */
         .price-hero { padding: 15px 20px; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; }
         .ticker-val { font-size: 3.2rem; font-weight: 900; font-family: 'Courier New', monospace; letter-spacing: -2px; }
+
+        .top-graph-auth-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .graph-auth-btn {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .btn-graph-login {
+            background: transparent;
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .btn-graph-login:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+        .btn-graph-register {
+            background: var(--neon-blue);
+            color: #000;
+        }
+        .btn-graph-register:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+        }
 
         /* --- TOP OF GRAPH TIMELINE HISTORY MODULE --- */
         .graph-top-history-ribbon {
@@ -228,6 +262,8 @@
             .utility-group, .account-mode-group { width: 100%; }
             .live-transaction-counter { margin: 10px 10px 0 10px; }
             #chart-container { min-height: 200px; }
+            .price-hero { flex-direction: column; gap: 10px; }
+            .top-graph-auth-actions { width: 100%; }
         }
     </style>
 </head>
@@ -265,8 +301,16 @@
                     <span style="color: #666; font-size: 0.8rem; font-weight: bold;">BTC/KES REALTIME</span>
                     <div class="ticker-val" id="ticker-price">8,421,500</div>
                 </div>
-                <div id="market-trend" style="background: rgba(0,255,136,0.1); padding: 10px 20px; border-radius: 10px; font-weight: 900; color: var(--high-green);">
-                    +0.00%
+                
+                <!-- NEW: TOP OF GRAPH LOGIN & REGISTER ACTION PACK -->
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                    <div id="market-trend" style="background: rgba(0,255,136,0.1); padding: 10px 20px; border-radius: 10px; font-weight: 900; color: var(--high-green);">
+                        +0.00%
+                    </div>
+                    <div class="top-graph-auth-actions">
+                        <button class="graph-auth-btn btn-graph-login" onclick="location.href='/login'">Login</button>
+                        <button class="graph-auth-btn btn-graph-register" onclick="location.href='/register'">Register</button>
+                    </div>
                 </div>
             </div>
 
@@ -326,6 +370,10 @@
 </div>
 
 <script>
+    // --- AUTHENTICATION STATE TRACKER ---
+    window.USER_IS_AUTHENTICATED = false; // Set to true when user completes authentications
+    window.CURRENT_ACCOUNT_MODE = "REAL";  // Keeps track of the current selected play environment
+
     // --- ADMIN REMOTE CONTROL OBJECT CONFIGURATION ---
     window.NEXAFX_ADMIN_CONFIG = {
         forcedTrend: "DYNAMIC",       
@@ -529,6 +577,13 @@
 
     // --- TRADE LOGIC ---
     function executeBuy() {
+        // AUTHENTICATION INTERCEPT GUARD FOR REAL PLAY ENVIRONMENT
+        if (window.CURRENT_ACCOUNT_MODE === "REAL" && !window.USER_IS_AUTHENTICATED) {
+            alert("Authentication Required: Please login or register to place bets in Real Trade.");
+            window.location.href = "/login";
+            return;
+        }
+
         let admin = window.NEXAFX_ADMIN_CONFIG || {};
         const amt = parseFloat(document.getElementById('stake-amount').value);
         
@@ -609,6 +664,13 @@
     }
 
     function executeSell() {
+        // AUTHENTICATION INTERCEPT GUARD FOR REAL PLAY ENVIRONMENT
+        if (window.CURRENT_ACCOUNT_MODE === "REAL" && !window.USER_IS_AUTHENTICATED) {
+            alert("Authentication Required: Please login or register to complete operations in Real Trade.");
+            window.location.href = "/login";
+            return;
+        }
+
         if (isLocked) return;
         if (!activeTradePosition || activeTradePosition.hasSold) return;
         
@@ -769,10 +831,12 @@
 
         if (mode === 'DEMO') {
             currentBtn.classList.add('active-demo');
+            window.CURRENT_ACCOUNT_MODE = "DEMO";
             balance = 100000.00;
             addPayoutLog("Switched environment matrix context: Training Simulator (Demo Play).");
         } else {
             currentBtn.classList.add('active-real');
+            window.CURRENT_ACCOUNT_MODE = "REAL";
             balance = 0.00;
             addPayoutLog("Switched environment matrix context: Production Vault (Real Play).");
         }
