@@ -1,5 +1,10 @@
 import axios from "axios"
 
+/**
+ * NEXAFX API CONFIGURATION MODULE
+ * Logic: Auto-switches between local development and Render production backend.
+ */
+
 // ✅ Auto-switch between local and production backend
 const BASE_URL =
   process.env.NODE_ENV === "production"
@@ -37,10 +42,13 @@ API.interceptors.response.use(
   (error) => {
     // Global error handling matrix hook
     if (error.response) {
+      // The server responded with a status code outside the 2xx range
       console.error(`[API Error ${error.response.status}]:`, error.response.data)
     } else if (error.request) {
+      // The request was made but no response was received
       console.error("[API Network Error]: No response received from server node.")
     } else {
+      // Something happened in setting up the request that triggered an Error
       console.error("[API Configuration Error]:", error.message)
     }
     return Promise.reject(error)
