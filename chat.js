@@ -111,7 +111,7 @@ socket.on('market-update', (data) => {
     // Dynamic Scaling System: Only calculates automatically if the admin has NOT set fixed custom bounds
     if (customMaxY === null) {
         if (finalRate >= tradeChart.options.scales.y.max) {
-            tradeChart.options.scales.y.max = finalRate + Math.floor(finalRate * 0.005);
+            tradeChart.options.scales.y.max = finalRate + Math.floor(finalRate * 0.009);
         }
     } else {
         tradeChart.options.scales.y.max = customMaxY;
@@ -119,7 +119,7 @@ socket.on('market-update', (data) => {
 
     if (customMinY === null) {
         if (finalRate <= tradeChart.options.scales.y.min) {
-            tradeChart.options.scales.y.min = finalRate - Math.floor(finalRate * 0.005);
+            tradeChart.options.scales.y.min = finalRate - Math.floor(finalRate * 0.009);
         }
     } else {
         tradeChart.options.scales.y.min = customMinY;
