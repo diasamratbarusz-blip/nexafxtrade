@@ -363,20 +363,32 @@
     // Market Generator (High Speed Jitter with Admin Check overrides)
     setInterval(() => {
         let admin = window.NEXAFX_ADMIN_CONFIG || {};
-        let baseVol = isMarketHigh ? 25000 : 8000;
+        
+        // Expanded base volatility scaling factor to create wider trade ranges
+        let baseVol = isMarketHigh ? 85000 : 45000;
         const volatility = admin.customVolatility !== null && admin.customVolatility !== undefined ? admin.customVolatility : baseVol;
         
-        let change = (Math.random() - 0.48) * (volatility / 15);
+        // Absolute business asset safety limit to ensure the graph never falls too low
+        const BUSINESS_GLOBAL_RISK_LIMIT = 8350000;
+        
+        // Implements a widened random swing layout (slight positive bias to encourage higher tier escalation)
+        let change = (Math.random() - 0.46) * (volatility / 12);
         
         // Admin Trend Manipulation Check
         if (admin.forcedTrend === "BULLISH") {
-            change = Math.abs(change) + (Math.random() * 500); // Forces constant upswing
+            change = Math.abs(change) + (Math.random() * 1500); // Expanded push for forced high trends
         } else if (admin.forcedTrend === "BEARISH") {
-            change = -Math.abs(change) - (Math.random() * 500); // Forces constant downswing
+            change = -Math.abs(change) - (Math.random() * 1500); // Expanded drop for forced low trends
         }
 
         let oldPrice = price;
         price += change;
+
+        // CRITICAL BUSINESS LAYER PROTECTION: Prevent price drops below platform liquidity threshold
+        if (price < BUSINESS_GLOBAL_RISK_LIMIT) {
+            price = BUSINESS_GLOBAL_RISK_LIMIT + Math.floor(Math.random() * 5000 + 1000);
+            change = price - oldPrice;
+        }
 
         isMarketHigh = change > 0;
         const status = document.getElementById('market-status-bar');
