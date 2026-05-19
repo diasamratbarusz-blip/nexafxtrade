@@ -2,41 +2,50 @@
  * Nexafxtrade Authentication Controller
  * Path: ./controllers/auth.js
  * Description: Handles User Sign-up, Sign-in, and Token Generation
+ * Complete integration version - Restricting registration to phone and password schemas
+ * Version: 3.3.0 (May 2026)
  */
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// 1. USER MODEL (Defined here for simplicity, or import from ../models/User)
+// 1. USER MODEL (Inlined explicitly to preserve entire asset configuration context)
 const userSchema = new mongoose.Schema({
-    phone: { type: String, required: true, unique: true }, // Key for Kenyan market
+    phone: { type: String, required: true, unique: true }, // Key identity vector for Kenyan market
     password: { type: String, required: true },
     balance: { type: Number, default: 0 },
-    referrer: { type: String, default: null }, // For the 10% referral bonus
+    referrer: { type: String, default: null }, // Core hook for the 10% network referral engine bonus
     createdAt: { type: Date, default: Date.now }
 });
 
-const User = mongoose.model('User', userSchema);
+// Safeguard against redefining the model compilation inside live reload node execution layers
+const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 /**
  * REGISTER NEW USER
+ * Handles secure, phone-based platform enrollment parameters
  */
 exports.register = async (req, res) => {
     try {
         const { phone, password, referrer } = req.body;
 
-        // Check if user already exists
-        let user = await User.findOne({ phone });
-        if (user) {
-            return res.status(400).json({ message: "Phone number already registered" });
+        // Strict validation checks for baseline input sanity
+        if (!phone || !password) {
+            return res.status(400).json({ success: false, message: "Missing phone or password registration payload parameter" });
         }
 
-        // Hash the password for security
+        // Check if user already exists in the system database collection
+        let user = await User.findOne({ phone });
+        if (user) {
+            return res.status(400).json({ success: false, message: "Phone number already registered" });
+        }
+
+        // Hash the password using a high-factor salt generation routine
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create user
+        // Build user record with verified structural variables
         user = new User({
             phone,
             password: hashedPassword,
@@ -45,48 +54,58 @@ exports.register = async (req, res) => {
 
         await user.save();
 
-        // Create JWT Token
+        // Sign a persistent JWT Token for immediate access pass issuance
         const token = jwt.sign(
             { userId: user._id }, 
-            process.env.JWT_SECRET, 
+            process.env.JWT_SECRET || 'fallback_jwt_secret_nexafx_2026', 
             { expiresIn: '7d' }
         );
 
         res.status(201).json({
             success: true,
             token,
-            user: { phone: user.phone, balance: user.balance }
+            user: { 
+                id: user._id, 
+                phone: user.phone, 
+                balance: user.balance 
+            }
         });
 
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error during registration");
+        console.error("Critical Exception in Nexafxtrade Register Engine:", err);
+        res.status(500).json({ success: false, message: "Server Error during registration routine processing" });
     }
 };
 
 /**
  * LOGIN USER
+ * Authenticates user credentials via phone identities
  */
 exports.login = async (req, res) => {
     try {
         const { phone, password } = req.body;
 
-        // Find user by phone
+        // Force validation check on absolute execution properties
+        if (!phone || !password) {
+            return res.status(400).json({ success: false, message: "Missing credential tracking fields input" });
+        }
+
+        // Find user by unique phone identifier string
         const user = await User.findOne({ phone });
         if (!user) {
-            return res.status(400).json({ message: "Invalid Credentials" });
+            return res.status(400).json({ success: false, message: "Invalid Credentials" });
         }
 
-        // Compare password with hashed version
+        // Compare password with hashed version stored in the secure DB document
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: "Invalid Credentials" });
+            return res.status(400).json({ success: false, message: "Invalid Credentials" });
         }
 
-        // Create JWT Token
+        // Create fresh JWT Authorization Token
         const token = jwt.sign(
             { userId: user._id }, 
-            process.env.JWT_SECRET, 
+            process.env.JWT_SECRET || 'fallback_jwt_secret_nexafx_2026', 
             { expiresIn: '7d' }
         );
 
@@ -101,20 +120,33 @@ exports.login = async (req, res) => {
         });
 
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Server Error during login");
+        console.error("Critical Exception in Nexafxtrade Login Engine:", err);
+        res.status(500).json({ success: false, message: "Server Error during system login processing" });
     }
 };
 
 /**
- * GET CURRENT USER DATA (To refresh balance on dashboard)
+ * GET CURRENT USER DATA
+ * Refreshes user account state data seamlessly without leaking sensitive hashes
  */
 exports.getMe = async (req, res) => {
     try {
-        // req.user is set by your authMiddleware (needed for protected routes)
+        // req.user mapping parameters are injected via downstream authMiddleware pipeline structures
+        if (!req.user || !req.user.userId) {
+            return res.status(401).json({ success: false, message: "Authorization tracking footprint missing" });
+        }
+
         const user = await User.findById(req.user.userId).select('-password');
-        res.json(user);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User profile record data matrix not found" });
+        }
+
+        res.json({
+            success: true,
+            user
+        });
     } catch (err) {
-        res.status(500).send("Server Error fetching user data");
+        console.error("Critical Exception in Nexafxtrade Profile Data Fetching:", err);
+        res.status(500).json({ success: false, message: "Server Error fetching user dashboard parameters" });
     }
 };
