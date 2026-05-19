@@ -357,9 +357,9 @@
         
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        // Setup a central production pipeline master gain node for clean high volume outputs
+        // Central volume pipeline maximization
         masterGainNode = audioCtx.createGain();
-        masterGainNode.gain.setValueAtTime(0.85, audioCtx.currentTime); // High baseline master presence
+        masterGainNode.gain.setValueAtTime(1.0, audioCtx.currentTime); // Absolute maximum master capacity without platform clipping
         masterGainNode.connect(audioCtx.destination);
         
         document.getElementById('audio-btn').innerHTML = '<i class="fas fa-volume-up"></i> BEATS ACTIVE';
@@ -374,20 +374,28 @@
         }
 
         const osc = audioCtx.createOscillator();
-        const subOsc = audioCtx.createOscillator(); // Layered sub harmonic voice to reinforce thickness
+        const subOsc = audioCtx.createOscillator(); // Secondary harmonizer voice layer
         const gain = audioCtx.createGain();
         
         osc.type = type;
-        subOsc.type = 'sine'; // Always keep sub tracking smooth and bass-heavy
+        subOsc.type = 'sine'; 
         
         osc.connect(gain);
         subOsc.connect(gain);
         gain.connect(masterGainNode);
         
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        subOsc.frequency.setValueAtTime(freq / 2, audioCtx.currentTime); // Standard 1 octave below matching depth channel
+        // MODERATE BASS MATRIX REDESIGN: Raise frequencies to prevent speaker muddying or rattling
+        let targetedFreq = freq;
+        let targetedSubFreq = freq / 2;
+        if(freq < 90) {
+            targetedFreq = 100; // Hard clean punch floor
+            targetedSubFreq = 50; // Controlled micro sub-bass drop point
+        }
+
+        osc.frequency.setValueAtTime(targetedFreq, audioCtx.currentTime);
+        subOsc.frequency.setValueAtTime(targetedSubFreq, audioCtx.currentTime); 
         
-        if (freq > 100) {
+        if (targetedFreq > 100) {
             osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
             subOsc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
         } else {
@@ -396,7 +404,7 @@
         }
         
         gain.gain.setValueAtTime(0, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(vol * 1.4, audioCtx.currentTime + 0.006); // Multiplied input scale for punchier kick validation
+        gain.gain.linearRampToValueAtTime(vol * 2.0, audioCtx.currentTime + 0.005); // High envelope speed injection for loud crack
         gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
         
         osc.start();
@@ -408,12 +416,12 @@
     function startAfroLoop() {
         setInterval(() => {
             if (isMarketHigh) {
-                playSynth(70, 'triangle', 0.28, 0.6); // Louder, more aggressive pulse waves
+                playSynth(110, 'triangle', 0.25, 0.85); // Loud high accent mid-range kick
                 setTimeout(() => {
-                    if (isMarketHigh) playSynth(75, 'triangle', 0.20, 0.5);
+                    if (isMarketHigh) playSynth(120, 'triangle', 0.18, 0.75);
                 }, 250); 
             } else {
-                playSynth(50, 'sine', 0.80, 0.5); // Deep sub-bass floor thump mapping
+                playSynth(95, 'sine', 0.60, 0.80); // Moderate clean bass punch loop tracking
             }
         }, 1000);
     }
@@ -492,7 +500,7 @@
             glow.style.background = "var(--high-green)";
             glow.style.opacity = "0.15";
             chart.data.datasets[0].borderColor = "var(--high-green)";
-            playSynth(440, 'sawtooth', 0.05, 0.04); // Louder real-time charting tick sound
+            playSynth(520, 'sawtooth', 0.04, 0.08); // Maximum clarity on live ticks
         } else {
             status.innerText = "❄️ LOW MARKET STRENGTH - BEARISH MOMENTUM ❄️";
             status.className = "status-low";
@@ -527,23 +535,22 @@
 
         balance -= amt;
         updateBalance();
-        playSynth(110, 'sawtooth', 0.5, 0.75); // Loud entrance confirmation signal
+        playSynth(180, 'sawtooth', 0.45, 0.95); // Extremely loud and sharp action signature sound
 
-        // All full time points seconds options requested array
-        const secondsOptions = [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
-        
-        // Dynamic Probability Vector Weight Matrix: Mostly pick numbers below 20 seconds
+        // CRITICAL UPDATE: Multi-tier random distribution framework (5s to 30s)
         let chosenHighSeconds;
-        if (Math.random() < 0.78) {
-            const optionsBelow20 = secondsOptions.filter(s => s < 20);
-            chosenHighSeconds = optionsBelow20[Math.floor(Math.random() * optionsBelow20.length)];
+        const rollWeight = Math.random(); 
+
+        if (rollWeight < 0.75) {
+            // 75% Probability Vector target: Short bursts (5 to 10 seconds)
+            chosenHighSeconds = Math.floor(Math.random() * (10 - 5 + 1)) + 5;
         } else {
-            const optionsAboveEqual20 = secondsOptions.filter(s => s >= 20);
-            chosenHighSeconds = optionsAboveEqual20[Math.floor(Math.random() * optionsAboveEqual20.length)];
+            // 25% Probability Vector target: Extended runs (11 to 30 seconds)
+            chosenHighSeconds = Math.floor(Math.random() * (30 - 11 + 1)) + 11;
         }
         
         currentHighTicksLimit = Math.floor((chosenHighSeconds * 1000) / 150);
-        console.log(`High Market Window assigned: ${chosenHighSeconds}s (${currentHighTicksLimit} loops).`);
+        console.log(`High Market Window assigned dynamically: ${chosenHighSeconds}s (${currentHighTicksLimit} loop ticks).`);
 
         let targetedRatio = admin.customTargetRatio || 1.85;
         
@@ -581,7 +588,7 @@
                 label.innerHTML = `<i class="fas fa-hand-holding-usd"></i> SELL`;
                 bar.style.transition = "none";
                 bar.style.width = "0%";
-                playSynth(880, 'sine', 0.12, 0.45); // Crispy unlock signal alert
+                playSynth(980, 'sine', 0.15, 0.85); // High crisp pitch unlocked confirmation alert
             }
         }, 1000);
 
@@ -613,10 +620,10 @@
             <span style="color: #888; font-size: 0.75rem; font-weight: bold;"><i class="fas fa-chart-line"></i> Tracking upper limits...</span>
         `;
         
-        // Premium Loud Multi-Stage Escalation Win Synthesizers
-        playSynth(950, 'sine', 0.25, 0.65);
-        setTimeout(() => { playSynth(1450, 'sine', 0.35, 0.75); }, 70);
-        setTimeout(() => { playSynth(1950, 'sine', 0.45, 0.85); }, 140);
+        // Multi-stage maximum amplification win synthesizer chords
+        playSynth(1100, 'sine', 0.25, 0.95);
+        setTimeout(() => { playSynth(1550, 'sine', 0.35, 1.0); }, 60);
+        setTimeout(() => { playSynth(2100, 'sine', 0.45, 1.0); }, 120);
     }
 
     // --- AUTOMATIC EXPIRATION LOW STATE PARSER ---
@@ -654,7 +661,7 @@
         tradeTicksElapsed = 0;
         
         if (targetText) targetText.innerText = "No active trade counting";
-        playSynth(130, 'sawtooth', 0.75, 0.85); // Loud crashing low-pass buzz filter
+        playSynth(180, 'sawtooth', 0.80, 1.0); // Maximum blast crash notification with balanced bass punch
     }
 
     function updateBalance() {
