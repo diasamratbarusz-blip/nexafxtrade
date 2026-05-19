@@ -464,6 +464,12 @@
         if (activeTradePosition) {
             tradeTicksElapsed++;
 
+            // Track absolute running value calculation framework dynamically for the crash points
+            let currentProgressPercent = tradeTicksElapsed / currentHighTicksLimit;
+            if (currentProgressPercent > 1) currentProgressPercent = 1;
+            let currentMultiplierScale = 1 + (currentProgressPercent * 5.2);
+            activeTradePosition.lastKnownValue = activeTradePosition.stake * currentMultiplierScale;
+
             // Check if the running ticks have crossed the completely randomized loss point
             if (tradeTicksElapsed <= activeTradePosition.lossTickThreshold) {
                 // Keep pumping green upward momentum while within the safe zone
@@ -566,6 +572,7 @@
             targetAmount: amt * targetedRatio,
             hasSold: false,
             soldAmount: 0,
+            lastKnownValue: amt,
             lossTickThreshold: chosenLossTickThreshold // Stored inside structural context safely
         };
 
@@ -635,8 +642,8 @@
     function handleTradeExpirationLoss() {
         if (!activeTradePosition) return;
         
-        let maxPossibleMultiplier = 1 + (1 * 5.2);
-        let absoluteCrashValue = activeTradePosition.stake * maxPossibleMultiplier;
+        // Capture exact point of system drop crash value configuration safely
+        let crashValue = activeTradePosition.lastKnownValue || activeTradePosition.stake;
 
         const liveAmountText = document.getElementById('live-running-amount');
         const targetText = document.getElementById('aiming-target-indicator');
@@ -646,13 +653,13 @@
             ribbonContent.innerHTML = `
                 <span class="badge-won">WON: KES ${activeTradePosition.soldAmount.toFixed(2)}</span>
                 <span class="history-arrow-divider"><i class="fas fa-chevron-right"></i></span>
-                <span class="badge-lost-target">CRASHED AT: KES ${absoluteCrashValue.toFixed(2)}</span>
+                <span class="badge-lost-target">CRASHED AT: KES ${crashValue.toFixed(2)}</span>
             `;
         } else {
             ribbonContent.innerHTML = `
                 <span class="badge-lost-target">LOST: KES ${activeTradePosition.stake.toFixed(2)}</span>
                 <span class="history-arrow-divider"><i class="fas fa-chevron-right"></i></span>
-                <span class="badge-lost-target">CRASHED AT: KES ${absoluteCrashValue.toFixed(2)}</span>
+                <span class="badge-lost-target">CRASHED AT: KES ${crashValue.toFixed(2)}</span>
             `;
             
             if (liveAmountText) {
@@ -722,7 +729,7 @@
                 ribbonContent.innerHTML = `
                     <span class="badge-won">WON: KES ${activeTradePosition.soldAmount.toFixed(2)}</span>
                     <span class="history-arrow-divider"><i class="fas fa-chevron-right"></i></span>
-                    <span style="color: #666; font-size: 0.7rem;">PEAK POTENTIAL: KES ${dynamicCountingValue.toFixed(2)}</span>
+                    <span class="badge-lost-target">CRASHED AT: KES ${dynamicCountingValue.toFixed(2)}</span>
                 `;
             }
 
