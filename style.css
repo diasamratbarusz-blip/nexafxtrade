@@ -2,6 +2,7 @@
  * Nexafxtrade Premium Stylesheet
  * Optimized for the "image_3.png" aesthetic & high-performance wavy charts
  * Complete integration version - Fully Flexible For All Mobile & Desktop Viewports
+ * Version: 3.3.0 (May 2026)
  */
 
 :root {
@@ -539,6 +540,12 @@ nav, .main-header {
     padding: 12px;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.universal-action-bar:hover {
+    border-color: rgba(0, 212, 255, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .utility-group, .account-mode-group {
@@ -560,7 +567,7 @@ nav, .main-header {
     border-radius: 6px;
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
     white-space: nowrap;
 }
@@ -587,7 +594,7 @@ nav, .main-header {
     border-radius: 6px;
     cursor: pointer;
     text-align: center;
-    transition: 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     background: #11171f;
     color: var(--text-dim);
     border: 1px solid var(--border-color);
@@ -624,6 +631,7 @@ nav, .main-header {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    transition: border-color 0.3s ease;
 }
 
 .counter-details {
@@ -655,7 +663,7 @@ nav, .main-header {
     font-family: monospace;
     color: var(--text-light);
     letter-spacing: -0.5px;
-    transition: color 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 /* JavaScript status classes for direct math state updates */
@@ -666,6 +674,7 @@ nav, .main-header {
 
 .live-running-amount.loss-danger {
     color: var(--danger) !important;
+    text-shadow: 0 0 8px rgba(255, 82, 82, 0.3);
 }
 
 /* --- Responsive Engine Media Processing --- */
