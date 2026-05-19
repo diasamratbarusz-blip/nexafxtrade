@@ -258,45 +258,38 @@ function handleTrade(orderType) {
         tradeTicksElapsed = 0;
 
         // --- WEIGHTED MATHEMATICAL DISTRIBUTION ENGINE ---
-        // Determines a completely dynamic lifespan strictly constrained between 5s and 30s
         let chosenLossSeconds;
         let randomWeightRoll = Math.random();
 
         if (randomWeightRoll < 0.75) {
-            // 75% Probability: Forces the loss target configuration down below 10 seconds (5s to 10s window)
             chosenLossSeconds = Math.random() * (10.0 - 5.0) + 5.0;
         } else {
-            // 25% Probability: Fallback range extending up to the structural outer limits (10.01s to 30s window)
             chosenLossSeconds = Math.random() * (30.0 - 10.01) + 10.01;
         }
 
-        // Convert selected timeline seconds values into websocket stream tick intervals (Assuming ~800ms emulations or updates)
         let randomThresholdRoll = Math.floor((chosenLossSeconds * 1000) / 800);
 
-        // Define tracking calculation metric data parameters
         activeTradePosition = {
             type: 'BUY',
             entryPrice: currentPrice,
             stake: stakeValue,
-            targetAmount: stakeValue * 1.5, // Targets 150% (aiming scale)
+            targetAmount: stakeValue * 1.5,
             customizedLossThreshold: randomThresholdRoll
         };
 
         if (socket && socket.connected) {
             socket.emit('place-trade', { type: 'BUY', amount: stakeValue, customizedLossThreshold: randomThresholdRoll });
         }
-        console.log(`BUY order sent to server context. Crash lifespan locked at: ${chosenLossSeconds.toFixed(2)}s`);
     } else {
-        // If a buy position was active, this executes the liquidating sell operation
         if (activeTradePosition) {
             let currentMultiplier = currentPrice / activeTradePosition.entryPrice;
             let finalPayout = activeTradePosition.stake * currentMultiplier;
             walletBalance += finalPayout;
             injectChatMessage("SYSTEM ALERT", `Sold position successfully! Recieved KES ${finalPayout.toFixed(2)}`, true, "var(--success)");
-            activeTradePosition = null; // Clear position tracking configuration
+            activeTradePosition = null; 
             tradeTicksElapsed = 0;
         } else {
-            walletBalance += (stakeValue * 0.95); // Example fallback transaction parameters
+            walletBalance += (stakeValue * 0.95); 
             injectChatMessage("SYSTEM ALERT", `Liquidated dynamic Asset stake volume: ${stakeValue} KES`, true, "var(--danger)");
         }
         
@@ -305,13 +298,10 @@ function handleTrade(orderType) {
         if (socket && socket.connected) {
             socket.emit('place-trade', { type: 'SELL', amount: stakeValue });
         }
-        console.log("SELL order sent to server context.");
     }
 
-    // Visual Refresh Across Balance Elements
     refreshUIBalances();
     
-    // Legacy support additions tracking system logs inside sidebars
     const logsContainer = document.getElementById('tradeLogs');
     if (logsContainer) {
         const item = document.createElement('div');
@@ -322,21 +312,11 @@ function handleTrade(orderType) {
     }
 }
 
-// Map bindings to conditional event checking protocols safely
 if (buyBtn && !buyBtn.onclick) {
     buyBtn.onclick = () => { handleTrade('BUY'); };
 }
 if (sellBtn && !sellBtn.onclick) {
     sellBtn.onclick = () => { handleTrade('SELL'); };
-}
-
-// Listen for trade outcome from server.js engine
-if (socket) {
-    socket.on('trade-result', (data) => {
-        const resultMsg = data.status === "WIN" ? `Win! KES ${data.payout}` : "Loss. Try again!";
-        console.log(`Nexafxtrade: ${resultMsg}`);
-        injectChatMessage("ENGINE", `Trade Result: ${resultMsg}`, true, data.status === "WIN" ? "var(--success)" : "var(--danger)");
-    });
 }
 
 /**
@@ -351,7 +331,6 @@ window.initAudio = () => {
     const btn = document.getElementById('soundBtn') || document.querySelector('.sound-status');
     if (btn) {
         btn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i> SOUND ON' : '<i class="fas fa-volume-mute"></i> SOUND OFF';
-        btn.className = soundEnabled ? 'sound-status on' : 'sound-status';
     }
 };
 
@@ -383,12 +362,11 @@ function playSound(type) {
 }
 
 /**
- * 6. UI INTERACTION HELPERS (Global Scope)
+ * 6. UI INTERACTION HELPERS
  */
 window.adjustAmount = (val) => {
     const input = document.getElementById('trade-amount') || document.querySelector('.amount-input');
     if (!input) return;
-
     let current = parseInt(input.value) || 0;
     if (val === 'double') {
         input.value = current * 2;
@@ -402,113 +380,39 @@ window.setSum = (val) => {
     if (input) input.value = val;
 };
 
-/**
- * ==========================================================================
- * NEW INTEGRATIONS: TRANSACTION TRACKING & RESPONSIVE HUB ROUTINES
- * ==========================================================================
- */
-
-/**
- * Centralized Balance Display Formatter Utility
- */
 function refreshUIBalances() {
     const localBal = document.getElementById('user-balance') || document.getElementById('walletBal');
     const walletBal = document.getElementById('walletBal') || document.querySelector('.wallet-amount');
     const formattedBalance = walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    
     if (localBal) localBal.innerText = formattedBalance;
     if (walletBal) {
-        if (walletBal.tagName === 'INPUT') {
-            walletBal.value = `KES ${formattedBalance}`;
-        } else {
-            walletBal.innerText = walletBal.id === 'walletBal' ? `KES ${formattedBalance}` : formattedBalance;
-        }
+        if (walletBal.tagName === 'INPUT') { walletBal.value = `KES ${formattedBalance}`; }
+        else { walletBal.innerText = `KES ${formattedBalance}`; }
     }
 }
 
-/**
- * Tracks and Calculates Transaction Value in Real-Time to prompt accurate sells
- */
 function processLiveCountingTransaction() {
     const liveValueDisplay = document.getElementById('live-running-amount');
-    const targetIndicator = document.getElementById('aiming-target-indicator');
-    
     if (!liveValueDisplay) return;
 
     if (activeTradePosition) {
-        // Evaluate market variance calculations
-        let structuralRatio = currentPrice / activeTradePosition.entryPrice;
-        let currentLiveCountingValue = activeTradePosition.stake * structuralRatio;
-        
-        // Prevent negative visually counting outputs
+        let currentLiveCountingValue = activeTradePosition.stake * (currentPrice / activeTradePosition.entryPrice);
         if (currentLiveCountingValue < 0) currentLiveCountingValue = 0;
-        
         liveValueDisplay.innerText = `KES ${currentLiveCountingValue.toFixed(2)}`;
         
-        if (targetIndicator) {
-            targetIndicator.innerText = `Aiming Target: KES ${activeTradePosition.targetAmount.toFixed(2)}`;
-        }
-
-        // Apply style class modifiers based on performance benchmarks
         if (currentLiveCountingValue >= activeTradePosition.targetAmount) {
             liveValueDisplay.className = "live-running-amount profit-reached";
         } else if (currentLiveCountingValue < activeTradePosition.stake) {
             liveValueDisplay.className = "live-running-amount loss-danger";
-        } else {
-            liveValueDisplay.className = "live-running-amount";
         }
     } else {
-        // Idle System state indicators when no dynamic transactions are open
         liveValueDisplay.innerText = "KES 0.00";
         liveValueDisplay.className = "live-running-amount";
-        if (targetIndicator) targetIndicator.innerText = "No active trade counting";
     }
 }
 
-/**
- * Navigation Button Framework Route Binding Utilities
- */
-window.executeWithdrawalRoute = () => {
-    injectChatMessage("SYSTEM", "Redirecting to Secured Withdrawal Processing Channel...", true, "var(--primary)");
-    console.log("Navigation Execution: Withdraw channel open.");
-};
-
-window.executeDepositRoute = () => {
-    injectChatMessage("SYSTEM", "Opening Instant Account Liquidity Loading Portal...", true, "var(--success)");
-    console.log("Navigation Execution: Deposit channel open.");
-};
-
-window.toggleHowToTradeModal = () => {
-    alert("Nexafxtrade Tutorial Desk:\n1. Input your target stake amount.\n2. Click BUY to grab an active market contract position.\n3. Monitor the live counting transaction field.\n4. Click SELL once position meets or exceeds your aiming amount target!");
-};
-
-window.triggerReferralSystem = () => {
-    const simulationLink = `https://nexafxtrade.premium/ref?id=${Math.floor(Math.random() * 89999 + 10000)}`;
-    alert(`Copy your exclusive referral network dashboard configuration link:\n${simulationLink}`);
-    injectChatMessage("REWARDS", "Referral link copied to Clipboard environment context system framework.", true, "var(--gold-text)");
-};
-
-/**
- * Environment Simulation Context Controllers (Demo Play vs Real Play)
- */
-window.switchAccountMode = (selectedMode, clickedElement) => {
-    // Reset active indicators across dynamic mode controls selectors
-    const modes = document.querySelectorAll('.mode-btn');
-    modes.forEach(btn => {
-        btn.classList.remove('active-demo', 'active-real');
-    });
-
-    if (selectedMode === 'DEMO') {
-        clickedElement.classList.add('active-demo');
-        walletBalance = 100000; // Load simulated training funds asset limits
-        injectChatMessage("SYSTEM CONSOLE", "Switched to Demo Play Sandbox. Trades use simulated asset variables.", true, "var(--primary)");
-    } else {
-        clickedElement.classList.add('active-real');
-        walletBalance = 1450000; // Restore standard profile capital configurations
-        injectChatMessage("SYSTEM CONSOLE", "Switched to Live Production Server. Real capital trading rules applied.", true, "var(--success)");
-    }
-    
-    refreshUIBalances();
-};
+// Route Binders
+window.executeWithdrawalRoute = () => { injectChatMessage("SYSTEM", "Redirecting to Secured Withdrawal Processing Channel...", true, "var(--primary)"); };
+window.executeDepositRoute = () => { injectChatMessage("SYSTEM", "Opening Instant Account Liquidity Loading Portal...", true, "var(--success)"); };
 
 console.log("Nexafxtrade: Script logic loaded successfully.");
