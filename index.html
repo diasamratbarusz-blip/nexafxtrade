@@ -26,9 +26,9 @@
         /* --- Global Medium Size App Container Wrapper --- */
         .app-container {
             width: 100%;
-            max-width: 1200px; /* Restricts layout from stretching too wide on big screens */
+            max-width: 1200px;
             height: 100vh;
-            max-height: 900px; /* Restricts layout from getting vertically bloated */
+            max-height: 900px;
             display: flex;
             flex-direction: column;
             background: var(--bg-black);
@@ -85,8 +85,61 @@
         }
 
         /* --- Price Display --- */
-        .price-hero { padding: 20px; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; }
+        .price-hero { padding: 15px 20px; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; }
         .ticker-val { font-size: 3.2rem; font-weight: 900; font-family: 'Courier New', monospace; letter-spacing: -2px; }
+
+        /* --- TOP OF GRAPH TIMELINE HISTORY MODULE --- */
+        .graph-top-history-ribbon {
+            background: #0d1117;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            padding: 8px 20px;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 24px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .history-ribbon-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-right: 1px solid #333;
+            padding-right: 10px;
+        }
+        .history-item-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge-won {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--high-green);
+            color: var(--high-green);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            font-family: monospace;
+        }
+        .badge-lost-target {
+            background: rgba(255, 51, 102, 0.15);
+            border: 1px solid var(--low-red);
+            color: var(--low-red);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            font-family: monospace;
+        }
+        .history-arrow-divider {
+            color: #444;
+            font-size: 0.7rem;
+        }
 
         /* --- Chart Wrapper --- */
         #chart-container { flex: 1; min-height: 220px; padding: 0 20px; position: relative; z-index: 1; }
@@ -123,7 +176,7 @@
         .live-transaction-counter {
             background: linear-gradient(90deg, rgba(17, 21, 28, 0.9) 0%, rgba(6, 8, 10, 0.9) 100%);
             border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid var(--neon-blue);
-            border-radius: 10px; padding: 12px 20px; margin: 0 20px; z-index: 2;
+            border-radius: 10px; padding: 12px 20px; margin: 10px 20px 0 20px; z-index: 2;
             display: flex; justify-content: space-between; align-items: center;
         }
         .counter-details { display: flex; flex-direction: column; gap: 2px; }
@@ -214,6 +267,14 @@
                 </div>
                 <div id="market-trend" style="background: rgba(0,255,136,0.1); padding: 10px 20px; border-radius: 10px; font-weight: 900; color: var(--high-green);">
                     +0.00%
+                </div>
+            </div>
+
+            <!-- TIMELINE HISTORY LEDGER RIBBON AT TOP OF GRAPH -->
+            <div class="graph-top-history-ribbon">
+                <span class="history-ribbon-label">Position History</span>
+                <div id="live-history-ribbon-content" class="history-item-container">
+                    <span style="color: #444; font-size: 0.75rem;">No recent trade streams completed</span>
                 </div>
             </div>
 
@@ -433,7 +494,7 @@
         dataPoints.shift();
         chart.update('none');
 
-        processLiveCountingTransaction(oldPrice);
+        processLiveCountingTransaction();
     }, 150);
 
     // --- TRADE LOGIC ---
@@ -459,16 +520,13 @@
         // Dynamic Probability Vector Weight Matrix: Mostly pick numbers below 20 seconds
         let chosenHighSeconds;
         if (Math.random() < 0.78) {
-            // 78% probability of selecting an option below 20 seconds
             const optionsBelow20 = secondsOptions.filter(s => s < 20);
             chosenHighSeconds = optionsBelow20[Math.floor(Math.random() * optionsBelow20.length)];
         } else {
-            // 22% probability of selecting an option 20 seconds and above
             const optionsAboveEqual20 = secondsOptions.filter(s => s >= 20);
             chosenHighSeconds = optionsAboveEqual20[Math.floor(Math.random() * optionsAboveEqual20.length)];
         }
         
-        // Convert selected execution seconds into total loop counts (1 second = ~6.66 loops at 150ms intervals)
         currentHighTicksLimit = Math.floor((chosenHighSeconds * 1000) / 150);
         console.log(`High Market Window assigned: ${chosenHighSeconds}s (${currentHighTicksLimit} loops).`);
 
@@ -479,8 +537,13 @@
         activeTradePosition = {
             stake: amt,
             entryPrice: price,
-            targetAmount: amt * targetedRatio
+            targetAmount: amt * targetedRatio,
+            hasSold: false,
+            soldAmount: 0
         };
+
+        // Reset history header visualization ribbon text for new placement streams
+        document.getElementById('live-history-ribbon-content').innerHTML = `<span style="color: var(--neon-blue); font-size: 0.75rem; font-weight: bold;"><i class="fas fa-spinner fa-spin"></i> Stream tracking live...</span>`;
 
         isLocked = true;
         const buyBtn = document.getElementById('buy-btn');
@@ -491,7 +554,7 @@
         buyBtn.disabled = true;
         sellBtn.disabled = true;
         bar.style.width = "100%";
-        bar.style.transition = "width 3s linear"; // Speed up initial lockout verification delay to 3s
+        bar.style.transition = "width 3s linear"; 
         
         let count = 3;
         const countdown = setInterval(() => {
@@ -514,57 +577,79 @@
 
     function executeSell() {
         if (isLocked) return;
-        if (!activeTradePosition) return;
+        if (!activeTradePosition || activeTradePosition.hasSold) return;
         
-        let admin = window.NEXAFX_ADMIN_CONFIG || {};
-        
-        // Calculate the grown scale counter valuation achieved during the high point phase
+        // Calculate dynamic cashout value at this precise moment
         let progressPercent = tradeTicksElapsed / currentHighTicksLimit;
-        
-        // Scaled multiplier growth engine (Ticks smoothly upwards, matching stakes like 50, 100, 200, 500 up towards KSh 1000+)
         let multiplierScale = 1 + (progressPercent * 5.2); 
         let finalProfit = activeTradePosition.stake * multiplierScale;
         
+        // Lock inside memory metrics context but let loop process run out
+        activeTradePosition.hasSold = true;
+        activeTradePosition.soldAmount = finalProfit;
+
         balance += finalProfit;
         updateBalance();
         
-        // Complete visual layout confirmation message alert box parameters
-        alert(`🎉 Congratulations for selling it! KES ${finalProfit.toFixed(2)} added to your wallet.`);
+        // Display immediate confirmation layout 
+        alert(`🎉 Congratulations! You won KES ${finalProfit.toFixed(2)}.`);
         addPayoutLog(`User Cashout: KES ${finalProfit.toFixed(2)}`);
 
-        // Clean environment reference buffers instantly
-        activeTradePosition = null;
-        tradeTicksElapsed = 0;
-        processLiveCountingTransaction();
+        // Lock button controls instantly to prevent duplicate cashout actions
+        document.getElementById('sell-btn').disabled = true;
+        
+        // Update top ribbon timeline with intermediate locked winning record banner
+        document.getElementById('live-history-ribbon-content').innerHTML = `
+            <span class="badge-won">WON: KES ${finalProfit.toFixed(2)}</span>
+            <span class="history-arrow-divider"><i class="fas fa-chevron-right"></i></span>
+            <span style="color: #888; font-size: 0.75rem; font-weight: bold;"><i class="fas fa-chart-line"></i> Tracking upper limits...</span>
+        `;
         
         playSynth(900, 'sine', 0.15, 0.2);
-        setTimeout(() => {
-            playSynth(1350, 'sine', 0.25, 0.2);
-        }, 80);
+        setTimeout(() => { playSynth(1350, 'sine', 0.25, 0.2); }, 80);
     }
 
     // --- AUTOMATIC EXPIRATION LOW STATE PARSER ---
     function handleTradeExpirationLoss() {
         if (!activeTradePosition) return;
         
-        // Force the running UI amount to crash cleanly down to 0
+        // Calculate the maximum limit point reached before crash execution
+        let maxPossibleMultiplier = 1 + (1 * 5.2);
+        let absoluteCrashValue = activeTradePosition.stake * maxPossibleMultiplier;
+
         const liveAmountText = document.getElementById('live-running-amount');
-        if (liveAmountText) {
-            liveAmountText.innerText = "KES 0.00";
-            liveAmountText.className = "live-running-amount loss-danger";
+        const targetText = document.getElementById('aiming-target-indicator');
+        const ribbonContent = document.getElementById('live-history-ribbon-content');
+
+        // Render the crash state in the history ribbon at the top of the graph
+        if (activeTradePosition.hasSold) {
+            // Case A: User cashed out early. Show their win side-by-side with the absolute peak they missed out on
+            ribbonContent.innerHTML = `
+                <span class="badge-won">WON: KES ${activeTradePosition.soldAmount.toFixed(2)}</span>
+                <span class="history-arrow-divider"><i class="fas fa-chevron-right"></i></span>
+                <span class="badge-lost-target">CRASHED AT: KES ${absoluteCrashValue.toFixed(2)}</span>
+            `;
+        } else {
+            // Case B: User did not sell. Show total failure drop down metrics
+            ribbonContent.innerHTML = `
+                <span class="badge-lost-target">LOST: KES ${activeTradePosition.stake.toFixed(2)}</span>
+                <span class="history-arrow-divider"><i class="fas fa-chevron-right"></i></span>
+                <span class="badge-lost-target">CRASHED AT: KES ${absoluteCrashValue.toFixed(2)}</span>
+            `;
+            
+            if (liveAmountText) {
+                liveAmountText.innerText = "KES 0.00";
+                liveAmountText.className = "live-running-amount loss-danger";
+            }
+            alert("❌ You lost, try next chance!");
         }
         
-        // Clean environment state references so the user has no positions active
+        // Clear environment tracking properties
         activeTradePosition = null;
         tradeTicksElapsed = 0;
         
-        playSynth(150, 'sawtooth', 0.5, 0.3);
-        
-        // Fire custom alert verification notification parameters directly to screen layout
-        alert("❌ You lost, try next chance!");
-        
-        const targetText = document.getElementById('aiming-target-indicator');
         if (targetText) targetText.innerText = "No active trade counting";
+        playSynth(150, 'sawtooth', 0.5, 0.3);
     }
 
     function updateBalance() {
@@ -592,23 +677,39 @@
     function processLiveCountingTransaction() {
         const liveAmountText = document.getElementById('live-running-amount');
         const targetText = document.getElementById('aiming-target-indicator');
+        const ribbonContent = document.getElementById('live-history-ribbon-content');
         
         if (!liveAmountText) return;
 
         if (activeTradePosition) {
-            // High Market Value counter scale calculations
             let progressPercent = tradeTicksElapsed / currentHighTicksLimit;
             if (progressPercent > 1) progressPercent = 1;
             
-            // Multiplier curve engine scales up nicely into the hundreds and thousands
             let multiplierScale = 1 + (progressPercent * 5.2);
             let dynamicCountingValue = activeTradePosition.stake * multiplierScale;
             
+            // Core counter always counts up beautifully to the end, regardless of whether they sold
             liveAmountText.innerText = `KES ${dynamicCountingValue.toFixed(2)}`;
             
-            // Hides the countdown time entirely from view, replacing it with a secured position status tracking note
             if (targetText) {
                 targetText.innerHTML = `<span style="color: var(--high-green);"><i class="fas fa-shield-alt"></i> ⚡ MARKET POSITION SECURED</span>`;
+            }
+
+            // Real-time top graph history ribbon builder update loop
+            if (!activeTradePosition.hasSold) {
+                ribbonContent.innerHTML = `
+                    <span style="color: #fff; font-size: 0.75rem; font-weight: bold;">CURRENT VALUE:</span>
+                    <span class="badge-won" style="background: rgba(0,212,255,0.1); border-color: var(--neon-blue); color: var(--neon-blue);">
+                        KES ${dynamicCountingValue.toFixed(2)}
+                    </span>
+                `;
+            } else {
+                // If they already sold, update the ribbon to show their locked win alongside the live moving counter
+                ribbonContent.innerHTML = `
+                    <span class="badge-won">WON: KES ${activeTradePosition.soldAmount.toFixed(2)}</span>
+                    <span class="history-arrow-divider"><i class="fas fa-chevron-right"></i></span>
+                    <span style="color: #666; font-size: 0.7rem;">PEAK POTENTIAL: KES ${dynamicCountingValue.toFixed(2)}</span>
+                `;
             }
 
             if (dynamicCountingValue >= activeTradePosition.stake * 2) {
@@ -616,8 +717,6 @@
             } else {
                 liveAmountText.className = "live-running-amount";
             }
-        } else {
-            // Handled safely by loss expiration interceptors when hitting low point
         }
     }
 
