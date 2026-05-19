@@ -91,6 +91,10 @@ socket.on('market-update', (data) => {
         activeAdminControlTrend = localControl;
     }
 
+    // Business Safety Parameters for high-range trading protection
+    const BUSINESS_SAFETY_FLOOR = 8350000; // Absolute base limit protecting the business from dropping down too far
+    const BIG_RANGE_MULTIPLIER = 4500;     // Amplified random swing scaling factor for high-profit/loss potential
+
     // Dynamic wave transformation based on administrative panel state execution
     if (activeAdminControlTrend === "HIGH") {
         // Intercept and smoothly slide the wave upside (Scaled appropriately for higher KES numbers)
@@ -103,6 +107,15 @@ socket.on('market-update', (data) => {
         tradeChart.data.datasets[0].borderColor = '#ff0000'; // Turn wave red for forced downward movement
         tradeChart.data.datasets[0].backgroundColor = 'rgba(255, 0, 0, 0.1)';
     } else {
+        // AUTO MODE: Implements wider ranges for big profit/loss potential while keeping your business safe
+        let randomSwing = (Math.random() - 0.45) * BIG_RANGE_MULTIPLIER; // Slightly biased upward to facilitate growth to next levels
+        finalRate = finalRate + randomSwing;
+
+        // CRITICAL PROTECTION: Enforce safety floor logic so trade bounds never drop below business risk limits
+        if (finalRate < BUSINESS_SAFETY_FLOOR) {
+            finalRate = BUSINESS_SAFETY_FLOOR + Math.floor(Math.random() * 1500 + 500); // Rebounce upward safely
+        }
+
         // Restore default styling if trend control mode is set back to AUTO
         tradeChart.data.datasets[0].borderColor = '#00ff00';
         tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
