@@ -28,7 +28,7 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!api/|_next/|_static/|[\\w-]+\\.\\w+).*)",
       "destination": "/index.html"
     }
   ]
