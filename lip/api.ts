@@ -17,12 +17,13 @@ const API = axios.create({
 // ✅ Optional: Request interceptor (useful for tokens later)
 API.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token")
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    // Check if window is defined to avoid Next.js Server-Side Rendering (SSR) reference errors
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token")
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
     }
-
     return config
   },
   (error) => {
@@ -34,7 +35,14 @@ API.interceptors.request.use(
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    // You can expand this later for global error handling
+    // Global error handling matrix hook
+    if (error.response) {
+      console.error(`[API Error ${error.response.status}]:`, error.response.data)
+    } else if (error.request) {
+      console.error("[API Network Error]: No response received from server node.")
+    } else {
+      console.error("[API Configuration Error]:", error.message)
+    }
     return Promise.reject(error)
   }
 )
