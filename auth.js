@@ -32,13 +32,19 @@ exports.register = async (req, res) => {
 
         // Strict validation checks for baseline input sanity
         if (!phone || !password) {
-            return res.status(400).json({ success: false, message: "Missing phone or password registration payload parameter" });
+            return res.status(400).json({ 
+                success: false, 
+                message: "Missing phone or password registration payload parameter" 
+            });
         }
 
         // Check if user already exists in the system database collection
         let user = await User.findOne({ phone });
         if (user) {
-            return res.status(400).json({ success: false, message: "Phone number already registered" });
+            return res.status(400).json({ 
+                success: false, 
+                message: "Phone number already registered in the Nexafx matrix" 
+            });
         }
 
         // Hash the password using a high-factor salt generation routine
@@ -73,7 +79,10 @@ exports.register = async (req, res) => {
 
     } catch (err) {
         console.error("Critical Exception in Nexafxtrade Register Engine:", err);
-        res.status(500).json({ success: false, message: "Server Error during registration routine processing" });
+        res.status(500).json({ 
+            success: false, 
+            message: "Server Error during registration routine processing" 
+        });
     }
 };
 
@@ -87,19 +96,28 @@ exports.login = async (req, res) => {
 
         // Force validation check on absolute execution properties
         if (!phone || !password) {
-            return res.status(400).json({ success: false, message: "Missing credential tracking fields input" });
+            return res.status(400).json({ 
+                success: false, 
+                message: "Missing credential tracking fields input" 
+            });
         }
 
         // Find user by unique phone identifier string
         const user = await User.findOne({ phone });
         if (!user) {
-            return res.status(400).json({ success: false, message: "Invalid Credentials" });
+            return res.status(400).json({ 
+                success: false, 
+                message: "Invalid Credentials: Node not found" 
+            });
         }
 
         // Compare password with hashed version stored in the secure DB document
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ success: false, message: "Invalid Credentials" });
+            return res.status(400).json({ 
+                success: false, 
+                message: "Invalid Credentials: Password mismatch" 
+            });
         }
 
         // Create fresh JWT Authorization Token
@@ -121,7 +139,10 @@ exports.login = async (req, res) => {
 
     } catch (err) {
         console.error("Critical Exception in Nexafxtrade Login Engine:", err);
-        res.status(500).json({ success: false, message: "Server Error during system login processing" });
+        res.status(500).json({ 
+            success: false, 
+            message: "Server Error during system login processing" 
+        });
     }
 };
 
@@ -133,12 +154,18 @@ exports.getMe = async (req, res) => {
     try {
         // req.user mapping parameters are injected via downstream authMiddleware pipeline structures
         if (!req.user || !req.user.userId) {
-            return res.status(401).json({ success: false, message: "Authorization tracking footprint missing" });
+            return res.status(401).json({ 
+                success: false, 
+                message: "Authorization tracking footprint missing" 
+            });
         }
 
         const user = await User.findById(req.user.userId).select('-password');
         if (!user) {
-            return res.status(404).json({ success: false, message: "User profile record data matrix not found" });
+            return res.status(404).json({ 
+                success: false, 
+                message: "User profile record data matrix not found" 
+            });
         }
 
         res.json({
@@ -147,6 +174,9 @@ exports.getMe = async (req, res) => {
         });
     } catch (err) {
         console.error("Critical Exception in Nexafxtrade Profile Data Fetching:", err);
-        res.status(500).json({ success: false, message: "Server Error fetching user dashboard parameters" });
+        res.status(500).json({ 
+            success: false, 
+            message: "Server Error fetching user dashboard parameters" 
+        });
     }
 };
