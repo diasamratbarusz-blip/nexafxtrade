@@ -1,254 +1,269 @@
-"use client"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXAFX | Register Terminal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --high-green: #00ff88;
+            --neon-blue: #00d4ff;
+            --bg-black: #06090f;
+            --panel: #11171f;
+            --text-dim: #707a8a;
+            --error-red: #ff5252;
+        }
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import API from "../../lib/api"
+        body, html {
+            margin: 0; padding: 0; 
+            background-color: var(--bg-black);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-export default function Register() {
-  const router = useRouter()
-  
-  // State elements
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [password, setPassword] = useState("")
-  
-  // Feedback UI states
-  const [statusMsg, setStatusMsg] = useState("")
-  const [isError, setIsError] = useState(false)
-  const [loading, setLoading] = useState(false)
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-  const handleRegister = async () => {
-    // Resetting local UI notification state channels cleanly
-    setStatusMsg("Establishing connection to terminal node...")
-    setIsError(false)
-    setLoading(true)
+        .auth-card {
+            background-color: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 35px 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
 
-    if (!name || !email || !phone || !password) {
-      setStatusMsg("⚠️ All credential modules must be filled.")
-      setIsError(true)
-      setLoading(false)
-      return;
-    }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    try {
-      const res = await API.post("/auth/register", {
-        name,
-        email,
-        phone,
-        password
-      })
+        .brand-title {
+            color: var(--high-green);
+            font-weight: 900;
+            font-size: 1.8rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            margin: 0;
+        }
 
-      setStatusMsg("Registration authorized! Generating secure token...")
-      setIsError(false)
+        .brand-title span {
+            color: var(--neon-blue);
+        }
 
-      // Safe transmission synchronization down into client local matrices
-      localStorage.setItem("token", res.data.token)
+        .auth-subtitle {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
 
-      setTimeout(() => {
-        router.push("/dashboard") // Adjust route path destination as needed
-      }, 1000)
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
 
-    } catch (error: any) {
-      console.log(error)
-      setIsError(true)
-      setStatusMsg(
-        error.response?.data?.message || 
-        "❌ Terminal initialization failed. Check network matrix node."
-      )
-    } finally {
-      setLoading(false)
-    }
-  }
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #444;
+            font-size: 0.9rem;
+        }
 
-  return (
-    <div style={styles.bodyWrapper}>
-      <div style={styles.authContainer}>
-        <div style={styles.authCard}>
-          
-          {/* System Core Headers */}
-          <div style={styles.authHeader}>
-            <h1 style={styles.brandTitle}>NEXAFX<span style={styles.brandSpan}>TRADE</span></h1>
-            <div style={styles.authSubtitle}>Initialize Account Terminal</div>
-          </div>
+        .auth-input {
+            width: 100%;
+            background-color: #06080a;
+            border: 1px solid #222;
+            color: white;
+            padding: 14px 14px 14px 45px;
+            font-size: 0.95rem;
+            border-radius: 10px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
 
-          {/* Credentials Submission Forms */}
-          <div style={styles.formGroup}>
-            <input
-              type="text"
-              placeholder="Full Operator Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              style={styles.authInput}
-            />
-          </div>
+        .auth-input:focus {
+            border-color: var(--neon-blue);
+        }
 
-          <div style={styles.formGroup}>
-            <input
-              type="email"
-              placeholder="Registered Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={styles.authInput}
-            />
-          </div>
+        .btn-auth-submit {
+            width: 100%;
+            background: var(--neon-blue);
+            color: #000;
+            border: none;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
 
-          <div style={styles.formGroup}>
-            <input
-              type="tel"
-              placeholder="Phone Number (e.g., +254...)"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              style={styles.authInput}
-            />
-          </div>
+        .btn-auth-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
-          <div style={styles.formGroup}>
-            <input
-              type="password"
-              placeholder="Secure Access Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={styles.authInput}
-            />
-          </div>
+        .status-message {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            min-height: 20px;
+        }
 
-          {/* Secure submit command node */}
-          <button 
-            onClick={handleRegister} 
-            disabled={loading}
-            style={{
-              ...styles.btnAuthSubmit,
-              opacity: loading ? 0.6 : 1,
-              cursor: loading ? "not-allowed" : "pointer"
-            }}
-          >
-            {loading ? "INITIALIZING..." : "REGISTER TERMINAL"}
-          </button>
+        .auth-footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
 
-          {/* System state runtime notifications */}
-          {statusMsg && (
-            <p style={{
-              ...styles.statusMessage,
-              color: isError ? "#ff5252" : "#00e676"
-            }}>
-              {statusMsg}
-            </p>
-          )}
+        .link-text {
+            color: var(--neon-blue);
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-          {/* Dynamic router redirection paths */}
-          <div style={styles.authRoutingFooter}>
-            Already have an active node?{" "}
-            <span 
-              onClick={() => router.push("/login")} 
-              style={styles.linkText}
-            >
-              Access Vault
-            </span>
-          </div>
+        /* Loading Animation */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-top: 3px solid #000;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
 
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1 class="brand-title">NEXAFX<span>TRADE</span></h1>
+            <div class="auth-subtitle">Initialize Account Terminal</div>
         </div>
-      </div>
-    </div>
-  )
-}
 
-// Inline styles mirroring the Nexafxtrade Premium design framework
-const styles: { [key: string]: React.CSSProperties } = {
-  bodyWrapper: {
-    backgroundColor: "#06090f",
-    color: "#ffffff",
-    fontFamily: "'Inter', sans-serif",
-    margin: 0,
-    padding: 0,
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  authContainer: {
-    width: "100%",
-    maxWidth: "420px",
-    padding: "25px",
-    zIndex: 10,
-  },
-  authCard: {
-    backgroundColor: "#11171f",
-    border: "1px solid rgba(255, 255, 255, 0.05)",
-    borderRadius: "16px",
-    padding: "30px 25px",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.6)",
-  },
-  authHeader: {
-    textAlign: "center",
-    marginBottom: "25px",
-  },
-  brandTitle: {
-    color: "#00ff00",
-    fontWeight: 900,
-    fontSize: "1.6rem",
-    letterSpacing: "-1px",
-    textTransform: "uppercase",
-    margin: 0,
-  },
-  brandSpan: {
-    color: "#00d4ff",
-  },
-  authSubtitle: {
-    color: "#707a8a",
-    fontSize: "0.85rem",
-    marginTop: "6px",
-    textTransform: "uppercase",
-    letterSpacing: "0.5px",
-  },
-  formGroup: {
-    marginBottom: "18px",
-    width: "100%",
-  },
-  authInput: {
-    width: "100%",
-    backgroundColor: "#06090f",
-    border: "1px solid #222222",
-    color: "#ffffff",
-    padding: "12px 14px",
-    fontSize: "0.9rem",
-    borderRadius: "8px",
-    outline: "none",
-    boxSizing: "border-box",
-  },
-  btnAuthSubmit: {
-    width: "100%",
-    background: "#00d4ff",
-    color: "#000000",
-    border: "none",
-    padding: "14px",
-    fontSize: "1rem",
-    fontWeight: 800,
-    textTransform: "uppercase",
-    borderRadius: "8px",
-    transition: "all 0.2s ease",
-    marginTop: "10px",
-  },
-  statusMessage: {
-    marginTop: "15px",
-    fontSize: "0.85rem",
-    fontWeight: 700,
-    textAlign: "center",
-    minHeight: "20px",
-    fontFamily: "monospace",
-    letterSpacing: "0.5px",
-    margin: "15px 0 0 0",
-  },
-  authRoutingFooter: {
-    marginTop: "20px",
-    textAlign: "center",
-    fontSize: "0.8rem",
-    color: "#707a8a",
-  },
-  linkText: {
-    color: "#00d4ff",
-    fontWeight: 700,
-    cursor: "pointer",
-    textDecoration: "underline",
-  }
-}
+        <div class="form-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="name" class="auth-input" placeholder="Full Operator Name" required>
+        </div>
+
+        <div class="form-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" class="auth-input" placeholder="Registered Email Address" required>
+        </div>
+
+        <div class="form-group">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="phone" class="auth-input" placeholder="Phone (e.g., 254...)" required>
+        </div>
+
+        <div class="form-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" class="auth-input" placeholder="Secure Access Password" required>
+        </div>
+
+        <button id="registerBtn" class="btn-auth-submit" onclick="handleRegister()">
+            <span id="btnText">REGISTER TERMINAL</span>
+            <div id="spinner" class="spinner"></div>
+        </button>
+
+        <div id="statusMsg" class="status-message"></div>
+
+        <div class="auth-footer">
+            Already have an active node? 
+            <a href="login.html" class="link-text">Access Vault</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = "http://localhost:5000/api"; // Replace with your Render URL for production
+
+    async function handleRegister() {
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const password = document.getElementById('password').value;
+        const statusEl = document.getElementById('statusMsg');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+        const registerBtn = document.getElementById('registerBtn');
+
+        // Reset UI
+        statusEl.innerText = "ESTABLISHING CONNECTION...";
+        statusEl.style.color = "var(--neon-blue)";
+        
+        if (!name || !email || !phone || !password) {
+            statusEl.innerText = "⚠️ ALL CREDENTIAL MODULES REQUIRED.";
+            statusEl.style.color = "var(--error-red)";
+            return;
+        }
+
+        // UI Loading State
+        btnText.style.display = "none";
+        spinner.style.display = "block";
+        registerBtn.disabled = true;
+
+        try {
+            const response = await fetch(`${API_BASE}/auth/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, phone, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                statusEl.innerText = "REGISTRATION AUTHORIZED. REDIRECTING...";
+                statusEl.style.color = "var(--high-green)";
+                
+                // Store Token
+                if(data.token) localStorage.setItem("token", data.token);
+
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1500);
+            } else {
+                throw new Error(data.message || "TERMINAL REJECTED CREDENTIALS");
+            }
+
+        } catch (error) {
+            statusEl.innerText = `❌ ERROR: ${error.message.toUpperCase()}`;
+            statusEl.style.color = "var(--error-red)";
+            
+            // Reset Button
+            btnText.style.display = "block";
+            spinner.style.display = "none";
+            registerBtn.disabled = false;
+        }
+    }
+</script>
+
+</body>
+</html>
