@@ -24,7 +24,7 @@
 
                 <div class="balance-box">
                     <span class="label">KES</span>
-                    <span id="user-balance" class="value">1,450,000.00</span>
+                    <span id="user-balance" class="value">0.00</span>
                 </div>
                 
                 <div class="action-shortcuts">
