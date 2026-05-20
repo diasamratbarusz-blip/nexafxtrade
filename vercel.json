@@ -28,7 +28,15 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api/|_next/|_static/|[\\w-]+\\.\\w+).*)",
+      "source": "/((?!api/|static/|favicon.ico|logo192.png|manifest.json).*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/register",
       "destination": "/index.html"
     }
   ]
