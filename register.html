@@ -38,14 +38,13 @@
             background-color: var(--panel);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            padding: 35px 25px;
+            padding: 30px 25px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-            position: relative;
         }
 
         .auth-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .brand-title {
@@ -57,9 +56,7 @@
             margin: 0;
         }
 
-        .brand-title span {
-            color: var(--neon-blue);
-        }
+        .brand-title span { color: var(--neon-blue); }
 
         .auth-subtitle {
             color: var(--text-dim);
@@ -67,11 +64,10 @@
             margin-top: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 600;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 15px;
             position: relative;
         }
 
@@ -89,17 +85,15 @@
             background-color: #06080a;
             border: 1px solid #222;
             color: white;
-            padding: 14px 14px 14px 45px;
+            padding: 12px 14px 12px 45px;
             font-size: 0.95rem;
             border-radius: 10px;
             outline: none;
             box-sizing: border-box;
-            transition: border-color 0.3s ease;
+            transition: 0.3s;
         }
 
-        .auth-input:focus {
-            border-color: var(--neon-blue);
-        }
+        .auth-input:focus { border-color: var(--neon-blue); }
 
         .btn-auth-submit {
             width: 100%;
@@ -112,17 +106,13 @@
             text-transform: uppercase;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease;
             margin-top: 10px;
         }
 
-        .btn-auth-submit:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        .btn-auth-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .status-message {
-            margin-top: 20px;
+            margin-top: 15px;
             font-size: 0.8rem;
             font-weight: 700;
             text-align: center;
@@ -131,32 +121,13 @@
         }
 
         .auth-footer {
-            margin-top: 25px;
+            margin-top: 20px;
             text-align: center;
             font-size: 0.85rem;
             color: var(--text-dim);
         }
 
-        .link-text {
-            color: var(--neon-blue);
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* Loading Animation */
-        .spinner {
-            display: none;
-            width: 18px;
-            height: 18px;
-            border: 3px solid rgba(0,0,0,0.1);
-            border-top: 3px solid #000;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .link-text { color: var(--neon-blue); font-weight: 700; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -170,27 +141,31 @@
 
         <div class="form-group">
             <i class="fas fa-user"></i>
-            <input type="text" id="name" class="auth-input" placeholder="Full Operator Name" required>
+            <input type="text" id="name" class="auth-input" placeholder="Full Operator Name">
         </div>
 
         <div class="form-group">
             <i class="fas fa-envelope"></i>
-            <input type="email" id="email" class="auth-input" placeholder="Registered Email Address" required>
+            <input type="email" id="email" class="auth-input" placeholder="Registered Email Address">
         </div>
 
         <div class="form-group">
             <i class="fas fa-phone"></i>
-            <input type="tel" id="phone" class="auth-input" placeholder="Phone (e.g., 254...)" required>
+            <input type="tel" id="phone" class="auth-input" placeholder="Phone (e.g., 254...)">
         </div>
 
         <div class="form-group">
             <i class="fas fa-lock"></i>
-            <input type="password" id="password" class="auth-input" placeholder="Secure Access Password" required>
+            <input type="password" id="password" class="auth-input" placeholder="Secure Access Password">
+        </div>
+
+        <div class="form-group">
+            <i class="fas fa-shield-alt"></i>
+            <input type="password" id="confirmPassword" class="auth-input" placeholder="Confirm Access Password">
         </div>
 
         <button id="registerBtn" class="btn-auth-submit" onclick="handleRegister()">
-            <span id="btnText">REGISTER TERMINAL</span>
-            <div id="spinner" class="spinner"></div>
+            REGISTER TERMINAL
         </button>
 
         <div id="statusMsg" class="status-message"></div>
@@ -203,31 +178,33 @@
 </div>
 
 <script>
-    const API_BASE = "http://localhost:5000/api"; // Replace with your Render URL for production
+    const API_BASE = "https://your-nexafx-backend.onrender.com/api"; // Update this with your Render URL
 
     async function handleRegister() {
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
         const phone = document.getElementById('phone').value;
         const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
         const statusEl = document.getElementById('statusMsg');
-        const btnText = document.getElementById('btnText');
-        const spinner = document.getElementById('spinner');
         const registerBtn = document.getElementById('registerBtn');
 
-        // Reset UI
-        statusEl.innerText = "ESTABLISHING CONNECTION...";
-        statusEl.style.color = "var(--neon-blue)";
-        
-        if (!name || !email || !phone || !password) {
+        // Validation Logic
+        if (!name || !email || !phone || !password || !confirmPassword) {
             statusEl.innerText = "⚠️ ALL CREDENTIAL MODULES REQUIRED.";
             statusEl.style.color = "var(--error-red)";
             return;
         }
 
-        // UI Loading State
-        btnText.style.display = "none";
-        spinner.style.display = "block";
+        if (password !== confirmPassword) {
+            statusEl.innerText = "❌ PASSWORDS DO NOT MATCH.";
+            statusEl.style.color = "var(--error-red)";
+            return;
+        }
+
+        // Lock UI
+        statusEl.innerText = "SYNCHRONIZING WITH SERVER...";
+        statusEl.style.color = "var(--neon-blue)";
         registerBtn.disabled = true;
 
         try {
@@ -242,24 +219,13 @@
             if (response.ok) {
                 statusEl.innerText = "REGISTRATION AUTHORIZED. REDIRECTING...";
                 statusEl.style.color = "var(--high-green)";
-                
-                // Store Token
-                if(data.token) localStorage.setItem("token", data.token);
-
-                setTimeout(() => {
-                    window.location.href = "dashboard.html";
-                }, 1500);
+                setTimeout(() => window.location.href = "dashboard.html", 1500);
             } else {
                 throw new Error(data.message || "TERMINAL REJECTED CREDENTIALS");
             }
-
         } catch (error) {
             statusEl.innerText = `❌ ERROR: ${error.message.toUpperCase()}`;
             statusEl.style.color = "var(--error-red)";
-            
-            // Reset Button
-            btnText.style.display = "block";
-            spinner.style.display = "none";
             registerBtn.disabled = false;
         }
     }
