@@ -181,14 +181,14 @@
 <script>
     /**
      * DYNAMIC API CONFIGURATION
-     * Automatically switches between local and production nodes
+     * Checks if environment is local or production
      */
     const getApiBase = () => {
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        // If testing on computer, use localhost. If live, use your Render link.
+        // Update the second URL with your actual Render service address
         return isLocal 
             ? "http://localhost:5000/api" 
-            : "https://nexafxtrade.onrender.com/api"; // CHANGE THIS to your real Render URL
+            : "https://nexafxtrade.onrender.com/api"; 
     };
 
     async function handleRegister() {
@@ -200,7 +200,10 @@
         const statusEl = document.getElementById('statusMsg');
         const registerBtn = document.getElementById('registerBtn');
 
-        // Validation Logic
+        // Reset display
+        statusEl.style.color = "var(--neon-blue)";
+        
+        // 1. Core Validation
         if (!name || !email || !phone || !password || !confirmPassword) {
             statusEl.innerText = "⚠️ ALL CREDENTIAL MODULES REQUIRED.";
             statusEl.style.color = "var(--error-red)";
@@ -215,7 +218,6 @@
 
         // Lock UI
         statusEl.innerText = "SYNCHRONIZING WITH SERVER...";
-        statusEl.style.color = "var(--neon-blue)";
         registerBtn.disabled = true;
 
         try {
@@ -230,22 +232,24 @@
             const data = await response.json();
 
             if (response.ok) {
-                statusEl.innerText = "REGISTRATION AUTHORIZED. REDIRECTING...";
+                statusEl.innerText = "REGISTRATION AUTHORIZED. SECURING NODE...";
                 statusEl.style.color = "var(--high-green)";
                 
-                // Store session token
-                if(data.token) localStorage.setItem("token", data.token);
+                // Save JWT for session persistence
+                if(data.token) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("operatorName", name);
+                }
                 
                 setTimeout(() => window.location.href = "dashboard.html", 1500);
             } else {
                 throw new Error(data.message || "TERMINAL REJECTED CREDENTIALS");
             }
         } catch (error) {
-            console.error("Network Error:", error);
+            console.error("Auth Error:", error);
             
-            // Helpful debugging if it still fails
             if (error.message.includes("Failed to fetch")) {
-                statusEl.innerText = "❌ CONNECTION FAILED: SERVER OFFLINE OR CORS ERROR.";
+                statusEl.innerText = "❌ CONNECTION FAILED: CHECK SERVER/CORS.";
             } else {
                 statusEl.innerText = `❌ ERROR: ${error.message.toUpperCase()}`;
             }
