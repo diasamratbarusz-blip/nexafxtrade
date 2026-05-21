@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NEXAFX | Pro KES Exchange</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/socket.io/socket.io.js"></script> <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --high-green: #00ff88;
@@ -23,7 +23,6 @@
             user-select: none; display: flex; justify-content: center; align-items: center;
         }
 
-        /* --- Global Medium Size App Container Wrapper --- */
         .app-container {
             width: 100%;
             max-width: 1200px;
@@ -39,7 +38,6 @@
             position: relative;
         }
 
-        /* --- Header Section --- */
         header {
             height: 65px; background: var(--panel); display: flex; align-items: center;
             justify-content: space-between; padding: 0 20px; border-bottom: 2px solid #222;
@@ -57,7 +55,6 @@
         .balance-label { font-size: 0.65rem; color: #888; display: block; font-weight: bold; }
         .balance-val { color: var(--gold); font-family: monospace; font-size: 1.2rem; font-weight: 900; }
 
-        /* --- Momentum Status Banner --- */
         #market-status-bar {
             height: 30px; display: flex; align-items: center; justify-content: center;
             font-size: 0.75rem; font-weight: 900; text-transform: uppercase;
@@ -66,7 +63,6 @@
         .status-high { background: var(--high-green) !important; color: #000; box-shadow: 0 0 20px var(--high-green); }
         .status-low { background: var(--low-red) !important; color: #fff; box-shadow: 0 0 20px var(--low-red); }
 
-        /* --- Layout Grid --- */
         .main-layout {
             display: grid; grid-template-columns: 280px 1fr; flex: 1;
             background: #111; gap: 1px; overflow: hidden;
@@ -83,7 +79,6 @@
             pointer-events: none; opacity: 0.05; transition: 0.8s; z-index: 0;
         }
 
-        /* --- Price Display & Top Graph Auth Buttons --- */
         .price-hero { padding: 15px 20px; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; }
         .ticker-val { font-size: 3.2rem; font-weight: 900; font-family: 'Courier New', monospace; letter-spacing: -2px; }
 
@@ -96,44 +91,36 @@
             border: 1px solid transparent; transition: all 0.2s ease;
         }
         .btn-graph-login { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.2); }
+        .btn-graph-login:hover { background: rgba(255, 255, 255, 0.1); border-color: #fff; }
         .btn-graph-register { background: var(--neon-blue); color: #000; }
+        .btn-graph-register:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); }
 
-        /* --- TOP OF GRAPH TIMELINE HISTORY --- */
         .graph-top-history-ribbon {
             background: #0d1117; border-top: 1px solid #222; border-bottom: 1px solid #222;
             padding: 8px 20px; z-index: 5; display: flex; align-items: center; gap: 12px;
             min-height: 24px; overflow-x: auto; white-space: nowrap;
         }
         .history-ribbon-label { font-size: 0.7rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; border-right: 1px solid #333; padding-right: 10px; }
-        .badge-won { background: rgba(0, 255, 136, 0.15); border: 1px solid var(--high-green); color: var(--high-green); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 900; }
-        .badge-lost-target { background: rgba(255, 51, 102, 0.15); border: 1px solid var(--low-red); color: var(--low-red); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 900; }
+        .history-item-container { display: flex; align-items: center; gap: 8px; }
+        .badge-won { background: rgba(0, 255, 136, 0.15); border: 1px solid var(--high-green); color: var(--high-green); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 900; font-family: monospace; }
+        .badge-lost-target { background: rgba(255, 51, 102, 0.15); border: 1px solid var(--low-red); color: var(--low-red); padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 900; font-family: monospace; }
 
-        /* --- Chart Wrapper --- */
-        #chart-container { flex: 1; min-height: 220px; padding: 0 20px; position: relative; z-index: 1; }
-
-        /* --- UNIVERSAL ACTION HUB SYSTEM --- */
         .universal-action-bar {
             display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 20px; z-index: 2;
             justify-content: space-between; align-items: center; background: rgba(17, 21, 28, 0.6);
             border-bottom: 1px solid #222; border-top: 1px solid #222;
         }
         .utility-group, .account-mode-group { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; min-width: 240px; }
-        .util-btn {
-            flex: 1; min-width: 100px; padding: 10px 12px; font-size: 0.8rem; font-weight: 800;
-            text-transform: uppercase; border-radius: 8px; cursor: pointer; text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.2s ease; color: #fff;
-        }
-        .btn-withdraw-nav { background: #222; }
-        .btn-deposit-nav { background: var(--high-green); color: #000; }
+        .util-btn { flex: 1; min-width: 100px; padding: 10px 12px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; border-radius: 8px; cursor: pointer; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.2s ease; color: #fff; }
+        .btn-withdraw-nav { background: #222; border-color: #444; }
+        .btn-deposit-nav { background: var(--high-green); color: #000; border-color: var(--high-green); }
+        .btn-how-to-trade { background: rgba(0, 212, 255, 0.05); color: var(--neon-blue); border-color: var(--neon-blue); }
+        .btn-referral { background: rgba(255, 204, 0, 0.05); color: var(--gold); border-color: var(--gold); }
         
-        .mode-btn {
-            flex: 1; padding: 10px 12px; font-size: 0.8rem; font-weight: 800;
-            border-radius: 8px; cursor: pointer; background: #111; color: #555; border: 1px solid #222;
-        }
+        .mode-btn { flex: 1; padding: 10px 12px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s ease; background: #111; color: #555; border: 1px solid #222; }
         .mode-btn.active-demo { background: rgba(0, 212, 255, 0.15); color: var(--neon-blue); border-color: var(--neon-blue); }
         .mode-btn.active-real { background: rgba(0, 255, 136, 0.15); color: var(--high-green); border-color: var(--high-green); }
 
-        /* --- LIVE TRANSACTION COUNTER --- */
         .live-transaction-counter {
             background: linear-gradient(90deg, rgba(17, 21, 28, 0.9) 0%, rgba(6, 8, 10, 0.9) 100%);
             border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid var(--neon-blue);
@@ -141,32 +128,33 @@
             display: flex; justify-content: space-between; align-items: center;
         }
         .live-running-amount { font-size: 1.5rem; font-weight: 900; font-family: monospace; color: #fff; }
+        .live-running-amount.profit-reached { color: var(--high-green) !important; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
 
-        /* --- Trade Desktop Controls --- */
+        #chart-container { flex: 1; min-height: 220px; padding: 0 20px; position: relative; z-index: 1; }
+
         .bottom-controls {
             background: var(--panel); padding: 25px; border-top: 1px solid #333;
             display: flex; flex-direction: column; gap: 20px; z-index: 1; flex-shrink: 0;
         }
-        .stake-box {
-            background: #000; border: 1px solid #333; border-radius: 15px;
-            padding: 15px; display: flex; align-items: center; justify-content: space-between;
-        }
+
+        .stake-box { background: #000; border: 1px solid #333; border-radius: 15px; padding: 15px; display: flex; align-items: center; justify-content: space-between; }
         .stake-box input { background: transparent; border: none; color: white; font-size: 2rem; font-weight: 900; width: 100%; text-align: center; outline: none; }
 
         .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .btn {
-            height: 75px; border: none; border-radius: 15px; font-size: 1.5rem; font-weight: 900;
-            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
-            gap: 10px; position: relative; overflow: hidden; text-transform: uppercase;
-        }
+        .btn { height: 75px; border: none; border-radius: 15px; font-size: 1.5rem; font-weight: 900; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; position: relative; overflow: hidden; text-transform: uppercase; }
         .btn-buy { background: var(--high-green); color: #000; box-shadow: 0 6px 0 #008844; }
         .btn-sell { background: var(--low-red); color: #fff; box-shadow: 0 6px 0 #991133; }
+        .btn:active { transform: translateY(3px); box-shadow: none; }
+        .btn:disabled { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; }
+
         .cooldown-overlay { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: rgba(0,0,0,0.4); z-index: 1; }
 
         @media (max-width: 850px) {
             .app-container { height: 100vh; max-height: none; border: none; }
             .main-layout { grid-template-columns: 1fr; }
             .side-activity { display: none; }
+            .ticker-val { font-size: 2.2rem; }
+            .universal-action-bar { flex-direction: column; }
         }
     </style>
 </head>
@@ -181,17 +169,17 @@
             </button>
             <div class="balance-container">
                 <span class="balance-label">WALLET BALANCE</span>
-                <span class="balance-val" id="balance">0.00</span>
+                <span class="balance-val" id="balance">1,450,000.00</span>
             </div>
         </div>
     </header>
 
-    <div id="market-status-bar">Connecting to Nexafxtrade Nodes...</div>
+    <div id="market-status-bar">Monitoring Market Neutrality...</div>
 
     <div class="main-layout">
         <section class="side-activity">
             <div style="padding: 15px; background: #1c222b; font-weight: bold; font-size: 0.8rem; color: var(--high-green);">
-                <i class="fas fa-broadcast-tower"></i> LIVE NETWORK FEED
+                <i class="fas fa-broadcast-tower"></i> LIVE WITHDRAWALS
             </div>
             <div id="payout-feed" style="padding: 10px; font-size: 0.85rem; line-height: 1.8;"></div>
         </section>
@@ -204,44 +192,44 @@
                     <span style="color: #666; font-size: 0.8rem; font-weight: bold;">BTC/KES REALTIME</span>
                     <div class="ticker-val" id="ticker-price">8,421,500</div>
                 </div>
-                
                 <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
                     <div id="market-trend" style="background: rgba(0,255,136,0.1); padding: 10px 20px; border-radius: 10px; font-weight: 900; color: var(--high-green);">+0.00%</div>
-                    <div class="top-graph-auth-actions" id="auth-actions">
-                        <button class="graph-auth-btn btn-graph-login" onclick="location.href='/login.html'">Login</button>
-                        <button class="graph-auth-btn btn-graph-register" onclick="location.href='/register.html'">Register</button>
+                    <div class="top-graph-auth-actions">
+                        <button class="graph-auth-btn btn-graph-login" onclick="location.href='/login'">Login</button>
+                        <button class="graph-auth-btn btn-graph-register" onclick="location.href='/register'">Register</button>
                     </div>
                 </div>
             </div>
 
             <div class="graph-top-history-ribbon">
-                <span class="history-ribbon-label">Recent Tapes</span>
-                <div id="live-history-ribbon-content" class="history-item-container"></div>
+                <span class="history-ribbon-label">Position History</span>
+                <div id="live-history-ribbon-content" class="history-item-container">
+                    <span style="color: #444; font-size: 0.75rem;">No recent trade streams completed</span>
+                </div>
             </div>
 
             <div class="universal-action-bar">
                 <div class="utility-group">
-                    <button class="util-btn btn-deposit-nav" onclick="location.href='/deposit.html'">Deposit</button>
-                    <button class="util-btn btn-withdraw-nav" onclick="location.href='/withdraw.html'">Withdraw</button>
-                    <button class="util-btn btn-how-to-trade" onclick="alert('Stake and Sell before the crash!')">Manual</button>
+                    <button class="util-btn btn-deposit-nav" onclick="executeDepositRoute()">Deposit</button>
+                    <button class="util-btn btn-withdraw-nav" onclick="executeWithdrawalRoute()">Withdrawal</button>
+                    <button class="util-btn btn-how-to-trade" onclick="toggleHowToTradeModal()">How to Trade</button>
+                    <button class="util-btn btn-referral" onclick="triggerReferralSystem()">Referral</button>
                 </div>
                 <div class="account-mode-group">
-                    <button class="mode-btn" id="demo-mode" onclick="switchAccountMode('DEMO')">Demo</button>
-                    <button class="mode-btn active-real" id="real-mode" onclick="switchAccountMode('REAL')">Real</button>
+                    <button class="mode-btn" onclick="switchAccountMode('DEMO', this)">Demo Play</button>
+                    <button class="mode-btn active-real" onclick="switchAccountMode('REAL', this)">Real Play</button>
                 </div>
             </div>
 
             <div class="live-transaction-counter">
                 <div class="counter-details">
-                    <span class="counter-title">Live Position</span>
-                    <span id="aiming-target-indicator">Standing By...</span>
+                    <span class="counter-title">Live Position Counter</span>
+                    <span id="aiming-target-indicator" style="font-size: 0.7rem; color: var(--gold); font-weight: bold;">No active trade counting</span>
                 </div>
                 <div class="live-running-amount" id="live-running-amount">KES 0.00</div>
             </div>
 
-            <div id="chart-container">
-                <canvas id="liveGraph"></canvas>
-            </div>
+            <div id="chart-container"><canvas id="liveGraph"></canvas></div>
 
             <div class="bottom-controls">
                 <div class="stake-box">
@@ -250,9 +238,7 @@
                     <span style="color: var(--high-green); font-weight: bold;">STAKE</span>
                 </div>
                 <div class="action-btns">
-                    <button class="btn btn-buy" id="buy-btn" onclick="executeBuy()">
-                        <i class="fas fa-bolt"></i> BUY
-                    </button>
+                    <button class="btn btn-buy" id="buy-btn" onclick="executeBuy()"><i class="fas fa-bolt"></i> BUY</button>
                     <button class="btn btn-sell" id="sell-btn" disabled onclick="executeSell()">
                         <div class="cooldown-overlay" id="sell-timer-bar"></div>
                         <span id="sell-label"><i class="fas fa-hand-holding-usd"></i> SELL</span>
@@ -264,139 +250,114 @@
 </div>
 
 <script>
-    const socket = io(); // Connects to your Node.js backend
-    let balance = 0;
-    let currentPrice = 8421500;
-    let audioCtx = null;
-    let isTradeActive = false;
-    let currentAccountMode = "REAL";
+    window.USER_IS_AUTHENTICATED = false;
+    window.CURRENT_ACCOUNT_MODE = "REAL";
+    window.NEXAFX_ADMIN_CONFIG = { forcedTrend: "DYNAMIC", customVolatility: null, minimumTicketPrice: 100, maximumTicketPrice: 500000 };
 
-    // --- INITIAL DATA FETCH ---
-    async function initUser() {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const res = await fetch('/api/user/profile', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const json = await res.json();
-                if (json.success) {
-                    balance = json.data.balance;
-                    document.getElementById('auth-actions').innerHTML = `<span style="color:var(--high-green)">● ONLINE</span>`;
-                    updateBalanceUI();
-                }
-            } catch (e) { console.error("Auth failed"); }
-        }
+    let balance = 1450000;
+    let price = 8421500;
+    let isLocked = false;
+    let activeTradePosition = null;
+    let tradeTicksElapsed = 0;
+    let currentHighTicksLimit = 45;
+    let audioCtx = null, masterGainNode = null;
+
+    function initBeats() {
+        if (audioCtx) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGainNode = audioCtx.createGain();
+        masterGainNode.connect(audioCtx.destination);
+        document.getElementById('audio-btn').innerHTML = 'BEATS ACTIVE';
+        setInterval(() => playSynth(110, 'sine', 0.2, 0.5), 1000);
     }
 
-    // --- SOCKET REAL-TIME LISTENERS ---
-    socket.on('market-update', (data) => {
-        const oldPrice = currentPrice;
-        currentPrice = data.rate;
-        const diff = currentPrice - oldPrice;
-        
-        document.getElementById('ticker-price').innerText = currentPrice.toLocaleString();
-        document.getElementById('market-trend').innerText = (diff >= 0 ? '+' : '') + (diff/1000).toFixed(2) + '%';
-        document.getElementById('market-trend').style.color = diff >= 0 ? 'var(--high-green)' : 'var(--low-red)';
-        
-        updateChart(currentPrice);
-    });
+    function playSynth(freq, type, dur, vol) {
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+        osc.connect(gain); gain.connect(masterGainNode);
+        osc.start(); osc.stop(audioCtx.currentTime + dur);
+    }
 
-    socket.on('trade-result', (data) => {
-        if (data.status === "WIN") {
-            balance += parseFloat(data.payout);
-            alert(`🎉 WIN! Payout: KES ${data.payout}`);
-        } else {
-            alert("❌ LOSS! Better luck next time.");
-        }
-        isTradeActive = false;
-        document.getElementById('buy-btn').disabled = false;
-        updateBalanceUI();
-    });
-
-    // --- CHART ENGINE ---
     const ctx = document.getElementById('liveGraph').getContext('2d');
-    let dataPoints = Array(50).fill(8421500);
+    let dataPoints = Array(50).fill(price);
     const chart = new Chart(ctx, {
         type: 'line',
-        data: {
-            labels: dataPoints.map(() => ''),
-            datasets: [{
-                data: dataPoints,
-                borderColor: '#00ff88',
-                borderWidth: 3,
-                pointRadius: 0,
-                fill: true,
-                backgroundColor: 'rgba(0, 255, 136, 0.05)',
-                tension: 0.4
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { position: 'right', grid: { color: '#222' } } } }
+        data: { labels: dataPoints.map(() => ''), datasets: [{ data: dataPoints, borderColor: '#00ff88', borderWidth: 4, pointRadius: 0, fill: true, backgroundColor: 'rgba(0, 255, 136, 0.05)', tension: 0.3 }] },
+        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 0 }, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { position: 'right', grid: { color: '#222' } } } }
     });
 
-    function updateChart(price) {
-        dataPoints.push(price);
-        dataPoints.shift();
+    setInterval(() => {
+        let change = (Math.random() - 0.46) * 5000;
+        if (activeTradePosition) {
+            tradeTicksElapsed++;
+            if (tradeTicksElapsed <= activeTradePosition.lossTickThreshold) {
+                change = Math.abs(change) + 2000;
+            } else {
+                change = -Math.abs(change) - 5000;
+                handleTradeExpirationLoss();
+                return;
+            }
+        }
+        price += change;
+        document.getElementById('ticker-price').innerText = Math.floor(price).toLocaleString();
+        dataPoints.push(price); dataPoints.shift();
         chart.update('none');
-    }
+        processLiveCounting();
+    }, 150);
 
-    // --- TRADING OPERATIONS ---
     function executeBuy() {
-        const amount = parseFloat(document.getElementById('stake-amount').value);
-        if (amount > balance) return alert("Insufficient Balance");
-        if (amount < 100) return alert("Min Stake KES 100");
-
-        balance -= amount;
-        updateBalanceUI();
-        isTradeActive = true;
+        if (window.CURRENT_ACCOUNT_MODE === "REAL" && !window.USER_IS_AUTHENTICATED) {
+            alert("Login required for Real Trade."); return;
+        }
+        const amt = parseFloat(document.getElementById('stake-amount').value);
+        if (amt > balance) return alert("Insufficient Balance");
+        balance -= amt; updateBalance();
         
-        socket.emit('place-trade', { amount, type: 'BUY' });
+        let chosenSeconds = Math.random() * 15 + 5;
+        currentHighTicksLimit = Math.floor((chosenSeconds * 1000) / 150);
+        activeTradePosition = { stake: amt, lossTickThreshold: Math.floor(currentHighTicksLimit * 0.7), hasSold: false };
         
+        isLocked = true;
         document.getElementById('buy-btn').disabled = true;
-        const sellBtn = document.getElementById('sell-btn');
-        sellBtn.disabled = false;
-
-        // Visual feedback for the 30s loop
-        let progress = 0;
-        const bar = document.getElementById('sell-timer-bar');
-        const interval = setInterval(() => {
-            progress += (100 / 300);
-            bar.style.width = progress + "%";
-            if (progress >= 100 || !isTradeActive) clearInterval(interval);
-        }, 100);
+        document.getElementById('sell-btn').disabled = false;
+        setTimeout(() => { isLocked = false; }, 3000);
     }
 
     function executeSell() {
-        // Since logic is on server, this manually triggers an early cashout if you implement it
-        // For now, we follow the 30s server-side loop
-        alert("Position Locked. Waiting for result...");
+        if (isLocked || !activeTradePosition) return;
+        let val = activeTradePosition.lastValue || activeTradePosition.stake;
+        balance += val; updateBalance();
+        activeTradePosition.hasSold = true;
+        alert("Won: KES " + val.toFixed(2));
+        activeTradePosition = null;
     }
 
-    function updateBalanceUI() {
-        document.getElementById('balance').innerText = balance.toLocaleString(undefined, {minimumFractionDigits: 2});
+    function handleTradeExpirationLoss() {
+        if (!activeTradePosition || activeTradePosition.hasSold) return;
+        alert("Market Crashed! Position Lost.");
+        activeTradePosition = null;
     }
 
-    function switchAccountMode(mode) {
-        currentAccountMode = mode;
-        if (mode === "DEMO") {
-            balance = 100000;
-            document.getElementById('demo-mode').classList.add('active-demo');
-            document.getElementById('real-mode').classList.remove('active-real');
-        } else {
-            initUser(); // Re-fetch real balance
-            document.getElementById('real-mode').classList.add('active-real');
-            document.getElementById('demo-mode').classList.remove('active-demo');
-        }
-        updateBalanceUI();
+    function processLiveCounting() {
+        if (!activeTradePosition) return;
+        let mult = 1 + (tradeTicksElapsed / currentHighTicksLimit) * 5;
+        let currentVal = activeTradePosition.stake * mult;
+        activeTradePosition.lastValue = currentVal;
+        document.getElementById('live-running-amount').innerText = "KES " + currentVal.toFixed(2);
     }
 
-    function initBeats() {
-        // Basic AudioContext initialization for Gen Z Steeze
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        document.getElementById('audio-btn').innerHTML = '<i class="fas fa-volume-up"></i> BEATS LIVE';
+    function updateBalance() { document.getElementById('balance').innerText = balance.toLocaleString(); }
+    function executeWithdrawalRoute() { alert("Redirecting to M-Pesa Gateway..."); }
+    function executeDepositRoute() { alert("Opening Deposit Module..."); }
+    function switchAccountMode(mode, btn) {
+        window.CURRENT_ACCOUNT_MODE = mode;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active-real', 'active-demo'));
+        btn.classList.add(mode === 'REAL' ? 'active-real' : 'active-demo');
     }
-
-    initUser();
 </script>
 </body>
 </html>
