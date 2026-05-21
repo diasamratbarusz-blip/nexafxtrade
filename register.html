@@ -118,6 +118,7 @@
             text-align: center;
             font-family: 'Courier New', monospace;
             min-height: 20px;
+            line-height: 1.4;
         }
 
         .auth-footer {
@@ -127,7 +128,7 @@
             color: var(--text-dim);
         }
 
-        .link-text { color: var(--neon-blue); font-weight: 700; text-decoration: none; }
+        .link-text { color: var(--neon-blue); font-weight: 700; text-decoration: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -178,7 +179,17 @@
 </div>
 
 <script>
-    const API_BASE = "https://your-nexafx-backend.onrender.com/api"; // Update this with your Render URL
+    /**
+     * DYNAMIC API CONFIGURATION
+     * Automatically switches between local and production nodes
+     */
+    const getApiBase = () => {
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        // If testing on computer, use localhost. If live, use your Render link.
+        return isLocal 
+            ? "http://localhost:5000/api" 
+            : "https://nexafxtrade.onrender.com/api"; // CHANGE THIS to your real Render URL
+    };
 
     async function handleRegister() {
         const name = document.getElementById('name').value;
@@ -208,7 +219,9 @@
         registerBtn.disabled = true;
 
         try {
-            const response = await fetch(`${API_BASE}/auth/register`, {
+            const api_url = `${getApiBase()}/auth/register`;
+            
+            const response = await fetch(api_url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, phone, password })
@@ -219,12 +232,24 @@
             if (response.ok) {
                 statusEl.innerText = "REGISTRATION AUTHORIZED. REDIRECTING...";
                 statusEl.style.color = "var(--high-green)";
+                
+                // Store session token
+                if(data.token) localStorage.setItem("token", data.token);
+                
                 setTimeout(() => window.location.href = "dashboard.html", 1500);
             } else {
                 throw new Error(data.message || "TERMINAL REJECTED CREDENTIALS");
             }
         } catch (error) {
-            statusEl.innerText = `❌ ERROR: ${error.message.toUpperCase()}`;
+            console.error("Network Error:", error);
+            
+            // Helpful debugging if it still fails
+            if (error.message.includes("Failed to fetch")) {
+                statusEl.innerText = "❌ CONNECTION FAILED: SERVER OFFLINE OR CORS ERROR.";
+            } else {
+                statusEl.innerText = `❌ ERROR: ${error.message.toUpperCase()}`;
+            }
+            
             statusEl.style.color = "var(--error-red)";
             registerBtn.disabled = false;
         }
