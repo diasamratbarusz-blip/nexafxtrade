@@ -181,20 +181,22 @@
 <script>
     /**
      * DYNAMIC API CONFIGURATION
-     * Checks if environment is local or production
+     * Updated to point to your new Vercel Backend!
      */
     const getApiBase = () => {
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        // Update the second URL with your actual Render service address
+        
+        // Your new Vercel Backend URL
         return isLocal 
             ? "http://localhost:5000/api" 
-            : "https://nexafxtrade.onrender.com/api"; 
+            : "https://nexapayfx-backend.vercel.app/api"; 
     };
 
     async function handleRegister() {
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
+        // Added .trim() to remove accidental spaces
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
         const statusEl = document.getElementById('statusMsg');
@@ -241,6 +243,7 @@
                     localStorage.setItem("operatorName", name);
                 }
                 
+                // Go to the dashboard
                 setTimeout(() => window.location.href = "dashboard.html", 1500);
             } else {
                 throw new Error(data.message || "TERMINAL REJECTED CREDENTIALS");
