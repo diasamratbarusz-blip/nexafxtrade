@@ -76,13 +76,14 @@ export default function Home() {
       </p>
 
       <div style={styles.navBox}>
-        <Link href="/login" style={{...styles.linkBtn, ...styles.secondaryBtn}}>
+        {/* FIX: Added .html to the links so Next.js can find your HTML files */}
+        <Link href="/login.html" style={{...styles.linkBtn, ...styles.secondaryBtn}}>
           Login
         </Link>
-        <Link href="/register" style={{...styles.linkBtn, ...styles.primaryBtn}}>
+        <Link href="/register.html" style={{...styles.linkBtn, ...styles.primaryBtn}}>
           Get Started
         </Link>
-        <Link href="/dashboard" style={{...styles.linkBtn, ...styles.secondaryBtn}}>
+        <Link href="/dashboard.html" style={{...styles.linkBtn, ...styles.secondaryBtn}}>
           Terminal
         </Link>
       </div>
@@ -93,4 +94,4 @@ export default function Home() {
       </footer>
     </main>
   );
-}
+        }
