@@ -2,13 +2,13 @@ import axios from "axios"
 
 /**
  * NEXAFX API CONFIGURATION MODULE
- * Logic: Auto-switches between local development and Render production backend.
+ * Logic: Auto-switches between local development and Vercel production backend.
  */
 
 // ✅ Auto-switch between local and production backend
 const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://nexapayfx-backend.onrender.com/api"
+    ? "https://nexapayfx-backend.vercel.app/api" // UPDATED: Changed from Render to Vercel
     : "http://localhost:5000/api"
 
 // ✅ Axios instance
@@ -19,7 +19,7 @@ const API = axios.create({
   },
 })
 
-// ✅ Optional: Request interceptor (useful for tokens later)
+// ✅ Request interceptor (Automatically adds the login token to every request)
 API.interceptors.request.use(
   (config) => {
     // Check if window is defined to avoid Next.js Server-Side Rendering (SSR) reference errors
@@ -36,19 +36,19 @@ API.interceptors.request.use(
   }
 )
 
-// ✅ Optional: Response interceptor (better error handling)
+// ✅ Response interceptor (Better error handling)
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Global error handling matrix hook
+    // Global error handling
     if (error.response) {
-      // The server responded with a status code outside the 2xx range
+      // The server responded with an error (like 401 or 500)
       console.error(`[API Error ${error.response.status}]:`, error.response.data)
     } else if (error.request) {
-      // The request was made but no response was received
+      // The request was made but no response was received (Server is down)
       console.error("[API Network Error]: No response received from server node.")
     } else {
-      // Something happened in setting up the request that triggered an Error
+      // Something happened in setting up the request
       console.error("[API Configuration Error]:", error.message)
     }
     return Promise.reject(error)
