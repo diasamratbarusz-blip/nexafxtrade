@@ -6,12 +6,6 @@
     <title>Login | NEXAFX Premium Architecture</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /**
-         * Nexafxtrade Premium Login System
-         * Optimized for the "image_3.png" aesthetic & fluid viewport layouts
-         * Version: 3.3.0 (May 2026)
-         */
-
         :root {
             --bg-deep: #06090f;
             --bg-card: #11171f;
@@ -42,7 +36,6 @@
             overflow-x: hidden;
         }
 
-        /* Full Screen Form Container Matrix */
         .auth-container {
             width: 100%;
             max-width: 420px;
@@ -65,14 +58,13 @@
             box-shadow: 0 4px 25px rgba(0, 212, 255, 0.05);
         }
 
-        /* Branding Segment Headers */
         .auth-header {
             text-align: center;
             margin-bottom: 25px;
         }
 
         .brand-title {
-            color: #00ff00; /* Legacy Neon Green accent tracking */
+            color: #00ff00;
             font-weight: 900;
             font-size: 1.6rem;
             letter-spacing: -1px;
@@ -92,7 +84,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Form Input Field Frameworks */
         .form-group {
             position: relative;
             margin-bottom: 18px;
@@ -131,7 +122,6 @@
             color: var(--primary);
         }
 
-        /* Primary Action Buttons Desk execution */
         .btn-auth-submit {
             width: 100%;
             background: var(--primary);
@@ -161,7 +151,6 @@
             transform: translateY(0);
         }
 
-        /* Feedback Notifications */
         .status-message {
             margin-top: 15px;
             font-size: 0.85rem;
@@ -181,7 +170,6 @@
             color: var(--success);
         }
 
-        /* Routing Redirection Links layout elements */
         .auth-routing-footer {
             margin-top: 20px;
             text-align: center;
@@ -199,7 +187,6 @@
             text-decoration: underline;
         }
 
-        /* --- Geometric Background Animation --- */
         .wave-bg {
             position: fixed;
             bottom: 0;
@@ -229,7 +216,6 @@
             75% { transform: translateX(4px); }
         }
 
-        /* Responsive Constraints Configuration override metrics */
         @media (max-width: 480px) {
             .auth-container {
                 padding: 15px;
@@ -245,13 +231,11 @@
 
 <div class="auth-container">
     <div class="auth-card">
-        <!-- System Core Headers -->
         <div class="auth-header">
             <h1 class="brand-title">NEXAFX<span>TRADE</span></h1>
             <div class="auth-subtitle">Secure Access Portal Node</div>
         </div>
 
-        <!-- Credentials Submission Desk Forms -->
         <div class="form-group">
             <input type="email" id="email" class="auth-input" placeholder="Registered Email Address" required autocomplete="email">
             <i class="fas fa-envelope"></i>
@@ -262,22 +246,18 @@
             <i class="fas fa-lock"></i>
         </div>
 
-        <!-- Secure submit command node -->
         <button class="btn-auth-submit" onclick="login()">
             <i class="fas fa-sign-in-alt"></i> Access Vault
         </button>
 
-        <!-- System state runtime notifications -->
         <p id="msg" class="status-message"></p>
 
-        <!-- Dynamic router redirection paths -->
         <div class="auth-routing-footer">
             Don't have an operating terminal node? <a href="register.html">Register Terminal</a>
         </div>
     </div>
 </div>
 
-<!-- Geometric Background Waves SVG -->
 <svg class="wave-bg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
     <defs>
         <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18v44h-352z" />
@@ -290,8 +270,18 @@
 </svg>
 
 <script>
-    // System core endpoint API variable architecture setup mapping 
-    const API = "https://nexapayfx-backend.onrender.com/api";
+    /**
+     * DYNAMIC API CONFIGURATION
+     * Updated to point to your new Vercel Backend!
+     */
+    const getApiBase = () => {
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        
+        // Your new Vercel Backend URL
+        return isLocal 
+            ? "http://localhost:5000/api" 
+            : "https://nexapayfx-backend.vercel.app/api"; 
+    };
 
     async function login(){
         const msgNode = document.getElementById("msg");
@@ -310,7 +300,9 @@
         }
 
         try {
-            const res = await fetch(`${API}/auth/login`, {
+            const api_url = `${getApiBase()}/auth/login`;
+            
+            const res = await fetch(api_url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -325,11 +317,15 @@
                 msgNode.innerText = "Authorization granted! Syncing data modules...";
                 msgNode.className = "status-message msg-success";
                 
-                // Safe transmission synchronization down into client local matrices
+                // Save the token and the user's name
                 localStorage.setItem("token", data.token);
+                if (data.user && data.user.name) {
+                    localStorage.setItem("operatorName", data.user.name);
+                }
                 
+                // FIX: Redirect to dashboard.html instead of index.html
                 setTimeout(() => {
-                    window.location.href = "index.html";
+                    window.location.href = "dashboard.html"; 
                 }, 800);
             } else {
                 msgNode.innerText = "❌ Login failed: " + (data.message || "Invalid account matching credentials.");
@@ -337,7 +333,11 @@
             }
         } catch(error) {
             console.error("Network interface channel mapping failure: ", error);
-            msgNode.innerText = "🌐 Connection error. Verify your network matrix node.";
+            if (error.message.includes("Failed to fetch")) {
+                msgNode.innerText = "❌ CONNECTION FAILED: CHECK SERVER/CORS.";
+            } else {
+                msgNode.innerText = "❌ ERROR: " + error.message.toUpperCase();
+            }
             msgNode.className = "status-message msg-error";
         }
     }
