@@ -84,6 +84,22 @@
         .btn-graph-login:hover { background: rgba(255, 255, 255, 0.1); border-color: #fff; }
         .btn-graph-register { background: var(--neon-blue); color: #000; }
         .btn-graph-register:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); }
+        .btn-graph-logout { background: var(--low-red); color: #fff; }
+        .btn-graph-logout:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(255, 51, 102, 0.4); }
+
+        .user-info-display {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--high-green);
+            margin-right: 10px;
+        }
+        .user-info-display.show { display: flex; }
+        .user-name { color: var(--high-green); font-weight: 700; font-size: 0.9rem; }
+        .user-status { color: var(--text-dim); font-size: 0.75rem; }
 
         .graph-top-history-ribbon {
             background: #0d1117; border-top: 1px solid #222; border-bottom: 1px solid #222;
@@ -186,7 +202,8 @@
             .live-transaction-counter { margin: 10px 10px 0 10px; }
             #chart-container { min-height: 200px; }
             .price-hero { flex-direction: column; gap: 10px; }
-            .top-graph-auth-actions { width: 100%; }
+            .top-graph-auth-actions { width: 100%; flex-direction: column; }
+            .user-info-display { width: 100%; justify-content: center; margin: 10px 0; }
         }
     </style>
 </head>
@@ -196,6 +213,15 @@
     <header>
         <div class="brand">NEXAFX<span>TRADE</span></div>
         <div style="display: flex; align-items: center; gap: 15px;">
+            <!-- User Info Display (Shows when logged in) -->
+            <div id="user-info-display" class="user-info-display">
+                <i class="fas fa-user-circle" style="color: var(--high-green); font-size: 1.2rem;"></i>
+                <div>
+                    <div class="user-name" id="user-name-display">User</div>
+                    <div class="user-status">● Online</div>
+                </div>
+            </div>
+
             <button id="audio-btn" onclick="initBeats()" style="background: var(--neon-blue); border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer;">
                 <i class="fas fa-play"></i> ACTIVATE SOUND
             </button>
@@ -230,8 +256,12 @@
                         +0.00%
                     </div>
                     <div class="top-graph-auth-actions">
-                        <button id="login-btn" class="graph-auth-btn btn-graph-login" onclick="location.href='/login'">Login</button>
-                        <button id="register-btn" class="graph-auth-btn btn-graph-register" onclick="location.href='/register'">Register</button>
+                        <button id="login-btn" class="graph-auth-btn btn-graph-login" onclick="handleLoginLogout()">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        <button id="register-btn" class="graph-auth-btn btn-graph-register" onclick="location.href='/register'">
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
                     </div>
                 </div>
             </div>
@@ -300,6 +330,7 @@
     window.USER_IS_AUTHENTICATED = false;
     window.CURRENT_ACCOUNT_MODE = "REAL";
     window.USER_TOKEN = localStorage.getItem("token");
+    window.USER_DATA = null;
 
     // --- ADMIN REMOTE CONTROL OBJECT CONFIGURATION ---
     window.NEXAFX_ADMIN_CONFIG = {
@@ -318,49 +349,126 @@
     let tradeTicksElapsed = 0;
     let currentHighTicksLimit = 45; 
 
-    // --- INITIALIZE APP (Fetch User Data from Vercel) ---
+    // --- INITIALIZE APP (Check Auth on Page Load) ---
     async function initApp() {
+        console.log("🔍 Initializing dashboard... Token exists:", !!window.USER_TOKEN);
+        
         if (window.USER_TOKEN) {
             try {
                 const response = await fetch(`${getApiBase()}/user/profile`, {
                     method: "GET",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${window.USER_TOKEN}` }
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "Authorization": `Bearer ${window.USER_TOKEN}` 
+                    }
                 });
+
+                console.log("📡 Profile response status:", response.status);
 
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.success) {
+                    console.log("✅ Profile data received:", data);
+                    
+                    if (data.success && data.user) {
+                        // User is authenticated
                         window.USER_IS_AUTHENTICATED = true;
+                        window.USER_DATA = data.user;
+                        balance = data.user.balance || 0;
                         
-                        // FIX: Changed from data.data.balance to data.user.balance to match backend response
-                        balance = data.user?.balance || 0; 
+                        console.log("💰 User balance:", balance);
+                        console.log("👤 User name:", data.user.name);
+                        
                         updateBalance();
-                        
-                        // Update UI to show logged in state
-                        document.getElementById('login-btn').innerText = "Logout";
-                        document.getElementById('login-btn').onclick = logoutUser;
-                        document.getElementById('register-btn').style.display = "none";
+                        updateAuthUI(true, data.user);
+                    } else {
+                        throw new Error("Invalid response format");
                     }
                 } else {
+                    console.warn("❌ Token invalid, clearing storage");
                     localStorage.removeItem("token");
+                    localStorage.removeItem("user");
                     window.USER_TOKEN = null;
+                    updateAuthUI(false, null);
                 }
             } catch (error) {
-                console.error("Failed to fetch profile:", error);
+                console.error("🚫 Failed to fetch profile:", error);
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                window.USER_TOKEN = null;
+                updateAuthUI(false, null);
             }
-        }
-        
-        if (!window.USER_IS_AUTHENTICATED) {
-            balance = (window.CURRENT_ACCOUNT_MODE === "DEMO") ? 100000.00 : 0.00;
+        } else {
+            console.log("⚠️ No token found, showing guest mode");
+            balance = 0;
             updateBalance();
+            updateAuthUI(false, null);
+        }
+    }
+
+    // --- UPDATE AUTHENTICATION UI ---
+    function updateAuthUI(isLoggedIn, userData) {
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const userInfoDisplay = document.getElementById('user-info-display');
+        const userNameDisplay = document.getElementById('user-name-display');
+
+        if (isLoggedIn && userData) {
+            // Show logged in state
+            loginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+            loginBtn.className = 'graph-auth-btn btn-graph-logout';
+            loginBtn.onclick = handleLoginLogout;
+            
+            registerBtn.style.display = 'none';
+            
+            userInfoDisplay.classList.add('show');
+            userNameDisplay.textContent = userData.name || 'User';
+            
+            console.log("✅ UI updated to logged-in state");
+        } else {
+            // Show guest state
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+            loginBtn.className = 'graph-auth-btn btn-graph-login';
+            loginBtn.onclick = handleLoginLogout;
+            
+            registerBtn.style.display = 'block';
+            
+            userInfoDisplay.classList.remove('show');
+            
+            console.log("✅ UI updated to guest state");
+        }
+    }
+
+    // --- HANDLE LOGIN/LOGOUT BUTTON CLICK ---
+    function handleLoginLogout() {
+        if (window.USER_IS_AUTHENTICATED) {
+            // Logout
+            logoutUser();
+        } else {
+            // Login
+            window.location.href = '/login';
         }
     }
 
     function logoutUser() {
+        console.log("🚪 Logging out user...");
         localStorage.removeItem("token");
         localStorage.removeItem("operatorName");
         localStorage.removeItem("user");
-        window.location.href = "/";
+        window.USER_TOKEN = null;
+        window.USER_IS_AUTHENTICATED = false;
+        window.USER_DATA = null;
+        balance = 0;
+        updateBalance();
+        updateAuthUI(false, null);
+        alert("You have been logged out successfully.");
+    }
+
+    function updateBalance() {
+        const balanceEl = document.getElementById('balance');
+        if (balanceEl) {
+            balanceEl.innerText = balance.toLocaleString(undefined, {minimumFractionDigits: 2});
+            console.log("💵 Balance updated to:", balance);
+        }
     }
 
     // Run initialization when page loads
@@ -499,8 +607,8 @@
     // --- TRADE LOGIC ---
     async function executeBuy() {
         if (window.CURRENT_ACCOUNT_MODE === "REAL" && !window.USER_IS_AUTHENTICATED) {
-            alert("Authentication Required: Please login or register to place bets in Real Trade.");
-            window.location.href = "/login"; // FIX: Updated to clean Next.js route
+            alert("🔐 Authentication Required: Please login or register to place bets in Real Trade.");
+            window.location.href = "/login";
             return;
         }
 
@@ -521,7 +629,7 @@
                 });
                 const data = await response.json();
                 if (!response.ok || !data.success) return alert(data.message || "Failed to deduct balance.");
-                balance = data.newBalance; // Sync exact backend balance
+                balance = data.newBalance;
                 updateBalance();
             } catch (error) {
                 return alert("Network error while placing trade.");
@@ -587,7 +695,6 @@
         activeTradePosition.hasSold = true;
         activeTradePosition.soldAmount = finalProfit;
 
-        // SECURE BACKEND ADDITION FOR REAL MODE
         if (window.CURRENT_ACCOUNT_MODE === "REAL") {
             try {
                 const response = await fetch(`${getApiBase()}/user/balance`, {
@@ -597,9 +704,9 @@
                 });
                 const data = await response.json();
                 if (response.ok && data.success) balance = data.newBalance;
-                else balance += finalProfit; // Fallback
+                else balance += finalProfit;
             } catch (error) {
-                balance += finalProfit; // Fallback
+                balance += finalProfit;
             }
         } else {
             balance += finalProfit;
@@ -652,10 +759,6 @@
         playSynth(180, 'sawtooth', 0.80, 1.0); 
     }
 
-    function updateBalance() {
-        document.getElementById('balance').innerText = balance.toLocaleString(undefined, {minimumFractionDigits: 2});
-    }
-
     function addPayoutLog(msg) {
         const feed = document.getElementById('payout-feed');
         if(!feed) return;
@@ -702,9 +805,30 @@
         }
     }
 
-    function executeWithdrawalRoute() { addPayoutLog("Initiating Secure Withdrawal Channel Sequence..."); alert("Secure Gateway Redirect:\nOpening local mobile payout ledger interface console."); }
-    function executeDepositRoute() { addPayoutLog("Generating Liquidity Loading Node Credentials..."); alert("Instant Account Loading via Automated Native Node Terminals Access Granted."); }
-    function toggleHowToTradeModal() { alert("Quick-Start Tutorial Guide:\n1. Input your custom stake.\n2. Tap BUY to open a position.\n3. Watch the Live Counter increase.\n4. Tap SELL before the crash!"); }
+    function executeWithdrawalRoute() { 
+        if (!window.USER_IS_AUTHENTICATED) {
+            alert("Please login to access withdrawal.");
+            window.location.href = "/login";
+            return;
+        }
+        addPayoutLog("Initiating Secure Withdrawal Channel Sequence..."); 
+        alert("Secure Gateway Redirect:\nOpening local mobile payout ledger interface console."); 
+    }
+    
+    function executeDepositRoute() { 
+        if (!window.USER_IS_AUTHENTICATED) {
+            alert("Please login to access deposit.");
+            window.location.href = "/login";
+            return;
+        }
+        addPayoutLog("Generating Liquidity Loading Node Credentials..."); 
+        alert("Instant Account Loading via Automated Native Node Terminals Access Granted."); 
+    }
+    
+    function toggleHowToTradeModal() { 
+        alert("Quick-Start Tutorial Guide:\n1. Input your custom stake.\n2. Tap BUY to open a position.\n3. Watch the Live Counter increase.\n4. Tap SELL before the crash!"); 
+    }
+    
     function triggerReferralSystem() {
         const simulatedRefLink = "https://nexafxtrade.vercel.app/invite?code=" + Math.floor(Math.random() * 90000 + 10000);
         alert("Your Exclusive Referral Network URL Token:\n" + simulatedRefLink);
@@ -728,4 +852,4 @@
     }
 </script>
 </body>
-</html>
+                    </html>
