@@ -7,224 +7,46 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --bg-deep: #06090f;
-            --bg-card: #11171f;
-            --primary: #00d4ff;
-            --success: #00e676;
-            --danger: #ff5252;
-            --text-dim: #707a8a;
-            --text-light: #ffffff;
-            --border-color: #222222;
+            --bg-deep: #06090f; --bg-card: #11171f; --primary: #00d4ff;
+            --success: #00e676; --danger: #ff5252; --text-dim: #707a8a;
+            --text-light: #ffffff; --border-color: #222222;
         }
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html {
-            background-color: var(--bg-deep);
-            color: var(--text-light);
+            background-color: var(--bg-deep); color: var(--text-light);
             font-family: 'Inter', 'Segoe UI', Roboto, -apple-system, sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            min-height: -webkit-fill-available;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
+            margin: 0; padding: 0; height: 100vh; display: flex;
+            align-items: center; justify-content: center; overflow-x: hidden;
         }
-
-        .auth-container {
-            width: 100%;
-            max-width: 420px;
-            padding: 25px;
-            z-index: 10;
-            position: relative;
-        }
-
+        .auth-container { width: 100%; max-width: 420px; padding: 25px; z-index: 10; position: relative; }
         .auth-card {
-            background-color: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 30px 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px; padding: 30px 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
-
-        .auth-card:hover {
-            border-color: rgba(0, 212, 255, 0.15);
-            box-shadow: 0 4px 25px rgba(0, 212, 255, 0.05);
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .brand-title {
-            color: #00ff00;
-            font-weight: 900;
-            font-size: 1.6rem;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-            margin: 0;
-        }
-
-        .brand-title span {
-            color: var(--primary);
-        }
-
-        .auth-subtitle {
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            margin-top: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group {
-            position: relative;
-            margin-bottom: 18px;
-            width: 100%;
-        }
-
-        .form-group i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-dim);
-            font-size: 0.95rem;
-            transition: color 0.2s ease;
-        }
-
+        .auth-header { text-align: center; margin-bottom: 25px; }
+        .brand-title { color: #00ff00; font-weight: 900; font-size: 1.6rem; letter-spacing: -1px; text-transform: uppercase; margin: 0; }
+        .brand-title span { color: var(--primary); }
+        .auth-subtitle { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; text-transform: uppercase; }
+        .form-group { position: relative; margin-bottom: 18px; width: 100%; }
+        .form-group i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-dim); }
         .auth-input {
-            width: 100%;
-            background-color: var(--bg-deep);
-            border: 1px solid var(--border-color);
-            color: var(--text-light);
-            padding: 12px 14px 12px 42px;
-            font-size: 0.9rem;
-            border-radius: 8px;
-            outline: none;
-            font-family: inherit;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            width: 100%; background-color: var(--bg-deep); border: 1px solid var(--border-color);
+            color: var(--text-light); padding: 12px 14px 12px 42px; font-size: 0.9rem;
+            border-radius: 8px; outline: none; font-family: inherit;
         }
-
-        .auth-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 8px rgba(0, 212, 255, 0.15);
-        }
-
-        .auth-input:focus + i {
-            color: var(--primary);
-        }
-
+        .auth-input:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(0, 212, 255, 0.15); }
         .btn-auth-submit {
-            width: 100%;
-            background: var(--primary);
-            color: #000000;
-            border: none;
-            padding: 14px;
-            font-size: 1rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 25px;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%; background: var(--primary); color: #000000; border: none;
+            padding: 14px; font-size: 1rem; font-weight: 800; text-transform: uppercase;
+            border-radius: 8px; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 8px; margin-top: 25px;
         }
-
-        .btn-auth-submit:hover {
-            transform: translateY(-2px);
-            filter: brightness(1.1);
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
-        }
-
-        .btn-auth-submit:active {
-            transform: translateY(0);
-        }
-
-        .status-message {
-            margin-top: 15px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-align: center;
-            min-height: 20px;
-            font-family: monospace;
-            letter-spacing: 0.5px;
-        }
-        
-        .msg-error {
-            color: var(--danger);
-            animation: shake 0.3s ease-in-out;
-        }
-        
-        .msg-success {
-            color: var(--success);
-        }
-
-        .auth-routing-footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-
-        .auth-routing-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .auth-routing-footer a:hover {
-            text-decoration: underline;
-        }
-
-        .wave-bg {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 15vh;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.2;
-        }
-
-        .parallax > use {
-            animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
-        }
-        .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
-        .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; }
-        .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; }
-
-        @keyframes move-forever {
-            0% { transform: translate3d(-90px,0,0); }
-            100% { transform: translate3d(85px,0,0); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-4px); }
-            75% { transform: translateX(4px); }
-        }
-
-        @media (max-width: 480px) {
-            .auth-container {
-                padding: 15px;
-            }
-            .auth-card {
-                padding: 25px 15px;
-                border-radius: 12px;
-            }
-        }
+        .btn-auth-submit:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .status-message { margin-top: 15px; font-size: 0.85rem; font-weight: 700; text-align: center; min-height: 20px; font-family: monospace; }
+        .msg-error { color: var(--danger); }
+        .msg-success { color: var(--success); }
+        .auth-routing-footer { margin-top: 20px; text-align: center; font-size: 0.8rem; color: var(--text-dim); }
+        .auth-routing-footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -237,12 +59,12 @@
         </div>
 
         <div class="form-group">
-            <input type="email" id="email" class="auth-input" placeholder="Registered Email Address" required autocomplete="email">
+            <input type="email" id="email" class="auth-input" placeholder="Registered Email Address" required>
             <i class="fas fa-envelope"></i>
         </div>
 
         <div class="form-group">
-            <input type="password" id="password" class="auth-input" placeholder="Account Password" required autocomplete="current-password">
+            <input type="password" id="password" class="auth-input" placeholder="Account Password" required>
             <i class="fas fa-lock"></i>
         </div>
 
@@ -253,40 +75,19 @@
         <p id="msg" class="status-message"></p>
 
         <div class="auth-routing-footer">
-            Don't have an operating terminal node? <a href="register.html">Register Terminal</a>
+            Don't have an operating terminal node? <a href="/register">Register Terminal</a>
         </div>
     </div>
 </div>
 
-<svg class="wave-bg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-    <defs>
-        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18v44h-352z" />
-    </defs>
-    <g class="parallax">
-        <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(0,212,255,0.06)" />
-        <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(0,230,118,0.04)" />
-        <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(6,9,15,0.1)" />
-    </g>
-</svg>
-
 <script>
-    /**
-     * DYNAMIC API CONFIGURATION
-     * Updated to point to your new Vercel Backend!
-     */
     const getApiBase = () => {
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        
-        // Your new Vercel Backend URL
-        return isLocal 
-            ? "http://localhost:5000/api" 
-            : "https://nexapayfx-backend.vercel.app/api"; 
+        return isLocal ? "http://localhost:5000/api" : "https://nexapayfx-backend.vercel.app/api"; 
     };
 
     async function login(){
         const msgNode = document.getElementById("msg");
-        
-        // Resetting local UI notification state channels cleanly
         msgNode.innerText = "Connecting to network node...";
         msgNode.className = "status-message msg-success";
 
@@ -300,15 +101,10 @@
         }
 
         try {
-            const api_url = `${getApiBase()}/auth/login`;
-            
-            const res = await fetch(api_url, {
+            const res = await fetch(`${getApiBase()}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email: emailValue,
-                    password: passwordValue
-                })
+                body: JSON.stringify({ email: emailValue, password: passwordValue })
             });
 
             const data = await res.json();
@@ -317,22 +113,22 @@
                 msgNode.innerText = "Authorization granted! Syncing data modules...";
                 msgNode.className = "status-message msg-success";
                 
-                // Save the token and the user's name
                 localStorage.setItem("token", data.token);
-                if (data.user && data.user.name) {
+                if (data.user) {
                     localStorage.setItem("operatorName", data.user.name);
+                    // UPDATED: Save the whole user object so the dashboard loads instantly
+                    localStorage.setItem("user", JSON.stringify(data.user));
                 }
                 
-                // FIX: Redirect to dashboard.html instead of index.html
+                // UPDATED: Changed from "dashboard.html" to "/dashboard" for Next.js routing
                 setTimeout(() => {
-                    window.location.href = "dashboard.html"; 
+                    window.location.href = "/dashboard"; 
                 }, 800);
             } else {
-                msgNode.innerText = "❌ Login failed: " + (data.message || "Invalid account matching credentials.");
+                msgNode.innerText = "❌ Login failed: " + (data.message || "Invalid credentials.");
                 msgNode.className = "status-message msg-error";
             }
         } catch(error) {
-            console.error("Network interface channel mapping failure: ", error);
             if (error.message.includes("Failed to fetch")) {
                 msgNode.innerText = "❌ CONNECTION FAILED: CHECK SERVER/CORS.";
             } else {
@@ -342,6 +138,5 @@
         }
     }
 </script>
-
 </body>
 </html>
