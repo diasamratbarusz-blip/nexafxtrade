@@ -816,6 +816,9 @@
         }
     }
 
+    // ==========================================
+    // UPDATED ROUTING FUNCTIONS
+    // ==========================================
     function executeWithdrawalRoute() { 
         if (!window.USER_IS_AUTHENTICATED) {
             alert("Please login to access withdrawal.");
@@ -823,7 +826,8 @@
             return;
         }
         addPayoutLog("Initiating Secure Withdrawal Channel Sequence..."); 
-        alert("Secure Gateway Redirect:\nOpening local mobile payout ledger interface console."); 
+        // Redirect to the new withdrawal page
+        window.location.href = "/withdrawal"; 
     }
     
     function executeDepositRoute() { 
@@ -833,7 +837,8 @@
             return;
         }
         addPayoutLog("Generating Liquidity Loading Node Credentials..."); 
-        alert("Instant Account Loading via Automated Native Node Terminals Access Granted."); 
+        // Redirect to the new deposit page
+        window.location.href = "/deposit"; 
     }
     
     function toggleHowToTradeModal() { 
