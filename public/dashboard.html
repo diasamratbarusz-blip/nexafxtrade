@@ -84,14 +84,15 @@
         .btn-graph-login:hover { background: rgba(255, 255, 255, 0.1); border-color: #fff; }
         .btn-graph-register { background: var(--neon-blue); color: #000; }
         .btn-graph-register:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); }
-        .btn-graph-logout { background: var(--low-red); color: #fff; }
+        .btn-graph-logout { background: var(--low-red); color: #fff; border-color: var(--low-red); }
         .btn-graph-logout:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(255, 51, 102, 0.4); }
 
+        /* User Profile Display Card */
         .user-info-display {
             display: none;
             align-items: center;
             gap: 10px;
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 255, 136, 0.05);
             padding: 8px 15px;
             border-radius: 8px;
             border: 1px solid var(--high-green);
@@ -99,7 +100,7 @@
         }
         .user-info-display.show { display: flex; }
         .user-name { color: var(--high-green); font-weight: 700; font-size: 0.9rem; }
-        .user-status { color: var(--text-dim); font-size: 0.75rem; }
+        .user-email { color: var(--text-dim); font-size: 0.7rem; font-family: monospace; }
 
         .graph-top-history-ribbon {
             background: #0d1117; border-top: 1px solid #222; border-bottom: 1px solid #222;
@@ -215,10 +216,10 @@
         <div style="display: flex; align-items: center; gap: 15px;">
             <!-- User Info Display (Shows when logged in) -->
             <div id="user-info-display" class="user-info-display">
-                <i class="fas fa-user-circle" style="color: var(--high-green); font-size: 1.2rem;"></i>
+                <i class="fas fa-user-circle" style="color: var(--high-green); font-size: 1.5rem;"></i>
                 <div>
-                    <div class="user-name" id="user-name-display">User</div>
-                    <div class="user-status">● Online</div>
+                    <div class="user-name" id="user-name-display">Operator</div>
+                    <div class="user-email" id="user-email-display">ID: Loading...</div>
                 </div>
             </div>
 
@@ -349,10 +350,25 @@
     let tradeTicksElapsed = 0;
     let currentHighTicksLimit = 45; 
 
-    // --- INITIALIZE APP (Check Auth on Page Load) ---
+    // --- INITIALIZE APP (Local-First Strategy for Zero Delay) ---
     async function initApp() {
-        console.log("🔍 Initializing dashboard... Token exists:", !!window.USER_TOKEN);
-        
+        // 1. INSTANT UI UPDATE: Load from localStorage immediately so user sees their name/balance without waiting
+        const savedUser = localStorage.getItem("user");
+        if (window.USER_TOKEN && savedUser) {
+            try {
+                const userData = JSON.parse(savedUser);
+                window.USER_IS_AUTHENTICATED = true;
+                window.USER_DATA = userData;
+                balance = userData.balance || 0;
+                
+                updateBalance();
+                updateAuthUI(true, userData);
+            } catch (e) {
+                console.error("Error parsing saved user data", e);
+            }
+        }
+
+        // 2. BACKGROUND VERIFICATION: Fetch fresh data from Vercel backend to ensure accuracy
         if (window.USER_TOKEN) {
             try {
                 const response = await fetch(`${getApiBase()}/user/profile`, {
@@ -363,27 +379,24 @@
                     }
                 });
 
-                console.log("📡 Profile response status:", response.status);
-
                 if (response.ok) {
                     const data = await response.json();
-                    console.log("✅ Profile data received:", data);
+                    // Handle both data.user and data.data just in case backend format varies
+                    const freshUser = data.user || data.data; 
                     
-                    if (data.success && data.user) {
-                        // User is authenticated
+                    if (data.success && freshUser) {
                         window.USER_IS_AUTHENTICATED = true;
-                        window.USER_DATA = data.user;
-                        balance = data.user.balance || 0;
+                        window.USER_DATA = freshUser;
+                        balance = freshUser.balance || 0;
                         
-                        console.log("💰 User balance:", balance);
-                        console.log("👤 User name:", data.user.name);
+                        // Update localStorage with the fresh backend data
+                        localStorage.setItem("user", JSON.stringify(freshUser));
                         
                         updateBalance();
-                        updateAuthUI(true, data.user);
-                    } else {
-                        throw new Error("Invalid response format");
+                        updateAuthUI(true, freshUser);
                     }
                 } else {
+                    // Token is invalid or expired
                     console.warn("❌ Token invalid, clearing storage");
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
@@ -391,14 +404,11 @@
                     updateAuthUI(false, null);
                 }
             } catch (error) {
-                console.error("🚫 Failed to fetch profile:", error);
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                window.USER_TOKEN = null;
-                updateAuthUI(false, null);
+                console.error("🚫 Network error fetching profile:", error);
+                // Keep the localStorage data visible even if network fails
             }
         } else {
-            console.log("⚠️ No token found, showing guest mode");
+            // No token, show guest mode
             balance = 0;
             updateBalance();
             updateAuthUI(false, null);
@@ -411,6 +421,7 @@
         const registerBtn = document.getElementById('register-btn');
         const userInfoDisplay = document.getElementById('user-info-display');
         const userNameDisplay = document.getElementById('user-name-display');
+        const userEmailDisplay = document.getElementById('user-email-display');
 
         if (isLoggedIn && userData) {
             // Show logged in state
@@ -421,7 +432,10 @@
             registerBtn.style.display = 'none';
             
             userInfoDisplay.classList.add('show');
-            userNameDisplay.textContent = userData.name || 'User';
+            userNameDisplay.textContent = userData.name || 'Operator';
+            if (userEmailDisplay) {
+                userEmailDisplay.textContent = userData.email || ('ID: ' + (userData.id || 'Unknown'));
+            }
             
             console.log("✅ UI updated to logged-in state");
         } else {
@@ -433,6 +447,7 @@
             registerBtn.style.display = 'block';
             
             userInfoDisplay.classList.remove('show');
+            if (userEmailDisplay) userEmailDisplay.textContent = '';
             
             console.log("✅ UI updated to guest state");
         }
@@ -441,10 +456,8 @@
     // --- HANDLE LOGIN/LOGOUT BUTTON CLICK ---
     function handleLoginLogout() {
         if (window.USER_IS_AUTHENTICATED) {
-            // Logout
             logoutUser();
         } else {
-            // Login
             window.location.href = '/login';
         }
     }
@@ -467,7 +480,6 @@
         const balanceEl = document.getElementById('balance');
         if (balanceEl) {
             balanceEl.innerText = balance.toLocaleString(undefined, {minimumFractionDigits: 2});
-            console.log("💵 Balance updated to:", balance);
         }
     }
 
@@ -619,7 +631,6 @@
         if (amt > (admin.maximumTicketPrice || 500000)) return alert("Maximum ticket exceeded. Cap: KES " + (admin.maximumTicketPrice || 500000));
         if (amt > balance) return alert("Insufficient Balance");
 
-        // SECURE BACKEND DEDUCTION FOR REAL MODE
         if (window.CURRENT_ACCOUNT_MODE === "REAL") {
             try {
                 const response = await fetch(`${getApiBase()}/user/balance`, {
@@ -852,4 +863,4 @@
     }
 </script>
 </body>
-                    </html>
+    </html>
