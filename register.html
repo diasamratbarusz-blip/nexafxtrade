@@ -32,7 +32,6 @@
             flex-direction: column;
         }
 
-        /* ==================== HEADER ==================== */
         nav { 
             display: flex; 
             justify-content: space-between; 
@@ -70,7 +69,6 @@
             font-size: 16px;
         }
 
-        /* ==================== MAIN CONTENT & SIGNUP BOX ==================== */
         .main-content { 
             padding: 60px 20px; 
             display: flex; 
@@ -109,10 +107,7 @@
             50% { background-position: 100% 50%; }
         }
 
-        .auth-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+        .auth-header { text-align: center; margin-bottom: 25px; }
         .brand-title {
             font-family: 'Outfit';
             color: var(--high-green);
@@ -131,7 +126,6 @@
             letter-spacing: 1px;
         }
 
-        /* Help Box Component */
         .info-box { 
             text-align: center; 
             margin-bottom: 25px; 
@@ -140,12 +134,7 @@
             border-radius: 14px; 
             border: 1px dashed var(--neon-blue);
         }
-        .info-box p { 
-            color: var(--text-dim); 
-            font-size: 13px; 
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
+        .info-box p { color: var(--text-dim); font-size: 13px; margin-bottom: 10px; font-weight: 500; }
         .btn-info { 
             background: linear-gradient(135deg, #0f172a, #1e293b);
             color: var(--neon-blue); 
@@ -161,309 +150,83 @@
             text-decoration: none;
             transition: all 0.3s ease;
         }
-        .btn-info:hover { 
-            transform: translateY(-2px);
-            border-color: var(--high-green);
-            color: var(--high-green);
-        }
+        .btn-info:hover { transform: translateY(-2px); border-color: var(--high-green); color: var(--high-green); }
 
-        /* Form Inputs Elements */
         .form-group { margin-bottom: 20px; }
         .form-group label { 
-            display: block; 
-            margin-bottom: 8px; 
-            font-size: 13px; 
-            font-weight: 700; 
-            color: var(--neon-blue);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; 
+            color: var(--neon-blue); text-transform: uppercase; letter-spacing: 0.5px;
         }
         
-        .input-wrapper {
-            position: relative;
-            width: 100%;
-        }
+        .input-wrapper { position: relative; width: 100%; }
         .input-wrapper i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #444a54;
-            font-size: 0.95rem;
-            transition: color 0.3s;
+            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+            color: #444a54; font-size: 0.95rem; transition: color 0.3s;
         }
 
         .auth-input { 
-            width: 100%; 
-            padding: 14px 16px 14px 45px; 
-            border-radius: 12px; 
-            border: 1px solid #222c3a; 
-            background: var(--input-bg); 
-            color: #ffffff; 
-            font-size: 14px;
-            font-weight: 600;
-            outline: none;
-            transition: all 0.3s ease;
+            width: 100%; padding: 14px 16px 14px 45px; border-radius: 12px; 
+            border: 1px solid #222c3a; background: var(--input-bg); color: #ffffff; 
+            font-size: 14px; font-weight: 600; outline: none; transition: all 0.3s ease;
         }
-        .auth-input:focus { 
-            border-color: var(--neon-blue); 
-            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-        }
-        .auth-input:focus + i {
-            color: var(--neon-blue);
-        }
+        .auth-input:focus { border-color: var(--neon-blue); box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1); }
         .auth-input::placeholder { color: #444a54; font-weight: 500; }
 
-        /* Password Wrapper Variant */
         .password-wrapper { position: relative; width: 100%; }
         .password-wrapper .auth-input { padding-right: 50px !important; }
         
         .toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            color: var(--text-dim);
-            cursor: pointer;
-            font-size: 15px;
-            padding: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.3s;
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            background: transparent; border: none; color: var(--text-dim);
+            cursor: pointer; font-size: 15px; padding: 5px;
+            display: flex; align-items: center; justify-content: center;
         }
-        .toggle-password:hover { color: var(--neon-blue); }
 
-        /* Verification Controls */
         .checkbox-group { 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 12px; 
-            margin: 22px 0; 
-            font-size: 13px; 
-            color: var(--text-dim);
-            font-weight: 500;
+            display: flex; align-items: flex-start; gap: 12px; margin: 22px 0; 
+            font-size: 13px; color: var(--text-dim); font-weight: 500;
         }
-        .checkbox-group input { 
-            width: 18px; 
-            height: 18px; 
-            cursor: pointer;
-            accent-color: var(--neon-blue);
-            flex-shrink: 0;
-            background: var(--input-bg);
-            border: 1px solid #222c3a;
-        }
-        .checkbox-group label { user-select: none; line-height: 1.4; }
+        .checkbox-group input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--neon-blue); }
         .checkbox-group a { color: var(--neon-blue); text-decoration: none; font-weight: 700; }
-        .checkbox-group a:hover { text-decoration: underline; }
 
         .btn-auth-submit { 
-            width: 100%; 
-            background: var(--neon-blue);
-            color: #000000; 
-            padding: 16px; 
-            border: none; 
-            border-radius: 12px; 
-            font-weight: 800; 
-            font-size: 15px; 
-            cursor: pointer; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
+            width: 100%; background: var(--neon-blue); color: #000000; padding: 16px; 
+            border: none; border-radius: 12px; font-weight: 800; font-size: 15px; 
+            cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;
         }
-        .btn-auth-submit:hover { 
-            background: var(--high-green);
-            transform: translateY(-1px);
-        }
+        .btn-auth-submit:hover { background: var(--high-green); transform: translateY(-1px); }
         .btn-auth-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .status-message {
-            margin-top: 15px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-align: center;
-            font-family: 'Courier New', monospace;
-            min-height: 20px;
-            line-height: 1.4;
+            margin-top: 15px; font-size: 0.8rem; font-weight: 700; text-align: center;
+            font-family: 'Courier New', monospace; min-height: 20px; line-height: 1.4;
         }
 
-        .login-footer { 
-            text-align: center; 
-            margin-top: 25px; 
-            font-size: 13px; 
-            color: var(--text-dim);
-            font-weight: 500;
-        }
+        .login-footer { text-align: center; margin-top: 25px; font-size: 13px; color: var(--text-dim); }
         .login-footer a { color: var(--neon-blue); text-decoration: none; font-weight: 700; }
-        .login-footer a:hover { color: var(--high-green); }
 
-        /* ==================== FOOTER STYLING ==================== */
-        footer { 
-            background: #0b0f14;
-            padding: 60px 10% 40px; 
-            border-top: 2px solid var(--border-light);
-        }
-        .footer-content { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-            gap: 40px; 
-            margin-bottom: 40px; 
-        }
-        .footer-col h4 { 
-            color: var(--neon-blue); 
-            margin-bottom: 20px; 
-            font-size: 14px; 
-            text-transform: uppercase; 
-            font-family: 'Outfit';
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+        footer { background: #0b0f14; padding: 60px 10% 40px; border-top: 2px solid var(--border-light); }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { color: var(--neon-blue); margin-bottom: 20px; font-size: 14px; text-transform: uppercase; }
         .footer-col ul { list-style: none; }
-        .footer-col ul li { 
-            margin-bottom: 12px; 
-            color: var(--text-dim);
-            font-size: 13px; 
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .footer-col ul li:hover { 
-            color: var(--high-green);
-            transform: translateX(4px);
-        }
-        
-        .social-icons { display: flex; gap: 10px; margin-top: 20px; }
-        .social-icons i { 
-            background: rgba(255, 255, 255, 0.03);
-            padding: 10px; 
-            border-radius: 10px; 
-            color: var(--text-dim);
-            font-size: 15px; 
-            border: 1px solid var(--border-light);
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .social-icons i:hover { 
-            background: var(--panel);
-            color: var(--neon-blue);
-            border-color: var(--neon-blue);
-            transform: translateY(-2px);
-        }
+        .footer-col ul li { margin-bottom: 12px; color: var(--text-dim); font-size: 13px; cursor: pointer; }
+        .bottom-bar { border-top: 1px solid var(--border-light); padding-top: 30px; text-align: center; color: #444a54; font-size: 12px; }
 
-        .bottom-bar { 
-            border-top: 1px solid var(--border-light);
-            padding-top: 30px; 
-            text-align: center; 
-            color: #444a54;
-            font-size: 12px;
-        }
-
-        /* Floating WhatsApp Button Component */
         .wa-float { 
-            position: fixed; 
-            bottom: 30px; 
-            right: 30px; 
-            background: #25D366; 
-            color: white; 
-            width: 55px; 
-            height: 55px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 26px; 
-            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
-            z-index: 1000; 
-            text-decoration: none;
-            transition: all 0.3s ease;
+            position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; 
+            width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; font-size: 26px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+            z-index: 1000; text-decoration: none;
         }
-        .wa-float:hover { transform: scale(1.1); }
 
-        /* ==================== MODAL OVERLAY BOX ==================== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(6, 9, 15, 0.85);
-            backdrop-filter: blur(6px);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(6, 9, 15, 0.85); backdrop-filter: blur(6px); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-box {
-            background: var(--panel);
-            width: 100%;
-            max-width: 550px;
-            max-height: 80vh;
-            border-radius: 20px;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: popIn 0.3s ease;
-        }
-        @keyframes popIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .modal-header {
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.1);
-        }
-        .modal-header h3 { 
-            font-family: 'Outfit'; 
-            color: var(--neon-blue);
-            font-size: 1.25rem;
-            font-weight: 800;
-        }
-        .modal-close {
-            background: #1e293b;
-            border: none;
-            color: var(--text-dim);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .modal-close:hover { 
-            background: var(--error-red);
-            color: white;
-        }
-        .modal-body {
-            padding: 25px;
-            overflow-y: auto;
-            color: var(--text-dim);
-            font-size: 14px;
-            line-height: 1.7;
-        }
-        .modal-body h4 {
-            color: var(--high-green);
-            margin: 18px 0 8px;
-            font-size: 15px;
-            font-weight: 700;
-        }
-        .modal-body strong { color: white; }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 768px) {
-            nav { padding: 15px 20px; }
-            .main-content { padding: 30px 15px; }
-            .signup-card { padding: 30px 20px; }
-            footer { padding: 40px 20px 20px; }
-        }
+        .modal-box { background: var(--panel); width: 100%; max-width: 550px; max-height: 80vh; border-radius: 20px; border: 1px solid var(--border-light); display: flex; flex-direction: column; overflow: hidden; }
+        .modal-header { padding: 20px 25px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { color: var(--neon-blue); font-size: 1.25rem; font-weight: 800; }
+        .modal-close { background: #1e293b; border: none; color: var(--text-dim); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
+        .modal-body { padding: 25px; overflow-y: auto; color: var(--text-dim); font-size: 14px; line-height: 1.7; }
+        .modal-body h4 { color: var(--high-green); margin: 18px 0 8px; font-size: 15px; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -492,7 +255,6 @@
             </a>
         </div>
 
-        <!-- Inputs Group Component -->
         <div class="form-group">
             <label>Operator Name</label>
             <div class="input-wrapper">
@@ -524,7 +286,7 @@
                     <input type="password" id="password" class="auth-input" placeholder="Min. 8 parameters">
                     <i class="fas fa-lock"></i>
                 </div>
-                <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle visibility">
+                <button type="button" class="toggle-password" id="togglePassword">
                     <i class="fas fa-eye" id="eyeIcon"></i>
                 </button>
             </div>
@@ -537,7 +299,7 @@
                     <input type="password" id="confirmPassword" class="auth-input" placeholder="Re-enter parameters">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <button type="button" class="toggle-password" id="toggleConfirmPassword" aria-label="Toggle confirmation visibility">
+                <button type="button" class="toggle-password" id="toggleConfirmPassword">
                     <i class="fas fa-eye" id="eyeIconConfirm"></i>
                 </button>
             </div>
@@ -555,12 +317,11 @@
         <div id="statusMsg" class="status-message"></div>
 
         <div class="login-footer">
-            Already have an active node? <a href="login.html">Access Vault</a>
+            Already have an active node? <a href="/login">Access Vault</a>
         </div>
     </div>
 </section>
 
-<!-- Floating WhatsApp Module -->
 <a href="https://wa.me/254715509440" class="wa-float" target="_blank">
     <i class="fab fa-whatsapp"></i>
 </a>
@@ -568,44 +329,24 @@
 <footer>
     <div class="footer-content">
         <div class="footer-col">
-            <div class="logo" style="margin-bottom: 20px;">
-                NEXAFX<span>TRADE</span>
-            </div>
+            <div class="logo" style="margin-bottom: 20px;">NEXAFX<span>TRADE</span></div>
             <p style="font-size: 13px; color: var(--text-dim); line-height: 1.7;">
-                Enterprise crypto-asset engine and liquidity gateway running premium tier operations. All pipelines are human-verified for high reliability.
+                Enterprise crypto-asset engine and liquidity gateway running premium tier operations.
             </p>
-            <div class="social-icons">
-                <i class="fab fa-facebook-f"></i>
-                <i class="fab fa-instagram"></i>
-                <i class="fab fa-twitter"></i>
-                <i class="fab fa-whatsapp"></i>
-            </div>
-        </div>
-        <div class="footer-col">
-            <h4>Node Operations</h4>
-            <ul>
-                <li>Liquidity Indexes</li>
-                <li>System Metrics</li>
-                <li>API Terminal</li>
-                <li>Security Protocols</li>
-            </ul>
         </div>
         <div class="footer-col">
             <h4>Compliance Vault</h4>
             <ul>
                 <li><i class="fas fa-shield-alt" style="color:var(--neon-blue); margin-right:8px;"></i> Security Clearance</li>
-                <li><i class="fas fa-phone" style="color:var(--neon-blue); margin-right:8px;"></i> Hotlines Active</li>
-                <li><i class="fas fa-envelope" style="color:var(--neon-blue); margin-right:8px;"></i> ops@nexafxtrade.com</li>
+                <li><i class="fas fa-phone" style="color:var(--neon-blue); margin-right:8px;"></i> +254 715 509 440</li>
             </ul>
         </div>
     </div>
     <div class="bottom-bar">
         © 2026 Nexafxtrade Security Operations Center. All Rights Reserved.
-        <p style="font-size: 10px; margin-top: 8px; color: #333942;">System verification is required on all initialized client configurations to protect pool limits.</p>
     </div>
 </footer>
 
-<!-- TERMS OF SERVICE MODAL OVERLAY -->
 <div class="modal-overlay" id="termsModal">
     <div class="modal-box">
         <div class="modal-header">
@@ -614,86 +355,39 @@
         </div>
         <div class="modal-body">
             <p><strong>Last Manifest Revision:</strong> June 2026</p>
-            <p>Welcome to Nexafxtrade. By establishing a connection profile and generating a master access token, you acknowledge full compliance with these conditions:</p>
-            
+            <p>Welcome to Nexafxtrade. By establishing a connection profile, you acknowledge full compliance with these conditions:</p>
             <h4>1. Immediate Token Generation</h4>
-            <p>Profiles are instantiated immediately upon successful registration submission. Checking the authorization module validates that you are a real human administrator operating without automated scripts or scraper relays.</p>
-            
+            <p>Profiles are instantiated immediately upon successful registration submission.</p>
             <h4>2. Liquidity & Wallet Funding</h4>
-            <p>Wallet top-ups and system calls executed via linked integration pathways process autonomously. Ensure your incoming transmission targets are fully accurate before authorization. Nexafxtrade is not liable for data loss from misconfigured paths.</p>
-            
-            <h4>3. Market Routing Guarantee</h4>
-            <p>We stream algorithmic data vectors. Delivery pipelines adjust dynamically in real-time. System execution remains conditional upon external global liquidity and provider confirmation flags.</p>
-            
-            <h4>4. Prohibited Pipeline Exploits</h4>
-            <p>You are prohibited from using this node structure for cross-arbitrage routing attacks, velocity flood exploits, or using unauthorized parallel loops. Accounts discovered utilizing structural attacks face permanent block listing with total resource forfeiture.</p>
-            
-            <h4>5. Contact Core Command</h4>
-            <p>For urgent engineering requests, flag our response lines instantly via WhatsApp secure link at <strong>+254 715 509 440</strong> or send logs to <strong>ops@nexafxtrade.com</strong>.</p>
+            <p>Wallet top-ups process autonomously. Ensure your incoming transmission targets are fully accurate.</p>
         </div>
     </div>
 </div>
 
 <script>
-    // ==========================================
-    // API ENDPOINT CONFIGURATION MODULE
-    // ==========================================
     const getApiBase = () => {
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        return isLocal 
-            ? "http://localhost:5000/api" 
-            : "https://nexapayfx-backend.vercel.app/api"; 
+        return isLocal ? "http://localhost:5000/api" : "https://nexapayfx-backend.vercel.app/api"; 
     };
 
-    // ==========================================
-    // PASSWORD VISIBILITY LOGIC HANDLERS
-    // ==========================================
-    const togglePasswordBtn = document.getElementById('togglePassword');
-    const passwordInputField = document.getElementById('password');
-    const eyeIcon = document.getElementById('eyeIcon');
+    // Password Toggles
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const pwd = document.getElementById('password');
+        const icon = document.getElementById('eyeIcon');
+        pwd.type = pwd.type === 'password' ? 'text' : 'password';
+        icon.classList.toggle('fa-eye'); icon.classList.toggle('fa-eye-slash');
+    });
 
-    if (togglePasswordBtn && passwordInputField && eyeIcon) {
-        togglePasswordBtn.addEventListener('click', function () {
-            const type = passwordInputField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInputField.setAttribute('type', type);
-            eyeIcon.classList.toggle('fa-eye');
-            eyeIcon.classList.toggle('fa-eye-slash');
-        });
-    }
+    document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
+        const pwd = document.getElementById('confirmPassword');
+        const icon = document.getElementById('eyeIconConfirm');
+        pwd.type = pwd.type === 'password' ? 'text' : 'password';
+        icon.classList.toggle('fa-eye'); icon.classList.toggle('fa-eye-slash');
+    });
 
-    const toggleConfirmPasswordBtn = document.getElementById('toggleConfirmPassword');
-    const confirmPasswordInputField = document.getElementById('confirmPassword');
-    const eyeIconConfirm = document.getElementById('eyeIconConfirm');
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-    if (toggleConfirmPasswordBtn && confirmPasswordInputField && eyeIconConfirm) {
-        toggleConfirmPasswordBtn.addEventListener('click', function () {
-            const type = confirmPasswordInputField.getAttribute('type') === 'password' ? 'text' : 'password';
-            confirmPasswordInputField.setAttribute('type', type);
-            eyeIconConfirm.classList.toggle('fa-eye');
-            eyeIconConfirm.classList.toggle('fa-eye-slash');
-        });
-    }
-
-    // ==========================================
-    // MODAL CONTROL INTERFACES
-    // ==========================================
-    function openModal(id) {
-        document.getElementById(id).classList.add('active');
-    }
-    
-    function closeModal(id) {
-        document.getElementById(id).classList.remove('active');
-    }
-    
-    window.onclick = function(event) {
-        if (event.target.classList.contains('modal-overlay')) {
-            event.target.classList.remove('active');
-        }
-    }
-
-    // ==========================================
-    // DATA TRANSMISSION PIPELINE
-    // ==========================================
     async function handleRegister() {
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
@@ -705,9 +399,6 @@
         const statusEl = document.getElementById('statusMsg');
         const registerBtn = document.getElementById('registerBtn');
 
-        statusEl.style.color = "var(--neon-blue)";
-        
-        // 1. Validation Safeguards
         if (!name || !email || !phone || !password || !confirmPassword) {
             statusEl.innerText = "⚠️ ALL CREDENTIAL MODULES REQUIRED.";
             statusEl.style.color = "var(--error-red)";
@@ -726,14 +417,12 @@
             return;
         }
 
-        // Lock UI State
         statusEl.innerText = "SYNCHRONIZING WITH SERVER...";
+        statusEl.style.color = "var(--neon-blue)";
         registerBtn.disabled = true;
 
         try {
-            const api_url = `${getApiBase()}/auth/register`;
-            
-            const response = await fetch(api_url, {
+            const response = await fetch(`${getApiBase()}/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, phone, password })
@@ -748,26 +437,27 @@
                 if(data.token) {
                     localStorage.setItem("token", data.token);
                     localStorage.setItem("operatorName", name);
+                    // UPDATED: Save the whole user object so the dashboard loads instantly
+                    if(data.user) {
+                        localStorage.setItem("user", JSON.stringify(data.user));
+                    }
                 }
                 
-                setTimeout(() => window.location.href = "dashboard.html", 1500);
+                // UPDATED: Changed from "dashboard.html" to "/dashboard" for Next.js routing
+                setTimeout(() => window.location.href = "/dashboard", 1500);
             } else {
                 throw new Error(data.message || "TERMINAL REJECTED CREDENTIALS");
             }
         } catch (error) {
-            console.error("Auth Error:", error);
-            
             if (error.message.includes("Failed to fetch")) {
                 statusEl.innerText = "❌ CONNECTION FAILED: CHECK SERVER/CORS.";
             } else {
                 statusEl.innerText = `❌ ERROR: ${error.message.toUpperCase()}`;
             }
-            
             statusEl.style.color = "var(--error-red)";
             registerBtn.disabled = false;
         }
     }
 </script>
-
 </body>
-</html>
+            </html>
