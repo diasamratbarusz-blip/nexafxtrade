@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXAFX | Institutional Multi-Asset Trading Terminal</title>
+    <title>NEXAFX | Universal Institutional Trading Terminal</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -21,61 +21,60 @@
 
         body, html {
             margin: 0; padding: 0; background: var(--bg-black); color: #ffffff;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif; height: 100vh;
-            user-select: none; display: flex; justify-content: center; align-items: center;
-            overflow: hidden;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; min-height: 100vh;
+            user-select: none; box-sizing: border-box;
         }
 
+        /* Fluid layout container responding to any resolution boundary */
         .app-container {
-            width: 100%; max-width: 1600px; height: 100vh; max-height: 980px;
-            display: flex; flex-direction: column; background: var(--bg-black);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--border-color); overflow: hidden; position: relative;
+            width: 100%; min-height: 100vh; display: flex; flex-direction: column; 
+            background: var(--bg-black); overflow-x: hidden;
         }
 
         header {
-            height: 65px; background: var(--panel); display: flex; align-items: center;
-            justify-content: space-between; padding: 0 24px; border-bottom: 1px solid var(--border-color);
-            z-index: 100; flex-shrink: 0;
+            min-height: 65px; background: var(--panel); display: flex; align-items: center;
+            justify-content: space-between; padding: 10px 20px; border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap; gap: 15px; box-sizing: border-box;
         }
 
         .brand { font-size: 1.4rem; font-weight: 900; letter-spacing: 1px; }
         .brand span { color: var(--neon-blue); }
 
-        .header-actions { display: flex; align-items: center; gap: 16px; }
+        .header-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 
         .balance-container {
             background: #000000; border: 1px solid var(--border-color);
-            padding: 6px 16px; border-radius: 8px; text-align: right;
+            padding: 6px 16px; border-radius: 8px; text-align: right; min-width: 140px;
         }
         .balance-label { font-size: 0.65rem; color: var(--text-dim); display: block; font-weight: 700; letter-spacing: 0.5px; }
         .balance-val { color: var(--high-green); font-family: monospace; font-size: 1.15rem; font-weight: 800; }
 
         #market-status-bar {
-            height: 28px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
+            min-height: 28px; display: flex; align-items: center; justify-content: space-between; padding: 6px 20px;
             font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
-            letter-spacing: 1.5px; background: #070a0e; border-bottom: 1px solid var(--border-color); flex-shrink: 0;
+            letter-spacing: 1.5px; background: #070a0e; border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap; gap: 10px; box-sizing: border-box;
         }
         .status-high { color: var(--high-green); }
 
+        /* Multi-directional responsive master layout */
         .main-layout {
             display: grid; grid-template-columns: 310px 1fr; flex: 1;
-            background: var(--border-color); gap: 1px; overflow: hidden;
+            background: var(--border-color); gap: 1px;
         }
 
-        .side-activity { background: var(--panel); display: flex; flex-direction: column; overflow: hidden; }
+        .side-activity { background: var(--panel); display: flex; flex-direction: column; max-height: 100%; overflow: hidden; }
         
         .market-watch-header {
             padding: 14px 20px; font-weight: 800; font-size: 0.75rem; color: var(--text-dim);
             letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid var(--border-color);
-            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .market-tabs { display: flex; background: #0b0f14; border-bottom: 1px solid var(--border-color); }
-        .m-tab-btn { flex: 1; padding: 8px; font-size: 0.65rem; font-weight: 800; background: transparent; border: none; color: var(--text-dim); cursor: pointer; text-transform: uppercase; }
+        .market-tabs { display: flex; background: #0b0f14; border-bottom: 1px solid var(--border-color); overflow-x: auto; }
+        .m-tab-btn { flex: 1; padding: 10px 5px; font-size: 0.65rem; font-weight: 800; background: transparent; border: none; color: var(--text-dim); cursor: pointer; text-transform: uppercase; white-space: nowrap; }
         .m-tab-btn.active { color: #fff; background: var(--panel-light); border-bottom: 2px solid var(--neon-blue); }
 
-        .pair-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+        .pair-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; max-height: 450px; }
         .pair-row {
             display: grid; grid-template-columns: 1fr 85px 55px;
             padding: 12px 20px; border-bottom: 1px solid rgba(35, 47, 62, 0.4);
@@ -86,16 +85,13 @@
         .pair-price { font-family: monospace; font-weight: 700; font-size: 0.85rem; text-align: right; }
         .pair-change { font-family: monospace; font-size: 0.75rem; text-align: right; font-weight: bold; }
 
-        .trading-zone { 
-            background: var(--bg-black); display: flex; flex-direction: column; 
-            position: relative; overflow: hidden;
-        }
+        .trading-zone { background: var(--bg-black); display: flex; flex-direction: column; overflow: hidden; }
 
-        .price-hero { padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .price-hero { padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 15px; }
         .active-pair-display { font-size: 1.4rem; font-weight: 800; color: #fff; }
         .ticker-val { font-size: 2.6rem; font-weight: 800; font-family: monospace; letter-spacing: -1px; margin-top: 4px; }
 
-        .top-graph-auth-actions { display: flex; gap: 8px; align-items: center; }
+        .top-graph-auth-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .graph-auth-btn {
             padding: 8px 16px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
             border-radius: 6px; cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
@@ -105,18 +101,20 @@
         .btn-graph-register { background: var(--neon-blue); color: #000; }
         .btn-graph-register:hover { filter: brightness(1.1); }
 
-        /* Chart Workspace Elements */
-        #chart-container { flex: 1; min-height: 250px; padding: 15px 20px; position: relative; }
-        .chart-toolbar { position: absolute; top: 20px; right: 30px; z-index: 10; display: flex; gap: 8px; }
-        .ct-btn { background: rgba(18, 24, 32, 0.85); border: 1px solid var(--border-color); color: var(--text-dim); padding: 5px 10px; font-size: 0.7rem; font-weight: 700; border-radius: 4px; cursor: pointer; }
+        /* Chart Canvas Area */
+        #chart-container { flex: 1; min-height: 280px; padding: 15px 20px; position: relative; display: flex; flex-direction: column; }
+        .chart-toolbar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; width: 100%; justify-content: flex-end; }
+        .ct-btn { background: rgba(18, 24, 32, 0.85); border: 1px solid var(--border-color); color: var(--text-dim); padding: 5px 10px; font-size: 0.7rem; font-weight: 700; border-radius: 4px; cursor: pointer; white-space: nowrap; }
         .ct-btn.active { color: #fff; border-color: var(--neon-blue); background: var(--panel-light); }
+        #liveGraph { flex: 1; width: 100% !important; max-height: 350px; }
 
         .universal-action-bar {
             display: flex; gap: 10px; padding: 10px 24px;
             justify-content: space-between; align-items: center; background: var(--panel);
             border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
         }
-        .utility-group, .account-mode-group { display: flex; gap: 8px; }
+        .utility-group, .account-mode-group { display: flex; gap: 8px; flex-wrap: wrap; }
         .util-btn {
             padding: 8px 14px; font-size: 0.75rem; font-weight: 700;
             text-transform: uppercase; border-radius: 6px; cursor: pointer;
@@ -131,28 +129,31 @@
         .mode-btn.active-demo { color: var(--neon-blue); border-color: var(--neon-blue); }
         .mode-btn.active-real { color: var(--high-green); border-color: var(--high-green); }
 
-        /* Terminals and Intelligence Workspace Tabbing */
+        /* Terminals and Workspace Tabbing Panels */
         .workspace-tabs-strip { display: flex; background: #0c1117; border-bottom: 1px solid var(--border-color); }
-        .w-tab { padding: 10px 20px; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); background: transparent; border: none; cursor: pointer; text-transform: uppercase; border-right: 1px solid var(--border-color); }
+        .w-tab { padding: 12px 20px; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); background: transparent; border: none; cursor: pointer; text-transform: uppercase; border-right: 1px solid var(--border-color); flex: 1; text-align: center; }
         .w-tab.active { color: #fff; background: var(--panel); border-top: 2px solid var(--neon-blue); }
 
-        .positions-terminal { height: 180px; background: var(--panel); display: flex; flex-direction: column; overflow: hidden; }
-        .positions-log { flex: 1; overflow-y: auto; font-size: 0.8rem; font-family: monospace; }
+        .positions-terminal { min-height: 200px; background: var(--panel); display: flex; flex-direction: column; }
+        .positions-log { width: 100%; overflow-x: auto; font-size: 0.8rem; font-family: monospace; }
+        
+        /* Grid structured for horizontal expansion mapping wrapper logs */
+        .positions-table-wrapper { min-width: 750px; display: flex; flex-direction: column; }
         .position-item {
-            display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1fr 70px;
-            padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.02); align-items: center;
+            display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1.2fr 80px;
+            padding: 12px 24px; border-bottom: 1px solid rgba(255,255,255,0.02); align-items: center;
         }
         .pos-buy { color: var(--high-green); }
         .pos-sell { color: var(--low-red); }
 
-        /* Intelligence Modules View */
-        .ai-intelligence-log { padding: 15px 24px; display: none; gap: 15px; overflow-y: auto; height: 100%; box-sizing: border-box; }
-        .ai-card { background: rgba(0, 176, 255, 0.04); border: 1px solid rgba(0, 176, 255, 0.15); border-radius: 6px; padding: 12px; flex: 1; }
+        /* Intelligence Modules Component View Layout */
+        .ai-intelligence-log { padding: 15px 24px; display: none; gap: 15px; flex-direction: column; box-sizing: border-box; }
+        .ai-card { background: rgba(0, 176, 255, 0.04); border: 1px solid rgba(0, 176, 255, 0.15); border-radius: 6px; padding: 12px; }
 
-        /* Parameter Matrix Form Controllers */
+        /* Parameter Control Ticket Input Dock */
         .bottom-controls {
             background: var(--panel); padding: 16px 24px; border-top: 1px solid var(--border-color);
-            display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.5fr; gap: 16px; align-items: center; flex-shrink: 0;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; align-items: center;
         }
 
         .input-param-box {
@@ -166,7 +167,7 @@
             font-weight: 800; font-family: monospace; width: 100%; outline: none;
         }
 
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 220px; }
         .btn {
             height: 50px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 800;
             cursor: pointer; transition: opacity 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center;
@@ -176,10 +177,18 @@
         .btn-sell { background: var(--low-red); color: #ffffff; }
         .btn:active { transform: scale(0.98); }
 
-        @media (max-width: 1200px) {
+        /* Responsive Breakpoint Engine for Small Screens and Tablets */
+        @media (max-width: 1024px) {
             .main-layout { grid-template-columns: 1fr; }
-            .side-activity { display: none; }
+            .side-activity { max-height: 320px; border-bottom: 1px solid var(--border-color); }
+            .pair-list { max-height: 220px; }
+        }
+
+        @media (max-width: 480px) {
+            header { justify-content: center; text-align: center; }
+            .ticker-val { font-size: 2.1rem; }
             .bottom-controls { grid-template-columns: 1fr; }
+            .action-btns { min-width: 100%; }
         }
     </style>
 </head>
@@ -202,19 +211,20 @@
     </div>
 
     <div class="main-layout">
+        <!-- Market Catalog Column -->
         <section class="side-activity">
             <div class="market-watch-header">
-                <span><i class="fas fa-chart-pie"></i> Core Market Watch</span>
+                <span><i class="fas fa-chart-pie"></i> Market Watch Matrix</span>
             </div>
             <div class="market-tabs">
                 <button class="m-tab-btn active" onclick="filterMarketCategory('FOREX')">Forex</button>
                 <button class="m-tab-btn" onclick="filterMarketCategory('CRYPTO')">Crypto</button>
                 <button class="m-tab-btn" onclick="filterMarketCategory('COMMODITY')">Commodities</button>
             </div>
-            <div class="pair-list" id="forex-pair-list">
-                </div>
+            <div class="pair-list" id="forex-pair-list"></div>
         </section>
 
+        <!-- Trading Core Command Hub -->
         <section class="trading-zone">
             <div class="price-hero">
                 <div>
@@ -222,8 +232,8 @@
                     <div class="ticker-val" id="ticker-price">1.08524</div>
                 </div>
                 
-                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
-                    <div id="market-trend" style="font-weight: 800; font-size: 1rem; color: var(--high-green);">
+                <div>
+                    <div id="market-trend" style="font-weight: 800; font-size: 1rem; color: var(--high-green); text-align: right; margin-bottom: 8px;">
                         +0.04%
                     </div>
                     <div class="top-graph-auth-actions">
@@ -233,10 +243,11 @@
                 </div>
             </div>
 
+            <!-- Graph Canvas Container -->
             <div id="chart-container">
                 <div class="chart-toolbar">
                     <button class="ct-btn active" onclick="setChartStyle('LINE', this)">Line</button>
-                    <button class="ct-btn" onclick="toggleChartTechnical('MA', this)">Moving Average</button>
+                    <button class="ct-btn" onclick="toggleChartTechnical('MA', this)">Moving Avg</button>
                     <button class="ct-btn" onclick="toggleChartTechnical('BB', this)">Bollinger Bands</button>
                 </div>
                 <canvas id="liveGraph"></canvas>
@@ -253,27 +264,31 @@
                 </div>
             </div>
 
+            <!-- Workspace Multi-Tab Controller Layer -->
             <div class="workspace-tabs-strip">
                 <button class="w-tab active" id="btn-tab-pos" onclick="switchWorkspaceView('POSITIONS')">Active Positions</button>
                 <button class="w-tab" id="btn-tab-ai" onclick="switchWorkspaceView('AI_INTELLIGENCE')">AI Trend Signals</button>
             </div>
 
             <div class="positions-terminal">
+                <!-- Terminal Active Risk Layer Table Container -->
                 <div class="positions-log" id="open-positions-log"></div>
                 
+                <!-- AI Signal Stream Layer Grid Container -->
                 <div class="ai-intelligence-log" id="ai-signals-log">
                     <div class="ai-card">
-                        <h4 style="margin:0 0 5px 0; color:var(--neon-blue); font-size:0.75rem;"><i class="fas fa-brain"></i> NEURAL ENGINE: EUR/USD PREDICTION</h4>
-                        <p style="font-size:0.75rem; color:var(--text-dim); margin:4px 0;">Algorithmic assessment maps continuous bullish expansion targets above near-term consolidation floors.</p>
-                        <span style="font-size:0.7rem; color:var(--high-green); font-weight:800;">CONVICTION LEVEL: 86.2%</span>
+                        <h4 style="margin:0 0 5px 0; color:var(--neon-blue); font-size:0.75rem;"><i class="fas fa-brain"></i> NEURAL ENGINE: TREND PROFILE</h4>
+                        <p style="font-size:0.75rem; color:var(--text-dim); margin:4px 0;">Algorithmic assessment maps continuous structural scaling indicators over baseline dynamic support bands.</p>
+                        <span style="font-size:0.7rem; color:var(--high-green); font-weight:800;">CONVICTION MATCH: 86.2%</span>
                     </div>
                     <div class="ai-card">
-                        <h4 style="margin:0 0 5px 0; color:var(--gold); font-size:0.75rem;"><i class="fas fa-exclamation-triangle"></i> DYNAMIC DRAWDOWN ADVISOR</h4>
-                        <p style="font-size:0.75rem; color:var(--text-dim); margin:4px 0;">Margin saturation ratios look clear. Maintain Stop Loss targets to protect digital equity pools.</p>
+                        <h4 style="margin:0 0 5px 0; color:var(--gold); font-size:0.75rem;"><i class="fas fa-exclamation-triangle"></i> DRAWDOWN SENSOR ADVISOR</h4>
+                        <p style="font-size:0.75rem; color:var(--text-dim); margin:4px 0;">Margin validation complete. Balance equations match network parity models safely.</p>
                     </div>
                 </div>
             </div>
 
+            <!-- Positional Parameter Order Input Frame Grid -->
             <div class="bottom-controls">
                 <div class="input-param-box">
                     <span class="param-label">VOLUME (LOTS)</span>
@@ -284,13 +299,13 @@
                 <div class="input-param-box">
                     <span class="param-label">STOP LOSS (SL)</span>
                     <div class="param-input-wrapper">
-                        <input type="number" id="target-sl" placeholder="Optional Target" step="0.0001">
+                        <input type="number" id="target-sl" placeholder="Optional" step="0.0001">
                     </div>
                 </div>
                 <div class="input-param-box">
                     <span class="param-label">TAKE PROFIT (TP)</span>
                     <div class="param-input-wrapper">
-                        <input type="number" id="target-tp" placeholder="Optional Target" step="0.0001">
+                        <input type="number" id="target-tp" placeholder="Optional" step="0.0001">
                     </div>
                 </div>
                 <div class="action-btns">
@@ -308,11 +323,9 @@
 
 <script>
     let currentCategoryFilter = 'FOREX';
-    let currentChartStyle = 'LINE';
     let showMovingAverage = false;
     let showBollingerBands = false;
 
-    // Cross-Market Operational Instrument Index
     let forexMarkets = {
         "EUR/USD": { category: "FOREX", price: 1.08520, digits: 5, change: 0.02, multiplier: 100000 },
         "GBP/USD": { category: "FOREX", price: 1.26440, digits: 5, change: -0.05, multiplier: 100000 },
@@ -329,7 +342,6 @@
         renderMarketWatch();
         selectForexPair(activePair);
         
-        // Synchronized Server Clock Loop
         setInterval(() => {
             document.getElementById('live-clock').innerText = new Date().toUTCString().replace('GMT', 'UTC');
         }, 1000);
@@ -355,12 +367,10 @@
             div.onclick = () => selectForexPair(pair);
             
             const changeColor = data.change >= 0 ? 'var(--high-green)' : 'var(--low-red)';
-            const prefix = data.change >= 0 ? '+' : '';
-
             div.innerHTML = `
                 <span class="pair-name">${pair}</span>
                 <span class="pair-price" id="watch-${pair}">${data.price.toFixed(data.digits)}</span>
-                <span class="pair-change" style="color: ${changeColor}">${prefix}${data.change.toFixed(2)}%</span>
+                <span class="pair-change" style="color: ${changeColor}">${data.change >= 0 ? '+' : ''}${data.change.toFixed(2)}%</span>
             `;
             container.appendChild(div);
         });
@@ -371,12 +381,10 @@
         let marketObj = forexMarkets[pair];
         document.getElementById('current-pair-title').innerText = pair;
         
-        // Auto-assign matching decimals to parameter ticket inputs
         let stepVal = 1 / Math.pow(10, marketObj.digits);
         document.getElementById('target-sl').step = stepVal;
         document.getElementById('target-tp').step = stepVal;
         
-        // Reset defaults
         document.getElementById('target-sl').value = '';
         document.getElementById('target-tp').value = '';
 
@@ -385,7 +393,7 @@
         updateChartDataset();
     }
 
-    // Chart Configuration Architecture Block
+    // Canvas Graphical Context Object
     const ctx = document.getElementById('liveGraph').getContext('2d');
     let dataPoints = Array(40).fill(1.08520);
     
@@ -408,8 +416,7 @@
     });
 
     function setChartStyle(style, btn) {
-        currentChartStyle = style;
-        document.querySelectorAll('.ct-btn').forEach(b => { if(b.innerText === 'Line' || b.innerText === 'Candlestick') b.classList.remove('active'); });
+        document.querySelectorAll('.ct-btn').forEach(b => { if(b.innerText === 'Line') b.classList.remove('active'); });
         btn.classList.add('active');
     }
 
@@ -422,7 +429,6 @@
     function updateChartDataset() {
         chart.data.datasets[0].data = dataPoints;
         
-        // Technical Indicator Analytical Calculations Engine
         if (showMovingAverage) {
             chart.data.datasets[1].data = dataPoints.map((val, idx) => {
                 if(idx < 5) return val;
@@ -441,13 +447,12 @@
         chart.update('none');
     }
 
-    // High-Speed Pricing Telemetry Pulse Loop
+    // High frequency operational telemetry tick simulation
     setInterval(() => {
         Object.keys(forexMarkets).forEach(pair => {
             let item = forexMarkets[pair];
             let dev = (pair.includes("JPY") || pair.includes("USD/")) ? 0.0002 : 0.02;
-            let fluctuation = (Math.random() - 0.5) * (item.price * dev * 0.05);
-            item.price += fluctuation;
+            item.price += (Math.random() - 0.5) * (item.price * dev * 0.05);
             
             const element = document.getElementById(`watch-${pair}`);
             if(element) element.innerText = item.price.toFixed(item.digits);
@@ -467,16 +472,13 @@
         let lotSize = parseFloat(document.getElementById('lot-size').value);
         if(isNaN(lotSize) || lotSize <= 0) return alert("Invalid Volumetric parameters.");
 
-        let slVal = parseFloat(document.getElementById('target-sl').value) || null;
-        let tpVal = parseFloat(document.getElementById('target-tp').value) || null;
-
         let order = {
             id: Math.floor(Math.random() * 900000 + 100000),
             pair: activePair,
             type: type,
             lots: lotSize,
-            sl: slVal,
-            tp: tpVal,
+            sl: parseFloat(document.getElementById('target-sl').value) || null,
+            tp: parseFloat(document.getElementById('target-tp').value) || null,
             entryPrice: forexMarkets[activePair].price
         };
 
@@ -491,29 +493,20 @@
 
     function calculateFloatingPnL() {
         let logContainer = document.getElementById('open-positions-log');
-        if(document.getElementById('btn-tab-pos').className.includes('active') === false) return;
+        if(!document.getElementById('btn-tab-pos').className.includes('active')) return;
 
         if(!openPositions.length) {
             logContainer.innerHTML = `<div style="padding:20px; color:var(--text-dim); text-align:center;">No active risk vectors open in current runtime workspace.</div>`;
             return;
         }
 
-        let html = '';
+        let html = '<div class="positions-table-wrapper">';
         openPositions.forEach(pos => {
             let currentPrice = forexMarkets[pos.pair].price;
             let targetMarket = forexMarkets[pos.pair];
-            let pnl = 0;
+            let pnl = pos.type === 'BUY' ? (currentPrice - pos.entryPrice) : (pos.entryPrice - currentPrice);
+            let pnlKes = pnl * pos.lots * targetMarket.multiplier * 131.50;
 
-            if(pos.type === 'BUY') {
-                pnl = (currentPrice - pos.entryPrice) * pos.lots * targetMarket.multiplier;
-            } else {
-                pnl = (pos.entryPrice - currentPrice) * pos.lots * targetMarket.multiplier;
-            }
-
-            // Absolute conversion multiplier configuration metric
-            let pnlKes = pnl * 131.50; 
-
-            // Auto Execution Guardrail Evaluation Loop (SL/TP)
             if(pos.sl && ((pos.type === 'BUY' && currentPrice <= pos.sl) || (pos.type === 'SELL' && currentPrice >= pos.sl))) {
                 setTimeout(() => { closeForexOrder(pos.id); }, 10); return;
             }
@@ -533,6 +526,7 @@
                 </div>
             `;
         });
+        html += '</div>';
         logContainer.innerHTML = html;
     }
 
@@ -552,8 +546,8 @@
         btn.classList.add(mode === 'DEMO' ? 'active-demo' : 'active-real');
     }
 
-    function executeDepositRoute() { alert("Forwarding user profile token payloads to your backend /api pathways safely."); }
-    function executeWithdrawalRoute() { alert("Extracting secure internal balances out to clearing networks."); }
+    function executeDepositRoute() { alert("Forwarding token vectors to payment endpoints."); }
+    function executeWithdrawalRoute() { alert("Extracting secure internal balances out."); }
 </script>
 </body>
 </html>
