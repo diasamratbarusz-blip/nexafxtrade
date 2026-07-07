@@ -1,7 +1,7 @@
 /**
  * NEXAFX Trade Platform - Integrated Logic Engine
  * Handles: Authentication, Trading, Charts, Sound, and UI Management
- * Version: 4.0.0 (Production Ready)
+ * Version: 4.1.0 (Production Optimized)
  */
 
 // ==========================================
@@ -81,17 +81,11 @@ async function initApp() {
                 }
             } else {
                 console.warn("❌ Token invalid, clearing storage");
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                window.USER_TOKEN = null;
-                updateAuthUI(false, null);
+                clearSession();
             }
         } catch (error) {
             console.error("🚫 Failed to fetch profile:", error);
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            window.USER_TOKEN = null;
-            updateAuthUI(false, null);
+            clearSession();
         }
     } else {
         console.log("⚠️ No token found, showing guest mode");
@@ -99,6 +93,15 @@ async function initApp() {
         updateBalance();
         updateAuthUI(false, null);
     }
+}
+
+function clearSession() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.USER_TOKEN = null;
+    window.USER_IS_AUTHENTICATED = false;
+    window.USER_DATA = null;
+    updateAuthUI(false, null);
 }
 
 // ==========================================
@@ -111,24 +114,28 @@ function updateAuthUI(isLoggedIn, userData) {
     const userNameDisplay = document.getElementById('user-name-display');
 
     if (isLoggedIn && userData) {
-        loginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-        loginBtn.className = 'graph-auth-btn btn-graph-logout';
-        loginBtn.onclick = handleLoginLogout;
+        if (loginBtn) {
+            loginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+            loginBtn.className = 'graph-auth-btn btn-graph-logout';
+            loginBtn.onclick = handleLoginLogout;
+        }
         
-        registerBtn.style.display = 'none';
+        if (registerBtn) registerBtn.style.display = 'none';
         
-        userInfoDisplay.classList.add('show');
-        userNameDisplay.textContent = userData.name || 'User';
+        if (userInfoDisplay) userInfoDisplay.classList.add('show');
+        if (userNameDisplay) userNameDisplay.textContent = userData.name || 'User';
         
         console.log("✅ UI updated to logged-in state");
     } else {
-        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
-        loginBtn.className = 'graph-auth-btn btn-graph-login';
-        loginBtn.onclick = handleLoginLogout;
+        if (loginBtn) {
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+            loginBtn.className = 'graph-auth-btn btn-graph-login';
+            loginBtn.onclick = handleLoginLogout;
+        }
         
-        registerBtn.style.display = 'block';
+        if (registerBtn) registerBtn.style.display = 'block';
         
-        userInfoDisplay.classList.remove('show');
+        if (userInfoDisplay) userInfoDisplay.classList.remove('show');
         
         console.log("✅ UI updated to guest state");
     }
@@ -387,9 +394,10 @@ async function executeBuy() {
     }
 
     let admin = window.NEXAFX_ADMIN_CONFIG || {};
-    const amt = parseFloat(document.getElementById('stake-amount').value);
+    const stakeInput = document.getElementById('stake-amount');
+    const amt = stakeInput ? parseFloat(stakeInput.value) : 0;
     
-    if (amt < (admin.minimumTicketPrice || 100)) {
+    if (isNaN(amt) || amt < (admin.minimumTicketPrice || 100)) {
         return alert("Minimum permitted ticket placement is KES " + (admin.minimumTicketPrice || 100));
     }
     if (amt > (admin.maximumTicketPrice || 500000)) {
