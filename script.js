@@ -284,10 +284,10 @@
                     </div>
                 </div>
                 <div class="action-btns">
-                    <button class="btn btn-buy">
+                    <button class="btn btn-buy" onclick="handleInstantDealPlacement('BUY')">
                         <i class="fas fa-arrow-up"></i> BUY / LONG
                     </button>
-                    <button class="btn btn-sell">
+                    <button class="btn btn-sell" onclick="handleInstantDealPlacement('SELL')">
                         <i class="fas fa-arrow-down"></i> SELL / SHORT
                     </button>
                 </div>
@@ -372,9 +372,11 @@
         renderMarketWatch();
         registerActiveAssetSwitch(currentActiveAsset, 5);
         refreshUIBalances();
+        renderActivePositionsGrid();
         
         setInterval(() => {
-            document.getElementById('live-clock').innerText = new Date().toUTCString().replace('GMT', 'UTC');
+            const clockEl = document.getElementById('live-clock');
+            if (clockEl) clockEl.innerText = new Date().toUTCString().replace('GMT', 'UTC');
         }, 1000);
     });
 
@@ -388,6 +390,7 @@
 
     function renderMarketWatch() {
         const container = document.getElementById('forex-pair-list');
+        if (!container) return;
         container.innerHTML = '';
         Object.keys(forexMarkets).forEach(pair => {
             const data = forexMarkets[pair];
@@ -418,7 +421,9 @@
         }
 
         currentPrice = modifiedRate;
-        forexMarkets[currentActiveAsset].price = currentPrice;
+        if (forexMarkets[currentActiveAsset]) {
+            forexMarkets[currentActiveAsset].price = currentPrice;
+        }
         
         const watchField = document.getElementById(`watch-${currentActiveAsset}`);
         if(watchField) watchField.innerText = currentPrice.toFixed(decimalPrecision);
@@ -476,6 +481,7 @@
     }, 400);
 
     window.registerActiveAssetSwitch = (pairName, baseDigits) => {
+        if (!forexMarkets[pairName]) return;
         currentActiveAsset = pairName;
         decimalPrecision = baseDigits || 5;
         
@@ -485,16 +491,18 @@
         tradeChart.options.scales.y.ticks.callback = (value) => value.toFixed(decimalPrecision);
         tradeChart.update('none');
 
-        document.getElementById('current-pair-title').innerText = pairName;
+        const titleEl = document.getElementById('current-pair-title');
+        if (titleEl) titleEl.innerText = pairName;
+        
         renderMarketWatch();
         injectChatMessage("MARKET", `Switched clearing pipeline channel to ${pairName}`, true, "var(--neon-blue)");
     };
 
     function handleInstantDealPlacement(orderType) {
         const volumeInput = document.getElementById('lot-size-input');
-        const assignedLotSize = parseFloat(volumeInput.value) || 0.1;
+        const assignedLotSize = volumeInput ? parseFloat(volumeInput.value) : 1.00;
 
-        if (assignedLotSize <= 0) {
+        if (isNaN(assignedLotSize) || assignedLotSize <= 0) {
             alert("Invalid transaction contract parameter sizing.");
             return;
         }
@@ -519,10 +527,10 @@
         }
     }
 
-    function closeForexOrder(id) {
+    window.closeForexOrder = (id) => {
         activeOpenPositions = activeOpenPositions.filter(pos => pos.id !== id);
         renderActivePositionsGrid();
-    }
+    };
 
     function renderActivePositionsGrid() {
         const ledgerContainer = document.getElementById('tradeLogs');
@@ -543,13 +551,11 @@
         processLiveFloatingPortfolioPnL();
     }
 
-    document.querySelectorAll('.btn-buy').forEach(b => b.onclick = () => handleInstantDealPlacement('BUY'));
-    document.querySelectorAll('.btn-sell').forEach(b => b.onclick = () => handleInstantDealPlacement('SELL'));
-
     function processLiveFloatingPortfolioPnL() {
         let globalFloatingPnL = 0;
 
         activeOpenPositions.forEach(pos => {
+            if (!forexMarkets[pos.pair]) return;
             let currentAssetPrice = forexMarkets[pos.pair].price;
             let contractSizeUnitMultiplier = (pos.pair === "USD/JPY" || pos.pair.includes("JPY")) ? 1000 : 100000;
             if(pos.pair.includes("BTC") || pos.pair.includes("ETH")) contractSizeUnitMultiplier = 10;
@@ -634,7 +640,9 @@
     window.adjustLotSizeValue = (direction) => {
         const input = document.getElementById('lot-size-input');
         if (!input) return;
-        let currentLots = parseFloat(input.value) || 1.00;
+        let currentLots = parseFloat(input.value);
+        if (isNaN(currentLots)) currentLots = 1.00;
+        
         if (direction === 'add') {
             input.value = (currentLots + 0.1).toFixed(2);
         } else if (direction === 'subtract') {
@@ -643,16 +651,21 @@
     };
 
     function switchWorkspaceView(viewMode) {
-        document.getElementById('btn-tab-pos').classList.toggle('active', viewMode === 'POSITIONS');
-        document.getElementById('btn-tab-chat').classList.toggle('active', viewMode === 'CHAT');
+        const tabPos = document.getElementById('btn-tab-pos');
+        const tabChat = document.getElementById('btn-tab-chat');
+        const posLog = document.getElementById('open-positions-log');
+        const feedView = document.getElementById('chat-feed');
 
-        document.getElementById('open-positions-log').style.display = viewMode === 'POSITIONS' ? 'block' : 'none';
-        document.getElementById('chat-feed').style.display = viewMode === 'CHAT' ? 'flex' : 'none';
+        if (tabPos) tabPos.classList.toggle('active', viewMode === 'POSITIONS');
+        if (tabChat) tabChat.classList.toggle('active', viewMode === 'CHAT');
+
+        if (posLog) posLog.style.display = viewMode === 'POSITIONS' ? 'block' : 'none';
+        if (feedView) feedView.style.display = viewMode === 'CHAT' ? 'flex' : 'none';
     }
 
     function switchAccountMode(mode, btn) {
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active-demo', 'active-real'));
-        btn.classList.add(mode === 'DEMO' ? 'active-demo' : 'active-real');
+        if (btn) btn.classList.add(mode === 'DEMO' ? 'active-demo' : 'active-real');
     }
 </script>
 </body>
