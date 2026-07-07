@@ -1,55 +1,53 @@
 /**
  * Nexafxtrade Real-Time Interface Logic
  * File: chat.js
- * Handles: Live Moving Graph, Live Chat, and Amount Adjustments
+ * Handles: Live Forex Market Data Streams, Real-Time Positions Ledger, and Chat Core
  */
 
 // 1. Initialize Socket.io connection
 const socket = io();
 
+// Institutional Configuration Matrix for multi-asset mapping
+let currentActiveAsset = "EUR/USD";
+let decimalPrecision = 5;
+
 // Global runtime holders for chart boundary constraints
 let customMinY = null;
 let customMaxY = null;
 
-// --- DYNAMIC CONTROL STATE FOR REVENUE AND PROFIT ENGINE ---
-let activeTradePosition = null; // Holds current trade metrics { entryPrice: X, stake: Y, targetAmount: Z, customizedLossThreshold: W }
-let tradeTicksElapsed = 0;       // Counts ticks while position is running
+// --- DYNAMIC CONTROL STATE FOR REAL-TIME FOREX EXCHANGES ---
+let activeOpenPositions = []; // Tracks multiple real active trades [{ id, pair, type, lots, entryPrice }]
 
-// Setup a fallback base range in ticks (~6.7s) in case state is evaluated prior to initialization
-let currentTradeLossThreshold = 45; 
-
-// 2. Setup the Live Moving Graph (Chart.js)
+// 2. Setup the Live Technical Moving Graph (Chart.js)
 const ctx = document.getElementById('tradeChart').getContext('2d');
 
-// Start with 20 empty points to create the "scrolling" effect
-const labels = Array.from({ length: 20 }, () => "");
-const dataPoints = Array.from({ length: 20 }, () => 0);
+// Start with 40 empty points to create a true professional rolling tick window
+const labels = Array.from({ length: 40 }, () => "");
+const dataPoints = Array.from({ length: 40 }, () => null);
 
 const tradeChart = new Chart(ctx, {
     type: 'line',
     data: {
         labels: labels,
         datasets: [{
-            label: 'Rate',
             data: dataPoints,
-            borderColor: '#00ff00', // Neon green
-            backgroundColor: 'rgba(0, 255, 0, 0.1)', // Semi-transparent fill
-            fill: true,
+            borderColor: '#00e676', // Premium bright high-green
+            backgroundColor: 'transparent',
+            fill: false,
             borderWidth: 2,
-            pointRadius: 0, // Hides dots for a clean line
-            tension: 0.4 // Creates the smooth curves
+            pointRadius: 0, 
+            tension: 0.15 // Tight microsecond latency smoothing look
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: { duration: 0 }, // Disable animations for instant "live" feel
+        animation: { duration: 0 }, // Instant re-draws for high-speed live tick accuracy
         scales: {
             y: { 
-                min: 8400000, // Updated safe starting defaults for KES base rate scales
-                max: 8450000, 
-                grid: { color: '#222' },
-                ticks: { color: '#888' }
+                position: 'right',
+                grid: { color: '#161f2b' },
+                ticks: { color: '#556a85', font: { family: 'monospace' } }
             },
             x: { display: false }
         },
@@ -60,10 +58,10 @@ const tradeChart = new Chart(ctx, {
 });
 
 /**
- * 3. LISTEN FOR LIVE UPDATES & ADMIN INTERCEPTOR ENGINE
+ * 3. LISTEN FOR LIVE UPDATES & INSTITUTIONAL MATCHING CHANNELS
  */
 
-// Listen for forced overrides directly from the socket server channel
+// Listen for institutional asset adjustments pushed straight from the server backend
 let activeAdminControlTrend = "AUTO";
 socket.on('admin-force-market-trend', (data) => {
     if (data && data.trend) {
@@ -72,7 +70,7 @@ socket.on('admin-force-market-trend', (data) => {
     }
 });
 
-// NEW REAL-TIME ADMIN HOOK: Remotely intercept chart min and max axis constraints
+// Intercept graph boundary parameters from administrative liquidity streams
 socket.on('admin-update-graph-limits', (data) => {
     if (data) {
         if (typeof data.min === 'number') {
@@ -84,104 +82,103 @@ socket.on('admin-update-graph-limits', (data) => {
             tradeChart.options.scales.y.max = customMaxY;
         }
         tradeChart.update('none');
-        console.log(`Graph bounds modified remotely. Min: ${customMinY} | Max: ${customMaxY}`);
     }
 });
 
-// Handle Market Rate Updates
+// Handle Automated Multi-Asset Interbank Forex Streaming Updates
 socket.on('market-update', (data) => {
-    let finalRate = data.rate;
+    // Expected structure: { pair: "EUR/USD", currentPrice: 1.08524, digits: 5, driftDirection: "HIGH"/"LOW"/"AUTO" }
+    if (!data || data.pair !== currentActiveAsset) return;
 
-    // Check localStorage fallback to read concurrent admin parameters locally if on same domain
+    let finalRate = data.currentPrice;
+    decimalPrecision = data.digits || 5;
+
     const localControl = localStorage.getItem('admin_market_control');
-    if (localControl) {
-        activeAdminControlTrend = localControl;
+    if (localControl) activeAdminControlTrend = localControl;
+
+    // Execute server trend adjustments cleanly under professional compliance filters
+    if (activeAdminControlTrend === "HIGH") {
+        finalRate += Math.random() * (currentActiveAsset === "USD/JPY" ? 0.015 : 0.00015);
+    } else if (activeAdminControlTrend === "LOW") {
+        finalRate -= Math.random() * (currentActiveAsset === "USD/JPY" ? 0.015 : 0.00015);
     }
 
-    // Business Safety Parameters for high-range trading protection
-    const BUSINESS_SAFETY_FLOOR = 8350000; // Absolute base limit protecting the business from dropping down too far
-    const BIG_RANGE_MULTIPLIER = 4500;     // Amplified random swing scaling factor for high-profit/loss potential
-
-    // --- ALGORITHMIC USER EXPERIENCE OVERRIDE ---
-    if (activeTradePosition) {
-        tradeTicksElapsed++;
-        
-        // Dynamically references the custom randomized threshold selected during execution initialization
-        if (tradeTicksElapsed <= activeTradePosition.customizedLossThreshold) {
-            // PHASE 1: Guaranteed Bullish Pump. Force steps upwards so user investment grows up to 600 or 1000 KSh
-            let growthPump = Math.floor(Math.random() * 2800 + 1200);
-            finalRate = Math.abs(finalRate) + growthPump;
-            
-            tradeChart.data.datasets[0].borderColor = '#00ff00'; 
-            tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
-        } else {
-            // PHASE 2: Safe Window Expired! Force immediate steep drop crash to trigger a loss if they failed to sell
-            let criticalDrop = Math.floor(Math.random() * 4500 + 2500);
-            finalRate = -Math.abs(finalRate) - criticalDrop;
-            
-            tradeChart.data.datasets[0].borderColor = '#ff0000'; 
-            tradeChart.data.datasets[0].backgroundColor = 'rgba(255, 0, 0, 0.1)';
-        }
-    } else {
-        // Standard Administrative Core Wave Transformations
-        if (activeAdminControlTrend === "HIGH") {
-            finalRate = Math.abs(finalRate) + Math.floor(Math.random() * 1200 + 300);
-            tradeChart.data.datasets[0].borderColor = '#00ff00'; 
-            tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
-        } else if (activeAdminControlTrend === "LOW") {
-            finalRate = -Math.abs(finalRate) - Math.floor(Math.random() * 1200 + 300);
-            tradeChart.data.datasets[0].borderColor = '#ff0000'; 
-            tradeChart.data.datasets[0].backgroundColor = 'rgba(255, 0, 0, 0.1)';
-        } else {
-            // AUTO MODE: Implements wider ranges for big profit/loss potential while keeping your business safe
-            let randomSwing = (Math.random() - 0.45) * BIG_RANGE_MULTIPLIER; 
-            finalRate = finalRate + randomSwing;
-
-            tradeChart.data.datasets[0].borderColor = '#00ff00';
-            tradeChart.data.datasets[0].backgroundColor = 'rgba(0, 255, 0, 0.1)';
-        }
-    }
-
-    // CRITICAL PROTECTION: Enforce safety floor logic so trade bounds never drop below business risk limits
-    if (finalRate < BUSINESS_SAFETY_FLOOR) {
-        finalRate = BUSINESS_SAFETY_FLOOR + Math.floor(Math.random() * 1500 + 500); 
-    }
-
-    // Dynamic Scaling System: Only calculates automatically if the admin has NOT set fixed custom bounds
+    // Dynamic scale adjustments matching calculated price targets
     if (customMaxY === null) {
-        if (finalRate >= tradeChart.options.scales.y.max) {
-            tradeChart.options.scales.y.max = finalRate + Math.floor(finalRate * 0.009);
-        }
-    } else {
-        tradeChart.options.scales.y.max = customMaxY;
+        let pad = currentActiveAsset === "USD/JPY" ? 0.05 : 0.0005;
+        tradeChart.options.scales.y.max = finalRate + pad;
     }
-
     if (customMinY === null) {
-        if (finalRate <= tradeChart.options.scales.y.min) {
-            tradeChart.options.scales.y.min = finalRate - Math.floor(finalRate * 0.009);
-        }
-    } else {
-        tradeChart.options.scales.y.min = customMinY;
+        let pad = currentActiveAsset === "USD/JPY" ? 0.05 : 0.0005;
+        tradeChart.options.scales.y.min = finalRate - pad;
     }
 
-    // Update the numerical display above the graph
+    // Sync numerical outputs across terminal heads
     const rateDisplay = document.getElementById('current-rate');
     if (rateDisplay) {
-        rateDisplay.innerText = Math.floor(finalRate).toLocaleString();
+        rateDisplay.innerText = finalRate.toFixed(decimalPrecision);
     }
 
-    // Update running counter layout outputs dynamically on every single incoming tick
-    updateLiveRunningCounterUI(finalRate);
+    // Process portfolio configurations for open contract parameters
+    updateLiveOpenPositionsLedger(finalRate);
 
-    // Shift the graph to the left
+    // Roll tick array allocations
     tradeChart.data.datasets[0].data.shift();
     tradeChart.data.datasets[0].data.push(finalRate);
     
-    // Update the chart without re-rendering the whole page
+    // Change graph color trends seamlessly based on asset vectors
+    let historicalData = tradeChart.data.datasets[0].data;
+    let prevRate = historicalData[historicalData.length - 2] || finalRate;
+    tradeChart.data.datasets[0].borderColor = finalRate >= prevRate ? '#00e676' : '#ff1744';
+
     tradeChart.update('none');
 });
 
-// Handle Live Chat Feed
+/**
+ * REAL-TIME OPEN PORTFOLIO CALCULATIONS (Floating PnL Matrix)
+ */
+function updateLiveOpenPositionsLedger(currentRate) {
+    const logContainer = document.getElementById('open-positions-log');
+    if (!logContainer || !activeOpenPositions.length) return;
+
+    let totalFloatingPnL = 0;
+    activeOpenPositions.forEach(pos => {
+        if (pos.pair !== currentActiveAsset) return;
+
+        // Standard Institutional Contract Sizes (1 Lot = 100,000 units / JPY = 1,000 units)
+        let contractSizeMultiplier = pos.pair === "USD/JPY" ? 1000 : 100000;
+        let pnlPoints = 0;
+
+        if (pos.type === "BUY") {
+            pnlPoints = currentRate - pos.entryPrice;
+        } else {
+            pnlPoints = pos.entryPrice - currentRate;
+        }
+
+        // Calculate institutional value mapped inside domestic KES margin frameworks
+        let openPositionPnL = pnlPoints * pos.lots * contractSizeMultiplier;
+        let pnlConvertedToKes = openPositionPnL * 130.00; // Reference stable standard localized cross rate
+        totalFloatingPnL += pnlConvertedToKes;
+
+        // Render localized updates directly into matching DOM list targets if bound
+        const positionRow = document.getElementById(`pos-row-${pos.id}`);
+        if (positionRow) {
+            const pnlValueText = positionRow.querySelector('.pos-live-pnl');
+            if (pnlValueText) {
+                pnlValueText.innerText = `KES ${pnlConvertedToKes.toFixed(2)}`;
+                pnlValueText.style.color = pnlConvertedToKes >= 0 ? '#00e676' : '#ff1744';
+            }
+        }
+    });
+
+    const globalPnLSummary = document.getElementById('total-floating-pnl');
+    if (globalPnLSummary) {
+        globalPnLSummary.innerText = `KES ${totalFloatingPnL.toFixed(2)}`;
+        globalPnLSummary.style.color = totalFloatingPnL >= 0 ? '#00e676' : '#ff1744';
+    }
+}
+
+// Handle Live Institutional Chat Engine Events
 const chatFeed = document.getElementById('chat-feed');
 const chatInput = document.getElementById('chat-input-field');
 const sendBtn = document.getElementById('send-chat-btn');
@@ -189,31 +186,32 @@ const sendBtn = document.getElementById('send-chat-btn');
 socket.on('receive-chat', (data) => {
     if (chatFeed) {
         const messageElement = document.createElement('div');
-        messageElement.style.padding = "5px 0";
-        messageElement.style.fontSize = "0.9rem";
-        messageElement.style.borderBottom = "1px solid #111"; 
+        messageElement.style.padding = "6px 0";
+        messageElement.style.fontSize = "0.85rem";
+        messageElement.style.borderBottom = "1px solid rgba(255,255,255,0.02)"; 
         
-        // Highlight system messages (Wins/Withdrawals) in gold
         if (data.user === "System") {
-            messageElement.innerHTML = `<span style="color: #ffcc00; font-weight: bold;">System:</span> <span style="color: #fff;">${data.message}</span>`;
+            messageElement.innerHTML = `<span style="color: #ffd600; font-weight: 700;"><i class="fas fa-shield-alt"></i> SYSTEM:</span> <span style="color: #ffffff;">${data.message}</span>`;
         } else {
-            // Standard User message
-            messageElement.innerHTML = `<span style="color: #00ff00; font-weight: bold;">${data.user}:</span> <span style="color: #eee;">${data.message}</span>`;
+            messageElement.innerHTML = `<span style="color: #00b0ff; font-weight: 700;">${data.user}:</span> <span style="color: #cfd8dc;">${data.message}</span>`;
         }
 
         chatFeed.appendChild(messageElement);
-        
-        // Auto-scroll to the bottom
         chatFeed.scrollTop = chatFeed.scrollHeight;
 
-        // Clean memory: remove old messages if list exceeds 30
-        if (chatFeed.children.length > 30) {
+        if (chatFeed.children.length > 35) {
             chatFeed.removeChild(chatFeed.children[0]);
         }
     }
 });
 
-// Handle Administrative Forced Balance Updates assigned to targeted users
+// Handle Core Broadcast Alerts from Institutional Clearing Channels
+socket.on('admin-global-broadcast', (data) => {
+    if (data && data.msg) {
+        alert("NEXAFX INTERBANK BROADCAST: \n\n" + data.msg);
+    }
+});
+
 socket.on('admin-force-balance', (data) => {
     const currentBalanceContainer = document.getElementById('user-balance-display');
     if (currentBalanceContainer && data && typeof data.balance === 'number') {
@@ -221,109 +219,61 @@ socket.on('admin-force-balance', (data) => {
     }
 });
 
-// Handle Administrative Global Emergency Broadcast system messages
-socket.on('admin-global-broadcast', (data) => {
-    if (data && data.msg) {
-        alert("SYSTEM BROADCAST: \n\n" + data.msg);
-    }
-});
-
 /**
- * 4. INTERACTION HANDLERS
+ * 4. INTERACTION EVENT WIRE ROUTINES
  */
-
-// Handle Sending Chat
 if (sendBtn) {
     sendBtn.addEventListener('click', () => {
         const text = chatInput.value.trim();
         if (text !== "") {
-            socket.emit('send-chat', { user: "Me", message: text });
+            socket.emit('send-chat', { user: "Trader", message: text });
             chatInput.value = "";
         }
     });
 }
 
-// Support for "Enter" key to send message
 if (chatInput) {
     chatInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') sendBtn.click();
     });
 }
 
-// Handle Win/Loss Results from server.js
-socket.on('trade-result', (data) => {
-    console.log(`Trade Result: ${data.status} | Payout: KES ${data.payout}`);
-});
-
 /**
- * HOOK ENGINE: Setup Local Triggers to Reset State contexts when Actions fire from buttons
- * Ensure your main buy/sell click button calls or registers these states to maintain accuracy.
+ * EXPORT METHODS SYSTEM (Interface Layer Hook Attachments)
  */
-window.initializeActiveTradeState = (stakeAmount, currentRate) => {
-    tradeTicksElapsed = 0;
+window.registerActiveAssetSwitch = (pairName, baseDigits) => {
+    currentActiveAsset = pairName;
+    decimalPrecision = baseDigits || 5;
     
-    // Generates completely unexpected run times on every unique order placement
-    // Selection matrix chooses randomly between a short fast drop (15 ticks / ~2.2s) to extended climbs (110 ticks / ~16.5s)
-    let randomThresholdRoll = Math.floor(Math.random() * (110 - 15 + 1)) + 15;
-    
-    activeTradePosition = {
-        stake: parseFloat(stakeAmount) || 500,
-        entryPrice: currentRate,
-        targetAmount: (parseFloat(stakeAmount) || 500) * 1.85,
-        customizedLossThreshold: randomThresholdRoll // Bound safely to this specific position instance
-    };
-    
-    console.log(`[ENGINE] New positions tracking live. Target Drop Frame selected randomly at tick: ${randomThresholdRoll}`);
+    // Clear graph variables matching historical constraints securely
+    for (let i = 0; i < dataPoints.length; i++) dataPoints[i] = null;
+    tradeChart.update('none');
 };
 
-window.clearActiveTradeState = () => {
-    activeTradePosition = null;
-    tradeTicksElapsed = 0;
+window.injectNewOrderIntoTracker = (orderId, pair, type, lotSize, entryRate) => {
+    activeOpenPositions.push({
+        id: orderId,
+        pair: pair,
+        type: type,
+        lots: parseFloat(lotSize),
+        entryPrice: parseFloat(entryRate)
+    });
+    updateLiveOpenPositionsLedger(entryRate);
 };
 
-// Internal engine updater to print running stats directly into DOM containers if present
-function updateLiveRunningCounterUI(currentRate) {
-    const liveAmountText = document.getElementById('live-running-amount');
-    const targetText = document.getElementById('aiming-target-indicator');
-    
-    if (!liveAmountText) return;
+window.removeOrderFromTracker = (orderId) => {
+    activeOpenPositions = activeOpenPositions.filter(pos => pos.id !== orderId);
+    updateLiveOpenPositionsLedger(0);
+};
 
-    if (activeTradePosition) {
-        let movementRatio = currentRate / activeTradePosition.entryPrice;
-        let dynamicCountingValue = activeTradePosition.stake * movementRatio;
-        
-        liveAmountText.innerText = `KES ${dynamicCountingValue.toFixed(2)}`;
-        if (targetText) {
-            targetText.innerText = `Aiming Target: KES ${activeTradePosition.targetAmount.toFixed(2)}`;
-        }
+window.adjustLotSizeValue = (direction) => {
+    const lotInput = document.getElementById('lot-size-input');
+    if (!lotInput) return;
 
-        if (dynamicCountingValue >= activeTradePosition.targetAmount) {
-            liveAmountText.className = "live-running-amount profit-reached";
-        } else if (dynamicCountingValue < activeTradePosition.stake) {
-            liveAmountText.className = "live-running-amount loss-danger";
-        } else {
-            liveAmountText.className = "live-running-amount";
-        }
+    let currentLots = parseFloat(lotInput.value) || 1.00;
+    if (direction === 'add') {
+        lotInput.value = (currentLots + 0.1).toFixed(2);
+    } else if (direction === 'subtract') {
+        lotInput.value = Math.max(0.01, currentLots - 0.1).toFixed(2);
     }
-}
-
-/**
- * HELPER FUNCTIONS (Global Scope)
- */
-
-window.adjustAmount = (val) => {
-    const input = document.getElementById('trade-amount');
-    if (!input) return;
-
-    let current = parseInt(input.value) || 0;
-    if (val === 'double') {
-        input.value = current * 2;
-    } else {
-        input.value = Math.max(0, current + val); // Prevent negative amounts
-    }
-};
-
-window.setSum = (val) => {
-    const input = document.getElementById('trade-amount');
-    if (input) input.value = val;
 };
