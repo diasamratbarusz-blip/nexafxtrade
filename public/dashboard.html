@@ -87,7 +87,6 @@
         .btn-graph-logout { background: var(--low-red); color: #fff; border-color: var(--low-red); }
         .btn-graph-logout:hover { filter: brightness(1.2); box-shadow: 0 0 15px rgba(255, 51, 102, 0.4); }
 
-        /* User Profile Display Card */
         .user-info-display {
             display: none;
             align-items: center;
@@ -214,7 +213,6 @@
     <header>
         <div class="brand">NEXAFX<span>TRADE</span></div>
         <div style="display: flex; align-items: center; gap: 15px;">
-            <!-- User Info Display (Shows when logged in) -->
             <div id="user-info-display" class="user-info-display">
                 <i class="fas fa-user-circle" style="color: var(--high-green); font-size: 1.5rem;"></i>
                 <div>
@@ -320,26 +318,21 @@
 </div>
 
 <script>
-    // --- API CONFIGURATION ---
     const getApiBase = () => {
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        const VERCEL_BACKEND_URL = "https://nexapayfx-backend.vercel.app/api"; 
-        return isLocal ? "http://localhost:5000/api" : VERCEL_BACKEND_URL;
+        return isLocal ? "http://localhost:5000/api" : "https://nexapayfx-backend.vercel.app/api";
     };
 
-    // --- AUTHENTICATION STATE TRACKER ---
     window.USER_IS_AUTHENTICATED = false;
     window.CURRENT_ACCOUNT_MODE = "REAL";
     window.USER_TOKEN = localStorage.getItem("token");
     window.USER_DATA = null;
 
-    // --- ADMIN REMOTE CONTROL OBJECT CONFIGURATION ---
     window.NEXAFX_ADMIN_CONFIG = {
         forcedTrend: "DYNAMIC", customVolatility: null, minimumTicketPrice: 100,       
         maximumTicketPrice: 500000, profitMultiplierHigh: 1.95, profitMultiplierLow: 0.40, customTargetRatio: 1.85       
     };
 
-    // --- APP CORE ---
     let balance = 0;
     let price = 8421500;
     let isLocked = false;
@@ -350,9 +343,7 @@
     let tradeTicksElapsed = 0;
     let currentHighTicksLimit = 45; 
 
-    // --- INITIALIZE APP (Local-First Strategy for Zero Delay) ---
     async function initApp() {
-        // 1. INSTANT UI UPDATE: Load from localStorage immediately so user sees their name/balance without waiting
         const savedUser = localStorage.getItem("user");
         if (window.USER_TOKEN && savedUser) {
             try {
@@ -364,11 +355,10 @@
                 updateBalance();
                 updateAuthUI(true, userData);
             } catch (e) {
-                console.error("Error parsing saved user data", e);
+                console.error("Error parsing saved local metadata layer", e);
             }
         }
 
-        // 2. BACKGROUND VERIFICATION: Fetch fresh data from Vercel backend to ensure accuracy
         if (window.USER_TOKEN) {
             try {
                 const response = await fetch(`${getApiBase()}/user/profile`, {
@@ -381,7 +371,6 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    // Handle both data.user and data.data just in case backend format varies
                     const freshUser = data.user || data.data; 
                     
                     if (data.success && freshUser) {
@@ -389,33 +378,27 @@
                         window.USER_DATA = freshUser;
                         balance = freshUser.balance || 0;
                         
-                        // Update localStorage with the fresh backend data
                         localStorage.setItem("user", JSON.stringify(freshUser));
                         
                         updateBalance();
                         updateAuthUI(true, freshUser);
                     }
                 } else {
-                    // Token is invalid or expired
-                    console.warn("❌ Token invalid, clearing storage");
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
                     window.USER_TOKEN = null;
                     updateAuthUI(false, null);
                 }
             } catch (error) {
-                console.error("🚫 Network error fetching profile:", error);
-                // Keep the localStorage data visible even if network fails
+                console.error("Network interface connection failure:", error);
             }
         } else {
-            // No token, show guest mode
             balance = 0;
             updateBalance();
             updateAuthUI(false, null);
         }
     }
 
-    // --- UPDATE AUTHENTICATION UI ---
     function updateAuthUI(isLoggedIn, userData) {
         const loginBtn = document.getElementById('login-btn');
         const registerBtn = document.getElementById('register-btn');
@@ -424,11 +407,9 @@
         const userEmailDisplay = document.getElementById('user-email-display');
 
         if (isLoggedIn && userData) {
-            // Show logged in state
             loginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
             loginBtn.className = 'graph-auth-btn btn-graph-logout';
             loginBtn.onclick = handleLoginLogout;
-            
             registerBtn.style.display = 'none';
             
             userInfoDisplay.classList.add('show');
@@ -436,24 +417,17 @@
             if (userEmailDisplay) {
                 userEmailDisplay.textContent = userData.email || ('ID: ' + (userData.id || 'Unknown'));
             }
-            
-            console.log("✅ UI updated to logged-in state");
         } else {
-            // Show guest state
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
             loginBtn.className = 'graph-auth-btn btn-graph-login';
             loginBtn.onclick = handleLoginLogout;
-            
             registerBtn.style.display = 'block';
             
             userInfoDisplay.classList.remove('show');
             if (userEmailDisplay) userEmailDisplay.textContent = '';
-            
-            console.log("✅ UI updated to guest state");
         }
     }
 
-    // --- HANDLE LOGIN/LOGOUT BUTTON CLICK ---
     function handleLoginLogout() {
         if (window.USER_IS_AUTHENTICATED) {
             logoutUser();
@@ -463,7 +437,6 @@
     }
 
     function logoutUser() {
-        console.log("🚪 Logging out user...");
         localStorage.removeItem("token");
         localStorage.removeItem("operatorName");
         localStorage.removeItem("user");
@@ -483,10 +456,8 @@
         }
     }
 
-    // Run initialization when page loads
     window.addEventListener('DOMContentLoaded', initApp);
 
-    // --- HIGH-QUALITY LOUD SOUND MATRIX ---
     function initBeats() {
         if (audioCtx) return;
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -541,7 +512,6 @@
         }, 1000);
     }
 
-    // --- GRAPH ENGINE ---
     const ctx = document.getElementById('liveGraph').getContext('2d');
     let dataPoints = Array(50).fill(price);
     const chart = new Chart(ctx, {
@@ -616,7 +586,6 @@
         processLiveCountingTransaction();
     }, 150);
 
-    // --- TRADE LOGIC ---
     async function executeBuy() {
         if (window.CURRENT_ACCOUNT_MODE === "REAL" && !window.USER_IS_AUTHENTICATED) {
             alert("🔐 Authentication Required: Please login or register to place bets in Real Trade.");
@@ -816,9 +785,6 @@
         }
     }
 
-    // ==========================================
-    // UPDATED ROUTING FUNCTIONS
-    // ==========================================
     function executeWithdrawalRoute() { 
         if (!window.USER_IS_AUTHENTICATED) {
             alert("Please login to access withdrawal.");
@@ -826,7 +792,6 @@
             return;
         }
         addPayoutLog("Initiating Secure Withdrawal Channel Sequence..."); 
-        // Redirect to the new withdrawal page
         window.location.href = "/withdrawal"; 
     }
     
@@ -837,7 +802,6 @@
             return;
         }
         addPayoutLog("Generating Liquidity Loading Node Credentials..."); 
-        // Redirect to the new deposit page
         window.location.href = "/deposit"; 
     }
     
@@ -861,11 +825,11 @@
         } else {
             currentBtn.classList.add('active-real');
             window.CURRENT_ACCOUNT_MODE = "REAL";
-            balance = window.USER_IS_AUTHENTICATED ? balance : 0.00;
+            balance = window.USER_IS_AUTHENTICATED ? (window.USER_DATA?.balance || 0.00) : 0.00;
             addPayoutLog("Switched to Production Vault (Real Play).");
         }
         updateBalance();
     }
 </script>
 </body>
-    </html>
+</html>
