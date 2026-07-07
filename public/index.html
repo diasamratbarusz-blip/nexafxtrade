@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXAFX | Institutional Forex Exchange</title>
+    <title>NEXAFX | Institutional Multi-Asset Trading Terminal</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -27,7 +27,7 @@
         }
 
         .app-container {
-            width: 100%; max-width: 1400px; height: 100vh; max-height: 950px;
+            width: 100%; max-width: 1600px; height: 100vh; max-height: 980px;
             display: flex; flex-direction: column; background: var(--bg-black);
             box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7);
             border: 1px solid var(--border-color); overflow: hidden; position: relative;
@@ -52,43 +52,48 @@
         .balance-val { color: var(--high-green); font-family: monospace; font-size: 1.15rem; font-weight: 800; }
 
         #market-status-bar {
-            height: 28px; display: flex; align-items: center; justify-content: center;
+            height: 28px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px;
             font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
             letter-spacing: 1.5px; background: #070a0e; border-bottom: 1px solid var(--border-color); flex-shrink: 0;
         }
         .status-high { color: var(--high-green); }
-        .status-low { color: var(--low-red); }
 
         .main-layout {
-            display: grid; grid-template-columns: 280px 1fr; flex: 1;
+            display: grid; grid-template-columns: 310px 1fr; flex: 1;
             background: var(--border-color); gap: 1px; overflow: hidden;
         }
 
         .side-activity { background: var(--panel); display: flex; flex-direction: column; overflow: hidden; }
         
-        .pair-selector-title {
+        .market-watch-header {
             padding: 14px 20px; font-weight: 800; font-size: 0.75rem; color: var(--text-dim);
             letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
         }
+
+        .market-tabs { display: flex; background: #0b0f14; border-bottom: 1px solid var(--border-color); }
+        .m-tab-btn { flex: 1; padding: 8px; font-size: 0.65rem; font-weight: 800; background: transparent; border: none; color: var(--text-dim); cursor: pointer; text-transform: uppercase; }
+        .m-tab-btn.active { color: #fff; background: var(--panel-light); border-bottom: 2px solid var(--neon-blue); }
 
         .pair-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
         .pair-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 20px; border-bottom: 1px solid rgba(35, 47, 62, 0.4);
-            cursor: pointer; transition: background 0.2s;
+            display: grid; grid-template-columns: 1fr 85px 55px;
+            padding: 12px 20px; border-bottom: 1px solid rgba(35, 47, 62, 0.4);
+            cursor: pointer; transition: background 0.2s; align-items: center;
         }
         .pair-row:hover, .pair-row.active { background: var(--panel-light); }
-        .pair-name { font-weight: 700; font-size: 0.9rem; }
-        .pair-price { font-family: monospace; font-weight: 700; font-size: 0.9rem; }
-        
+        .pair-name { font-weight: 700; font-size: 0.85rem; }
+        .pair-price { font-family: monospace; font-weight: 700; font-size: 0.85rem; text-align: right; }
+        .pair-change { font-family: monospace; font-size: 0.75rem; text-align: right; font-weight: bold; }
+
         .trading-zone { 
             background: var(--bg-black); display: flex; flex-direction: column; 
             position: relative; overflow: hidden;
         }
 
-        .price-hero { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .price-hero { padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
         .active-pair-display { font-size: 1.4rem; font-weight: 800; color: #fff; }
-        .ticker-val { font-size: 2.8rem; font-weight: 800; font-family: monospace; letter-spacing: -1px; margin-top: 4px; }
+        .ticker-val { font-size: 2.6rem; font-weight: 800; font-family: monospace; letter-spacing: -1px; margin-top: 4px; }
 
         .top-graph-auth-actions { display: flex; gap: 8px; align-items: center; }
         .graph-auth-btn {
@@ -100,10 +105,14 @@
         .btn-graph-register { background: var(--neon-blue); color: #000; }
         .btn-graph-register:hover { filter: brightness(1.1); }
 
-        #chart-container { flex: 1; min-height: 250px; padding: 20px; position: relative; }
+        /* Chart Workspace Elements */
+        #chart-container { flex: 1; min-height: 250px; padding: 15px 20px; position: relative; }
+        .chart-toolbar { position: absolute; top: 20px; right: 30px; z-index: 10; display: flex; gap: 8px; }
+        .ct-btn { background: rgba(18, 24, 32, 0.85); border: 1px solid var(--border-color); color: var(--text-dim); padding: 5px 10px; font-size: 0.7rem; font-weight: 700; border-radius: 4px; cursor: pointer; }
+        .ct-btn.active { color: #fff; border-color: var(--neon-blue); background: var(--panel-light); }
 
         .universal-action-bar {
-            display: flex; gap: 10px; padding: 12px 20px;
+            display: flex; gap: 10px; padding: 10px 24px;
             justify-content: space-between; align-items: center; background: var(--panel);
             border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);
         }
@@ -122,43 +131,44 @@
         .mode-btn.active-demo { color: var(--neon-blue); border-color: var(--neon-blue); }
         .mode-btn.active-real { color: var(--high-green); border-color: var(--high-green); }
 
-        /* Real Forex Open Positions Grid System */
-        .positions-terminal {
-            height: 160px; background: var(--panel); border-top: 1px solid var(--border-color);
-            display: flex; flex-direction: column; overflow: hidden;
-        }
-        .terminal-header {
-            padding: 10px 20px; font-size: 0.7rem; font-weight: 800; letter-spacing: 1px;
-            text-transform: uppercase; color: var(--text-dim); background: #0e131a;
-            border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between;
-        }
+        /* Terminals and Intelligence Workspace Tabbing */
+        .workspace-tabs-strip { display: flex; background: #0c1117; border-bottom: 1px solid var(--border-color); }
+        .w-tab { padding: 10px 20px; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); background: transparent; border: none; cursor: pointer; text-transform: uppercase; border-right: 1px solid var(--border-color); }
+        .w-tab.active { color: #fff; background: var(--panel); border-top: 2px solid var(--neon-blue); }
+
+        .positions-terminal { height: 180px; background: var(--panel); display: flex; flex-direction: column; overflow: hidden; }
         .positions-log { flex: 1; overflow-y: auto; font-size: 0.8rem; font-family: monospace; }
         .position-item {
-            display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            padding: 10px 20px; border-bottom: 1px solid rgba(255,255,255,0.02); align-items: center;
+            display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr 1fr 70px;
+            padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.02); align-items: center;
         }
         .pos-buy { color: var(--high-green); }
         .pos-sell { color: var(--low-red); }
 
+        /* Intelligence Modules View */
+        .ai-intelligence-log { padding: 15px 24px; display: none; gap: 15px; overflow-y: auto; height: 100%; box-sizing: border-box; }
+        .ai-card { background: rgba(0, 176, 255, 0.04); border: 1px solid rgba(0, 176, 255, 0.15); border-radius: 6px; padding: 12px; flex: 1; }
+
+        /* Parameter Matrix Form Controllers */
         .bottom-controls {
-            background: var(--panel); padding: 20px 24px; border-top: 1px solid var(--border-color);
-            display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: center; flex-shrink: 0;
+            background: var(--panel); padding: 16px 24px; border-top: 1px solid var(--border-color);
+            display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.5fr; gap: 16px; align-items: center; flex-shrink: 0;
         }
 
-        .lot-management-box {
+        .input-param-box {
             background: #000000; border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 10px 16px; display: flex; flex-direction: column; gap: 4px;
+            padding: 8px 14px; display: flex; flex-direction: column; gap: 4px;
         }
-        .lot-label { font-size: 0.65rem; color: var(--text-dim); font-weight: 700; letter-spacing: 0.5px; }
-        .lot-input-wrapper { display: flex; align-items: center; justify-content: space-between; }
-        .lot-input-wrapper input {
-            background: transparent; border: none; color: white; font-size: 1.5rem;
-            font-weight: 800; font-family: monospace; width: 100%; outline: none; text-align: left;
+        .param-label { font-size: 0.65rem; color: var(--text-dim); font-weight: 700; letter-spacing: 0.5px; }
+        .param-input-wrapper { display: flex; align-items: center; }
+        .param-input-wrapper input {
+            background: transparent; border: none; color: white; font-size: 1.2rem;
+            font-weight: 800; font-family: monospace; width: 100%; outline: none;
         }
 
-        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .btn {
-            height: 55px; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 800;
+            height: 50px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 800;
             cursor: pointer; transition: opacity 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center;
             gap: 10px; text-transform: uppercase; letter-spacing: 0.5px;
         }
@@ -166,11 +176,10 @@
         .btn-sell { background: var(--low-red); color: #ffffff; }
         .btn:active { transform: scale(0.98); }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1200px) {
             .main-layout { grid-template-columns: 1fr; }
             .side-activity { display: none; }
-            .bottom-controls { grid-template-columns: 1fr; gap: 12px; }
-            .ticker-val { font-size: 2.2rem; }
+            .bottom-controls { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -178,7 +187,7 @@
 
 <div class="app-container">
     <header>
-        <div class="brand">NEXAFX<span>HQ</span></div>
+        <div class="brand">NEXAFX<span>CORE</span></div>
         <div class="header-actions">
             <div class="balance-container">
                 <span class="balance-label">MARGIN BALANCE (KES)</span>
@@ -187,15 +196,23 @@
         </div>
     </header>
 
-    <div id="market-status-bar" class="status-high">Institutional Liquidity Feed Connected</div>
+    <div id="market-status-bar" class="status-high">
+        <span><i class="fas fa-server"></i> LIVE SERVER: CONNECTED</span>
+        <span id="live-clock" style="font-family: monospace; color: var(--gold);">00:00:00 UTC</span>
+    </div>
 
     <div class="main-layout">
-        <!-- Professional Market Watch List -->
         <section class="side-activity">
-            <div class="pair-selector-title"><i class="fas fa-chart-bar"></i> Market Watch</div>
-            <div class="pair-list" id="forex-pair-list">
-                <!-- Programmatically populated for high accuracy -->
+            <div class="market-watch-header">
+                <span><i class="fas fa-chart-pie"></i> Core Market Watch</span>
             </div>
+            <div class="market-tabs">
+                <button class="m-tab-btn active" onclick="filterMarketCategory('FOREX')">Forex</button>
+                <button class="m-tab-btn" onclick="filterMarketCategory('CRYPTO')">Crypto</button>
+                <button class="m-tab-btn" onclick="filterMarketCategory('COMMODITY')">Commodities</button>
+            </div>
+            <div class="pair-list" id="forex-pair-list">
+                </div>
         </section>
 
         <section class="trading-zone">
@@ -210,10 +227,19 @@
                         +0.04%
                     </div>
                     <div class="top-graph-auth-actions">
-                        <button id="login-btn" class="graph-auth-btn btn-graph-login" onclick="location.href='login.html'">Gateway Login</button>
-                        <button id="register-btn" class="graph-auth-btn btn-graph-register" onclick="location.href='register.html'">Register Account</button>
+                        <button class="graph-auth-btn btn-graph-login" onclick="location.href='login.html'">Gateway Login</button>
+                        <button class="graph-auth-btn btn-graph-register" onclick="location.href='register.html'">Register Account</button>
                     </div>
                 </div>
+            </div>
+
+            <div id="chart-container">
+                <div class="chart-toolbar">
+                    <button class="ct-btn active" onclick="setChartStyle('LINE', this)">Line</button>
+                    <button class="ct-btn" onclick="toggleChartTechnical('MA', this)">Moving Average</button>
+                    <button class="ct-btn" onclick="toggleChartTechnical('BB', this)">Bollinger Bands</button>
+                </div>
+                <canvas id="liveGraph"></canvas>
             </div>
 
             <div class="universal-action-bar">
@@ -227,34 +253,51 @@
                 </div>
             </div>
 
-            <!-- Core Technical Chart Rendering Space -->
-            <div id="chart-container">
-                <canvas id="liveGraph"></canvas>
+            <div class="workspace-tabs-strip">
+                <button class="w-tab active" id="btn-tab-pos" onclick="switchWorkspaceView('POSITIONS')">Active Positions</button>
+                <button class="w-tab" id="btn-tab-ai" onclick="switchWorkspaceView('AI_INTELLIGENCE')">AI Trend Signals</button>
             </div>
 
-            <!-- Open Positions Terminal Log -->
             <div class="positions-terminal">
-                <div class="terminal-header">
-                    <span><i class="fas fa-folder-open"></i> Active Market Positions</span>
-                    <span>Running Floating PnL</span>
-                </div>
-                <div class="positions-log" id="open-positions-log">
-                    <!-- Dynamic trading metrics insert layout -->
+                <div class="positions-log" id="open-positions-log"></div>
+                
+                <div class="ai-intelligence-log" id="ai-signals-log">
+                    <div class="ai-card">
+                        <h4 style="margin:0 0 5px 0; color:var(--neon-blue); font-size:0.75rem;"><i class="fas fa-brain"></i> NEURAL ENGINE: EUR/USD PREDICTION</h4>
+                        <p style="font-size:0.75rem; color:var(--text-dim); margin:4px 0;">Algorithmic assessment maps continuous bullish expansion targets above near-term consolidation floors.</p>
+                        <span style="font-size:0.7rem; color:var(--high-green); font-weight:800;">CONVICTION LEVEL: 86.2%</span>
+                    </div>
+                    <div class="ai-card">
+                        <h4 style="margin:0 0 5px 0; color:var(--gold); font-size:0.75rem;"><i class="fas fa-exclamation-triangle"></i> DYNAMIC DRAWDOWN ADVISOR</h4>
+                        <p style="font-size:0.75rem; color:var(--text-dim); margin:4px 0;">Margin saturation ratios look clear. Maintain Stop Loss targets to protect digital equity pools.</p>
+                    </div>
                 </div>
             </div>
 
             <div class="bottom-controls">
-                <div class="lot-management-box">
-                    <span class="lot-label">VOLUME (LOTS)</span>
-                    <div class="lot-input-wrapper">
+                <div class="input-param-box">
+                    <span class="param-label">VOLUME (LOTS)</span>
+                    <div class="param-input-wrapper">
                         <input type="number" id="lot-size" value="1.00" step="0.1" min="0.01">
                     </div>
                 </div>
+                <div class="input-param-box">
+                    <span class="param-label">STOP LOSS (SL)</span>
+                    <div class="param-input-wrapper">
+                        <input type="number" id="target-sl" placeholder="Optional Target" step="0.0001">
+                    </div>
+                </div>
+                <div class="input-param-box">
+                    <span class="param-label">TAKE PROFIT (TP)</span>
+                    <div class="param-input-wrapper">
+                        <input type="number" id="target-tp" placeholder="Optional Target" step="0.0001">
+                    </div>
+                </div>
                 <div class="action-btns">
-                    <button class="btn btn-buy" id="buy-btn" onclick="openForexOrder('BUY')">
+                    <button class="btn btn-buy" onclick="openForexOrder('BUY')">
                         <i class="fas fa-arrow-up"></i> BUY / LONG
                     </button>
-                    <button class="btn btn-sell" id="sell-btn" onclick="openForexOrder('SELL')">
+                    <button class="btn btn-sell" onclick="openForexOrder('SELL')">
                         <i class="fas fa-arrow-down"></i> SELL / SHORT
                     </button>
                 </div>
@@ -264,38 +307,60 @@
 </div>
 
 <script>
-    const getApiBase = () => {
-        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        return isLocal ? "http://localhost:5000/api" : "https://nexapayfx-backend.vercel.app/api";
-    };
+    let currentCategoryFilter = 'FOREX';
+    let currentChartStyle = 'LINE';
+    let showMovingAverage = false;
+    let showBollingerBands = false;
 
-    window.USER_IS_AUTHENTICATED = false;
-    window.CURRENT_ACCOUNT_MODE = "DEMO";
-    window.USER_TOKEN = localStorage.getItem("token");
-
-    // Institutional Forex Market Catalog Architecture
+    // Cross-Market Operational Instrument Index
     let forexMarkets = {
-        "EUR/USD": { price: 1.08520, digits: 5, change: 0.02 },
-        "GBP/USD": { price: 1.26440, digits: 5, change: -0.05 },
-        "USD/JPY": { price: 151.420, digits: 3, change: 0.12 },
-        "AUD/USD": { price: 0.65310, digits: 5, change: -0.01 }
+        "EUR/USD": { category: "FOREX", price: 1.08520, digits: 5, change: 0.02, multiplier: 100000 },
+        "GBP/USD": { category: "FOREX", price: 1.26440, digits: 5, change: -0.05, multiplier: 100000 },
+        "USD/JPY": { category: "FOREX", price: 151.420, digits: 3, change: 0.12, multiplier: 1000 },
+        "BTC/USD": { category: "CRYPTO", price: 58420.50, digits: 2, change: 1.45, multiplier: 10 },
+        "ETH/USD": { category: "CRYPTO", price: 3145.25, digits: 2, change: -0.82, multiplier: 10 },
+        "XAU/USD": { category: "COMMODITY", price: 2342.10, digits: 2, change: 0.65, multiplier: 100 }
     };
+    
     let activePair = "EUR/USD";
-    let marginBalance = 1500000.00;
     let openPositions = [];
 
-    // Initialize Forex Pair Panels UI
+    window.addEventListener('DOMContentLoaded', () => {
+        renderMarketWatch();
+        selectForexPair(activePair);
+        
+        // Synchronized Server Clock Loop
+        setInterval(() => {
+            document.getElementById('live-clock').innerText = new Date().toUTCString().replace('GMT', 'UTC');
+        }, 1000);
+    });
+
+    function filterMarketCategory(cat) {
+        currentCategoryFilter = cat;
+        document.querySelectorAll('.m-tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.innerText === cat || (cat === 'COMMODITY' && btn.innerText === 'COMMODITIES'));
+        });
+        renderMarketWatch();
+    }
+
     function renderMarketWatch() {
         const container = document.getElementById('forex-pair-list');
         container.innerHTML = '';
         Object.keys(forexMarkets).forEach(pair => {
             const data = forexMarkets[pair];
+            if(data.category !== currentCategoryFilter) return;
+
             const div = document.createElement('div');
             div.className = `pair-row ${pair === activePair ? 'active' : ''}`;
             div.onclick = () => selectForexPair(pair);
+            
+            const changeColor = data.change >= 0 ? 'var(--high-green)' : 'var(--low-red)';
+            const prefix = data.change >= 0 ? '+' : '';
+
             div.innerHTML = `
                 <span class="pair-name">${pair}</span>
                 <span class="pair-price" id="watch-${pair}">${data.price.toFixed(data.digits)}</span>
+                <span class="pair-change" style="color: ${changeColor}">${prefix}${data.change.toFixed(2)}%</span>
             `;
             container.appendChild(div);
         });
@@ -303,24 +368,37 @@
 
     function selectForexPair(pair) {
         activePair = pair;
+        let marketObj = forexMarkets[pair];
         document.getElementById('current-pair-title').innerText = pair;
+        
+        // Auto-assign matching decimals to parameter ticket inputs
+        let stepVal = 1 / Math.pow(10, marketObj.digits);
+        document.getElementById('target-sl').step = stepVal;
+        document.getElementById('target-tp').step = stepVal;
+        
+        // Reset defaults
+        document.getElementById('target-sl').value = '';
+        document.getElementById('target-tp').value = '';
+
         renderMarketWatch();
-        // Clear graph variables matching historical constraints
-        dataPoints = Array(40).fill(forexMarkets[pair].price);
-        chart.data.datasets[0].data = dataPoints;
+        dataPoints = Array(40).fill(marketObj.price).map((v, i) => v + (Math.random() - 0.5) * (v * 0.002));
+        updateChartDataset();
     }
 
-    // Chart Setup Engine
+    // Chart Configuration Architecture Block
     const ctx = document.getElementById('liveGraph').getContext('2d');
-    let dataPoints = Array(40).fill(forexMarkets[activePair].price);
+    let dataPoints = Array(40).fill(1.08520);
+    
     const chart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: dataPoints.map(() => ''),
-            datasets: [{
-                data: dataPoints, borderColor: '#00e676', borderWidth: 2, pointRadius: 0,
-                fill: false, tension: 0.1
-            }]
+            datasets: [
+                { id: 'main', data: dataPoints, borderColor: '#00e676', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.05 },
+                { id: 'ma', data: [], borderColor: '#ffd600', borderWidth: 1.5, pointRadius: 0, fill: false, borderDash: [4, 4] },
+                { id: 'bb-upper', data: [], borderColor: '#00b0ff', borderWidth: 1, pointRadius: 0, fill: false },
+                { id: 'bb-lower', data: [], borderColor: '#00b0ff', borderWidth: 1, pointRadius: 0, fill: false }
+            ]
         },
         options: {
             responsive: true, maintainAspectRatio: false, animation: false,
@@ -329,39 +407,76 @@
         }
     });
 
-    // Realtime High-Performance Tick Stream Simulation Engine
+    function setChartStyle(style, btn) {
+        currentChartStyle = style;
+        document.querySelectorAll('.ct-btn').forEach(b => { if(b.innerText === 'Line' || b.innerText === 'Candlestick') b.classList.remove('active'); });
+        btn.classList.add('active');
+    }
+
+    function toggleChartTechnical(tech, btn) {
+        if(tech === 'MA') showMovingAverage = !showMovingAverage;
+        if(tech === 'BB') showBollingerBands = !showBollingerBands;
+        btn.classList.toggle('active');
+    }
+
+    function updateChartDataset() {
+        chart.data.datasets[0].data = dataPoints;
+        
+        // Technical Indicator Analytical Calculations Engine
+        if (showMovingAverage) {
+            chart.data.datasets[1].data = dataPoints.map((val, idx) => {
+                if(idx < 5) return val;
+                let sum = 0; for(let i=0; i<5; i++) { sum += dataPoints[idx-i]; }
+                return sum / 5;
+            });
+        } else { chart.data.datasets[1].data = []; }
+
+        if (showBollingerBands) {
+            chart.data.datasets[2].data = dataPoints.map(v => v * 1.0015);
+            chart.data.datasets[3].data = dataPoints.map(v => v * 0.9985);
+        } else {
+            chart.data.datasets[2].data = [];
+            chart.data.datasets[3].data = [];
+        }
+        chart.update('none');
+    }
+
+    // High-Speed Pricing Telemetry Pulse Loop
     setInterval(() => {
         Object.keys(forexMarkets).forEach(pair => {
             let item = forexMarkets[pair];
-            let pipMovement = (Math.random() - 0.5) * (pair === "USD/JPY" ? 0.04 : 0.0003);
-            item.price += pipMovement;
+            let dev = (pair.includes("JPY") || pair.includes("USD/")) ? 0.0002 : 0.02;
+            let fluctuation = (Math.random() - 0.5) * (item.price * dev * 0.05);
+            item.price += fluctuation;
             
-            // Render update inside watch row mapping metrics matrix
             const element = document.getElementById(`watch-${pair}`);
             if(element) element.innerText = item.price.toFixed(item.digits);
         });
 
-        // Track running statistics for active dashboard selection
         let activeObj = forexMarkets[activePair];
         document.getElementById('ticker-price').innerText = activeObj.price.toFixed(activeObj.digits);
         
         dataPoints.push(activeObj.price);
         dataPoints.shift();
-        chart.update('none');
-
+        
+        updateChartDataset();
         calculateFloatingPnL();
-    }, 400);
+    }, 450);
 
-    // Dynamic execution handling logic matrix
     function openForexOrder(type) {
         let lotSize = parseFloat(document.getElementById('lot-size').value);
-        if(isNaN(lotSize) || lotSize <= 0) return alert("Invalid Lot Size parameters defined.");
+        if(isNaN(lotSize) || lotSize <= 0) return alert("Invalid Volumetric parameters.");
+
+        let slVal = parseFloat(document.getElementById('target-sl').value) || null;
+        let tpVal = parseFloat(document.getElementById('target-tp').value) || null;
 
         let order = {
             id: Math.floor(Math.random() * 900000 + 100000),
             pair: activePair,
             type: type,
             lots: lotSize,
+            sl: slVal,
+            tp: tpVal,
             entryPrice: forexMarkets[activePair].price
         };
 
@@ -376,32 +491,44 @@
 
     function calculateFloatingPnL() {
         let logContainer = document.getElementById('open-positions-log');
+        if(document.getElementById('btn-tab-pos').className.includes('active') === false) return;
+
         if(!openPositions.length) {
-            logContainer.innerHTML = `<div style="padding:20px; color:var(--text-dim); text-align:center;">No open institutional market orders pending.</div>`;
+            logContainer.innerHTML = `<div style="padding:20px; color:var(--text-dim); text-align:center;">No active risk vectors open in current runtime workspace.</div>`;
             return;
         }
 
         let html = '';
         openPositions.forEach(pos => {
             let currentPrice = forexMarkets[pos.pair].price;
-            let multiplier = pos.pair === "USD/JPY" ? 1000 : 100000; // Contract Sizes Standard Matrix
+            let targetMarket = forexMarkets[pos.pair];
             let pnl = 0;
 
             if(pos.type === 'BUY') {
-                pnl = (currentPrice - pos.entryPrice) * pos.lots * multiplier;
+                pnl = (currentPrice - pos.entryPrice) * pos.lots * targetMarket.multiplier;
             } else {
-                pnl = (pos.entryPrice - currentPrice) * pos.lots * multiplier;
+                pnl = (pos.entryPrice - currentPrice) * pos.lots * targetMarket.multiplier;
             }
 
-            // Convert raw cross value metric into approximate KES structure value
-            let pnlKes = pnl * 130; 
+            // Absolute conversion multiplier configuration metric
+            let pnlKes = pnl * 131.50; 
+
+            // Auto Execution Guardrail Evaluation Loop (SL/TP)
+            if(pos.sl && ((pos.type === 'BUY' && currentPrice <= pos.sl) || (pos.type === 'SELL' && currentPrice >= pos.sl))) {
+                setTimeout(() => { closeForexOrder(pos.id); }, 10); return;
+            }
+            if(pos.tp && ((pos.type === 'BUY' && currentPrice >= pos.tp) || (pos.type === 'SELL' && currentPrice <= pos.tp))) {
+                setTimeout(() => { closeForexOrder(pos.id); }, 10); return;
+            }
 
             html += `
                 <div class="position-item">
-                    <span class="${pos.type === 'BUY' ? 'pos-buy' : 'pos-sell'}"><b>${pos.type}</b> ${pos.pair} (${pos.lots} Lots)</span>
-                    <span style="color:var(--text-dim)">Entry: ${pos.entryPrice.toFixed(forexMarkets[pos.pair].digits)}</span>
-                    <span>Live: ${currentPrice.toFixed(forexMarkets[pos.pair].digits)}</span>
-                    <span style="font-weight:bold; color:${pnlKes >= 0 ? 'var(--high-green)' : 'var(--low-red)'}">KES ${pnlKes.toFixed(2)}</span>
+                    <span class="${pos.type === 'BUY' ? 'pos-buy' : 'pos-sell'}"><b>${pos.type}</b> ${pos.pair}</span>
+                    <span style="color:var(--text-dim)">Vol: ${pos.lots.toFixed(2)}</span>
+                    <span>Entry: ${pos.entryPrice.toFixed(targetMarket.digits)}</span>
+                    <span>Live: ${currentPrice.toFixed(targetMarket.digits)}</span>
+                    <span style="color:#e0a800">SL: ${pos.sl ? pos.sl.toFixed(targetMarket.digits) : '--'}</span>
+                    <span style="font-weight:bold; color:${pnlKes >= 0 ? 'var(--high-green)' : 'var(--low-red)'}">KES ${pnlKes.toLocaleString(undefined,{maximumFractionDigits:2})}</span>
                     <button style="background:var(--low-red); border:none; color:white; border-radius:4px; padding:2px 8px; cursor:pointer;" onclick="closeForexOrder(${pos.id})">Close</button>
                 </div>
             `;
@@ -409,27 +536,24 @@
         logContainer.innerHTML = html;
     }
 
-    function renderPositionsTerminal() {
-        calculateFloatingPnL();
+    function switchWorkspaceView(viewMode) {
+        document.getElementById('btn-tab-pos').classList.toggle('active', viewMode === 'POSITIONS');
+        document.getElementById('btn-tab-ai').classList.toggle('active', viewMode === 'AI_INTELLIGENCE');
+
+        document.getElementById('open-positions-log').style.display = viewMode === 'POSITIONS' ? 'block' : 'none';
+        document.getElementById('ai-signals-log').style.display = viewMode === 'AI_INTELLIGENCE' ? 'flex' : 'none';
+        
+        renderPositionsTerminal();
     }
 
+    function renderPositionsTerminal() { calculateFloatingPnL(); }
     function switchAccountMode(mode, btn) {
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active-demo', 'active-real'));
-        if(mode === 'DEMO') {
-            btn.classList.add('active-demo');
-            window.CURRENT_ACCOUNT_MODE = "DEMO";
-        } else {
-            btn.classList.add('active-real');
-            window.CURRENT_ACCOUNT_MODE = "REAL";
-        }
+        btn.classList.add(mode === 'DEMO' ? 'active-demo' : 'active-real');
     }
 
-    function executeDepositRoute() { alert("Securing Broker Node Route:\nForwarding to core payment gateway API ledger link."); }
-    function executeWithdrawalRoute() { alert("Securing Broker Clearing Route:\nForwarding transaction parameter extraction pipeline."); }
-
-    // Kickstart application context structures
-    renderMarketWatch();
-    renderPositionsTerminal();
+    function executeDepositRoute() { alert("Forwarding user profile token payloads to your backend /api pathways safely."); }
+    function executeWithdrawalRoute() { alert("Extracting secure internal balances out to clearing networks."); }
 </script>
 </body>
 </html>
