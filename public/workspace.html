@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXAFX | Institutional Trading Desk</title>
+    
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/workspace.css">
+</head>
+<body>
+
+<div class="app-container">
+    <header class="main-header">
+        <div class="brand">NEXAFX<span>TRADE</span></div>
+        <div class="balance-box">
+            <span class="label">MARGIN BALANCE (KES)</span>
+            <span class="value" id="user-balance-display">1,450,000.00</span>
+        </div>
+    </header>
+
+    <main class="content-grid">
+        
+        <section class="workspace-panel">
+            <div class="panel-header">
+                <span><i class="fas fa-chart-pie"></i> Interbank Pairs</span> 
+                <span id="clock-utc" style="color:var(--gold-text); font-family: monospace;">00:00:00 UTC</span>
+            </div>
+            <div class="asset-list">
+                <div class="asset-row active" id="row-EURUSD" onclick="window.registerActiveAssetSwitch('EUR/USD', 5)">
+                    <span>EUR/USD</span><span class="price-val" id="watch-EURUSD">1.08500</span>
+                </div>
+                <div class="asset-row" id="row-GBPUSD" onclick="window.registerActiveAssetSwitch('GBP/USD', 5)">
+                    <span>GBP/USD</span><span class="price-val" id="watch-GBPUSD">1.26440</span>
+                </div>
+                <div class="asset-row" id="row-USDJPY" onclick="window.registerActiveAssetSwitch('USD/JPY', 3)">
+                    <span>USD/JPY</span><span class="price-val" id="watch-USDJPY">156.400</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="main-chart-space">
+            <div class="price-summary-bar">
+                <div>
+                    <span id="active-asset-title" style="color:var(--text-dim); font-size:0.75rem; font-weight:700;">EUR/USD LIVE FEED</span>
+                    <div class="price-large"><span id="current-rate">1.08500</span></div>
+                </div>
+                <div style="text-align: right;">
+                    <span id="total-floating-pnl" style="font-family:monospace; font-weight:700; font-size:1.1rem; color: var(--accent-green);">KES 0.00</span>
+                    <div style="color:var(--text-dim); font-size:0.6rem; font-weight:700;">TOTAL UNREALIZED P&L</div>
+                </div>
+            </div>
+
+            <div class="chart-viewport" id="chart-container"></div>
+
+            <div class="workspace-panel positions-ledger">
+                <div class="panel-header"><i class="fas fa-folder-open"></i> Open Portfolio Contract Log</div>
+                <div class="ledger-scroll" id="open-positions-log">
+                    <div class="ledger-empty-state">No active risk vectors open in current runtime workspace.</div>
+                </div>
+            </div>
+        </div>
+
+        <section class="workspace-panel">
+            <div class="panel-header"><i class="fas fa-comments"></i> Liquidity Communications Feed</div>
+            <div class="chat-body" id="chat-feed"></div>
+            
+            <div class="chat-input-wrapper">
+                <input type="text" id="chat-input-field" placeholder="Transmit dispatch details...">
+                <button class="chat-send-btn" id="send-chat-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+
+            <div class="order-entry-panel">
+                <div class="input-block">
+                    <label style="font-size: 0.65rem; color: var(--text-dim); font-weight: 700;">ORDER LOT SIZE (VOLUME)</label>
+                    <div class="lot-input-wrapper">
+                        <button class="lot-adjust-btn" onclick="window.adjustLotSizeValue('subtract')">-</button>
+                        <input type="text" id="lot-size-input" value="1.00" readonly>
+                        <button class="lot-adjust-btn" onclick="window.adjustLotSizeValue('add')">+</button>
+                    </div>
+                </div>
+                <div class="order-action-row">
+                    <button class="order-btn btn-buy" onclick="transmitInstantOrder('BUY')">Buy / Long</button>
+                    <button class="order-btn btn-sell" onclick="transmitInstantOrder('SELL')">Sell / Short</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="legal-footer">
+        <p>Nexafxtrade Institutional Hub: Binaa Mall, 2nd Floor, Langata Rd, Nairobi. Platform framework via Prosport Africa Ltd.</p>
+    </footer>
+</div>
+
+<script src="/js/chat.js"></script>
+</body>
+</html>
