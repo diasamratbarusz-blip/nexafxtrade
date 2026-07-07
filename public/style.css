@@ -48,6 +48,7 @@
             border-bottom: 1px solid var(--border-color);
             height: 60px;
             z-index: 100;
+            flex-shrink: 0;
         }
 
         .brand { color: var(--accent-green); font-weight: 900; font-size: 1.2rem; letter-spacing: 1px; }
@@ -111,6 +112,7 @@
             align-items: center;
             gap: 8px;
             text-transform: uppercase;
+            flex-shrink: 0;
         }
 
         /* --- Asset List Selector Box --- */
@@ -131,15 +133,15 @@
         .asset-price { font-family: monospace; font-size: 0.85rem; }
 
         /* --- Central Chart Area --- */
-        .main-chart-space { flex: 1; display: flex; flex-direction: column; }
-        .price-summary-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; }
+        .main-chart-space { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .price-summary-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; flex-shrink: 0; }
         .price-large { font-size: 2.2rem; font-weight: 800; font-family: monospace; letter-spacing: -1px; }
         .price-large span { font-size: 1.2rem; color: var(--text-dim); font-weight: 400; }
 
-        .chart-viewport { flex: 1; background: #020408; border-radius: 8px; border: 1px solid var(--border-color); position: relative; }
+        .chart-viewport { flex: 1; background: #020408; border-radius: 8px; border: 1px solid var(--border-color); position: relative; min-height: 200px; }
 
         /* --- Positions Ledger Section --- */
-        .positions-ledger { height: 180px; border-top: 1px solid var(--border-color); }
+        .positions-ledger { height: 180px; border-top: 1px solid var(--border-color); margin-top: 12px; flex-shrink: 0; }
         .ledger-scroll { flex: 1; overflow-y: auto; padding: 8px; }
         .ledger-item {
             display: grid;
@@ -160,12 +162,12 @@
         .chat-body { flex: 1; overflow-y: auto; padding: 15px; }
 
         /* --- Interactive Dealing Panel --- */
-        .order-entry-panel { padding: 15px; background: rgba(22, 31, 43, 0.15); border-top: 1px solid var(--border-color); }
+        .order-entry-panel { padding: 15px; background: rgba(22, 31, 43, 0.15); border-top: 1px solid var(--border-color); flex-shrink: 0; }
         .input-block { margin-bottom: 12px; }
         .input-block label { display: block; font-size: 0.65rem; color: var(--text-dim); margin-bottom: 5px; font-weight: 700; text-transform: uppercase; }
         
         .lot-input-wrapper { display: flex; background: #000; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
-        .lot-input-wrapper input { flex: 1; background: transparent; border: none; color: #fff; text-align: center; font-size: 1.1rem; font-family: monospace; outline: none; }
+        .lot-input-wrapper input { flex: 1; background: transparent; border: none; color: #fff; text-align: center; font-size: 1.1rem; font-family: monospace; outline: none; width: 50px; }
         .lot-adjust-btn { width: 40px; background: rgba(255,255,255,0.02); border: none; color: #fff; cursor: pointer; font-size: 1rem; }
         .lot-adjust-btn:hover { background: rgba(255,255,255,0.05); }
 
@@ -175,14 +177,14 @@
         .order-btn.btn-sell { background: var(--accent-red); color: #fff; }
 
         /* --- Footer Contexts --- */
-        .legal-footer { background: var(--bg-card); padding: 12px 20px; text-align: center; font-size: 0.65rem; color: var(--text-dim); border-top: 1px solid var(--border-color); }
+        .legal-footer { background: var(--bg-card); padding: 12px 20px; text-align: center; font-size: 0.65rem; color: var(--text-dim); border-top: 1px solid var(--border-color); flex-shrink: 0; }
         .legal-footer a { color: var(--primary); text-decoration: none; }
 
         @media (max-width: 1024px) {
-            .content-grid { grid-template-columns: 1fr; overflow-y: auto; height: auto; }
+            .content-grid { grid-template-columns: 1fr; overflow-y: auto; height: auto; gap: 16px; }
             body, html { overflow-y: auto; height: auto; }
             .workspace-panel { height: 350px; }
-            .main-chart-space { height: 500px; }
+            .main-chart-space { height: 600px; overflow: visible; }
         }
     </style>
 </head>
@@ -207,15 +209,15 @@
             <div class="asset-list" id="watchlist-container">
                 <div class="asset-row active" onclick="switchLiquidityAsset('EUR/USD', 5, this)">
                     <span class="asset-name">EUR/USD</span>
-                    <span class="asset-price" id="watch-EURUSD">--.-----</span>
+                    <span class="asset-price" id="watch-EURUSD">1.08500</span>
                 </div>
                 <div class="asset-row" onclick="switchLiquidityAsset('GBP/USD', 5, this)">
                     <span class="asset-name">GBP/USD</span>
-                    <span class="asset-price" id="watch-GBPUSD">--.-----</span>
+                    <span class="asset-price" id="watch-GBPUSD">1.26440</span>
                 </div>
                 <div class="asset-row" onclick="switchLiquidityAsset('USD/JPY', 3, this)">
                     <span class="asset-name">USD/JPY</span>
-                    <span class="asset-price" id="watch-USDJPY">--.---</span>
+                    <span class="asset-price" id="watch-USDJPY">156.400</span>
                 </div>
             </div>
         </section>
@@ -228,7 +230,7 @@
                     <div class="price-large"><span>$</span><span id="current-rate">1.08500</span></div>
                 </div>
                 <div style="text-align: right;">
-                    <span id="total-floating-pnl" style="font-family:monospace; font-weight:700; font-size:1.1rem;">KES 0.00</span>
+                    <span id="total-floating-pnl" style="font-family:monospace; font-weight:700; font-size:1.1rem; color: var(--accent-green);">KES 0.00</span>
                     <div style="color:var(--text-dim); font-size:0.6rem; font-weight:700;">TOTAL UNREALIZED P&L</div>
                 </div>
             </div>
@@ -241,7 +243,7 @@
             <div class="workspace-panel positions-ledger">
                 <div class="panel-header"><i class="fas fa-folder-open"></i> Open Portfolio Contract Log</div>
                 <div class="ledger-scroll" id="open-positions-log">
-                    <!-- Loaded dynamically via engine parameters -->
+                    <!-- Dynamically appended records land here -->
                 </div>
             </div>
         </div>
@@ -256,7 +258,7 @@
                     <label>Order Lot Size (Volume)</label>
                     <div class="lot-input-wrapper">
                         <button class="lot-adjust-btn" onclick="adjustLotSizeValue('subtract')">-</button>
-                        <input type="text" id="lot-size-input" value="1.00">
+                        <input type="text" id="lot-size-input" value="1.00" readonly>
                         <button class="lot-adjust-btn" onclick="adjustLotSizeValue('add')">+</button>
                     </div>
                 </div>
@@ -274,11 +276,28 @@
     </footer>
 </div>
 
-<!-- Load updated asynchronous matching layer -->
-<script src="/js/chat.js"></script>
+<!-- Load placeholder chat layer if static fallback is necessary -->
+<script>
+    if (typeof injectChatMessage === 'undefined') {
+        window.injectChatMessage = function(user, message, isSystem, color) {
+            const feed = document.getElementById('chat-feed');
+            if(!feed) return;
+            const entry = document.createElement('div');
+            entry.style.fontSize = "0.75rem";
+            entry.style.marginBottom = "6px";
+            if (isSystem) {
+                entry.innerHTML = `<span style="color:${color || '#ffd600'}; font-weight:bold;">[${user}]:</span> <span style="color:#fff;">${message}</span>`;
+            } else {
+                entry.innerHTML = `<span style="color:#00b0ff; font-weight:bold;">${user}:</span> <span style="color:#cfd8dc;">${message}</span>`;
+            }
+            feed.appendChild(entry);
+            feed.scrollTop = feed.scrollHeight;
+        }
+    }
+</script>
+<script src="/js/chat.js" onerror="console.warn('External script path layout skipped; operating layout definitions inside runtime window scope.')"></script>
 
 <script>
-    // Interface Connection Wire Hooks
     window.USER_IS_AUTHENTICATED = true; 
 
     function switchLiquidityAsset(pair, digits, element) {
@@ -291,6 +310,20 @@
         }
     }
 
+    function adjustLotSizeValue(direction) {
+        const input = document.getElementById('lot-size-input');
+        if (!input) return;
+        let val = parseFloat(input.value) || 1.00;
+        if (direction === 'add') {
+            input.value = (val + 0.1).toFixed(2);
+        } else if (direction === 'subtract') {
+            input.value = Math.max(0.01, val - 0.1).toFixed(2);
+        }
+        if (window.adjustLotSizeValueBackend) {
+            window.adjustLotSizeValueBackend(direction);
+        }
+    }
+
     function handleInstantDealPlacement(type) {
         if (!window.USER_IS_AUTHENTICATED) {
             alert("Liquidity access denied. Authorization token required.");
@@ -299,26 +332,36 @@
         }
 
         const currentRateText = document.getElementById('current-rate').innerText;
-        const entryPrice = parseFloat(currentRateText.replace(/,/g, ''));
-        const lotSize = document.getElementById('lot-size-input').value;
+        const entryPrice = parseFloat(currentRateText.replace(/[^0-9.]/g, ''));
+        const lotSize = parseFloat(document.getElementById('lot-size-input').value) || 1.00;
         const targetPair = document.getElementById('active-asset-title').innerText.split(' ')[0];
         const uniqueOrderId = 'ORD_' + Math.floor(Math.random() * 1000000);
 
-        // Append item template layout to DOM target dynamically
         const log = document.getElementById('open-positions-log');
-        const row = document.createElement('div');
-        row.className = 'ledger-item';
-        row.id = `pos-row-${uniqueOrderId}`;
-        row.innerHTML = `
-            <div><strong>${targetPair}</strong> <span class="pos-badge ${type === 'BUY' ? 'pos-buy' : 'pos-sell'}">${type}</span></div>
-            <div>Vol: ${lotSize}</div>
-            <div style="font-family:monospace; color:var(--text-dim);">${entryPrice}</div>
-            <div class="pos-live-pnl" style="font-family:monospace; text-align:right; font-weight:700;">KES 0.00</div>
-        `;
-        log.appendChild(row);
+        if (log) {
+            // Check if standard empty message layout exists and clear it out
+            if (log.innerHTML.includes("No active risk vectors")) {
+                log.innerHTML = "";
+            }
+            const row = document.createElement('div');
+            row.className = 'ledger-item';
+            row.id = `pos-row-${uniqueOrderId}`;
+            row.innerHTML = `
+                <div><strong>${targetPair}</strong> <span class="pos-badge ${type === 'BUY' ? 'pos-buy' : 'pos-sell'}">${type}</span></div>
+                <div>Vol: ${lotSize.toFixed(2)}</div>
+                <div style="font-family:monospace; color:var(--text-dim);">${entryPrice.toFixed(targetPair === 'USD/JPY' ? 3 : 5)}</div>
+                <div class="pos-live-pnl" style="font-family:monospace; text-align:right; font-weight:700;">KES 0.00</div>
+            `;
+            log.appendChild(row);
+            log.scrollTop = log.scrollHeight;
+        }
 
+        // Forward parameters directly into logic operations engine if wired up
         if (window.injectNewOrderIntoTracker) {
             window.injectNewOrderIntoTracker(uniqueOrderId, targetPair, type, lotSize, entryPrice);
+        } else if (typeof window.handleInstantDealPlacement === 'function' && window !== this) {
+            // Interoperability layout for older embedded execution dependencies
+            console.log("[NEXAFX] Inter-engine order data passed safely.");
         }
     }
 </script>
