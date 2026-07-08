@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXAFX CORE | Institutional Hyper-Terminal</title>
+    <title>NEXAFX TRADE | Professional Trader Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -28,7 +28,7 @@
 
         .app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; filter: blur(0px); transition: filter 0.4s ease; }
 
-        /* --- PRELOADER SYSTEM (INSTITUTIONAL GATEWAY HANDSHAKE) --- */
+        /* --- PRELOADER SYSTEM --- */
         #nexafx-preloader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #030508;
             z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -188,91 +188,91 @@
 <body>
 
 <div id="nexafx-preloader">
-    <div class="loader-brand">NEXAFX<span>CORE</span></div>
+    <div class="loader-brand">NEXAFX<span>TRADE</span></div>
     <div class="loader-track">
         <div class="loader-bar" id="preloader-bar"></div>
     </div>
-    <div class="loader-status" id="preloader-status">Initializing Workspace Modules...</div>
+    <div class="loader-status" id="preloader-status">Initializing Live Trading Workspace...</div>
 </div>
 
 <div id="nexafx-auth-screen">
     <div class="auth-card">
         <div class="auth-sidebar">
             <div>
-                <h3 style="font-weight:900; font-size:1.3rem; letter-spacing:0.5px;">NEXAFX<span>CORE</span></h3>
-                <p style="color:var(--text-dim); font-size:0.7rem; margin-top:4px; text-transform:uppercase;">Institutional Liquidity Gateway</p>
+                <h3 style="font-weight:900; font-size:1.3rem; letter-spacing:0.5px;">NEXAFX<span>TRADE</span></h3>
+                <p style="color:var(--text-dim); font-size:0.7rem; margin-top:4px; text-transform:uppercase;">Secure Liquidity Gateway</p>
             </div>
             <div class="auth-sidebar-stats">
                 <div class="auth-sidebar-stat-row">
-                    <span style="color:var(--text-dim)">ECN PIPELINE</span>
+                    <span style="color:var(--text-dim)">ECN CONNECTION</span>
                     <span style="color:var(--high-green)">ACTIVE // SECURE</span>
                 </div>
                 <div class="auth-sidebar-stat-row">
-                    <span style="color:var(--text-dim)">AGGREGATED SPREADS</span>
+                    <span style="color:var(--text-dim)">LIVE SPREADS</span>
                     <span style="color:#fff">FROM 0.0 PIPS</span>
                 </div>
                 <div class="auth-sidebar-stat-row">
-                    <span style="color:var(--text-dim)">CLEARING LOCATION</span>
-                    <span style="color:var(--gold)">NAIROBI HUB</span>
+                    <span style="color:var(--text-dim)">TRADING HUB</span>
+                    <span style="color:var(--gold)">NAIROBI OFFICE</span>
                 </div>
             </div>
-            <p style="font-size:0.6rem; color:var(--text-dim); line-height:1.3;">Warning: Access is restricted to authorized account operators. Financial operations contain margin risk variance profiles.</p>
+            <p style="font-size:0.6rem; color:var(--text-dim); line-height:1.3;">Warning: Access is restricted to authorized traders. Forex and contract operations contain financial leverage risk profiles.</p>
         </div>
         
         <div class="auth-main-form" id="auth-form-login">
-            <h2 class="auth-title">Operator Handshake</h2>
-            <p class="auth-subtitle">Enter terminal authentication details to build data pipeline access.</p>
+            <h2 class="auth-title">Trader Login</h2>
+            <p class="auth-subtitle">Enter your account credentials to access your secure live dashboard.</p>
             <div class="auth-form-group">
-                <label>Terminal Identity / Email</label>
+                <label>Email Address</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-user-shield"></i>
-                    <input type="email" class="auth-input" placeholder="operator@nexafxtrade.com">
+                    <input type="email" class="auth-input" placeholder="trader@nexafxtrade.com">
                 </div>
             </div>
             <div class="auth-form-group">
-                <label>Access Key Cipher</label>
+                <label>Password</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-key"></i>
                     <input type="password" class="auth-input" placeholder="••••••••••••">
                 </div>
             </div>
-            <button class="auth-submit-btn" onclick="bypassAuthSequence()">Initialize Session</button>
-            <p class="auth-switch-mode">New node registration? <span onclick="switchAuthMode('REGISTER')">Create Routing Account</span></p>
+            <button class="auth-submit-btn" onclick="navigateToPage('/login')">Sign In to Dashboard</button>
+            <p class="auth-switch-mode">Don't have an account? <span onclick="switchAuthMode('REGISTER')">Register Trading Account</span></p>
         </div>
 
         <div class="auth-main-form" id="auth-form-register" style="display:none;">
-            <h2 class="auth-title">Register Broker Node</h2>
-            <p class="auth-subtitle">Provision a dedicated clearing balance channel inside the core engine.</p>
+            <h2 class="auth-title">Register Trading Account</h2>
+            <p class="auth-subtitle">Create a dedicated market balance account inside the core execution platform.</p>
             <div class="auth-form-group">
-                <label>Full Operator Name</label>
+                <label>Full Name</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-id-badge"></i>
                     <input type="text" class="auth-input" placeholder="John Doe">
                 </div>
             </div>
             <div class="auth-form-group">
-                <label>Terminal Identity / Email</label>
+                <label>Email Address</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-envelope"></i>
-                    <input type="email" class="auth-input" placeholder="operator@nexafxtrade.com">
+                    <input type="email" class="auth-input" placeholder="trader@nexafxtrade.com">
                 </div>
             </div>
             <div class="auth-form-group">
-                <label>Secure Key Cipher</label>
+                <label>Secure Password</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-lock"></i>
                     <input type="password" class="auth-input" placeholder="••••••••••••">
                 </div>
             </div>
-            <button class="auth-submit-btn" onclick="bypassAuthSequence()">Construct Allocation Profile</button>
-            <p class="auth-switch-mode">Possess existing credentials? <span onclick="switchAuthMode('LOGIN')">Execute Operator Handshake</span></p>
+            <button class="auth-submit-btn" onclick="navigateToPage('/register')">Create My Account</button>
+            <p class="auth-switch-mode">Already have an account? <span onclick="switchAuthMode('LOGIN')">Go to Trader Login</span></p>
         </div>
     </div>
 </div>
 
 <div class="app-container" id="main-terminal-layout" style="display:none;">
     <header>
-        <div class="brand">NEXAFX<span>CORE</span></div>
+        <div class="brand">NEXAFX<span>TRADE</span></div>
         <div class="account-meta-strip">
             <div class="meta-stat-node"><span class="m-lbl">Live Balance</span><span class="m-val" id="top-balance" style="color:var(--gold)">1,500,000.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Equity</span><span class="m-val" id="top-equity">1,500,000.00</span></div>
@@ -285,13 +285,13 @@
 
     <div class="status-sub-bar">
         <div>
-            <span><i class="fas fa-server" style="color:var(--high-green)"></i> SERVER: <b>NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
-            <span>LOGIN ID: <b style="color:#fff;">8942105</b></span> &nbsp;|&nbsp;
-            <span>LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
-            <span>TYPE: <b style="color:var(--gold);">INSTITUTIONAL RAW ECN</b></span>
+            <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b>NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
+            <span>TRADER ID: <b style="color:#fff;">8942105</b></span> &nbsp;|&nbsp;
+            <span>ACCOUNT LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
+            <span>TYPE: <b style="color:var(--gold);">RAW ECN ACCOUNT</b></span>
         </div>
         <div>
-            <span>MARKET SESSION: <b style="color:#fff;" id="lbl-market-session">LONDON / NEW YORK INTERSECT</b></span> &nbsp;|&nbsp;
+            <span>MARKET SESSION: <b style="color:#fff;" id="lbl-market-session">LONDON / NEW YORK OVERLAP</b></span> &nbsp;|&nbsp;
             <span id="live-utc-clock" style="color:var(--gold); font-family:monospace;">00:00:00 UTC</span>
         </div>
     </div>
@@ -299,7 +299,7 @@
     <main class="master-workspace-grid">
         
         <section class="column-pane">
-            <div class="pane-section-header"><span><i class="fas fa-chart-line"></i> Liquidity Matrix Watch</span></div>
+            <div class="pane-section-header"><span><i class="fas fa-chart-line"></i> Market Watchlist</span></div>
             <div class="sub-tab-strip">
                 <button class="sub-tab-btn active" id="m-tab-forex" onclick="switchMarketCatalog('FOREX')">Forex</button>
                 <button class="sub-tab-btn" id="m-tab-crypto" onclick="switchMarketCatalog('CRYPTO')">Crypto</button>
@@ -309,7 +309,7 @@
             <div class="scrolling-list-area" id="market-watch-container">
             </div>
 
-            <div class="pane-section-header" style="border-top: 1px solid var(--border-color)"><span><i class="fas fa-newspaper"></i> Macro Intelligence Feed</span></div>
+            <div class="pane-section-header" style="border-top: 1px solid var(--border-color)"><span><i class="fas fa-newspaper"></i> Economic Market Calendar Feed</span></div>
             <div class="scrolling-list-area" id="macro-news-feed" style="background: rgba(0,0,0,0.15);">
             </div>
         </section>
@@ -318,7 +318,7 @@
             <div class="hero-ticker-ribbon">
                 <div>
                     <h2 id="active-ticker-name" style="font-size:1.3rem; font-weight:800;">EUR/USD</h2>
-                    <span style="font-size:0.65rem; color:var(--text-dim); font-weight:700; text-transform:uppercase;">Institutional Consolidated Liquidity Pool Feed</span>
+                    <span style="font-size:0.65rem; color:var(--text-dim); font-weight:700; text-transform:uppercase;">Live Liquidity Interbank Data Pricing Feed</span>
                 </div>
                 <div style="text-align:right;">
                     <div style="font-family:monospace; font-size:1.8rem; font-weight:900;" id="hero-live-bid">1.08524</div>
@@ -342,8 +342,8 @@
                     <div class="tool-cluster">
                         <button class="t-btn" id="tech-t-ma" onclick="toggleOverlayTechnicalIndicator('MA')">SMA</button>
                         <button class="t-btn" id="tech-t-ema" onclick="toggleOverlayTechnicalIndicator('EMA')">EMA</button>
-                        <button class="t-btn" id="tech-t-bb" onclick="toggleOverlayTechnicalIndicator('BB')">Bollinger</button>
-                        <button class="t-btn" id="tech-t-rsi" onclick="toggleOverlayTechnicalIndicator('RSI')">RSI Matrix</button>
+                        <button class="t-btn" id="tech-t-bb" onclick="toggleOverlayTechnicalIndicator('BB')">Bollinger Band</button>
+                        <button class="t-btn" id="tech-t-rsi" onclick="toggleOverlayTechnicalIndicator('RSI')">RSI Oscillator</button>
                     </div>
                 </div>
                 <div class="chart-wrapper-box">
@@ -353,10 +353,10 @@
 
             <div class="bottom-ledger-terminal">
                 <div class="sub-tab-strip" style="background: #070b12;">
-                    <button class="sub-tab-btn active" id="led-tab-pos" onclick="alterTerminalLedgerFocus('POSITIONS')">Open Risk Positions (<span id="count-pos-lbl">0</span>)</button>
-                    <button class="sub-tab-btn" id="led-tab-ord" onclick="alterTerminalLedgerFocus('ORDERS')">Pending Order Matrix (<span id="count-ord-lbl">0</span>)</button>
-                    <button class="sub-tab-btn" id="led-tab-anl" onclick="alterTerminalLedgerFocus('ANALYTICS')">System Workspace Performance Analytics</button>
-                    <button class="sub-tab-btn" id="led-tab-jrn" onclick="alterTerminalLedgerFocus('JOURNAL')">Trading Operational Journal Log</button>
+                    <button class="sub-tab-btn active" id="led-tab-pos" onclick="alterTerminalLedgerFocus('POSITIONS')">Open Trades (<span id="count-pos-lbl">0</span>)</button>
+                    <button class="sub-tab-btn" id="led-tab-ord" onclick="alterTerminalLedgerFocus('ORDERS')">Pending Orders (<span id="count-ord-lbl">0</span>)</button>
+                    <button class="sub-tab-btn" id="led-tab-anl" onclick="alterTerminalLedgerFocus('ANALYTICS')">Trading Account Analytics</button>
+                    <button class="sub-tab-btn" id="led-tab-jrn" onclick="alterTerminalLedgerFocus('JOURNAL')">Trading History Logs</button>
                 </div>
                 
                 <div class="ledger-table-canvas" id="terminal-ledger-display-engine">
@@ -365,11 +365,11 @@
         </section>
 
         <section class="column-pane right-pane">
-            <div class="pane-section-header"><span><i class="fas fa-ticket-alt"></i> Unified Smart Routing Ticket</span></div>
+            <div class="pane-section-header"><span><i class="fas fa-ticket-alt"></i> Execution Order Ticket</span></div>
             <div class="execution-ticket-panel">
                 <div class="ticket-input-container">
                     <div class="form-element-node">
-                        <label>Order Frame Mechanism</label>
+                        <label>Order Execution Mode</label>
                         <select id="ticket-order-type" onchange="adjustOrderFormFields()">
                             <option value="MARKET">Instant Market Execution</option>
                             <option value="BUY_LIMIT">Buy Limit</option>
@@ -379,37 +379,37 @@
                         </select>
                     </div>
                     <div class="form-element-node" id="box-execution-price" style="display:none;">
-                        <label>Target Execution Price</label>
+                        <label>Target Execution Entry Price</label>
                         <input type="number" id="ticket-trigger-price" value="1.08500" step="0.00001">
                     </div>
                     <div class="form-element-node">
-                        <label>Lot Size Volume Selector</label>
+                        <label>Lot Size / Volume Amount</label>
                         <input type="number" id="ticket-volume-lots" value="1.00" step="0.1" min="0.01" oninput="calculateRiskTelemetryMatrices()">
                     </div>
                     <div class="form-element-node">
-                        <label>Dynamic Risk Exposure Allocation per Trade</label>
+                        <label>Risk Allocation Management Percentage</label>
                         <select id="ticket-risk-percent" onchange="applyRiskPercentageCalculation()">
-                            <option value="CUSTOM">Manual Custom Specification</option>
-                            <option value="0.01">1% Account Capital Volatility Bound</option>
-                            <option value="0.02">2% Account Capital Volatility Bound</option>
-                            <option value="0.05">5% Aggressive Tier Risk Boundary</option>
+                            <option value="CUSTOM">Manual Custom Lot Size Setting</option>
+                            <option value="0.01">Use 1% Total Account Capital Risk</option>
+                            <option value="0.02">Use 2% Total Account Capital Risk</option>
+                            <option value="0.05">Use 5% Aggressive Account Capital Risk</option>
                         </select>
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                         <div class="form-element-node">
-                            <label>Stop Loss Protective Anchor (SL)</label>
-                            <input type="number" id="ticket-sl" placeholder="No Anchor" step="0.00001" oninput="calculateRiskTelemetryMatrices()">
+                            <label>Stop Loss Protect Line (SL)</label>
+                            <input type="number" id="ticket-sl" placeholder="No Limit" step="0.00001" oninput="calculateRiskTelemetryMatrices()">
                         </div>
                         <div class="form-element-node">
-                            <label>Take Profit Target Order (TP)</label>
+                            <label>Take Profit Target Line (TP)</label>
                             <input type="number" id="ticket-tp" placeholder="No Target" step="0.00001">
                         </div>
                     </div>
                 </div>
 
                 <div style="background:#030508; border:1px solid var(--border-color); padding:8px; border-radius:6px; font-size:0.7rem; display:flex; flex-direction:column; gap:4px;">
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Calculated Margin Risk Drawdown:</span><span id="calc-risk-kes" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Required Maintenance Collateral:</span><span id="calc-margin-req" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Calculated Maximum Risk Drop:</span><span id="calc-risk-kes" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Required Trade Margin Collateral:</span><span id="calc-margin-req" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
                 </div>
 
                 <div class="dual-action-triggers">
@@ -418,37 +418,37 @@
                 </div>
             </div>
 
-            <div class="pane-section-header" style="border-top:1px solid var(--border-color)"><span><i class="fas fa-brain"></i> Neural Core Signals &amp; Mirror Pools</span></div>
+            <div class="pane-section-header" style="border-top:1px solid var(--border-color)"><span><i class="fas fa-brain"></i> AI Trading Analyst Signals</span></div>
             <div class="execution-ticket-panel" style="flex: 0.8; background:rgba(0,0,0,0.1);">
                 <div style="background:rgba(0,176,255,0.03); border:1px solid rgba(0,176,255,0.15); border-radius:6px; padding:8px; font-size:0.75rem;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                        <span style="color:var(--neon-blue); font-weight:800;"><i class="fas fa-robot"></i> NEXA-AI PREDICTION ENGINE</span>
-                        <span style="background:var(--high-green); color:#000; font-size:0.55rem; padding:1px 4px; font-weight:900; border-radius:2px;">92.4% CONVICTION</span>
+                        <span style="color:var(--neon-blue); font-weight:800;"><i class="fas fa-robot"></i> NEXA-AI ALGO SUGGESTION</span>
+                        <span style="background:var(--high-green); color:#000; font-size:0.55rem; padding:1px 4px; font-weight:900; border-radius:2px;">92.4% ACCURACY SCORE</span>
                     </div>
-                    <p style="color:var(--text-dim); font-size:0.7rem; line-height:1.2;">Structural trend vector divergence maps spatial volume pooling safely above institutional support bands.</p>
-                    <div style="margin-top:4px; font-weight:700; color:#fff;">RECOMMENDATION: <span style="color:var(--high-green)">SCALED LONG BIAS</span></div>
+                    <p style="color:var(--text-dim); font-size:0.7rem; line-height:1.2;">Structural trend divergence maps high buyer pooling volume safely above institutional support bands.</p>
+                    <div style="margin-top:4px; font-weight:700; color:#fff;">STRATEGY SIGNAL: <span style="color:var(--high-green)">BUY LIMIT ACCUMULATION BIAS</span></div>
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:4px; margin-top:2px;">
-                    <span style="font-size:0.6rem; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Top Verified Institutional Master Allocators</span>
+                    <span style="font-size:0.6rem; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Top Account Master Traders Copy Pools</span>
                     <div style="background:#030508; border:1px solid var(--border-color); padding:6px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
-                        <div><b style="font-size:0.75rem;">Alpha Quant Vault</b><br><span style="font-size:0.6rem; color:var(--text-dim)">Followers: 14.8K | ROI: +244.5%</span></div>
-                        <button class="t-btn" style="border-color:var(--gold); color:var(--gold)" onclick="toggleCopyMirrorAllocations('Alpha Quant Vault')">Mirror Allocation</button>
+                        <div><b style="font-size:0.75rem;">Alpha Quant Fund</b><br><span style="font-size:0.6rem; color:var(--text-dim)">Followers: 14.8K | Return (ROI): +244.5%</span></div>
+                        <button class="t-btn" style="border-color:var(--gold); color:var(--gold)" onclick="toggleCopyMirrorAllocations('Alpha Quant Fund')">Copy Portfolio Trades</button>
                     </div>
                 </div>
             </div>
 
-            <div class="pane-section-header" style="border-top:1px solid var(--border-color)"><span><i class="fas fa-wallet"></i> Capital Clearing Operations</span></div>
+            <div class="pane-section-header" style="border-top:1px solid var(--border-color)"><span><i class="fas fa-wallet"></i> Wallet Funding Accounts</span></div>
             <div style="padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:6px; background:var(--panel);">
-                <button class="t-btn" style="background:rgba(0,230,118,0.05); border-color:var(--high-green); color:#fff; padding:6px;" onclick="triggerCapitalRoute('DEPOSIT')"><i class="fas fa-plus-circle" style="color:var(--high-green)"></i> Secure Deposit</button>
-                <button class="t-btn" style="background:rgba(255,23,68,0.05); border-color:var(--low-red); color:#fff; padding:6px;" onclick="triggerCapitalRoute('WITHDRAWAL')"><i class="fas fa-minus-circle" style="color:var(--low-red)"></i> Secure Extraction</button>
+                <button class="t-btn" style="background:rgba(0,230,118,0.05); border-color:var(--high-green); color:#fff; padding:6px;" onclick="navigateToPage('/deposit')"><i class="fas fa-plus-circle" style="color:var(--high-green)"></i> Secure Deposit</button>
+                <button class="t-btn" style="background:rgba(255,23,68,0.05); border-color:var(--low-red); color:#fff; padding:6px;" onclick="navigateToPage('/withdraw')"><i class="fas fa-minus-circle" style="color:var(--low-red)"></i> Secure Withdrawal</button>
             </div>
         </section>
     </main>
 
     <footer>
-        <div><span>Clearing Infrastructure: <b>PROSPORT AFRICA LTD Clearing House</b></span> &nbsp;|&nbsp; <span>Regulated Workspace Environment Area</span></div>
-        <div><span>Nexafxtrade Institutional Hub: Binaa Mall, 2nd Floor, Langata Rd, Nairobi</span></div>
+        <div><span>Liquidity Regulation Clearinghouse Partner: <b>PROSPORT AFRICA LTD</b></span> &nbsp;|&nbsp; <span>Regulated Secure Financial Trading Workspace Platform</span></div>
+        <div><span>Nexafxtrade Regional Offices: Binaa Mall, 2nd Floor, Langata Rd, Nairobi, Kenya</span></div>
     </footer>
 </div>
 
@@ -486,7 +486,7 @@
         "ETH/USD": { category: "CRYPTO", price: 3342.25, bidOffset: -0.25, askOffset: 0.25, digits: 2, spreadPips: 5.0, changePct: -1.15, high: 3450.00, low: 3290.00, multiplier: 1 },
         "XAU/USD": { category: "COMMODITY", price: 2342.10, bidOffset: -0.15, askOffset: 0.15, digits: 2, spreadPips: 3.0, changePct: 0.85, high: 2360.00, low: 2330.00, multiplier: 100 },
         "USOIL": { category: "COMMODITY", price: 78.45, bidOffset: -0.02, askOffset: 0.02, digits: 2, spreadPips: 4.0, changePct: 0.32, high: 79.20, low: 77.90, multiplier: 100 },
-        "US30": { category: "INDICES", price: 39120.00, bidOffset: -1.00, askOffset: 1.00, digits: 2, spreadPips: 2.0, changePct: 0.15, high: 39300.00, low: 38950.00, multiplier: 10 }
+        "US30": { category: "INDICES", price: 39120.00, bidOffset: -1.00, askOffset: 1.00, digits: 2, spreadPips: 2.0, changePct: 0.15, high: 39300.00, low: 38950.00, multiplier: 10
     };
 
     let macroCalendarEvents = [
@@ -496,8 +496,8 @@
     ];
 
     let systemJournalRegistry = [
-        { date: "2026-07-06", note: "Disciplined execution on technical retest of psychological cluster block framework.", status: "Compliant" },
-        { date: "2026-07-07", note: "Scaled exposure parameters downward ahead of top tier retail macro announcements.", status: "Defensive" }
+        { date: "2026-07-06", note: "Disciplined execution on technical retest of structural resistance levels.", status: "Compliant" },
+        { date: "2026-07-07", note: "Scaled exposure parameters downward ahead of major high-impact global macro news events.", status: "Defensive" }
     ];
 
     let activeSelectedPair = "EUR/USD";
@@ -521,13 +521,26 @@
         }, 400);
     });
 
-    /* ================= NEW WORKFLOW CONTROLLER ACTIONS ================= */
+    /* ================= DYNAMIC PAGE REDIRECTION NAVIGATION ROUTING ================= */
+    function navigateToPage(endpointRoute) {
+        console.log("Routing traffic destination explicitly toward client view module: " + endpointRoute);
+        
+        // This function manages routing configurations gracefully
+        if (endpointRoute === '/login' || endpointRoute === '/register') {
+            bypassAuthSequence(); // Run login state module initialization block setup
+        } else {
+            // For separate file apps or Next.js route structures, it forwards directly:
+            window.location.href = endpointRoute;
+        }
+    }
+    /* =============================================================================== */
+
     function runInstitutionalPreloader() {
         const statuses = [
-            "Connecting to ECN routing arrays...",
-            "Syncing consolidated interbank liquidity aggregates...",
-            "Verifying security handshake hashes...",
-            "Finalizing terminal view mapping..."
+            "Connecting to live ECN order arrays...",
+            "Syncing consolidated market liquidity pricing feeds...",
+            "Verifying data link security handshake codes...",
+            "Finalizing trader platform modules view layout..."
         ];
         let currentStep = 0;
         const bar = document.getElementById("preloader-bar");
@@ -547,7 +560,6 @@
                 document.getElementById("nexafx-preloader").style.opacity = "0";
                 setTimeout(() => {
                     document.getElementById("nexafx-preloader").style.display = "none";
-                    // Transition smoothly straight into Authentication Wall
                     document.getElementById("nexafx-auth-screen").style.display = "flex";
                 }, 600);
             }
@@ -565,16 +577,13 @@
     }
 
     function bypassAuthSequence() {
-        // Smooth slide out of credentials panel
         document.getElementById("nexafx-auth-screen").style.opacity = "0";
         setTimeout(() => {
             document.getElementById("nexafx-auth-screen").style.display = "none";
             
-            // Build and display main engine application interface frames
             const terminal = document.getElementById("main-terminal-layout");
             terminal.style.display = "flex";
             
-            // Trigger canvas binding calculations inside view window space
             canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
             populateStructuralAssetWatch();
             populateMacroIntelligenceFeed();
@@ -582,7 +591,6 @@
             rebuildTerminalLedgerView();
         }, 500);
     }
-    /* =================================================================== */
 
     function switchMarketCatalog(category) {
         activeCatalogFilter = category;
@@ -609,7 +617,7 @@
 
             let txtColor = node.changePct >= 0 ? 'var(--high-green)' : 'var(--low-red)';
             row.innerHTML = `
-                <div class="pair-name"><b>${symbol}</b><br><span style="font-size:0.55rem; color:var(--text-dim)">Sp: ${node.spreadPips} Pips</span></div>
+                <div class="pair-name"><b>${symbol}</b><br><span style="font-size:0.55rem; color:var(--text-dim)">Spread: ${node.spreadPips} Pips</span></div>
                 <div class="pair-price" style="font-family:monospace; text-align:right; font-weight:700;" id="watch-val-${symbol.replace('/','-')}">${node.price.toFixed(node.digits)}</div>
                 <div style="text-align:right; font-size:0.7rem; font-weight:700; color:${txtColor}">${node.changePct >= 0 ? '+' : ''}${node.changePct.toFixed(2)}%</div>
             `;
@@ -626,7 +634,7 @@
             el.className = 'macro-news-card';
             el.innerHTML = `
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
-                    <span><span class="impact-badge ${evt.impact==='high'?'impact-high':'impact-med'}">${evt.impact}</span><b>${evt.asset}</b></span>
+                    <span><span class="impact-badge ${evt.impact==='high'?'impact-high':'impact-med'}">${evt.impact} Impact</span><b>${evt.asset}</b></span>
                     <span style="font-family:monospace; color:var(--gold); font-weight:700;">${evt.time}</span>
                 </div>
                 <div style="color:#cfd8dc; font-size:0.7rem;">${evt.event}</div>
@@ -798,7 +806,7 @@
                 </div>
             `;
             if (openPositionsRegister.length === 0) {
-                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">No live systematic risk positions active in core runtime workspace memory.</div>`;
+                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">No open trading positions are active in your dashboard workspace memory.</div>`;
             } else {
                 openPositionsRegister.forEach(pos => {
                     let livePrice = liquidityCatalog[pos.pair].price;
@@ -832,11 +840,11 @@
             let container = document.createElement('div');
             container.innerHTML = `
                 <div class="ledger-grid-header" style="grid-template-columns: 1.5fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr;">
-                    <div>Order Token ID</div><div>Target Asset</div><div>Order Mapping Mechanism</div><div>Volume Size</div><div>Trigger Target Price</div><div>Stop Loss Anchor</div><div>Cancellation Action</div>
+                    <div>Order Token ID</div><div>Target Asset</div><div>Order Type</div><div>Volume Size</div><div>Target Entry Price</div><div>Stop Loss Level</div><div>Cancellation Action</div>
                 </div>
             `;
             if (pendingOrdersRegister.length === 0) {
-                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">Conditional pending matrix array container matches zero records.</div>`;
+                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">Conditional pending matrix order arrays match zero entries.</div>`;
             } else {
                 pendingOrdersRegister.forEach(ord => {
                     let row = document.createElement('div');
@@ -849,7 +857,7 @@
                         <div>${ord.lots.toFixed(2)}</div>
                         <div style="font-family:monospace">${ord.triggerPrice}</div>
                         <div>${ord.sl ? ord.sl : '--'}</div>
-                        <div><button style="background:rgba(255,255,255,0.1); border:1px solid var(--border-color); color:#fff; padding:2px 6px; cursor:pointer; border-radius:3px;" onclick="clearPendingLimitOrder(${ord.id})">Purge Ticket</button></div>
+                        <div><button style="background:rgba(255,255,255,0.1); border:1px solid var(--border-color); color:#fff; padding:2px 6px; cursor:pointer; border-radius:3px;" onclick="clearPendingLimitOrder(${ord.id})">Cancel Ticket</button></div>
                     `;
                     container.appendChild(row);
                 });
@@ -860,10 +868,10 @@
             let container = document.createElement('div');
             container.className = 'analytics-grid-box';
             container.innerHTML = `
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">WORKSPACE SYSTEM WIN RATE</span><b style="font-size:1.2rem; color:var(--high-green)">68.42% Win Parity Profile</b></div>
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">PROFIT FACTOR COEFFICIENT</span><b style="font-size:1.2rem; color:var(--neon-blue)">2.41 Balanced Multiplier</b></div>
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">CONSOLIDATED ACCOUNT RATIOS</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Sharpe Metric: <b>1.85</b> | ROI Growth Baseline: <b>+${accountCapitalState.growthRate}%</b></span></div>
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">SYSTEMIC DRAWDOWN THRESHOLDS</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Max Allocation Limit: <b>KES ${accountCapitalState.maxDrawdownCap.toLocaleString()}</b></span></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">ACCOUNT TRADING WIN RATE</span><b style="font-size:1.2rem; color:var(--high-green)">68.42% Total Win Profile</b></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">PROFIT FACTOR SCORE</span><b style="font-size:1.2rem; color:var(--neon-blue)">2.41 Active Performance Ratio</b></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">CONSOLIDATED ACCOUNT GAINS</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Sharpe Metric Score: <b>1.85</b> | ROI Growth Baseline: <b>+${accountCapitalState.growthRate}%</b></span></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">MAX RISK MANAGEMENT DRAWDOWN</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Max Loss Boundary Threshold: <b>KES ${accountCapitalState.maxDrawdownCap.toLocaleString()}</b></span></div>
             `;
             viewport.appendChild(container);
         }
@@ -873,7 +881,7 @@
             systemJournalRegistry.forEach(j => {
                 container.innerHTML += `
                     <div style="border-bottom:1px solid var(--border-color); padding:6px 0;">
-                        <span style="color:var(--gold); font-size:0.65rem;">[${j.date}] Operational Risk Framework Vector Note:</span>
+                        <span style="color:var(--gold); font-size:0.65rem;">[${j.date}] Trading Account Log Entry Note:</span>
                         <p style="color:#fff; font-size:0.75rem; margin-top:2px;">${j.note} - <b style="color:var(--high-green)">${j.status}</b></p>
                     </div>
                 `;
@@ -1088,11 +1096,7 @@
     }
 
     function toggleCopyMirrorAllocations(vaultName) {
-        alert(`Mirror allocation handshake completed. Synchronization processing for [${vaultName}] completed successfully.`);
-    }
-
-    function triggerCapitalRoute(direction) {
-        alert(`Routing clearing validation data directly to secure localized client ledger endpoints for immediate ${direction} settlement.`);
+        alert(`Account sync complete. You are now successfully copying trades from [${vaultName}].`);
     }
 </script>
 </body>
