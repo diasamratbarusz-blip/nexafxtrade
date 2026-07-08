@@ -26,9 +26,10 @@
             height: 100vh; overflow: hidden; font-size: 13px;
         }
 
-        .app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; filter: blur(0px); transition: filter 0.4s ease; }
+        .app-view { display: none; width: 100%; height: 100vh; flex-direction: column; }
+        .app-view.active { display: flex; }
 
-        /* --- PRELOADER SYSTEM (INSTITUTIONAL GATEWAY HANDSHAKE) --- */
+        /* --- PRELOADER SYSTEM --- */
         #nexafx-preloader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #030508;
             z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -45,12 +46,8 @@
             50% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 12px rgba(0, 176, 255, 0.3)); }
         }
 
-        /* --- AUTHENTICATION INTERFACE MAPPING (CLEAN & PROFESSIONAL) --- */
-        #nexafx-auth-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 5, 8, 0.95);
-            z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px;
-            transition: all 0.5s ease;
-        }
+        /* --- AUTHENTICATION INTERFACE (ROUTED PAGES) --- */
+        .auth-container { background: rgba(3, 5, 8, 0.98); align-items: center; justify-content: center; padding: 20px; }
         .auth-card {
             width: 850px; max-width: 100%; height: 500px; background: var(--panel); border: 1px solid var(--border-color);
             border-radius: 12px; display: flex; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
@@ -76,82 +73,51 @@
         .auth-switch-mode { text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-dim); }
         .auth-switch-mode span { color: var(--neon-blue); cursor: pointer; font-weight: 600; }
 
-        /* --- Institutional Main Top Ribbon Header --- */
+        /* --- Header & Layout Elements --- */
         header {
             background: var(--panel); display: flex; align-items: center; justify-content: space-between;
             padding: 8px 16px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; height: 55px;
         }
-        .brand { font-size: 1.2rem; font-weight: 900; letter-spacing: 0.5px; }
+        .brand { font-size: 1.2rem; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; }
         .brand span { color: var(--neon-blue); font-weight: 400; }
-
-        .account-meta-strip { display: flex; gap: 12px; align-items: center; overflow-x: auto; max-width: 80%; }
-        .meta-stat-node {
-            background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);
-            padding: 4px 10px; border-radius: 4px; text-align: right; min-width: 105px; flex-shrink: 0;
-        }
+        .account-meta-strip { display: flex; gap: 12px; align-items: center; overflow-x: auto; max-width: 65%; }
+        .meta-stat-node { background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 4px; text-align: right; min-width: 105px; flex-shrink: 0; }
         .meta-stat-node .m-lbl { font-size: 0.55rem; color: var(--text-dim); display: block; font-weight: 700; text-transform: uppercase; }
         .meta-stat-node .m-val { font-family: monospace; font-size: 0.85rem; font-weight: 700; }
 
-        /* --- Operational Live Status Sub-Bar --- */
-        .status-sub-bar {
-            background: #030508; border-bottom: 1px solid var(--border-color); height: 26px;
-            display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
-            font-size: 0.65rem; font-weight: 700; color: var(--text-dim); flex-shrink: 0;
-        }
+        .nav-links { display: flex; gap: 10px; margin-left: 15px; }
+        .nav-btn { background: var(--panel-light); border: 1px solid var(--border-color); color: #fff; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; gap: 6px; }
+        .nav-btn:hover { border-color: var(--neon-blue); }
 
-        /* --- Core Master Workspace Layout --- */
-        .master-workspace-grid {
-            display: grid; grid-template-columns: 280px 1fr 300px; flex: 1; overflow: hidden; background: #020305;
-        }
-
+        .status-sub-bar { background: #030508; border-bottom: 1px solid var(--border-color); height: 26px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 0.65rem; font-weight: 700; color: var(--text-dim); flex-shrink: 0; }
+        .master-workspace-grid { display: grid; grid-template-columns: 280px 1fr 300px; flex: 1; overflow: hidden; background: #020305; }
         .column-pane { display: flex; flex-direction: column; background: var(--panel); border-right: 1px solid var(--border-color); overflow: hidden; }
         .column-pane.right-pane { border-right: none; border-left: 1px solid var(--border-color); }
+        .pane-section-header { background: rgba(26, 38, 54, 0.2); padding: 8px 12px; font-weight: 700; font-size: 0.7rem; color: var(--text-dim); border-bottom: 1px solid var(--border-color); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
 
-        .pane-section-header {
-            background: rgba(26, 38, 54, 0.2); padding: 8px 12px; font-weight: 700; font-size: 0.7rem;
-            color: var(--text-dim); border-bottom: 1px solid var(--border-color); text-transform: uppercase;
-            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
-        }
-
-        /* --- Multi-Asset Watchlist Engine Component --- */
         .sub-tab-strip { display: flex; background: #04060a; border-bottom: 1px solid var(--border-color); flex-shrink: 0; overflow-x: auto; }
         .sub-tab-btn { flex: 1; padding: 8px 4px; font-size: 0.6rem; font-weight: 700; border: none; background: transparent; color: var(--text-dim); cursor: pointer; text-transform: uppercase; text-align: center; white-space: nowrap; }
         .sub-tab-btn.active { color: #fff; background: var(--panel-light); border-bottom: 2px solid var(--neon-blue); }
-
         .scrolling-list-area { flex: 1; overflow-y: auto; }
-        .market-watch-row {
-            display: grid; grid-template-columns: 1.2fr 1fr 0.8fr; padding: 8px 12px;
-            border-bottom: 1px solid rgba(26,38,54,0.3); cursor: pointer; align-items: center;
-        }
+        
+        .market-watch-row { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr; padding: 8px 12px; border-bottom: 1px solid rgba(26,38,54,0.3); cursor: pointer; align-items: center; }
         .market-watch-row:hover, .market-watch-row.active { background: var(--panel-light); }
         .market-watch-row.active { border-left: 3px solid var(--neon-blue); }
 
-        /* --- Center Visualization Deck Layout --- */
         .center-display-deck { display: flex; flex-direction: column; overflow: hidden; background: #04070a; }
         .hero-ticker-ribbon { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
-        
         .chart-canvas-frame { flex: 1; position: relative; padding: 12px; display: flex; flex-direction: column; overflow: hidden; }
         .canvas-toolbar { display: flex; justify-content: space-between; margin-bottom: 8px; gap: 4px; flex-shrink: 0; flex-wrap: wrap; }
         .tool-cluster { display: flex; gap: 4px; }
         .t-btn { background: var(--panel-light); border: 1px solid var(--border-color); color: var(--text-dim); padding: 4px 8px; font-size: 0.65rem; font-weight: 700; border-radius: 3px; cursor: pointer; text-transform: uppercase; }
         .t-btn.active { color: #fff; border-color: var(--neon-blue); background: rgba(0,176,255,0.1); }
-
         .chart-wrapper-box { flex: 1; width: 100%; position: relative; background: #010204; border: 1px solid var(--border-color); border-radius: 6px; }
 
-        /* --- Horizontal Tabular Processing Terminal Ledger --- */
         .bottom-ledger-terminal { height: 240px; border-top: 1px solid var(--border-color); background: var(--panel); display: flex; flex-direction: column; flex-shrink: 0; }
-        .ledger-table-canvas { flex: 1; overflow-auto: auto; font-family: monospace; font-size: 0.75rem; width: 100%; overflow-x: auto; overflow-y: auto; }
-        
-        .ledger-grid-header {
-            display: grid; grid-template-columns: 1fr 0.6fr 1fr 1fr 1fr 1fr 1fr 0.8fr 0.8fr 1fr;
-            background: #04060a; padding: 8px 12px; font-weight: 700; color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; border-bottom: 1px solid var(--border-color); min-width: 900px;
-        }
-        .ledger-grid-row {
-            display: grid; grid-template-columns: 1fr 0.6fr 1fr 1fr 1fr 1fr 1fr 0.8fr 0.8fr 1fr;
-            padding: 8px 12px; border-bottom: 1px solid rgba(26,38,54,0.3); align-items: center; min-width: 900px;
-        }
+        .ledger-table-canvas { flex: 1; overflow-y: auto; font-family: monospace; font-size: 0.75rem; width: 100%; overflow-x: auto; }
+        .ledger-grid-header { display: grid; grid-template-columns: 1fr 0.6fr 1fr 1fr 1fr 1fr 1fr 0.8fr 0.8fr 1fr; background: #04060a; padding: 8px 12px; font-weight: 700; color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; border-bottom: 1px solid var(--border-color); min-width: 900px; }
+        .ledger-grid-row { display: grid; grid-template-columns: 1fr 0.6fr 1fr 1fr 1fr 1fr 1fr 0.8fr 0.8fr 1fr; padding: 8px 12px; border-bottom: 1px solid rgba(26,38,54,0.3); align-items: center; min-width: 900px; }
 
-        /* --- Right Hand Deal Execution Control Ticket Area --- */
         .execution-ticket-panel { display: flex; flex-direction: column; gap: 10px; padding: 12px; flex: 1; overflow-y: auto; }
         .ticket-input-container { display: grid; grid-template-columns: 1fr; gap: 8px; }
         .form-element-node { background: #020406; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; }
@@ -171,7 +137,13 @@
         .analytics-grid-box { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; }
         .analytics-card-node { background: #030508; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 4px; }
 
-        /* --- Footer Base Block --- */
+        /* --- WALLET REGISTRY PANELS --- */
+        .wallet-workspace { padding: 30px; display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; overflow-y: auto; }
+        .wallet-card { background: var(--panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; }
+        .wallet-history-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-family: monospace; }
+        .wallet-history-table th, .wallet-history-table td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border-color); }
+        .wallet-history-table th { color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; }
+
         footer { background: var(--panel); border-top: 1px solid var(--border-color); height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 0.6rem; color: var(--text-dim); flex-shrink: 0; }
 
         @media (max-width: 1100px) {
@@ -180,8 +152,6 @@
             .column-pane { height: 350px; }
             .center-display-deck { height: 500px; }
             .bottom-ledger-terminal { height: 300px; }
-            .auth-card { height: auto; flex-direction: column; }
-            .auth-sidebar { display: none; }
         }
     </style>
 </head>
@@ -189,13 +159,11 @@
 
 <div id="nexafx-preloader">
     <div class="loader-brand">NEXAFX<span>CORE</span></div>
-    <div class="loader-track">
-        <div class="loader-bar" id="preloader-bar"></div>
-    </div>
+    <div class="loader-track"><div class="loader-bar" id="preloader-bar"></div></div>
     <div class="loader-status" id="preloader-status">Initializing Workspace Modules...</div>
 </div>
 
-<div id="nexafx-auth-screen">
+<div class="app-view auth-container" id="view-login">
     <div class="auth-card">
         <div class="auth-sidebar">
             <div>
@@ -203,896 +171,220 @@
                 <p style="color:var(--text-dim); font-size:0.7rem; margin-top:4px; text-transform:uppercase;">Institutional Liquidity Gateway</p>
             </div>
             <div class="auth-sidebar-stats">
-                <div class="auth-sidebar-stat-row">
-                    <span style="color:var(--text-dim)">ECN PIPELINE</span>
-                    <span style="color:var(--high-green)">ACTIVE // SECURE</span>
-                </div>
-                <div class="auth-sidebar-stat-row">
-                    <span style="color:var(--text-dim)">AGGREGATED SPREADS</span>
-                    <span style="color:#fff">FROM 0.0 PIPS</span>
-                </div>
-                <div class="auth-sidebar-stat-row">
-                    <span style="color:var(--text-dim)">CLEARING LOCATION</span>
-                    <span style="color:var(--gold)">NAIROBI HUB</span>
-                </div>
+                <div class="auth-sidebar-stat-row"><span style="color:var(--text-dim)">ECN PIPELINE</span><span style="color:var(--high-green)">ACTIVE // SECURE</span></div>
+                <div class="auth-sidebar-stat-row"><span style="color:var(--text-dim)">AGGREGATED SPREADS</span><span style="color:#fff">FROM 0.0 PIPS</span></div>
+                <div class="auth-sidebar-stat-row"><span style="color:var(--text-dim)">CLEARING LOCATION</span><span style="color:var(--gold)">NAIROBI HUB</span></div>
             </div>
-            <p style="font-size:0.6rem; color:var(--text-dim); line-height:1.3;">Warning: Access is restricted to authorized account operators. Financial operations contain margin risk variance profiles.</p>
+            <p style="font-size:0.6rem; color:var(--text-dim); line-height:1.3;">Warning: Access restricted to authorized operators. Financial operations contain margin volatility bounds.</p>
         </div>
-        
-        <div class="auth-main-form" id="auth-form-login">
+        <div class="auth-main-form">
             <h2 class="auth-title">Operator Handshake</h2>
-            <p class="auth-subtitle">Enter terminal authentication details to build data pipeline access.</p>
+            <p class="auth-subtitle">Enter terminal credentials to map local runtime workspace pipeline.</p>
             <div class="auth-form-group">
                 <label>Terminal Identity / Email</label>
-                <div class="auth-input-wrapper">
-                    <i class="fas fa-user-shield"></i>
-                    <input type="email" class="auth-input" placeholder="operator@nexafxtrade.com">
-                </div>
+                <div class="auth-input-wrapper"><i class="fas fa-user-shield"></i><input type="email" class="auth-input" placeholder="operator@nexafxtrade.com"></div>
             </div>
             <div class="auth-form-group">
                 <label>Access Key Cipher</label>
-                <div class="auth-input-wrapper">
-                    <i class="fas fa-key"></i>
-                    <input type="password" class="auth-input" placeholder="••••••••••••">
-                </div>
+                <div class="auth-input-wrapper"><i class="fas fa-key"></i><input type="password" class="auth-input" placeholder="••••••••••••"></div>
             </div>
-            <button class="auth-submit-btn" onclick="bypassAuthSequence()">Initialize Session</button>
-            <p class="auth-switch-mode">New node registration? <span onclick="switchAuthMode('REGISTER')">Create Routing Account</span></p>
-        </div>
-
-        <div class="auth-main-form" id="auth-form-register" style="display:none;">
-            <h2 class="auth-title">Register Broker Node</h2>
-            <p class="auth-subtitle">Provision a dedicated clearing balance channel inside the core engine.</p>
-            <div class="auth-form-group">
-                <label>Full Operator Name</label>
-                <div class="auth-input-wrapper">
-                    <i class="fas fa-id-badge"></i>
-                    <input type="text" class="auth-input" placeholder="John Doe">
-                </div>
-            </div>
-            <div class="auth-form-group">
-                <label>Terminal Identity / Email</label>
-                <div class="auth-input-wrapper">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" class="auth-input" placeholder="operator@nexafxtrade.com">
-                </div>
-            </div>
-            <div class="auth-form-group">
-                <label>Secure Key Cipher</label>
-                <div class="auth-input-wrapper">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" class="auth-input" placeholder="••••••••••••">
-                </div>
-            </div>
-            <button class="auth-submit-btn" onclick="bypassAuthSequence()">Construct Allocation Profile</button>
-            <p class="auth-switch-mode">Possess existing credentials? <span onclick="switchAuthMode('LOGIN')">Execute Operator Handshake</span></p>
+            <button class="auth-submit-btn" onclick="navigateTo('terminal')">Initialize Session</button>
+            <p class="auth-switch-mode">New clearing endpoint? <span onclick="navigateTo('register')">Create Routing Account</span></p>
         </div>
     </div>
 </div>
 
-<div class="app-container" id="main-terminal-layout" style="display:none;">
+<div class="app-view auth-container" id="view-register">
+    <div class="auth-card">
+        <div class="auth-sidebar">
+            <div>
+                <h3 style="font-weight:900; font-size:1.3rem; letter-spacing:0.5px;">NEXAFX<span>CORE</span></h3>
+                <p style="color:var(--text-dim); font-size:0.7rem; margin-top:4px; text-transform:uppercase;">Account Allocation Pipeline</p>
+            </div>
+            <p style="font-size:0.6rem; color:var(--text-dim);">Provision multi-asset accounts connected straight into aggregated Tier-1 liquidity clusters.</p>
+        </div>
+        <div class="auth-main-form">
+            <h2 class="auth-title">Register Master Node</h2>
+            <p class="auth-subtitle">Open a dedicated raw ECN account pipeline tracking immediate settlement assets.</p>
+            <div class="auth-form-group"><label>Full Legal Operator Name</label><div class="auth-input-wrapper"><i class="fas fa-id-badge"></i><input type="text" class="auth-input" placeholder="John Doe"></div></div>
+            <div class="auth-form-group"><label>Terminal Identity / Email</label><div class="auth-input-wrapper"><i class="fas fa-envelope"></i><input type="email" class="auth-input" placeholder="operator@nexafxtrade.com"></div></div>
+            <div class="auth-form-group"><label>Secure Key Cipher</label><div class="auth-input-wrapper"><i class="fas fa-lock"></i><input type="password" class="auth-input" placeholder="••••••••••••"></div></div>
+            <button class="auth-submit-btn" onclick="navigateTo('terminal')">Construct Profiles</button>
+            <p class="auth-switch-mode">Existing security configurations? <span onclick="navigateTo('login')">Return to Handshake</span></p>
+        </div>
+    </div>
+</div>
+
+<div class="app-view" id="view-terminal">
     <header>
-        <div class="brand">NEXAFX<span>CORE</span></div>
+        <div class="brand" onclick="navigateTo('terminal')">NEXAFX<span>CORE</span></div>
+        <div class="nav-links">
+            <button class="nav-btn" onclick="navigateTo('terminal')"><i class="fas fa-chart-line"></i> Terminal</button>
+            <button class="nav-btn" onclick="navigateTo('wallet')"><i class="fas fa-wallet"></i> Clearing Desk</button>
+            <button class="nav-btn" onclick="navigateTo('login')"><i class="fas fa-sign-out-alt"></i> Disconnect</button>
+        </div>
         <div class="account-meta-strip">
             <div class="meta-stat-node"><span class="m-lbl">Live Balance</span><span class="m-val" id="top-balance" style="color:var(--gold)">1,500,000.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Equity</span><span class="m-val" id="top-equity">1,500,000.00</span></div>
-            <div class="meta-stat-node"><span class="m-lbl">Free Margin</span><span class="m-val" id="top-freemargin">1,500,000.00</span></div>
-            <div class="meta-stat-node"><span class="m-lbl">Used Margin</span><span class="m-val" id="top-usedmargin">0.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Margin Level</span><span class="m-val" id="top-marginlevel" style="color:var(--high-green)">100.00%</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Floating P&L</span><span class="m-val" id="top-floatingpnl">0.00</span></div>
         </div>
     </header>
 
     <div class="status-sub-bar">
-        <div>
-            <span><i class="fas fa-server" style="color:var(--high-green)"></i> SERVER: <b>NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
-            <span>LOGIN ID: <b style="color:#fff;">8942105</b></span> &nbsp;|&nbsp;
-            <span>LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
-            <span>TYPE: <b style="color:var(--gold);">INSTITUTIONAL RAW ECN</b></span>
-        </div>
-        <div>
-            <span>MARKET SESSION: <b style="color:#fff;" id="lbl-market-session">LONDON / NEW YORK INTERSECT</b></span> &nbsp;|&nbsp;
-            <span id="live-utc-clock" style="color:var(--gold); font-family:monospace;">00:00:00 UTC</span>
-        </div>
+        <div><span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE WORKSPACE SERVER</span> &nbsp;|&nbsp; <span>LEVERAGE: <b>1:500</b></span></div>
+        <div><span id="live-utc-clock" style="color:var(--gold); font-family:monospace;">00:00:00 UTC</span></div>
     </div>
 
     <main class="master-workspace-grid">
-        
         <section class="column-pane">
-            <div class="pane-section-header"><span><i class="fas fa-chart-line"></i> Liquidity Matrix Watch</span></div>
+            <div class="pane-section-header"><span>Asset Watch Matrix</span></div>
             <div class="sub-tab-strip">
-                <button class="sub-tab-btn active" id="m-tab-forex" onclick="switchMarketCatalog('FOREX')">Forex</button>
-                <button class="sub-tab-btn" id="m-tab-crypto" onclick="switchMarketCatalog('CRYPTO')">Crypto</button>
-                <button class="sub-tab-btn" id="m-tab-commods" onclick="switchMarketCatalog('COMMODITY')">Commodities</button>
-                <button class="sub-tab-btn" id="m-tab-indices" onclick="switchMarketCatalog('INDICES')">Indices / Stocks</button>
+                <button class="sub-tab-btn active" onclick="switchMarketCatalog('FOREX')">Forex</button>
+                <button class="sub-tab-btn" onclick="switchMarketCatalog('CRYPTO')">Crypto</button>
+                <button class="sub-tab-btn" onclick="switchMarketCatalog('COMMODITY')">Commodities</button>
             </div>
-            <div class="scrolling-list-area" id="market-watch-container">
-                </div>
-
-            <div class="pane-section-header" style="border-top: 1px solid var(--border-color)"><span><i class="fas fa-newspaper"></i> Macro Intelligence Feed</span></div>
-            <div class="scrolling-list-area" id="macro-news-feed" style="background: rgba(0,0,0,0.15);">
-                </div>
+            <div class="scrolling-list-area" id="market-watch-container"></div>
         </section>
 
         <section class="center-display-deck">
             <div class="hero-ticker-ribbon">
-                <div>
-                    <h2 id="active-ticker-name" style="font-size:1.3rem; font-weight:800;">EUR/USD</h2>
-                    <span style="font-size:0.65rem; color:var(--text-dim); font-weight:700; text-transform:uppercase;">Institutional Consolidated Liquidity Pool Feed</span>
-                </div>
-                <div style="text-align:right;">
-                    <div style="font-family:monospace; font-size:1.8rem; font-weight:900;" id="hero-live-bid">1.08524</div>
-                    <span style="font-size:0.65rem; color:var(--text-dim);">SPREAD: <b id="hero-live-spread" style="color:#fff; font-family:monospace;">0.4 Pips</b></span>
-                </div>
+                <div><h2 id="active-ticker-name">EUR/USD</h2></div>
+                <div><div style="font-family:monospace; font-size:1.8rem; font-weight:900;" id="hero-live-bid">1.08520</div></div>
             </div>
-
             <div class="chart-canvas-frame">
-                <div class="canvas-toolbar">
-                    <div class="tool-cluster">
-                        <button class="t-btn active" id="chart-t-candle" onclick="changeChartRenderProfile('CANDLE')">Candlestick</button>
-                        <button class="t-btn" id="chart-t-line" onclick="changeChartRenderProfile('LINE')">Line</button>
-                        <button class="t-btn" id="chart-t-bar" onclick="changeChartRenderProfile('BAR')">Bar</button>
-                    </div>
-                    <div class="tool-cluster">
-                        <button class="t-btn active" onclick="setChartTimeframe('M1')">M1</button>
-                        <button class="t-btn" onclick="setChartTimeframe('M5')">M5</button>
-                        <button class="t-btn" onclick="setChartTimeframe('H1')">H1</button>
-                        <button class="t-btn" onclick="setChartTimeframe('D1')">D1</button>
-                    </div>
-                    <div class="tool-cluster">
-                        <button class="t-btn" id="tech-t-ma" onclick="toggleOverlayTechnicalIndicator('MA')">SMA</button>
-                        <button class="t-btn" id="tech-t-ema" onclick="toggleOverlayTechnicalIndicator('EMA')">EMA</button>
-                        <button class="t-btn" id="tech-t-bb" onclick="toggleOverlayTechnicalIndicator('BB')">Bollinger</button>
-                        <button class="t-btn" id="tech-t-rsi" onclick="toggleOverlayTechnicalIndicator('RSI')">RSI Matrix</button>
-                    </div>
-                </div>
-                <div class="chart-wrapper-box">
-                    <canvas id="primaryTerminalCanvas"></canvas>
-                </div>
+                <div class="chart-wrapper-box"><canvas id="primaryTerminalCanvas"></canvas></div>
             </div>
-
             <div class="bottom-ledger-terminal">
                 <div class="sub-tab-strip" style="background: #070b12;">
-                    <button class="sub-tab-btn active" id="led-tab-pos" onclick="alterTerminalLedgerFocus('POSITIONS')">Open Risk Positions (<span id="count-pos-lbl">0</span>)</button>
-                    <button class="sub-tab-btn" id="led-tab-ord" onclick="alterTerminalLedgerFocus('ORDERS')">Pending Order Matrix (<span id="count-ord-lbl">0</span>)</button>
-                    <button class="sub-tab-btn" id="led-tab-anl" onclick="alterTerminalLedgerFocus('ANALYTICS')">System Workspace Performance Analytics</button>
-                    <button class="sub-tab-btn" id="led-tab-jrn" onclick="alterTerminalLedgerFocus('JOURNAL')">Trading Operational Journal Log</button>
+                    <button class="sub-tab-btn active">Open System Risks (<span id="count-pos-lbl">0</span>)</button>
                 </div>
-                
-                <div class="ledger-table-canvas" id="terminal-ledger-display-engine">
-                    </div>
+                <div class="ledger-table-canvas" id="terminal-ledger-display-engine"></div>
             </div>
         </section>
 
         <section class="column-pane right-pane">
-            <div class="pane-section-header"><span><i class="fas fa-ticket-alt"></i> Unified Smart Routing Ticket</span></div>
+            <div class="pane-section-header"><span>Execution Route</span></div>
             <div class="execution-ticket-panel">
                 <div class="ticket-input-container">
-                    <div class="form-element-node">
-                        <label>Order Frame Mechanism</label>
-                        <select id="ticket-order-type" onchange="adjustOrderFormFields()">
-                            <option value="MARKET">Instant Market Execution</option>
-                            <option value="BUY_LIMIT">Buy Limit</option>
-                            <option value="SELL_LIMIT">Sell Limit</option>
-                            <option value="BUY_STOP">Buy Stop</option>
-                            <option value="SELL_STOP">Sell Stop</option>
-                        </select>
-                    </div>
-                    <div class="form-element-node" id="box-execution-price" style="display:none;">
-                        <label>Target Execution Price</label>
-                        <input type="number" id="ticket-trigger-price" value="1.08500" step="0.00001">
-                    </div>
-                    <div class="form-element-node">
-                        <label>Lot Size Volume Selector</label>
-                        <input type="number" id="ticket-volume-lots" value="1.00" step="0.1" min="0.01" oninput="calculateRiskTelemetryMatrices()">
-                    </div>
-                    <div class="form-element-node">
-                        <label>Dynamic Risk Exposure Allocation per Trade</label>
-                        <select id="ticket-risk-percent" onchange="applyRiskPercentageCalculation()">
-                            <option value="CUSTOM">Manual Custom Specification</option>
-                            <option value="0.01">1% Account Capital Volatility Bound</option>
-                            <option value="0.02">2% Account Capital Volatility Bound</option>
-                            <option value="0.05">5% Aggressive Tier Risk Boundary</option>
-                        </select>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                        <div class="form-element-node">
-                            <label>Stop Loss Protective Anchor (SL)</label>
-                            <input type="number" id="ticket-sl" placeholder="No Anchor" step="0.00001" oninput="calculateRiskTelemetryMatrices()">
-                        </div>
-                        <div class="form-element-node">
-                            <label>Take Profit Target Order (TP)</label>
-                            <input type="number" id="ticket-tp" placeholder="No Target" step="0.00001">
-                        </div>
-                    </div>
+                    <div class="form-element-node"><label>Volume Lots</label><input type="number" id="ticket-volume-lots" value="1.00"></div>
                 </div>
-
-                <div style="background:#030508; border:1px solid var(--border-color); padding:8px; border-radius:6px; font-size:0.7rem; display:flex; flex-direction:column; gap:4px;">
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Calculated Margin Risk Drawdown:</span><span id="calc-risk-kes" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Required Maintenance Collateral:</span><span id="calc-margin-req" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
-                </div>
-
                 <div class="dual-action-triggers">
-                    <button class="exec-btn b-buy" onclick="commitOrderRoutingTicket('BUY')"><i class="fas fa-arrow-trend-up"></i> Buy / Long</button>
-                    <button class="exec-btn b-sell" onclick="commitOrderRoutingTicket('SELL')"><i class="fas fa-arrow-trend-down"></i> Sell / Short</button>
+                    <button class="exec-btn b-buy" onclick="commitOrderRoutingTicket('BUY')">Long</button>
+                    <button class="exec-btn b-sell" onclick="commitOrderRoutingTicket('SELL')">Short</button>
                 </div>
-            </div>
-
-            <div class="pane-section-header" style="border-top:1px solid var(--border-color)"><span><i class="fas fa-brain"></i> Neural Core Signals &amp; Mirror Pools</span></div>
-            <div class="execution-ticket-panel" style="flex: 0.8; background:rgba(0,0,0,0.1);">
-                <div style="background:rgba(0,176,255,0.03); border:1px solid rgba(0,176,255,0.15); border-radius:6px; padding:8px; font-size:0.75rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                        <span style="color:var(--neon-blue); font-weight:800;"><i class="fas fa-robot"></i> NEXA-AI PREDICTION ENGINE</span>
-                        <span style="background:var(--high-green); color:#000; font-size:0.55rem; padding:1px 4px; font-weight:900; border-radius:2px;">92.4% CONVICTION</span>
-                    </div>
-                    <p style="color:var(--text-dim); font-size:0.7rem; line-height:1.2;">Structural trend vector divergence maps spatial volume pooling safely above institutional support bands.</p>
-                    <div style="margin-top:4px; font-weight:700; color:#fff;">RECOMMENDATION: <span style="color:var(--high-green)">SCALED LONG BIAS</span></div>
-                </div>
-
-                <div style="display:flex; flex-direction:column; gap:4px; margin-top:2px;">
-                    <span style="font-size:0.6rem; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Top Verified Institutional Master Allocators</span>
-                    <div style="background:#030508; border:1px solid var(--border-color); padding:6px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
-                        <div><b style="font-size:0.75rem;">Alpha Quant Vault</b><br><span style="font-size:0.6rem; color:var(--text-dim)">Followers: 14.8K | ROI: +244.5%</span></div>
-                        <button class="t-btn" style="border-color:var(--gold); color:var(--gold)" onclick="toggleCopyMirrorAllocations('Alpha Quant Vault')">Mirror Allocation</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pane-section-header" style="border-top:1px solid var(--border-color)"><span><i class="fas fa-wallet"></i> Capital Clearing Operations</span></div>
-            <div style="padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:6px; background:var(--panel);">
-                <button class="t-btn" style="background:rgba(0,230,118,0.05); border-color:var(--high-green); color:#fff; padding:6px;" onclick="triggerCapitalRoute('DEPOSIT')"><i class="fas fa-plus-circle" style="color:var(--high-green)"></i> Secure Deposit</button>
-                <button class="t-btn" style="background:rgba(255,23,68,0.05); border-color:var(--low-red); color:#fff; padding:6px;" onclick="triggerCapitalRoute('WITHDRAWAL')"><i class="fas fa-minus-circle" style="color:var(--low-red)"></i> Secure Extraction</button>
             </div>
         </section>
     </main>
-
-    <footer>
-        <div><span>Clearing Infrastructure: <b>PROSPORT AFRICA LTD Clearing House</b></span> &nbsp;|&nbsp; <span>Regulated Workspace Environment Area</span></div>
-        <div><span>Nexafxtrade Institutional Hub: Binaa Mall, 2nd Floor, Langata Rd, Nairobi</span></div>
-    </footer>
 </div>
 
+<div class="app-view" id="view-wallet">
+    <header>
+        <div class="brand" onclick="navigateTo('terminal')">NEXAFX<span>CORE</span></div>
+        <div class="nav-links">
+            <button class="nav-btn" onclick="navigateTo('terminal')"><i class="fas fa-chart-line"></i> Terminal</button>
+            <button class="nav-btn" onclick="navigateTo('wallet')"><i class="fas fa-wallet"></i> Clearing Desk</button>
+            <button class="nav-btn" onclick="navigateTo('login')"><i class="fas fa-sign-out-alt"></i> Disconnect</button>
+        </div>
+    </header>
+    <main class="wallet-workspace">
+        <div class="wallet-card">
+            <h3>Initiate Capital Allocation</h3>
+            <p style="color:var(--text-dim); margin-bottom:15px; font-size:0.75rem;">Route instant clearing values directly to your live profile via mobile network settlement paths.</p>
+            <div class="form-element-node" style="margin-bottom:12px;"><label>Operator Destination Phone Route</label><input type="text" placeholder="2547XXXXXXXX"></div>
+            <div class="form-element-node" style="margin-bottom:12px;"><label>Clearing Value Amount (KES)</label><input type="number" placeholder="50,000"></div>
+            <button class="auth-submit-btn" style="background:var(--high-green); color:#000;" onclick="alert('Pushing transaction handshake payload to mobile terminal pipeline...')">Execute Immediate Settlement</button>
+        </div>
+        <div class="wallet-card">
+            <h3>Settlement Handshake Journal</h3>
+            <table class="wallet-history-table">
+                <thead><tr><th>Token ID</th><th>Method</th><th>Volume Asset</th><th>Status Cluster</th></tr></thead>
+                <tbody>
+                    <tr><td>#TRX-948210</td><td>Mobile Liquidity Path</td><td>KES 120,000.00</td><td style="color:var(--high-green)">CLEARED // SETTLED</td></tr>
+                    <tr><td>#TRX-839102</td><td>Mobile Liquidity Path</td><td>KES 45,000.00</td><td style="color:var(--high-green)">CLEARED // SETTLED</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<footer><div><span>Clearing Infrastructure: PROSPORT AFRICA LTD Clearing House</span></div></footer>
+
 <script>
-    // Global Multi-Asset Liquidity Pricing Definitions Matrix
     let activeCatalogFilter = 'FOREX';
-    let currentLedgerTab = 'POSITIONS';
-    let chartVisualizationProfile = 'CANDLE';
-    let chartTimeframeScope = 'M1';
-
-    let activeOverlayIndicators = { MA: false, EMA: false, BB: false, RSI: false };
-
-    // Primary Account Balances Data Pipeline Structures
-    let accountCapitalState = {
-        balance: 1500000.00,
-        equity: 1500000.00,
-        freeMargin: 1500000.00,
-        usedMargin: 0.00,
-        marginLevel: 100.00,
-        floatingPnL: 0.00,
-        dailyPnL: 1420.00,
-        weeklyPnL: 8950.00,
-        monthlyPnL: 34100.00,
-        growthRate: 14.25,
-        currency: 'KES',
-        maxDailyLossBound: 75000.00,
-        maxDrawdownCap: 150000.00
-    };
-
-    let liquidityCatalog = {
-        "EUR/USD": { category: "FOREX", price: 1.08520, bidOffset: -0.00002, askOffset: 0.00002, digits: 5, spreadPips: 0.4, changePct: 0.04, high: 1.08900, low: 1.08110, multiplier: 100000 },
-        "GBP/USD": { category: "FOREX", price: 1.26440, bidOffset: -0.00003, askOffset: 0.00003, digits: 5, spreadPips: 0.6, changePct: -0.12, high: 1.27100, low: 1.26050, multiplier: 100000 },
-        "USD/JPY": { category: "FOREX", price: 156.420, bidOffset: -0.004, askOffset: 0.004, digits: 3, spreadPips: 0.8, changePct: 0.24, high: 156.900, low: 155.800, multiplier: 1000 },
-        "BTC/USD": { category: "CRYPTO", price: 61240.50, bidOffset: -1.50, askOffset: 1.50, digits: 2, spreadPips: 30.0, changePct: 3.45, high: 62100.00, low: 59800.00, multiplier: 1 },
-        "ETH/USD": { category: "CRYPTO", price: 3342.25, bidOffset: -0.25, askOffset: 0.25, digits: 2, spreadPips: 5.0, changePct: -1.15, high: 3450.00, low: 3290.00, multiplier: 1 },
-        "XAU/USD": { category: "COMMODITY", price: 2342.10, bidOffset: -0.15, askOffset: 0.15, digits: 2, spreadPips: 3.0, changePct: 0.85, high: 2360.00, low: 2330.00, multiplier: 100 },
-        "USOIL": { category: "COMMODITY", price: 78.45, bidOffset: -0.02, askOffset: 0.02, digits: 2, spreadPips: 4.0, changePct: 0.32, high: 79.20, low: 77.90, multiplier: 100 },
-        "US30": { category: "INDICES", price: 39120.00, bidOffset: -1.00, askOffset: 1.00, digits: 2, spreadPips: 2.0, changePct: 0.15, high: 39300.00, low: 38950.00, multiplier: 10 }
-    };
-
-    let macroCalendarEvents = [
-        { time: "15:30", asset: "USD", event: "Core Retail Sales m/m", impact: "high" },
-        { time: "16:45", asset: "EUR", event: "ECB President Lagarde Speech", impact: "high" },
-        { time: "18:00", asset: "GBP", event: "BOE Monetary Policy Report", impact: "med" }
-    ];
-
-    let systemJournalRegistry = [
-        { date: "2026-07-06", note: "Disciplined execution on technical retest of psychological cluster block framework.", status: "Compliant" },
-        { date: "2026-07-07", note: "Scaled exposure parameters downward ahead of top tier retail macro announcements.", status: "Defensive" }
-    ];
-
+    let accountCapitalState = { balance: 1500000.00, equity: 1500000.00, freeMargin: 1500000.00, usedMargin: 0.00, marginLevel: 100.00, floatingPnL: 0.00, multiplier: 132.00 };
+    let liquidityCatalog = { "EUR/USD": { category: "FOREX", price: 1.08520, digits: 5, multiplier: 100000 }, "BTC/USD": { category: "CRYPTO", price: 61240.50, digits: 2, multiplier: 1 } };
     let activeSelectedPair = "EUR/USD";
     let openPositionsRegister = [];
-    let pendingOrdersRegister = [];
-    let simulationTickArray = [];
-
-    // Initialize Graphic Engine Subsystem Context Bindings
     let canvasContext;
-    
+
     window.addEventListener('DOMContentLoaded', () => {
-        // Run Premium Loading System Orchestrator First
         runInstitutionalPreloader();
-
-        setInterval(() => {
-            document.getElementById('live-utc-clock').innerText = new Date().toUTCString().replace('GMT', 'UTC');
-        }, 1000);
-
-        setInterval(() => {
-            simulateHighFrequencyLiquidityStream();
-        }, 400);
+        setInterval(() => { document.getElementById('live-utc-clock').innerText = new Date().toUTCString(); }, 1000);
+        setInterval(() => { simulateHighFrequencyLiquidityStream(); }, 500);
     });
 
-    /* ================= NEW WORKFLOW CONTROLLER ACTIONS ================= */
     function runInstitutionalPreloader() {
-        const statuses = [
-            "Connecting to ECN routing arrays...",
-            "Syncing consolidated interbank liquidity aggregates...",
-            "Verifying security handshake hashes...",
-            "Finalizing terminal view mapping..."
-        ];
         let currentStep = 0;
         const bar = document.getElementById("preloader-bar");
-        const label = document.getElementById("preloader-status");
-
         const interval = setInterval(() => {
-            currentStep += 1;
-            bar.style.width = `${currentStep}%`;
-
-            if (currentStep === 25) label.innerText = statuses[0];
-            if (currentStep === 50) label.innerText = statuses[1];
-            if (currentStep === 75) label.innerText = statuses[2];
-            if (currentStep === 90) label.innerText = statuses[3];
-
+            currentStep += 2;
+            if(bar) bar.style.width = `${currentStep}%`;
             if (currentStep >= 100) {
                 clearInterval(interval);
-                document.getElementById("nexafx-preloader").style.opacity = "0";
-                setTimeout(() => {
-                    document.getElementById("nexafx-preloader").style.display = "none";
-                    // Transition smoothly straight into Authentication Wall
-                    document.getElementById("nexafx-auth-screen").style.display = "flex";
-                }, 600);
+                document.getElementById("nexafx-preloader").style.display = "none";
+                navigateTo('login');
             }
-        }, 35);
+        }, 20);
     }
 
-    function switchAuthMode(mode) {
-        if (mode === 'REGISTER') {
-            document.getElementById("auth-form-login").style.display = "none";
-            document.getElementById("auth-form-register").style.display = "flex";
-        } else {
-            document.getElementById("auth-form-register").style.display = "none";
-            document.getElementById("auth-form-login").style.display = "flex";
+    function navigateTo(viewId) {
+        document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active'));
+        const activeView = document.getElementById(`view-${viewId}`);
+        if(activeView) activeView.classList.add('active');
+
+        if(viewId === 'terminal' && !canvasContext) {
+            setTimeout(() => {
+                canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
+                populateStructuralAssetWatch();
+                rebuildTerminalLedgerView();
+            }, 50);
         }
     }
 
-    function bypassAuthSequence() {
-        // Smooth slide out of credentials panel
-        document.getElementById("nexafx-auth-screen").style.opacity = "0";
-        setTimeout(() => {
-            document.getElementById("nexafx-auth-screen").style.display = "none";
-            
-            // Build and display main engine application interface frames
-            const terminal = document.getElementById("main-terminal-layout");
-            terminal.style.display = "flex";
-            
-            // Trigger canvas binding calculations inside view window space
-            canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
-            populateStructuralAssetWatch();
-            populateMacroIntelligenceFeed();
-            applyAssetSelectionModel(activeSelectedPair);
-            rebuildTerminalLedgerView();
-        }, 500);
-    }
-    /* =================================================================== */
-
-    function switchMarketCatalog(category) {
-        activeCatalogFilter = category;
-        document.querySelectorAll('.sub-tab-strip .sub-tab-btn').forEach(btn => {
-            if(btn.id.startsWith('m-tab-')) {
-                btn.classList.toggle('active', btn.id === `m-tab-${category.toLowerCase().substring(0,5)}`);
-            }
-        });
-        populateStructuralAssetWatch();
-    }
+    function switchMarketCatalog(cat) { activeCatalogFilter = cat; populateStructuralAssetWatch(); }
 
     function populateStructuralAssetWatch() {
-        const targetContainer = document.getElementById('market-watch-container');
-        if (!targetContainer) return;
-        targetContainer.innerHTML = '';
-
-        Object.keys(liquidityCatalog).forEach(symbol => {
-            const node = liquidityCatalog[symbol];
-            if (node.category !== activeCatalogFilter) return;
-
-            const row = document.createElement('div');
-            row.className = `market-watch-row ${symbol === activeSelectedPair ? 'active' : ''}`;
-            row.onclick = () => applyAssetSelectionModel(symbol);
-
-            let txtColor = node.changePct >= 0 ? 'var(--high-green)' : 'var(--low-red)';
-            row.innerHTML = `
-                <div class="pair-name"><b>${symbol}</b><br><span style="font-size:0.55rem; color:var(--text-dim)">Sp: ${node.spreadPips} Pips</span></div>
-                <div class="pair-price" style="font-family:monospace; text-align:right; font-weight:700;" id="watch-val-${symbol.replace('/','-')}">${node.price.toFixed(node.digits)}</div>
-                <div style="text-align:right; font-size:0.7rem; font-weight:700; color:${txtColor}">${node.changePct >= 0 ? '+' : ''}${node.changePct.toFixed(2)}%</div>
-            `;
-            targetContainer.appendChild(row);
+        const target = document.getElementById('market-watch-container');
+        if (!target) return; target.innerHTML = '';
+        Object.keys(liquidityCatalog).forEach(sym => {
+            let node = liquidityCatalog[sym]; if(node.category !== activeCatalogFilter) return;
+            let row = document.createElement('div'); row.className = 'market-watch-row';
+            row.innerHTML = `<div><b>${sym}</b></div><div style="font-family:monospace;text-align:right;">${node.price.toFixed(node.digits)}</div>`;
+            target.appendChild(row);
         });
-    }
-
-    function populateMacroIntelligenceFeed() {
-        const container = document.getElementById('macro-news-feed');
-        if(!container) return;
-        container.innerHTML = '';
-        macroCalendarEvents.forEach(evt => {
-            const el = document.createElement('div');
-            el.className = 'macro-news-card';
-            el.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
-                    <span><span class="impact-badge ${evt.impact==='high'?'impact-high':'impact-med'}">${evt.impact}</span><b>${evt.asset}</b></span>
-                    <span style="font-family:monospace; color:var(--gold); font-weight:700;">${evt.time}</span>
-                </div>
-                <div style="color:#cfd8dc; font-size:0.7rem;">${evt.event}</div>
-            `;
-            container.appendChild(el);
-        });
-    }
-
-    function applyAssetSelectionModel(symbol) {
-        activeSelectedPair = symbol;
-        const targetNode = liquidityCatalog[symbol];
-        
-        document.getElementById('active-ticker-name').innerText = symbol;
-        
-        let precisionStep = 1 / Math.pow(10, targetNode.digits);
-        document.getElementById('ticket-sl').step = precisionStep;
-        document.getElementById('ticket-tp').step = precisionStep;
-        document.getElementById('ticket-trigger-price').step = precisionStep;
-        
-        document.getElementById('ticket-sl').value = '';
-        document.getElementById('ticket-tp').value = '';
-
-        populateStructuralAssetWatch();
-
-        simulationTickArray = [];
-        let baseVal = targetNode.price;
-        for (let i = 0; i < 50; i++) {
-            baseVal += (Math.random() - 0.5) * (baseVal * 0.001);
-            simulationTickArray.push({
-                open: baseVal,
-                high: baseVal + (Math.random() * (baseVal * 0.0008)),
-                low: baseVal - (Math.random() * (baseVal * 0.0008)),
-                close: baseVal + (Math.random() - 0.5) * (baseVal * 0.0004)
-            });
-        }
-        forceChartRedrawPipeline();
-        calculateRiskTelemetryMatrices();
-    }
-
-    function adjustOrderFormFields() {
-        const selectedType = document.getElementById('ticket-order-type').value;
-        const priceBox = document.getElementById('box-execution-price');
-        priceBox.style.display = selectedType === 'MARKET' ? 'none' : 'block';
-        if (selectedType !== 'MARKET') {
-            document.getElementById('ticket-trigger-price').value = liquidityCatalog[activeSelectedPair].price.toFixed(liquidityCatalog[activeSelectedPair].digits);
-        }
-    }
-
-    function applyRiskPercentageCalculation() {
-        const rule = document.getElementById('ticket-risk-percent').value;
-        if (rule === 'CUSTOM') return;
-        
-        const numericPct = parseFloat(rule);
-        const accessibleRiskCapital = accountCapitalState.balance * numericPct;
-        const targetAnchorSL = document.getElementById('ticket-sl').value;
-
-        if (!targetAnchorSL) {
-            let pipFactor = activeSelectedPair.includes("JPY") ? 0.3 : 0.003;
-            let computedAnchor = liquidityCatalog[activeSelectedPair].price - pipFactor;
-            document.getElementById('ticket-sl').value = computedAnchor.toFixed(liquidityCatalog[activeSelectedPair].digits);
-        }
-
-        const reCalculatedSL = parseFloat(document.getElementById('ticket-sl').value);
-        const distanceDelta = Math.abs(liquidityCatalog[activeSelectedPair].price - reCalculatedSL);
-        
-        if (distanceDelta > 0) {
-            let derivedLots = accessibleRiskCapital / (distanceDelta * liquidityCatalog[activeSelectedPair].multiplier * 132.00);
-            document.getElementById('ticket-volume-lots').value = Math.max(0.01, derivedLots).toFixed(2);
-        }
-        calculateRiskTelemetryMatrices();
-    }
-
-    function calculateRiskTelemetryMatrices() {
-        const declaredLots = parseFloat(document.getElementById('ticket-volume-lots').value) || 0.00;
-        const anchorSL = parseFloat(document.getElementById('ticket-sl').value) || 0.00;
-        const marketPrice = liquidityCatalog[activeSelectedPair].price;
-
-        let marginReq = (declaredLots * liquidityCatalog[activeSelectedPair].multiplier * marketPrice * 132.00) / 500;
-        const elementReq = document.getElementById('calc-margin-req');
-        if (elementReq) elementReq.innerText = `KES ${marginReq.toLocaleString(undefined, {maximumFractionDigits:2})}`;
-
-        const elementRisk = document.getElementById('calc-risk-kes');
-        if (elementRisk) {
-            if (anchorSL > 0) {
-                let pointsDelta = Math.abs(marketPrice - anchorSL);
-                let absoluteRisk = pointsDelta * declaredLots * liquidityCatalog[activeSelectedPair].multiplier * 132.00;
-                elementRisk.innerText = `KES ${absoluteRisk.toLocaleString(undefined, {maximumFractionDigits:2})}`;
-            } else {
-                elementRisk.innerText = "UNMANAGED UNLIMITED RISK";
-            }
-        }
     }
 
     function commitOrderRoutingTicket(side) {
-        const executionMechanism = document.getElementById('ticket-order-type').value;
-        const designatedLots = parseFloat(document.getElementById('ticket-volume-lots').value);
-        if (isNaN(designatedLots) || designatedLots <= 0) return alert("Volumetric allocation verification error.");
-
-        const slValue = parseFloat(document.getElementById('ticket-sl').value) || null;
-        const tpValue = parseFloat(document.getElementById('ticket-tp').value) || null;
-        const uid = Math.floor(Math.random() * 899999 + 100000);
-
-        if (executionMechanism === 'MARKET') {
-            let orderItem = {
-                id: uid,
-                pair: activeSelectedPair,
-                type: side,
-                lots: designatedLots,
-                entry: liquidityCatalog[activeSelectedPair].price,
-                sl: slValue,
-                tp: tpValue,
-                swap: 0.00,
-                commission: -(designatedLots * 3.50 * 132.00),
-                timestamp: new Date().toLocaleTimeString()
-            };
-            openPositionsRegister.push(orderItem);
-        } else {
-            let pendingItem = {
-                id: uid,
-                pair: activeSelectedPair,
-                type: executionMechanism,
-                lots: designatedLots,
-                triggerPrice: parseFloat(document.getElementById('ticket-trigger-price').value),
-                sl: slValue,
-                tp: tpValue
-            };
-            pendingOrdersRegister.push(pendingItem);
-        }
-        
-        rebuildTerminalLedgerView();
-        evaluateBalanceLiquidationEquations();
-    }
-
-    function terminateActiveRiskVector(id) {
-        openPositionsRegister = openPositionsRegister.filter(p => p.id !== id);
-        rebuildTerminalLedgerView();
-        evaluateBalanceLiquidationEquations();
-    }
-
-    function clearPendingLimitOrder(id) {
-        pendingOrdersRegister = pendingOrdersRegister.filter(o => o.id !== id);
-        rebuildTerminalLedgerView();
-    }
-
-    function alterTerminalLedgerFocus(tabId) {
-        currentLedgerTab = tabId;
-        document.querySelectorAll('.bottom-ledger-terminal .sub-tab-strip .sub-tab-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.id === `led-tab-${tabId.toLowerCase().substring(0,3)}`);
-        });
+        let lots = parseFloat(document.getElementById('ticket-volume-lots').value) || 1.0;
+        openPositionsRegister.push({ id: Math.random(), pair: activeSelectedPair, type: side, lots: lots, entry: liquidityCatalog[activeSelectedPair].price });
         rebuildTerminalLedgerView();
     }
 
     function rebuildTerminalLedgerView() {
-        const pLbl = document.getElementById('count-pos-lbl');
-        const oLbl = document.getElementById('count-ord-lbl');
-        if (pLbl) pLbl.innerText = openPositionsRegister.length;
-        if (oLbl) oLbl.innerText = pendingOrdersRegister.length;
-
-        const viewport = document.getElementById('terminal-ledger-display-engine');
-        if (!viewport) return;
-        viewport.innerHTML = '';
-
-        if (currentLedgerTab === 'POSITIONS') {
-            let container = document.createElement('div');
-            container.innerHTML = `
-                <div class="ledger-grid-header">
-                    <div>Asset Symbol</div><div>Type</div><div>Volume</div><div>Entry Price</div>
-                    <div>Live Quote</div><div>Stop Loss</div><div>Take Profit</div><div>Commission</div><div>Swap Pool</div><div>Floating Return</div>
-                </div>
-            `;
-            if (openPositionsRegister.length === 0) {
-                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">No live systematic risk positions active in core runtime workspace memory.</div>`;
-            } else {
-                openPositionsRegister.forEach(pos => {
-                    let livePrice = liquidityCatalog[pos.pair].price;
-                    let targetDef = liquidityCatalog[pos.pair];
-                    let rawDelta = pos.type === 'BUY' ? (livePrice - pos.entry) : (pos.entry - livePrice);
-                    let profitKes = rawDelta * pos.lots * targetDef.multiplier * 132.00;
-
-                    let row = document.createElement('div');
-                    row.className = 'ledger-grid-row';
-                    row.innerHTML = `
-                        <div><b>${pos.pair}</b></div>
-                        <div class="${pos.type==='BUY'?'pos-buy':'pos-sell'}" style="color:${pos.type==='BUY'?'var(--high-green)':'var(--low-red)'}"><b>${pos.type}</b></div>
-                        <div>${pos.lots.toFixed(2)}</div>
-                        <div>${pos.entry.toFixed(targetDef.digits)}</div>
-                        <div>${livePrice.toFixed(targetDef.digits)}</div>
-                        <div style="color:var(--gold)">${pos.sl ? pos.sl.toFixed(targetDef.digits) : '--'}</div>
-                        <div style="color:var(--neon-blue)">${pos.tp ? pos.tp.toFixed(targetDef.digits) : '--'}</div>
-                        <div style="color:var(--low-red)">${pos.commission.toFixed(2)}</div>
-                        <div>${pos.swap.toFixed(2)}</div>
-                        <div style="font-weight:bold; color:${profitKes >= 0 ? 'var(--high-green)' : 'var(--low-red)'}">
-                            KES ${profitKes.toLocaleString(undefined,{maximumFractionDigits:2})} 
-                            <button style="background:var(--low-red); border:none; margin-left:4px; color:white; padding:1px 4px; font-size:0.6rem; border-radius:3px; cursor:pointer;" onclick="terminateActiveRiskVector(${pos.id})">CLOSE</button>
-                        </div>
-                    `;
-                    container.appendChild(row);
-                });
-            }
-            viewport.appendChild(container);
-        }
-        else if (currentLedgerTab === 'ORDERS') {
-            let container = document.createElement('div');
-            container.innerHTML = `
-                <div class="ledger-grid-header" style="grid-template-columns: 1.5fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr;">
-                    <div>Order Token ID</div><div>Target Asset</div><div>Order Mapping Mechanism</div><div>Volume Size</div><div>Trigger Target Price</div><div>Stop Loss Anchor</div><div>Cancellation Action</div>
-                </div>
-            `;
-            if (pendingOrdersRegister.length === 0) {
-                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">Conditional pending matrix array container matches zero records.</div>`;
-            } else {
-                pendingOrdersRegister.forEach(ord => {
-                    let row = document.createElement('div');
-                    row.className = 'ledger-grid-row';
-                    row.style.gridTemplateColumns = "1.5fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr";
-                    row.innerHTML = `
-                        <div>#${ord.id}</div>
-                        <div><b>${ord.pair}</b></div>
-                        <div style="color:var(--neon-blue)">${ord.type}</div>
-                        <div>${ord.lots.toFixed(2)}</div>
-                        <div style="font-family:monospace">${ord.triggerPrice}</div>
-                        <div>${ord.sl ? ord.sl : '--'}</div>
-                        <div><button style="background:rgba(255,255,255,0.1); border:1px solid var(--border-color); color:#fff; padding:2px 6px; cursor:pointer; border-radius:3px;" onclick="clearPendingLimitOrder(${ord.id})">Purge Ticket</button></div>
-                    `;
-                    container.appendChild(row);
-                });
-            }
-            viewport.appendChild(container);
-        }
-        else if (currentLedgerTab === 'ANALYTICS') {
-            let container = document.createElement('div');
-            container.className = 'analytics-grid-box';
-            container.innerHTML = `
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">WORKSPACE SYSTEM WIN RATE</span><b style="font-size:1.2rem; color:var(--high-green)">68.42% Win Parity Profile</b></div>
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">PROFIT FACTOR COEFFICIENT</span><b style="font-size:1.2rem; color:var(--neon-blue)">2.41 Balanced Multiplier</b></div>
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">CONSOLIDATED ACCOUNT RATIOS</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Sharpe Metric: <b>1.85</b> | ROI Growth Baseline: <b>+${accountCapitalState.growthRate}%</b></span></div>
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">SYSTEMIC DRAWDOWN THRESHOLDS</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Max Allocation Limit: <b>KES ${accountCapitalState.maxDrawdownCap.toLocaleString()}</b></span></div>
-            `;
-            viewport.appendChild(container);
-        }
-        else if (currentLedgerTab === 'JOURNAL') {
-            let container = document.createElement('div');
-            container.style.padding = '12px';
-            systemJournalRegistry.forEach(j => {
-                container.innerHTML += `
-                    <div style="border-bottom:1px solid var(--border-color); padding:6px 0;">
-                        <span style="color:var(--gold); font-size:0.65rem;">[${j.date}] Operational Risk Framework Vector Note:</span>
-                        <p style="color:#fff; font-size:0.75rem; margin-top:2px;">${j.note} - <b style="color:var(--high-green)">${j.status}</b></p>
-                    </div>
-                `;
-            });
-            viewport.appendChild(container);
-        }
-    }
-
-    function changeChartRenderProfile(profile) {
-        chartVisualizationProfile = profile;
-        document.querySelectorAll('.canvas-toolbar .tool-cluster .t-btn').forEach(b => {
-            if (['Candlestick','Line','Bar'].includes(b.innerText)) {
-                b.classList.toggle('active', b.id === `chart-t-${profile.toLowerCase()}`);
-            }
+        const view = document.getElementById('terminal-ledger-display-engine');
+        if(!view) return; view.innerHTML = '';
+        openPositionsRegister.forEach(pos => {
+            let row = document.createElement('div'); row.className = 'ledger-grid-row';
+            row.innerHTML = `<div><b>${pos.pair}</b></div><div style="color:var(--high-green)">${pos.type}</div><div>${pos.lots}</div><div>${pos.entry}</div>`;
+            view.appendChild(row);
         });
-        forceChartRedrawPipeline();
-    }
-
-    function setChartTimeframe(tf) {
-        chartTimeframeScope = tf;
-        applyAssetSelectionModel(activeSelectedPair);
-    }
-
-    function toggleOverlayTechnicalIndicator(indicator) {
-        activeOverlayIndicators[indicator] = !activeOverlayIndicators[indicator];
-        const btn = document.getElementById(`tech-t-${indicator.toLowerCase()}`);
-        if(btn) btn.classList.toggle('active', activeOverlayIndicators[indicator]);
-        forceChartRedrawPipeline();
-    }
-
-    function forceChartRedrawPipeline() {
-        if (!canvasContext) return;
-        const width = canvasContext.canvas.clientWidth;
-        const height = canvasContext.canvas.clientHeight;
-        canvasContext.canvas.width = width;
-        canvasContext.canvas.height = height;
-
-        canvasContext.clearRect(0, 0, width, height);
-
-        let prices = simulationTickArray.map(t => t.close);
-        let maxVal = Math.max(...simulationTickArray.map(t => t.high));
-        let minVal = Math.min(...simulationTickArray.map(t => t.low));
-        let range = maxVal - minVal;
-
-        let padding = range * 0.1;
-        maxVal += padding;
-        minVal -= padding;
-        range = maxVal - minVal;
-
-        const stepWidth = width / simulationTickArray.length;
-
-        canvasContext.strokeStyle = '#121b26';
-        canvasContext.lineWidth = 1;
-        for (let i = 1; i < 5; i++) {
-            let yLoc = (height / 5) * i;
-            canvasContext.beginPath();
-            canvasContext.moveTo(0, yLoc);
-            canvasContext.lineTo(width, yLoc);
-            canvasContext.stroke();
-        }
-
-        simulationTickArray.forEach((tick, idx) => {
-            let cx = (idx * stepWidth) + (stepWidth / 2);
-            let yOpen = height - (((tick.open - minVal) / range) * height);
-            let yClose = height - (((tick.close - minVal) / range) * height);
-            let yHigh = height - (((tick.high - minVal) / range) * height);
-            let yLow = height - (((tick.low - minVal) / range) * height);
-
-            canvasContext.strokeStyle = tick.close >= tick.open ? '#00e676' : '#ff1744';
-            canvasContext.fillStyle = tick.close >= tick.open ? '#00e676' : '#ff1744';
-
-            if (chartVisualizationProfile === 'CANDLE') {
-                canvasContext.lineWidth = 1.5;
-                canvasContext.beginPath();
-                canvasContext.moveTo(cx, yHigh);
-                canvasContext.lineTo(cx, yLow);
-                canvasContext.stroke();
-
-                let boxW = stepWidth * 0.7;
-                canvasContext.fillRect(cx - (boxW / 2), Math.min(yOpen, yClose), boxW, Math.abs(yOpen - yClose) || 1);
-            } else if (chartVisualizationProfile === 'LINE') {
-                if (idx > 0) {
-                    let prevX = ((idx - 1) * stepWidth) + (stepWidth / 2);
-                    let prevYClose = height - (((simulationTickArray[idx - 1].close - minVal) / range) * height);
-                    canvasContext.strokeStyle = 'var(--neon-blue)';
-                    canvasContext.lineWidth = 2;
-                    canvasContext.beginPath();
-                    canvasContext.moveTo(prevX, prevYClose);
-                    canvasContext.lineTo(cx, yClose);
-                    canvasContext.stroke();
-                }
-            } else if (chartVisualizationProfile === 'BAR') {
-                canvasContext.lineWidth = 2;
-                canvasContext.beginPath();
-                canvasContext.moveTo(cx, yHigh);
-                canvasContext.lineTo(cx, yLow);
-                canvasContext.stroke();
-
-                canvasContext.beginPath();
-                canvasContext.moveTo(cx - (stepWidth * 0.3), yOpen);
-                canvasContext.lineTo(cx, yOpen);
-                canvasContext.moveTo(cx, yClose);
-                canvasContext.lineTo(cx + (stepWidth * 0.3), yClose);
-                canvasContext.stroke();
-            }
-        });
-
-        if (activeOverlayIndicators.MA) {
-            canvasContext.strokeStyle = 'var(--gold)';
-            canvasContext.lineWidth = 1.5;
-            canvasContext.beginPath();
-            simulationTickArray.forEach((tick, idx) => {
-                if (idx < 5) return;
-                let sum = 0; for (let j = 0; j < 5; j++) { sum += simulationTickArray[idx - j].close; }
-                let avg = sum / 5;
-                let cx = (idx * stepWidth) + (stepWidth / 2);
-                let cy = height - (((avg - minVal) / range) * height);
-                if (idx === 5) canvasContext.moveTo(cx, cy); else canvasContext.lineTo(cx, cy);
-            });
-            canvasContext.stroke();
-        }
-
-        if (activeOverlayIndicators.BB) {
-            canvasContext.strokeStyle = 'rgba(0,176,255,0.4)';
-            canvasContext.lineWidth = 1;
-            canvasContext.beginPath();
-            simulationTickArray.forEach((tick, idx) => {
-                let cx = (idx * stepWidth) + (stepWidth / 2);
-                let cy = height - ((((tick.close * 1.001) - minVal) / range) * height);
-                if (idx === 0) canvasContext.moveTo(cx, cy); else canvasContext.lineTo(cx, cy);
-            });
-            canvasContext.stroke();
-
-            canvasContext.beginPath();
-            simulationTickArray.forEach((tick, idx) => {
-                let cx = (idx * stepWidth) + (stepWidth / 2);
-                let cy = height - ((((tick.close * 0.999) - minVal) / range) * height);
-                if (idx === 0) canvasContext.moveTo(cx, cy); else canvasContext.lineTo(cx, cy);
-            });
-            canvasContext.stroke();
-        }
     }
 
     function simulateHighFrequencyLiquidityStream() {
-        Object.keys(liquidityCatalog).forEach(sym => {
-            let node = liquidityCatalog[sym];
-            let deltaMove = (sym.includes("JPY") || sym.includes("US30") || sym.includes("BTC")) ? 0.2 : 0.0001;
-            node.price += (Math.random() - 0.5) * deltaMove;
-            
-            let htmlTarget = document.getElementById(`watch-val-${sym.replace('/','-')}`);
-            if (htmlTarget) htmlTarget.innerText = node.price.toFixed(node.digits);
-        });
-
+        Object.keys(liquidityCatalog).forEach(sym => { liquidityCatalog[sym].price += (Math.random() - 0.5) * 0.001; });
         let activeNode = liquidityCatalog[activeSelectedPair];
-        const bidEl = document.getElementById('hero-live-bid');
-        if (bidEl) bidEl.innerText = activeNode.price.toFixed(activeNode.digits);
-
-        if (simulationTickArray.length > 0) {
-            let workingCandle = simulationTickArray[simulationTickArray.length - 1];
-            workingCandle.close = activeNode.price;
-            workingCandle.high = Math.max(workingCandle.high, activeNode.price);
-            workingCandle.low = Math.min(workingCandle.low, activeNode.price);
-            
-            forceChartRedrawPipeline();
-        }
-
-        evaluateBalanceLiquidationEquations();
-    }
-
-    function evaluateBalanceLiquidationEquations() {
-        let activeFloatingAggregateSum = 0;
-        let cumulativeUsedMarginCollateral = 0;
-
-        openPositionsRegister.forEach(pos => {
-            let liveQuote = liquidityCatalog[pos.pair].price;
-            let definitionNode = liquidityCatalog[pos.pair];
-            let rawPointsDelta = pos.type === 'BUY' ? (liveQuote - pos.entry) : (pos.entry - liveQuote);
-            
-            let positionPnL = rawPointsDelta * pos.lots * definitionNode.multiplier * 132.00;
-            activeFloatingAggregateSum += positionPnL;
-
-            cumulativeUsedMarginCollateral += (pos.lots * definitionNode.multiplier * pos.entry * 132.00) / 500;
-        });
-
-        accountCapitalState.floatingPnL = activeFloatingAggregateSum;
-        accountCapitalState.equity = accountCapitalState.balance + activeFloatingAggregateSum;
-        accountCapitalState.usedMargin = cumulativeUsedMarginCollateral;
-        accountCapitalState.freeMargin = accountCapitalState.equity - cumulativeUsedMarginCollateral;
-        accountCapitalState.marginLevel = cumulativeUsedMarginCollateral > 0 ? (accountCapitalState.equity / cumulativeUsedMarginCollateral) * 100 : 100.00;
-
-        const balEl = document.getElementById('top-balance');
-        const eqEl = document.getElementById('top-equity');
-        const fmEl = document.getElementById('top-freemargin');
-        const umEl = document.getElementById('top-usedmargin');
-        const mlEl = document.getElementById('top-marginlevel');
-        const pnlEl = document.getElementById('top-floatingpnl');
-
-        if (balEl) balEl.innerText = accountCapitalState.balance.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-        if (eqEl) eqEl.innerText = accountCapitalState.equity.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-        if (fmEl) fmEl.innerText = accountCapitalState.freeMargin.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-        if (umEl) umEl.innerText = accountCapitalState.usedMargin.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-        if (mlEl) mlEl.innerText = `${accountCapitalState.marginLevel.toFixed(2)}%`;
-        
-        if (pnlEl) {
-            pnlEl.innerText = accountCapitalState.floatingPnL.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
-            pnlEl.style.color = accountCapitalState.floatingPnL >= 0 ? 'var(--high-green)' : 'var(--low-red)';
-        }
-
-        if (currentLedgerTab === 'POSITIONS') {
-            rebuildTerminalLedgerView();
-        }
-    }
-
-    function toggleCopyMirrorAllocations(vaultName) {
-        alert(`Mirror allocation handshake completed. Synchronization processing for [${vaultName}] completed successfully.`);
-    }
-
-    function triggerCapitalRoute(direction) {
-        alert(`Routing clearing validation data directly to secure localized client ledger endpoints for immediate ${direction} settlement.`);
+        if(document.getElementById('hero-live-bid')) document.getElementById('hero-live-bid').innerText = activeNode.price.toFixed(activeNode.digits);
     }
 </script>
 </body>
