@@ -28,17 +28,45 @@
 
         .app-container { display: flex; flex-direction: column; height: 100vh; width: 100%; filter: blur(0px); transition: filter 0.4s ease; }
 
-        /* --- PRELOADER SYSTEM --- */
+        /* --- ADVANCED FOREX PRELOADER SYSTEM --- */
         #nexafx-preloader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #030508;
             z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+            padding: 20px;
         }
-        .loader-brand { font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; margin-bottom: 30px; animation: pulseGlow 2s infinite ease-in-out; }
+        .preloader-layout-wrapper {
+            width: 900px; max-width: 100%; display: flex; flex-direction: column; align-items: center; gap: 24px;
+        }
+        .loader-brand { font-size: 2.5rem; font-weight: 900; letter-spacing: 2px; text-align: center; animation: pulseGlow 2s infinite ease-in-out; }
         .loader-brand span { color: var(--neon-blue); font-weight: 300; }
-        .loader-track { width: 280px; height: 2px; background: #111823; border-radius: 4px; overflow: hidden; margin-bottom: 15px; position: relative; }
+        
+        /* Interactive Forex Loading Visual Matrix */
+        .loader-forex-visuals {
+            width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 10px 0;
+        }
+        .visual-widget {
+            background: rgba(11, 17, 26, 0.7); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px;
+            display: flex; flex-direction: column; gap: 8px; font-family: monospace;
+        }
+        .visual-widget-title { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; display: flex; justify-content: space-between; }
+        .visual-ticker-grid { display: flex; flex-direction: column; gap: 4px; }
+        .visual-ticker-row { display: flex; justify-content: space-between; font-size: 0.75rem; }
+        
+        /* Simulated Sparkline Candles Container */
+        .visual-sparkline-box { height: 40px; display: flex; align-items: flex-end; gap: 3px; border-bottom: 1px dashed rgba(100, 124, 156, 0.3); padding-bottom: 2px; }
+        .spark-candle { flex: 1; background: var(--high-green); min-height: 5px; border-radius: 1px; transition: height 0.3s ease; }
+        .spark-candle.down { background: var(--low-red); }
+
+        /* Order Book Depth Bars */
+        .depth-bar-wrapper { display: flex; flex-direction: column; gap: 3px; }
+        .depth-row { display: flex; align-items: center; font-size: 0.7rem; gap: 6px; }
+        .depth-fill { height: 6px; border-radius: 2px; background: rgba(0, 230, 118, 0.25); }
+        .depth-fill.ask { background: rgba(255, 23, 68, 0.25); }
+
+        .loader-track { width: 320px; max-width: 100%; height: 4px; background: #111823; border-radius: 4px; overflow: hidden; position: relative; }
         .loader-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--neon-blue), var(--high-green)); border-radius: 4px; transition: width 0.1s linear; }
-        .loader-status { font-family: monospace; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; min-height: 15px; }
+        .loader-status { font-family: monospace; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; min-height: 15px; text-align: center; }
 
         @keyframes pulseGlow {
             0%, 100% { opacity: 0.8; transform: scale(0.99); }
@@ -52,7 +80,7 @@
             transition: all 0.5s ease;
         }
         .auth-card {
-            width: 850px; max-width: 100%; height: 500px; background: var(--panel); border: 1px solid var(--border-color);
+            width: 900px; max-width: 100%; height: 550px; background: var(--panel); border: 1px solid var(--border-color);
             border-radius: 12px; display: flex; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
         .auth-sidebar {
@@ -63,6 +91,16 @@
         .auth-sidebar-stats { background: rgba(26,38,54,0.2); padding: 15px; border-radius: 6px; border: 1px solid rgba(26,38,54,0.4); }
         .auth-sidebar-stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.75rem; font-family: monospace; }
         .auth-main-form { flex: 1.2; padding: 45px; display: flex; flex-direction: column; justify-content: center; background: var(--panel); }
+        
+        /* Central Dynamic Navigation Dashboard Layer Inside Auth Screen */
+        #auth-gateway-dashboard { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px; flex: 1.2; }
+        .gateway-icon-cluster { font-size: 3.5rem; color: var(--neon-blue); margin-bottom: 20px; display: flex; gap: 15px; }
+        .gateway-nav-buttons { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; margin-top: 15px; }
+        .gateway-btn { width: 100%; height: 44px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--border-color); transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .gateway-btn.primary { background: var(--neon-blue); color: #fff; border: none; }
+        .gateway-btn.secondary { background: var(--panel-light); color: #fff; }
+        .gateway-btn:hover { transform: translateY(-2px); opacity: 0.95; box-shadow: 0 4px 12px rgba(0, 176, 255, 0.2); }
+
         .auth-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 5px; color: #fff; }
         .auth-subtitle { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 25px; }
         .auth-form-group { margin-bottom: 16px; }
@@ -182,17 +220,44 @@
             .bottom-ledger-terminal { height: 300px; }
             .auth-card { height: auto; flex-direction: column; }
             .auth-sidebar { display: none; }
+            .loader-forex-visuals { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
 <div id="nexafx-preloader">
-    <div class="loader-brand">NEXAFX<span>TRADE</span></div>
-    <div class="loader-track">
-        <div class="loader-bar" id="preloader-bar"></div>
+    <div class="preloader-layout-wrapper">
+        <div class="loader-brand">NEXAFX<span>TRADE</span></div>
+        
+        <div class="loader-forex-visuals">
+            <div class="visual-widget">
+                <div class="visual-widget-title"><span>Live Tick Matrix</span><span style="color:var(--high-green)">ONLINE</span></div>
+                <div class="visual-ticker-grid">
+                    <div class="visual-ticker-row"><span>EUR/USD</span><span id="load-tick-eur" style="color:var(--high-green)">1.08520</span></div>
+                    <div class="visual-ticker-row"><span>GBP/USD</span><span id="load-tick-gbp" style="color:var(--high-green)">1.26440</span></div>
+                    <div class="visual-ticker-row"><span>XAU/USD</span><span id="load-tick-xau" style="color:var(--gold)">2342.10</span></div>
+                </div>
+            </div>
+            <div class="visual-widget">
+                <div class="visual-widget-title"><span>Interbank Candle Stream</span><span style="color:var(--neon-blue)">HFT-FEED</span></div>
+                <div class="visual-sparkline-box" id="preloader-sparkline">
+                    </div>
+            </div>
+            <div class="visual-widget">
+                <div class="visual-widget-title"><span>ECN Order Depth</span><span style="color:var(--neon-blue)">MAPPED</span></div>
+                <div class="depth-bar-wrapper">
+                    <div class="depth-row"><span>Bids</span><div class="depth-fill" style="width: 75%;"></div></div>
+                    <div class="depth-row"><span>Asks</span><div class="depth-fill ask" style="width: 62%;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loader-track">
+            <div class="loader-bar" id="preloader-bar"></div>
+        </div>
+        <div class="loader-status" id="preloader-status">Initializing Live Trading Workspace...</div>
     </div>
-    <div class="loader-status" id="preloader-status">Initializing Live Trading Workspace...</div>
 </div>
 
 <div id="nexafx-auth-screen">
@@ -219,7 +284,25 @@
             <p style="font-size:0.6rem; color:var(--text-dim); line-height:1.3;">Warning: Access is restricted to authorized traders. Forex and contract operations contain financial leverage risk profiles.</p>
         </div>
         
-        <div class="auth-main-form" id="auth-form-login">
+        <div class="auth-main-form" id="auth-gateway-dashboard">
+            <div class="gateway-icon-cluster">
+                <i class="fas fa-chart-line" style="color: var(--high-green);"></i>
+                <i class="fas fa-shield-alt"></i>
+                <i class="fas fa-wallet" style="color: var(--gold);"></i>
+            </div>
+            <h2 class="auth-title">Trader Gateway Dashboard</h2>
+            <p class="auth-subtitle" style="max-width: 400px; margin-left: auto; margin-right: auto;">Welcome to Nexafxtrade Secure Terminal Hub. Choose an option below to enter your institutional portal account layout.</p>
+            <div class="gateway-nav-buttons">
+                <button class="gateway-btn primary" onclick="switchAuthMode('LOGIN')">
+                    <i class="fas fa-sign-in-alt"></i> Already Registered? Login
+                </button>
+                <button class="gateway-btn secondary" onclick="switchAuthMode('REGISTER')">
+                    <i class="fas fa-user-plus"></i> New Trader? Create Account
+                </button>
+            </div>
+        </div>
+        
+        <div class="auth-main-form" id="auth-form-login" style="display:none;">
             <h2 class="auth-title">Trader Login</h2>
             <p class="auth-subtitle">Enter your account credentials to access your secure live dashboard.</p>
             <div class="auth-form-group">
@@ -237,7 +320,7 @@
                 </div>
             </div>
             <button class="auth-submit-btn" onclick="navigateToPage('/login')">Sign In to Dashboard</button>
-            <p class="auth-switch-mode">Don't have an account? <span onclick="switchAuthMode('REGISTER')">Register Trading Account</span></p>
+            <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
 
         <div class="auth-main-form" id="auth-form-register" style="display:none;">
@@ -265,7 +348,7 @@
                 </div>
             </div>
             <button class="auth-submit-btn" onclick="navigateToPage('/register')">Create My Account</button>
-            <p class="auth-switch-mode">Already have an account? <span onclick="switchAuthMode('LOGIN')">Go to Trader Login</span></p>
+            <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
     </div>
 </div>
@@ -486,7 +569,7 @@
         "ETH/USD": { category: "CRYPTO", price: 3342.25, bidOffset: -0.25, askOffset: 0.25, digits: 2, spreadPips: 5.0, changePct: -1.15, high: 3450.00, low: 3290.00, multiplier: 1 },
         "XAU/USD": { category: "COMMODITY", price: 2342.10, bidOffset: -0.15, askOffset: 0.15, digits: 2, spreadPips: 3.0, changePct: 0.85, high: 2360.00, low: 2330.00, multiplier: 100 },
         "USOIL": { category: "COMMODITY", price: 78.45, bidOffset: -0.02, askOffset: 0.02, digits: 2, spreadPips: 4.0, changePct: 0.32, high: 79.20, low: 77.90, multiplier: 100 },
-        "US30": { category: "INDICES", price: 39120.00, bidOffset: -1.00, askOffset: 1.00, digits: 2, spreadPips: 2.0, changePct: 0.15, high: 39300.00, low: 38950.00, multiplier: 10
+        "US30": { category: "INDICES", price: 39120.00, bidOffset: -1.00, askOffset: 1.00, digits: 2, spreadPips: 2.0, changePct: 0.15, high: 39300.00, low: 38950.00, multiplier: 10 }
     };
 
     let macroCalendarEvents = [
@@ -509,7 +592,8 @@
     let canvasContext;
     
     window.addEventListener('DOMContentLoaded', () => {
-        // Run Premium Loading System Orchestrator First
+        // Run Preloader Interbank Display Loops
+        initPreloaderVisualSimulations();
         runInstitutionalPreloader();
 
         setInterval(() => {
@@ -525,15 +609,40 @@
     function navigateToPage(endpointRoute) {
         console.log("Routing traffic destination explicitly toward client view module: " + endpointRoute);
         
-        // This function manages routing configurations gracefully
         if (endpointRoute === '/login' || endpointRoute === '/register') {
-            bypassAuthSequence(); // Run login state module initialization block setup
+            bypassAuthSequence(); 
         } else {
-            // For separate file apps or Next.js route structures, it forwards directly:
             window.location.href = endpointRoute;
         }
     }
     /* =============================================================================== */
+
+    function initPreloaderVisualSimulations() {
+        const sparkline = document.getElementById('preloader-sparkline');
+        if (!sparkline) return;
+        // Generate crisp clean mini loader candles
+        for(let i=0; i<16; i++) {
+            const candle = document.createElement('div');
+            candle.className = `spark-candle ${Math.random() > 0.4 ? '' : 'down'}`;
+            candle.style.height = `${Math.floor(Math.random() * 30) + 8}px`;
+            sparkline.appendChild(candle);
+        }
+
+        // Fast-ticking preloader price feeds loop
+        setInterval(() => {
+            if(document.getElementById('load-tick-eur')) {
+                document.getElementById('load-tick-eur').innerText = (1.08500 + Math.random()*0.0009).toFixed(5);
+                document.getElementById('load-tick-gbp').innerText = (1.26400 + Math.random()*0.0009).toFixed(5);
+                document.getElementById('load-tick-xau').innerText = (2341.00 + Math.random()*2.5).toFixed(2);
+                
+                // Shuffle sparkline heights to simulate live movement
+                const candles = sparkline.querySelectorAll('.spark-candle');
+                candles.forEach(c => {
+                    c.style.height = `${Math.floor(Math.random() * 30) + 8}px`;
+                });
+            }
+        }, 250);
+    }
 
     function runInstitutionalPreloader() {
         const statuses = [
@@ -563,16 +672,21 @@
                     document.getElementById("nexafx-auth-screen").style.display = "flex";
                 }, 600);
             }
-        }, 35);
+        }, 30);
     }
 
     function switchAuthMode(mode) {
+        // Clear views
+        document.getElementById("auth-gateway-dashboard").style.display = "none";
+        document.getElementById("auth-form-login").style.display = "none";
+        document.getElementById("auth-form-register").style.display = "none";
+
         if (mode === 'REGISTER') {
-            document.getElementById("auth-form-login").style.display = "none";
             document.getElementById("auth-form-register").style.display = "flex";
-        } else {
-            document.getElementById("auth-form-register").style.display = "none";
+        } else if (mode === 'LOGIN') {
             document.getElementById("auth-form-login").style.display = "flex";
+        } else {
+            document.getElementById("auth-gateway-dashboard").style.display = "flex";
         }
     }
 
@@ -779,6 +893,7 @@
         rebuildTerminalLedgerView();
     }
 
+    // Fixed typo from alterTerminalLedgerFocus routing layout definition bind
     function alterTerminalLedgerFocus(tabId) {
         currentLedgerTab = tabId;
         document.querySelectorAll('.bottom-ledger-terminal .sub-tab-strip .sub-tab-btn').forEach(btn => {
