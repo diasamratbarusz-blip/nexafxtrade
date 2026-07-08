@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Login | NEXAFX Premium Architecture</title>
+    <title>Login | NEXAFX TRADE</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -26,7 +26,7 @@
         .auth-header { text-align: center; margin-bottom: 25px; }
         .brand-title { color: #00ff00; font-weight: 900; font-size: 1.6rem; letter-spacing: -1px; text-transform: uppercase; margin: 0; }
         .brand-title span { color: var(--primary); }
-        .auth-subtitle { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; text-transform: uppercase; }
+        .auth-subtitle { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
         .form-group { position: relative; margin-bottom: 18px; width: 100%; }
         .form-group i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-dim); }
         .auth-input {
@@ -42,7 +42,7 @@
             justify-content: center; gap: 8px; margin-top: 25px;
         }
         .btn-auth-submit:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        .status-message { margin-top: 15px; font-size: 0.85rem; font-weight: 700; text-align: center; min-height: 20px; font-family: monospace; }
+        .status-message { margin-top: 15px; font-size: 0.85rem; font-weight: 700; text-align: center; min-height: 20px; font-family: inherit; }
         .msg-error { color: var(--danger); }
         .msg-success { color: var(--success); }
         .auth-routing-footer { margin-top: 20px; text-align: center; font-size: 0.8rem; color: var(--text-dim); }
@@ -55,27 +55,27 @@
     <div class="auth-card">
         <div class="auth-header">
             <h1 class="brand-title">NEXAFX<span>TRADE</span></h1>
-            <div class="auth-subtitle">Secure Access Portal Node</div>
+            <div class="auth-subtitle">Secure Trader Login</div>
         </div>
 
         <div class="form-group">
-            <input type="email" id="email" class="auth-input" placeholder="Registered Email Address" required>
+            <input type="email" id="email" class="auth-input" placeholder="Email Address" required>
             <i class="fas fa-envelope"></i>
         </div>
 
         <div class="form-group">
-            <input type="password" id="password" class="auth-input" placeholder="Account Password" required>
+            <input type="password" id="password" class="auth-input" placeholder="Password" required>
             <i class="fas fa-lock"></i>
         </div>
 
         <button class="btn-auth-submit" onclick="login()">
-            <i class="fas fa-sign-in-alt"></i> Access Vault
+            <i class="fas fa-sign-in-alt"></i> Sign In to Account
         </button>
 
         <p id="msg" class="status-message"></p>
 
         <div class="auth-routing-footer">
-            Don't have an operating terminal node? <a href="/register">Register Terminal</a>
+            Don't have a trading account? <a href="/register">Register Now</a>
         </div>
     </div>
 </div>
@@ -88,14 +88,14 @@
 
     async function login(){
         const msgNode = document.getElementById("msg");
-        msgNode.innerText = "Connecting to network node...";
+        msgNode.innerText = "Connecting to secure server...";
         msgNode.className = "status-message msg-success";
 
         const emailValue = document.getElementById("email").value.trim();
         const passwordValue = document.getElementById("password").value;
 
         if(!emailValue || !passwordValue) {
-            msgNode.innerText = "⚠️ Credentials inputs cannot be blank.";
+            msgNode.innerText = "⚠️ Please fill in all fields.";
             msgNode.className = "status-message msg-error";
             return;
         }
@@ -110,29 +110,27 @@
             const data = await res.json();
 
             if(res.ok){
-                msgNode.innerText = "Authorization granted! Syncing data modules...";
+                msgNode.innerText = "Login successful! Opening trading dashboard...";
                 msgNode.className = "status-message msg-success";
                 
                 localStorage.setItem("token", data.token);
                 if (data.user) {
                     localStorage.setItem("operatorName", data.user.name);
-                    // UPDATED: Save the whole user object so the dashboard loads instantly
                     localStorage.setItem("user", JSON.stringify(data.user));
                 }
                 
-                // UPDATED: Changed from "dashboard.html" to "/dashboard" for Next.js routing
                 setTimeout(() => {
                     window.location.href = "/dashboard"; 
                 }, 800);
             } else {
-                msgNode.innerText = "❌ Login failed: " + (data.message || "Invalid credentials.");
+                msgNode.innerText = "❌ " + (data.message || "Invalid email or password.");
                 msgNode.className = "status-message msg-error";
             }
         } catch(error) {
             if (error.message.includes("Failed to fetch")) {
-                msgNode.innerText = "❌ CONNECTION FAILED: CHECK SERVER/CORS.";
+                msgNode.innerText = "❌ Connection failed. Please try again later.";
             } else {
-                msgNode.innerText = "❌ ERROR: " + error.message.toUpperCase();
+                msgNode.innerText = "❌ Error: " + error.message;
             }
             msgNode.className = "status-message msg-error";
         }
