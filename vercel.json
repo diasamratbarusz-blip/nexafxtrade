@@ -40,7 +40,11 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api/|static/|favicon.ico|logo192.png|manifest.json).*)",
+      "source": "/",
+      "destination": "/trader Gateway Dashboard.html"
+    },
+    {
+      "source": "/((?!api/|static/|favicon.ico|logo192.png|manifest.json|trader\\ Gateway\\ Dashboard\\.html).*)",
       "destination": "/index.html"
     },
     {
