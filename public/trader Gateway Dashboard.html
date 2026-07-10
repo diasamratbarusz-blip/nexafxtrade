@@ -1,0 +1,270 @@
+import React, { useState } from 'react';
+import { 
+  Wallet, 
+  ArrowUpRight, 
+  ArrowDownLeft, 
+  Activity, 
+  Layers, 
+  RefreshCw, 
+  Search, 
+  SlidersHorizontal, 
+  TrendingUp, 
+  TrendingDown, 
+  CheckCircle2, 
+  Clock, 
+  XCircle 
+} from 'lucide-react';
+
+// Mock Data for the Dashboard
+const INITIAL_TRANSACTIONS = [
+  { id: 'TXN-9842', type: 'Deposit', amount: '$1,250.00', method: 'MPESA', status: 'Completed', date: 'Today, 02:30 PM' },
+  { id: 'TXN-9841', type: 'Withdrawal', amount: '$450.00', method: 'Bank Transfer', status: 'Pending', date: 'Today, 11:15 AM' },
+  { id: 'TXN-9839', type: 'Trade Buy', amount: '$3,100.00', method: 'USD Wallet', status: 'Completed', date: 'Yesterday' },
+  { id: 'TXN-9838', type: 'Deposit', amount: '$500.00', method: 'Card', status: 'Failed', date: 'Yesterday' },
+];
+
+const MARKET_WATCH = [
+  { pair: 'BTC / USD', price: '$58,420.00', change: '+2.4%', up: true },
+  { pair: 'ETH / USD', price: '$3,150.25', change: '-1.1%', up: false },
+  { pair: 'SOL / USD', price: '$142.80', change: '+5.8%', up: true },
+];
+
+export default function TraderGatewayDashboard() {
+  const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS);
+  const [filter, setFilter] = useState('All');
+
+  const statusColors = {
+    Completed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    Pending: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    Failed: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+  };
+
+  const statusIcons = {
+    Completed: <CheckCircle2 className="w-3.5 h-3.5 mr-1" />,
+    Pending: <Clock className="w-3.5 h-3.5 mr-1" />,
+    Failed: <XCircle className="w-3.5 h-3.5 mr-1" />,
+  };
+
+  return (
+    <div className="min-h-screen bg-[#090A0F] text-slate-100 font-sans antialiased selection:bg-indigo-500/30">
+      {/* Top Navigation / Header */}
+      <header className="border-b border-slate-800/60 bg-[#0D0E16]/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <Layers className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+              Trader Gateway
+            </h1>
+            <p className="text-xs text-slate-500">Live Infrastructure Node</p>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-4">
+          <button className="p-2 rounded-lg bg-slate-800/40 border border-slate-800 hover:border-slate-700 transition">
+            <RefreshCw className="w-4 h-4 text-slate-400" />
+          </button>
+          <div className="h-8 w-[1px] bg-slate-800"></div>
+          <div className="flex items-center space-x-3 bg-slate-800/30 border border-slate-800/80 px-3 py-1.5 rounded-xl">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+            <span className="text-xs font-medium text-slate-300">Gateway Online</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Dashboard Main Content */}
+      <main className="max-w-7xl mx-auto p-6 space-y-6">
+        
+        {/* Section 1: Overview Cards */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Card 1: Main Balance */}
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#121424] to-[#171930] p-6 border border-indigo-500/10 shadow-xl shadow-black/40 group">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl group-hover:bg-indigo-500/20 transition-all duration-500"></div>
+            <div className="flex justify-between items-start mb-4">
+              <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">Total Net Balance</span>
+              <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400">
+                <Wallet className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-3xl font-bold tracking-tight">$14,240.50</h3>
+              <p className="text-xs text-slate-400 flex items-center">
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-400 mr-1" />
+                <span className="text-emerald-400 font-medium mr-1">+12.3%</span> this week
+              </p>
+            </div>
+          </div>
+
+          {/* Card 2: Total Deposits */}
+          <div className="rounded-2xl bg-[#0F111A] p-6 border border-slate-800/80 shadow-xl shadow-black/20">
+            <div className="flex justify-between items-start mb-4">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Cleared Deposits</span>
+              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+                <ArrowDownLeft className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-3xl font-bold tracking-tight">$8,950.00</h3>
+              <p className="text-xs text-slate-500">Processed across 18 successful webhook events</p>
+            </div>
+          </div>
+
+          {/* Card 3: Active Positions */}
+          <div className="rounded-2xl bg-[#0F111A] p-6 border border-slate-800/80 shadow-xl shadow-black/20">
+            <div className="flex justify-between items-start mb-4">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Active Margin Capital</span>
+              <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
+                <Activity className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-3xl font-bold tracking-tight">$5,290.50</h3>
+              <p className="text-xs text-slate-500">Currently allocated inside live contracts</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 2: Split Layout (Market & Actions) */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Market Watch Widget */}
+          <div className="lg:col-span-1 rounded-2xl bg-[#0F111A] border border-slate-800/80 p-5 flex flex-col justify-between">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-300 mb-4 flex items-center">
+                <SlidersHorizontal className="w-4 h-4 mr-2 text-indigo-400" /> Market Tickers
+              </h3>
+              <div className="space-y-3">
+                {MARKET_WATCH.map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/40">
+                    <div>
+                      <p className="text-xs font-bold text-slate-200">{item.pair}</p>
+                      <p className="text-sm font-mono text-slate-400 mt-0.5">{item.price}</p>
+                    </div>
+                    <div className={`flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg ${
+                      item.up ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'
+                    }`}>
+                      {item.up ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
+                      {item.change}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-slate-800/60 text-center">
+              <button className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
+                View Advanced Trading Terminal &rarr;
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Gateway Actions Panel */}
+          <div className="lg:col-span-2 rounded-2xl bg-[#0F111A] border border-slate-800/80 p-5">
+            <h3 className="text-sm font-semibold text-slate-300 mb-4">Quick Gateway Routing</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-4 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700 transition duration-200">
+                <h4 className="text-xs font-bold text-slate-300 mb-1">Initiate Manual Escrow Verification</h4>
+                <p className="text-xs text-slate-500 mb-3">Manually verify and override incoming ledger notifications against phone confirmations.</p>
+                <button className="w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-lg text-xs font-medium transition shadow-md shadow-indigo-600/10">
+                  Launch Verification
+                </button>
+              </div>
+              <div className="p-4 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700 transition duration-200">
+                <h4 className="text-xs font-bold text-slate-300 mb-1">Webhook Endpoint Node</h4>
+                <p className="text-xs text-slate-500 mb-3">Inspect status payloads, view responses, and debug incoming system events.</p>
+                <button className="w-full py-2 px-3 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-700/60 text-slate-200 rounded-lg text-xs font-medium transition">
+                  Inspect Logs
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 3: Ledger Transaction Log */}
+        <section className="rounded-2xl bg-[#0F111A] border border-slate-800/80 shadow-xl overflow-hidden">
+          {/* Table Header Filter Tools */}
+          <div className="p-5 border-b border-slate-800/60 bg-[#121421]/30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-200">Gateway Transaction Logs</h3>
+              <p className="text-xs text-slate-500 mt-0.5">Real-time status updates of incoming webhook payloads</p>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input 
+                  type="text" 
+                  placeholder="Filter reference ID..." 
+                  className="bg-slate-900/80 border border-slate-800 focus:border-indigo-500/50 outline-none text-xs rounded-xl pl-9 pr-4 py-2 w-48 transition font-mono placeholder:text-slate-600 text-slate-300"
+                />
+              </div>
+              
+              <div className="flex rounded-lg bg-slate-900 p-0.5 border border-slate-800">
+                {['All', 'Completed', 'Pending'].map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setFilter(t)}
+                    className={`px-3 py-1 text-xs font-medium rounded-md transition ${
+                      filter === t ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Main Data Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-800/60 text-slate-400 text-[11px] uppercase tracking-wider font-semibold bg-slate-900/10">
+                  <th className="py-3 px-5">Reference ID</th>
+                  <th className="py-3 px-5">Routing Event</th>
+                  <th className="py-3 px-5">System Method</th>
+                  <th className="py-3 px-5">Timestamp</th>
+                  <th className="py-3 px-5">Gross Amount</th>
+                  <th className="py-3 px-5 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/40 text-xs font-medium">
+                {transactions
+                  .filter(txn => filter === 'All' || txn.status === filter)
+                  .map((txn) => (
+                    <tr key={txn.id} className="hover:bg-slate-900/30 transition group">
+                      <td className="py-3.5 px-5 font-mono text-indigo-400 font-semibold group-hover:text-indigo-300">
+                        {txn.id}
+                      </td>
+                      <td className="py-3.5 px-5">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ${
+                          txn.type === 'Deposit' ? 'text-emerald-400 bg-emerald-500/5' : 'text-amber-400 bg-amber-500/5'
+                        }`}>
+                          {txn.type === 'Deposit' ? (
+                            <ArrowDownLeft className="w-3 h-3 mr-1" />
+                          ) : (
+                            <ArrowUpRight className="w-3 h-3 mr-1" />
+                          )}
+                          {txn.type}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-5 text-slate-300 font-mono">{txn.method}</td>
+                      <td className="py-3.5 px-5 text-slate-500">{txn.date}</td>
+                      <td className="py-3.5 px-5 text-slate-200 font-mono font-bold">{txn.amount}</td>
+                      <td className="py-3.5 px-5 text-right">
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
+                          statusColors[txn.status as keyof typeof statusColors]
+                        }`}>
+                          {statusIcons[txn.status as keyof typeof statusIcons]}
+                          {txn.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
