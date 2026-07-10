@@ -1,270 +1,304 @@
-import React, { useState } from 'react';
-import { 
-  Wallet, 
-  ArrowUpRight, 
-  ArrowDownLeft, 
-  Activity, 
-  Layers, 
-  RefreshCw, 
-  Search, 
-  SlidersHorizontal, 
-  TrendingUp, 
-  TrendingDown, 
-  CheckCircle2, 
-  Clock, 
-  XCircle 
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trader Gateway Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Custom Tailwind Configuration for smooth dark theme matching
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#06070B',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar and animations */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0D0E16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4F46E5;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#090A0F] text-slate-100 font-sans antialiased selection:bg-indigo-500/30">
 
-// Mock Data for the Dashboard
-const INITIAL_TRANSACTIONS = [
-  { id: 'TXN-9842', type: 'Deposit', amount: '$1,250.00', method: 'MPESA', status: 'Completed', date: 'Today, 02:30 PM' },
-  { id: 'TXN-9841', type: 'Withdrawal', amount: '$450.00', method: 'Bank Transfer', status: 'Pending', date: 'Today, 11:15 AM' },
-  { id: 'TXN-9839', type: 'Trade Buy', amount: '$3,100.00', method: 'USD Wallet', status: 'Completed', date: 'Yesterday' },
-  { id: 'TXN-9838', type: 'Deposit', amount: '$500.00', method: 'Card', status: 'Failed', date: 'Yesterday' },
-];
-
-const MARKET_WATCH = [
-  { pair: 'BTC / USD', price: '$58,420.00', change: '+2.4%', up: true },
-  { pair: 'ETH / USD', price: '$3,150.25', change: '-1.1%', up: false },
-  { pair: 'SOL / USD', price: '$142.80', change: '+5.8%', up: true },
-];
-
-export default function TraderGatewayDashboard() {
-  const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS);
-  const [filter, setFilter] = useState('All');
-
-  const statusColors = {
-    Completed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    Pending: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    Failed: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-  };
-
-  const statusIcons = {
-    Completed: <CheckCircle2 className="w-3.5 h-3.5 mr-1" />,
-    Pending: <Clock className="w-3.5 h-3.5 mr-1" />,
-    Failed: <XCircle className="w-3.5 h-3.5 mr-1" />,
-  };
-
-  return (
-    <div className="min-h-screen bg-[#090A0F] text-slate-100 font-sans antialiased selection:bg-indigo-500/30">
-      {/* Top Navigation / Header */}
-      <header className="border-b border-slate-800/60 bg-[#0D0E16]/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <Layers className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-              Trader Gateway
-            </h1>
-            <p className="text-xs text-slate-500">Live Infrastructure Node</p>
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <button className="p-2 rounded-lg bg-slate-800/40 border border-slate-800 hover:border-slate-700 transition">
-            <RefreshCw className="w-4 h-4 text-slate-400" />
-          </button>
-          <div className="h-8 w-[1px] bg-slate-800"></div>
-          <div className="flex items-center space-x-3 bg-slate-800/30 border border-slate-800/80 px-3 py-1.5 rounded-xl">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span className="text-xs font-medium text-slate-300">Gateway Online</span>
-          </div>
-        </div>
-      </header>
-
-      {/* Dashboard Main Content */}
-      <main className="max-w-7xl mx-auto p-6 space-y-6">
+    <div id="loading-screen" class="fixed inset-0 z-50 bg-[#06070B] flex flex-col items-center justify-center p-6">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.05),transparent_60%)] pointer-events-none"></div>
         
-        {/* Section 1: Overview Cards */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Card 1: Main Balance */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#121424] to-[#171930] p-6 border border-indigo-500/10 shadow-xl shadow-black/40 group">
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl group-hover:bg-indigo-500/20 transition-all duration-500"></div>
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">Total Net Balance</span>
-              <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400">
-                <Wallet className="w-5 h-5" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-3xl font-bold tracking-tight">$14,240.50</h3>
-              <p className="text-xs text-slate-400 flex items-center">
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-400 mr-1" />
-                <span className="text-emerald-400 font-medium mr-1">+12.3%</span> this week
-              </p>
-            </div>
-          </div>
+        <div class="w-full max-w-md bg-[#0D0E16] border border-slate-800/80 rounded-2xl p-6 shadow-2xl shadow-black/80 relative overflow-hidden">
+            <div id="progress-bar" class="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 transition-all duration-300 w-0"></div>
 
-          {/* Card 2: Total Deposits */}
-          <div className="rounded-2xl bg-[#0F111A] p-6 border border-slate-800/80 shadow-xl shadow-black/20">
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Cleared Deposits</span>
-              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
-                <ArrowDownLeft className="w-5 h-5" />
-              </div>
+            <div class="flex flex-col items-center text-center mb-8">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-600/10 border border-indigo-500/30 flex items-center justify-center mb-4 relative">
+                    <i data-lucide="cpu" class="w-6 h-6 text-indigo-400 animate-pulse"></i>
+                </div>
+                <h2 class="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+                    Trader Gateway Auth
+                </h2>
+                <p class="text-xs text-slate-500 mt-1">Routing node verification in progress</p>
             </div>
-            <div className="space-y-1">
-              <h3 className="text-3xl font-bold tracking-tight">$8,950.00</h3>
-              <p className="text-xs text-slate-500">Processed across 18 successful webhook events</p>
-            </div>
-          </div>
 
-          {/* Card 3: Active Positions */}
-          <div className="rounded-2xl bg-[#0F111A] p-6 border border-slate-800/80 shadow-xl shadow-black/20">
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Active Margin Capital</span>
-              <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
-                <Activity className="w-5 h-5" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-3xl font-bold tracking-tight">$5,290.50</h3>
-              <p className="text-xs text-slate-500">Currently allocated inside live contracts</p>
-            </div>
-          </div>
-        </section>
+            <div id="terminal-logs" class="bg-black/40 border border-slate-900 rounded-xl p-4 mb-6 font-mono text-[11px] space-y-2.5 h-36 overflow-y-auto shadow-inner text-slate-400">
+                </div>
 
-        {/* Section 2: Split Layout (Market & Actions) */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Market Watch Widget */}
-          <div className="lg:col-span-1 rounded-2xl bg-[#0F111A] border border-slate-800/80 p-5 flex flex-col justify-between">
-            <div>
-              <h3 className="text-sm font-semibold text-slate-300 mb-4 flex items-center">
-                <SlidersHorizontal className="w-4 h-4 mr-2 text-indigo-400" /> Market Tickers
-              </h3>
-              <div className="space-y-3">
-                {MARKET_WATCH.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/40">
-                    <div>
-                      <p className="text-xs font-bold text-slate-200">{item.pair}</p>
-                      <p className="text-sm font-mono text-slate-400 mt-0.5">{item.price}</p>
-                    </div>
-                    <div className={`flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg ${
-                      item.up ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'
-                    }`}>
-                      {item.up ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
-                      {item.change}
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div class="flex items-center justify-between px-1 text-xs">
+                <span class="text-slate-500 flex items-center">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-indigo-500/70 mr-1.5"></i> SSL Secured Node
+                </span>
+                <span id="progress-percent" class="font-mono text-indigo-400 font-semibold bg-indigo-500/5 px-2 py-0.5 rounded border border-indigo-500/10">
+                    0%
+                </span>
             </div>
-            <div className="mt-4 pt-4 border-t border-slate-800/60 text-center">
-              <button className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition">
-                View Advanced Trading Terminal &rarr;
-              </button>
-            </div>
-          </div>
-
-          {/* Quick Gateway Actions Panel */}
-          <div className="lg:col-span-2 rounded-2xl bg-[#0F111A] border border-slate-800/80 p-5">
-            <h3 className="text-sm font-semibold text-slate-300 mb-4">Quick Gateway Routing</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700 transition duration-200">
-                <h4 className="text-xs font-bold text-slate-300 mb-1">Initiate Manual Escrow Verification</h4>
-                <p className="text-xs text-slate-500 mb-3">Manually verify and override incoming ledger notifications against phone confirmations.</p>
-                <button className="w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-lg text-xs font-medium transition shadow-md shadow-indigo-600/10">
-                  Launch Verification
-                </button>
-              </div>
-              <div className="p-4 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700 transition duration-200">
-                <h4 className="text-xs font-bold text-slate-300 mb-1">Webhook Endpoint Node</h4>
-                <p className="text-xs text-slate-500 mb-3">Inspect status payloads, view responses, and debug incoming system events.</p>
-                <button className="w-full py-2 px-3 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-700/60 text-slate-200 rounded-lg text-xs font-medium transition">
-                  Inspect Logs
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Section 3: Ledger Transaction Log */}
-        <section className="rounded-2xl bg-[#0F111A] border border-slate-800/80 shadow-xl overflow-hidden">
-          {/* Table Header Filter Tools */}
-          <div className="p-5 border-b border-slate-800/60 bg-[#121421]/30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h3 className="text-sm font-semibold text-slate-200">Gateway Transaction Logs</h3>
-              <p className="text-xs text-slate-500 mt-0.5">Real-time status updates of incoming webhook payloads</p>
-            </div>
-            
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input 
-                  type="text" 
-                  placeholder="Filter reference ID..." 
-                  className="bg-slate-900/80 border border-slate-800 focus:border-indigo-500/50 outline-none text-xs rounded-xl pl-9 pr-4 py-2 w-48 transition font-mono placeholder:text-slate-600 text-slate-300"
-                />
-              </div>
-              
-              <div className="flex rounded-lg bg-slate-900 p-0.5 border border-slate-800">
-                {['All', 'Completed', 'Pending'].map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setFilter(t)}
-                    className={`px-3 py-1 text-xs font-medium rounded-md transition ${
-                      filter === t ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Main Data Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-slate-800/60 text-slate-400 text-[11px] uppercase tracking-wider font-semibold bg-slate-900/10">
-                  <th className="py-3 px-5">Reference ID</th>
-                  <th className="py-3 px-5">Routing Event</th>
-                  <th className="py-3 px-5">System Method</th>
-                  <th className="py-3 px-5">Timestamp</th>
-                  <th className="py-3 px-5">Gross Amount</th>
-                  <th className="py-3 px-5 text-right">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/40 text-xs font-medium">
-                {transactions
-                  .filter(txn => filter === 'All' || txn.status === filter)
-                  .map((txn) => (
-                    <tr key={txn.id} className="hover:bg-slate-900/30 transition group">
-                      <td className="py-3.5 px-5 font-mono text-indigo-400 font-semibold group-hover:text-indigo-300">
-                        {txn.id}
-                      </td>
-                      <td className="py-3.5 px-5">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ${
-                          txn.type === 'Deposit' ? 'text-emerald-400 bg-emerald-500/5' : 'text-amber-400 bg-amber-500/5'
-                        }`}>
-                          {txn.type === 'Deposit' ? (
-                            <ArrowDownLeft className="w-3 h-3 mr-1" />
-                          ) : (
-                            <ArrowUpRight className="w-3 h-3 mr-1" />
-                          )}
-                          {txn.type}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-5 text-slate-300 font-mono">{txn.method}</td>
-                      <td className="py-3.5 px-5 text-slate-500">{txn.date}</td>
-                      <td className="py-3.5 px-5 text-slate-200 font-mono font-bold">{txn.amount}</td>
-                      <td className="py-3.5 px-5 text-right">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
-                          statusColors[txn.status as keyof typeof statusColors]
-                        }`}>
-                          {statusIcons[txn.status as keyof typeof statusIcons]}
-                          {txn.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </main>
+        </div>
     </div>
-  );
-}
+
+    <div id="dashboard-screen" class="hidden">
+        <header class="border-b border-slate-800/60 bg-[#0D0E16]/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <i data-lucide="layers" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+                        Trader Gateway
+                    </h1>
+                    <p class="text-xs text-slate-500">Live Infrastructure Node</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button onclick="restartGateway()" class="p-2 rounded-lg bg-slate-800/40 border border-slate-800 hover:border-slate-700 transition flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                    <span class="hidden sm:inline">Reset Node</span>
+                </button>
+                <div class="h-8 w-[1px] bg-slate-800"></div>
+                <div class="flex items-center space-x-3 bg-slate-800/30 border border-slate-800/80 px-3 py-1.5 rounded-xl">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span class="text-xs font-medium text-slate-300">Handshake Secure</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto p-6 space-y-6">
+            
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#121424] to-[#171930] p-6 border border-indigo-500/10 shadow-xl shadow-black/40 group">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-indigo-400">Total Net Balance</span>
+                        <div class="p-2 rounded-xl bg-indigo-500/10 text-indigo-400">
+                            <i data-lucide="wallet" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-3xl font-bold tracking-tight">$14,240.50</h3>
+                        <p class="text-xs text-slate-400 flex items-center">
+                            <i data-lucide="trending-up" class="w-3.5 h-3.5 text-emerald-400 mr-1"></i>
+                            <span class="text-emerald-400 font-medium mr-1">+12.3%</span> this week
+                        </p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-[#0F111A] p-6 border border-slate-800/80 shadow-xl shadow-black/20">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Cleared Deposits</span>
+                        <div class="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+                            <i data-lucide="arrow-down-left" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-3xl font-bold tracking-tight">$8,950.00</h3>
+                        <p class="text-xs text-slate-500">Processed across successful webhook actions</p>
+                    </div>
+                </div>
+
+                <div class="rounded-2xl bg-[#0F111A] p-6 border border-slate-800/80 shadow-xl shadow-black/20">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Active Margin Capital</span>
+                        <div class="p-2 rounded-xl bg-amber-500/10 text-amber-400">
+                            <i data-lucide="activity" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-3xl font-bold tracking-tight">$5,290.50</h3>
+                        <p class="text-xs text-slate-500">Currently allocated inside live contracts</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="rounded-2xl bg-[#0F111A] border border-slate-800/80 p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-sm font-semibold text-slate-300 mb-4 flex items-center">
+                            <i data-lucide="sliders-horizontal" class="w-4 h-4 mr-2 text-indigo-400"></i> Market Tickers
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/40">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-200">BTC / USD</p>
+                                    <p class="text-sm font-mono text-slate-400 mt-0.5">$58,420.00</p>
+                                </div>
+                                <div class="flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400">
+                                    <i data-lucide="trending-up" class="w-3 h-3 mr-1"></i> +2.4%
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/40">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-200">ETH / USD</p>
+                                    <p class="text-sm font-mono text-slate-400 mt-0.5">$3,150.25</p>
+                                </div>
+                                <div class="flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-400">
+                                    <i data-lucide="trending-down" class="w-3 h-3 mr-1"></i> -1.1%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 text-center">
+                        <button class="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition inline-flex items-center gap-1">
+                            Enter Advanced Trading Workspace <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 rounded-2xl bg-[#0F111A] border border-slate-800/80 p-5">
+                    <h3 class="text-sm font-semibold text-slate-300 mb-4">Quick Gateway Routing</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700 transition duration-200">
+                          <h4 class="text-xs font-bold text-slate-300 mb-1">Initiate Manual Escrow Verification</h4>
+                          <p class="text-xs text-slate-500 mb-3">Manually verify and match incoming webhook ledger notifications against phone confirmations.</p>
+                          <button class="w-full py-2 px-3 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-lg text-xs font-medium transition shadow-md shadow-indigo-600/10">Launch Verification</button>
+                        </div>
+                        <div class="p-4 rounded-xl border border-slate-800/80 bg-slate-900/30 hover:border-slate-700 transition duration-200">
+                          <h4 class="text-xs font-bold text-slate-300 mb-1">Webhook Endpoint Node</h4>
+                          <p class="text-xs text-slate-500 mb-3">Inspect data payloads, track background events, and debug asynchronous server system behaviors.</p>
+                          <button class="w-full py-2 px-3 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 border border-slate-700/60 text-slate-200 rounded-lg text-xs font-medium transition">Inspect Logs</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="rounded-2xl bg-[#0F111A] border border-slate-800/80 shadow-xl overflow-hidden">
+                <div class="p-5 border-b border-slate-800/60 bg-[#121421]/30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h3 class="text-sm font-semibold text-slate-200">Gateway Transaction Logs</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Real-time status updates of incoming webhook payloads</p>
+                    </div>
+                    <div class="relative">
+                        <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" placeholder="Filter reference ID..." class="bg-slate-900/80 border border-slate-800 focus:border-indigo-500/50 outline-none text-xs rounded-xl pl-9 pr-4 py-2 w-48 transition font-mono text-slate-300">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800/60 text-slate-400 text-[11px] uppercase tracking-wider font-semibold bg-slate-900/10">
+                                <th class="py-3 px-5">Reference ID</th>
+                                <th class="py-3 px-5">Routing Event</th>
+                                <th class="py-3 px-5">System Method</th>
+                                <th class="py-3 px-5">Timestamp</th>
+                                <th class="py-3 px-5">Gross Amount</th>
+                                <th class="py-3 px-5 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/40 text-xs font-medium">
+                            <tr class="hover:bg-slate-900/30 transition">
+                                <td class="py-3.5 px-5 font-mono text-indigo-400 font-semibold">TXN-9842</td>
+                                <td class="py-3.5 px-5"><span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold text-emerald-400 bg-emerald-500/5"><i data-lucide="arrow-down-left" class="w-3 h-3 mr-1"></i>Deposit</span></td>
+                                <td class="py-3.5 px-5 text-slate-300 font-mono">MPESA</td>
+                                <td class="py-3.5 px-5 text-slate-500">Just Now</td>
+                                <td class="py-3.5 px-5 text-slate-200 font-mono font-bold">$1,250.00</td>
+                                <td class="py-3.5 px-5 text-right"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border bg-emerald-500/10 text-emerald-400 border-emerald-500/20"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 mr-1"></i>Completed</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/30 transition">
+                                <td class="py-3.5 px-5 font-mono text-indigo-400 font-semibold">TXN-9841</td>
+                                <td class="py-3.5 px-5"><span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold text-amber-400 bg-amber-500/5"><i data-lucide="arrow-up-right" class="w-3 h-3 mr-1"></i>Withdrawal</span></td>
+                                <td class="py-3.5 px-5 text-slate-300 font-mono">Bank Transfer</td>
+                                <td class="py-3.5 px-5 text-slate-500">Today, 11:15 AM</td>
+                                <td class="py-3.5 px-5 text-slate-200 font-mono font-bold">$450.00</td>
+                                <td class="py-3.5 px-5 text-right"><span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border bg-amber-500/10 text-amber-400 border-amber-500/20"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1"></i>Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const logs = [
+            "Establishing secure TLS link to gateway routing layer...",
+            "Verifying active webhooks and payment node status...",
+            "Syncing distributed transaction ledger entries...",
+            "Authorization handshake complete. Redirecting to trading terminal..."
+        ];
+
+        let currentStep = 0;
+
+        function runInitialization() {
+            const logContainer = document.getElementById('terminal-logs');
+            const progressBar = document.getElementById('progress-bar');
+            const percentLabel = document.getElementById('progress-percent');
+            
+            logContainer.innerHTML = '';
+            
+            const interval = setInterval(() => {
+                if (currentStep < logs.length) {
+                    // Inject terminal line
+                    const line = document.createElement('div');
+                    line.className = `flex items-start space-x-2 ${currentStep === logs.length - 1 ? 'text-emerald-400 font-bold' : 'text-slate-400'}`;
+                    line.innerHTML = `<span class="text-indigo-500/70 select-none">&gt;</span> <p>${logs[currentStep]}</p>`;
+                    logContainer.appendChild(line);
+                    logContainer.scrollTop = logContainer.scrollHeight;
+
+                    // Update metrics
+                    currentStep++;
+                    const progress = Math.round((currentStep / logs.length) * 100);
+                    progressBar.style.width = `${progress}%`;
+                    percentLabel.innerText = `${progress}%`;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').classList.add('hidden');
+                        document.getElementById('dashboard-screen').classList.remove('hidden');
+                        // Initialize icons inside the newly revealed view
+                        lucide.createIcons();
+                    }, 600);
+                }
+            }, 900);
+        }
+
+        function restartGateway() {
+            currentStep = 0;
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('loading-screen').classList.remove('hidden');
+            document.getElementById('progress-bar').style.width = '0%';
+            document.getElementById('progress-percent').innerText = '0%';
+            runInitialization();
+        }
+
+        // Auto-run on load
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            runInitialization();
+        });
+    </script>
+</body>
+</html>
