@@ -117,29 +117,29 @@
         /* --- Institutional Main Top Ribbon Header --- */
         header {
             background: var(--panel); display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 16px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; height: 55px;
+            padding: 8px 16px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; height: auto; min-height: 55px; flex-wrap: wrap; gap: 8px;
         }
         .brand { font-size: 1.2rem; font-weight: 900; letter-spacing: 0.5px; }
         .brand span { color: var(--neon-blue); font-weight: 400; }
 
-        .account-meta-strip { display: flex; gap: 12px; align-items: center; overflow-x: auto; max-width: 80%; }
+        .account-meta-strip { display: flex; gap: 8px; align-items: center; overflow-x: auto; max-width: 100%; padding-bottom: 4px; }
         .meta-stat-node {
             background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);
-            padding: 4px 10px; border-radius: 4px; text-align: right; min-width: 105px; flex-shrink: 0;
+            padding: 4px 10px; border-radius: 4px; text-align: right; min-width: 110px; flex-shrink: 0;
         }
         .meta-stat-node .m-lbl { font-size: 0.55rem; color: var(--text-dim); display: block; font-weight: 700; text-transform: uppercase; }
         .meta-stat-node .m-val { font-family: monospace; font-size: 0.85rem; font-weight: 700; }
 
         /* --- Operational Live Status Sub-Bar --- */
         .status-sub-bar {
-            background: #030508; border-bottom: 1px solid var(--border-color); height: 26px;
-            display: flex; align-items: center; justify-content: space-between; padding: 0 16px;
-            font-size: 0.65rem; font-weight: 700; color: var(--text-dim); flex-shrink: 0;
+            background: #030508; border-bottom: 1px solid var(--border-color); height: auto; min-height: 26px;
+            display: flex; align-items: center; justify-content: space-between; padding: 6px 16px;
+            font-size: 0.65rem; font-weight: 700; color: var(--text-dim); flex-shrink: 0; flex-wrap: wrap; gap: 8px;
         }
 
         /* --- Core Master Workspace Layout --- */
         .master-workspace-grid {
-            display: grid; grid-template-columns: 280px 1fr 300px; flex: 1; overflow: hidden; background: #020305;
+            display: grid; grid-template-columns: 310px 1fr 320px; flex: 1; overflow: hidden; background: #020305;
         }
 
         .column-pane { display: flex; flex-direction: column; background: var(--panel); border-right: 1px solid var(--border-color); overflow: hidden; }
@@ -210,13 +210,13 @@
         .analytics-card-node { background: #030508; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 4px; }
 
         /* --- Footer Base Block --- */
-        footer { background: var(--panel); border-top: 1px solid var(--border-color); height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 0.6rem; color: var(--text-dim); flex-shrink: 0; }
+        footer { background: var(--panel); border-top: 1px solid var(--border-color); height: auto; min-height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 6px 16px; font-size: 0.6rem; color: var(--text-dim); flex-shrink: 0; flex-wrap: wrap; gap: 6px; }
 
-        @media (max-width: 1100px) {
+        @media (max-width: 1200px) {
             .master-workspace-grid { grid-template-columns: 1fr; overflow-y: auto; height: auto; }
             body, html { overflow-y: auto; height: auto; }
-            .column-pane { height: 350px; }
-            .center-display-deck { height: 500px; }
+            .column-pane { height: 380px; }
+            .center-display-deck { height: 550px; }
             .bottom-ledger-terminal { height: 300px; }
             .auth-card { height: auto; flex-direction: column; }
             .auth-sidebar { display: none; }
@@ -241,8 +241,7 @@
             </div>
             <div class="visual-widget">
                 <div class="visual-widget-title"><span>Interbank Candle Stream</span><span style="color:var(--neon-blue)">HFT-FEED</span></div>
-                <div class="visual-sparkline-box" id="preloader-sparkline">
-                    </div>
+                <div class="visual-sparkline-box" id="preloader-sparkline"></div>
             </div>
             <div class="visual-widget">
                 <div class="visual-widget-title"><span>ECN Order Depth</span><span style="color:var(--neon-blue)">MAPPED</span></div>
@@ -363,6 +362,8 @@
             <div class="meta-stat-node"><span class="m-lbl">Used Margin</span><span class="m-val" id="top-usedmargin">0.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Margin Level</span><span class="m-val" id="top-marginlevel" style="color:var(--high-green)">100.00%</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Floating P&L</span><span class="m-val" id="top-floatingpnl">0.00</span></div>
+            <div class="meta-stat-node"><span class="m-lbl">Today's Net</span><span class="m-val" id="top-dailypnl" style="color:var(--high-green)">+1,420.00</span></div>
+            <div class="meta-stat-node"><span class="m-lbl">Max Daily Limit</span><span class="m-val" id="top-maxloss" style="color:var(--low-red)">75,000.00</span></div>
         </div>
     </header>
 
@@ -371,7 +372,8 @@
             <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b>NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
             <span>TRADER ID: <b style="color:#fff;">8942105</b></span> &nbsp;|&nbsp;
             <span>ACCOUNT LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
-            <span>TYPE: <b style="color:var(--gold);">RAW ECN ACCOUNT</b></span>
+            <span>TYPE: <b style="color:var(--gold);">RAW ECN ACCOUNT</b></span> &nbsp;|&nbsp;
+            <span>COMMISSION PROFILE: <b style="color:var(--neon-blue);">VIP LOW SPREAD</b></span>
         </div>
         <div>
             <span>MARKET SESSION: <b style="color:#fff;" id="lbl-market-session">LONDON / NEW YORK OVERLAP</b></span> &nbsp;|&nbsp;
@@ -389,12 +391,10 @@
                 <button class="sub-tab-btn" id="m-tab-commods" onclick="switchMarketCatalog('COMMODITY')">Commodities</button>
                 <button class="sub-tab-btn" id="m-tab-indices" onclick="switchMarketCatalog('INDICES')">Indices / Stocks</button>
             </div>
-            <div class="scrolling-list-area" id="market-watch-container">
-            </div>
+            <div class="scrolling-list-area" id="market-watch-container"></div>
 
             <div class="pane-section-header" style="border-top: 1px solid var(--border-color)"><span><i class="fas fa-newspaper"></i> Economic Market Calendar Feed</span></div>
-            <div class="scrolling-list-area" id="macro-news-feed" style="background: rgba(0,0,0,0.15);">
-            </div>
+            <div class="scrolling-list-area" id="macro-news-feed" style="background: rgba(0,0,0,0.15);"></div>
         </section>
 
         <section class="center-display-deck">
@@ -442,8 +442,7 @@
                     <button class="sub-tab-btn" id="led-tab-jrn" onclick="alterTerminalLedgerFocus('JOURNAL')">Trading History Logs</button>
                 </div>
                 
-                <div class="ledger-table-canvas" id="terminal-ledger-display-engine">
-                </div>
+                <div class="ledger-table-canvas" id="terminal-ledger-display-engine"></div>
             </div>
         </section>
 
@@ -565,22 +564,30 @@
         "EUR/USD": { category: "FOREX", price: 1.08520, bidOffset: -0.00002, askOffset: 0.00002, digits: 5, spreadPips: 0.4, changePct: 0.04, high: 1.08900, low: 1.08110, multiplier: 100000 },
         "GBP/USD": { category: "FOREX", price: 1.26440, bidOffset: -0.00003, askOffset: 0.00003, digits: 5, spreadPips: 0.6, changePct: -0.12, high: 1.27100, low: 1.26050, multiplier: 100000 },
         "USD/JPY": { category: "FOREX", price: 156.420, bidOffset: -0.004, askOffset: 0.004, digits: 3, spreadPips: 0.8, changePct: 0.24, high: 156.900, low: 155.800, multiplier: 1000 },
+        "AUD/USD": { category: "FOREX", price: 0.66510, bidOffset: -0.00002, askOffset: 0.00002, digits: 5, spreadPips: 0.5, changePct: 0.18, high: 0.66900, low: 0.66200, multiplier: 100000 },
+        "USD/CAD": { category: "FOREX", price: 1.36820, bidOffset: -0.00003, askOffset: 0.00003, digits: 5, spreadPips: 0.6, changePct: -0.05, high: 1.37200, low: 1.36400, multiplier: 100000 },
         "BTC/USD": { category: "CRYPTO", price: 61240.50, bidOffset: -1.50, askOffset: 1.50, digits: 2, spreadPips: 30.0, changePct: 3.45, high: 62100.00, low: 59800.00, multiplier: 1 },
         "ETH/USD": { category: "CRYPTO", price: 3342.25, bidOffset: -0.25, askOffset: 0.25, digits: 2, spreadPips: 5.0, changePct: -1.15, high: 3450.00, low: 3290.00, multiplier: 1 },
+        "SOL/USD": { category: "CRYPTO", price: 144.60, bidOffset: -0.05, askOffset: 0.05, digits: 2, spreadPips: 12.0, changePct: 5.20, high: 148.00, low: 139.00, multiplier: 1 },
         "XAU/USD": { category: "COMMODITY", price: 2342.10, bidOffset: -0.15, askOffset: 0.15, digits: 2, spreadPips: 3.0, changePct: 0.85, high: 2360.00, low: 2330.00, multiplier: 100 },
         "USOIL": { category: "COMMODITY", price: 78.45, bidOffset: -0.02, askOffset: 0.02, digits: 2, spreadPips: 4.0, changePct: 0.32, high: 79.20, low: 77.90, multiplier: 100 },
-        "US30": { category: "INDICES", price: 39120.00, bidOffset: -1.00, askOffset: 1.00, digits: 2, spreadPips: 2.0, changePct: 0.15, high: 39300.00, low: 38950.00, multiplier: 10 }
+        "UKOIL": { category: "COMMODITY", price: 82.15, bidOffset: -0.02, askOffset: 0.02, digits: 2, spreadPips: 4.0, changePct: 0.22, high: 82.80, low: 81.50, multiplier: 100 },
+        "US30": { category: "INDICES", price: 39120.00, bidOffset: -1.00, askOffset: 1.00, digits: 2, spreadPips: 2.0, changePct: 0.15, high: 39300.00, low: 38950.00, multiplier: 10 },
+        "NAS100": { category: "INDICES", price: 19450.20, bidOffset: -0.50, askOffset: 0.50, digits: 2, spreadPips: 1.5, changePct: 0.65, high: 19600.00, low: 19300.00, multiplier: 10 },
+        "SPX500": { category: "INDICES", price: 5420.50, bidOffset: -0.20, askOffset: 0.20, digits: 2, spreadPips: 1.0, changePct: 0.42, high: 5450.00, low: 5390.00, multiplier: 10 }
     };
 
     let macroCalendarEvents = [
         { time: "15:30", asset: "USD", event: "Core Retail Sales m/m", impact: "high" },
         { time: "16:45", asset: "EUR", event: "ECB President Lagarde Speech", impact: "high" },
-        { time: "18:00", asset: "GBP", event: "BOE Monetary Policy Report", impact: "med" }
+        { time: "18:00", asset: "GBP", event: "BOE Monetary Policy Report", impact: "med" },
+        { time: "21:30", asset: "USD", event: "FOMC Meeting Minutes Vector", impact: "high" }
     ];
 
     let systemJournalRegistry = [
         { date: "2026-07-06", note: "Disciplined execution on technical retest of structural resistance levels.", status: "Compliant" },
-        { date: "2026-07-07", note: "Scaled exposure parameters downward ahead of major high-impact global macro news events.", status: "Defensive" }
+        { date: "2026-07-07", note: "Scaled exposure parameters downward ahead of major high-impact global macro news events.", status: "Defensive" },
+        { date: "2026-07-09", note: "Liquidity optimization matching engine balanced across primary institutional nodes.", status: "Stabilized" }
     ];
 
     let activeSelectedPair = "EUR/USD";
@@ -1142,7 +1149,7 @@
     function simulateHighFrequencyLiquidityStream() {
         Object.keys(liquidityCatalog).forEach(sym => {
             let node = liquidityCatalog[sym];
-            let deltaMove = (sym.includes("JPY") || sym.includes("US30") || sym.includes("BTC")) ? 0.2 : 0.0001;
+            let deltaMove = (sym.includes("JPY") || sym.includes("US30") || sym.includes("BTC") || sym.includes("NAS100")) ? 0.2 : 0.0001;
             node.price += (Math.random() - 0.5) * deltaMove;
             
             let htmlTarget = document.getElementById(`watch-val-${sym.replace('/','-')}`);
