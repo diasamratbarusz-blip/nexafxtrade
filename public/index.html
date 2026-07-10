@@ -592,7 +592,32 @@
     let canvasContext;
     
     window.addEventListener('DOMContentLoaded', () => {
-        // Run Preloader Interbank Display Loops
+        // --- MANDATORY TRADER GATEWAY INTERCEPTOR VERIFICATION ACTION ---
+        const isVerifiedGateway = sessionStorage.getItem('trader_gateway_verified');
+        
+        if (!isVerifiedGateway) {
+            // Hardlock initialization layout and print verification security break to display node
+            const preloaderBar = document.getElementById("preloader-bar");
+            const preloaderStatus = document.getElementById("preloader-status");
+            
+            if (preloaderBar) preloaderBar.style.background = "var(--low-red)";
+            if (preloaderStatus) {
+                preloaderStatus.innerHTML = `
+                    <span style="color:var(--low-red); font-weight:bold; display:block; margin-bottom:12px;">
+                        SECURITY ERROR: UNAUTHORIZED INFRASTRUCTURE NODE ACCESS
+                    </span>
+                    <span style="color:var(--text-dim); display:block; margin-bottom:15px; text-transform:none;">
+                        You must pass through the Trader Gateway Dashboard validation server to initialize this ECN node workspace layout.
+                    </span>
+                    <button onclick="window.location.href='TraderGatewayDashboard.html'" class="t-btn" style="border-color:var(--neon-blue); color:var(--neon-blue); padding:6px 16px; font-size:0.75rem; background:rgba(0,176,255,0.05);">
+                        <i class="fas fa-shield-alt"></i> Authenticate at Trader Gateway First
+                    </button>
+                `;
+            }
+            return; // Terminate engine processes immediately
+        }
+
+        // Run Preloader Interbank Display Loops if authenticated safely
         initPreloaderVisualSimulations();
         runInstitutionalPreloader();
 
@@ -893,7 +918,6 @@
         rebuildTerminalLedgerView();
     }
 
-    // Fixed typo from alterTerminalLedgerFocus routing layout definition bind
     function alterTerminalLedgerFocus(tabId) {
         currentLedgerTab = tabId;
         document.querySelectorAll('.bottom-ledger-terminal .sub-tab-strip .sub-tab-btn').forEach(btn => {
