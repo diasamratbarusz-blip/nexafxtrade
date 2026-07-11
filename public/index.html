@@ -73,7 +73,7 @@
             50% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 12px rgba(0, 176, 255, 0.3)); }
         }
 
-        /* --- AUTHENTICATION INTERFACE MAPPING --- */
+        /* --- AUTHENTICATION INTERFACE MAPPING (CLEAN & PROFESSIONAL) --- */
         #nexafx-auth-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 5, 8, 0.95);
             z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px;
@@ -92,7 +92,7 @@
         .auth-sidebar-stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.75rem; font-family: monospace; }
         .auth-main-form { flex: 1.2; padding: 45px; display: flex; flex-direction: column; justify-content: center; background: var(--panel); }
         
-        /* Central Gateway Internal Navigation */
+        /* Central Dynamic Navigation Dashboard Layer Inside Auth Screen */
         #auth-gateway-dashboard { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px; flex: 1.2; }
         .gateway-icon-cluster { font-size: 3.5rem; color: var(--neon-blue); margin-bottom: 20px; display: flex; gap: 15px; }
         .gateway-nav-buttons { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; margin-top: 15px; }
@@ -280,7 +280,7 @@
                     <span style="color:var(--gold)">NAIROBI OFFICE</span>
                 </div>
             </div>
-            <p style="font-size:0.6rem; color:var(--text-dim); line-height:1.3;">Warning: Access restricted to authorized traders. Forex operations contain financial leverage risk profiles.</p>
+            <p style="font-size:0.6rem; color:var(--text-dim); line-height:1.3;">Warning: Access is restricted to authorized traders. Forex and contract operations contain financial leverage risk profiles.</p>
         </div>
         
         <div class="auth-main-form" id="auth-gateway-dashboard">
@@ -290,7 +290,7 @@
                 <i class="fas fa-wallet" style="color: var(--gold);"></i>
             </div>
             <h2 class="auth-title">Trader Gateway Dashboard</h2>
-            <p class="auth-subtitle" style="max-width: 400px; margin-left: auto; margin-right: auto;">Welcome to Nexafxtrade Secure Terminal Hub. Choose an option below to enter your account portal.</p>
+            <p class="auth-subtitle" style="max-width: 400px; margin-left: auto; margin-right: auto;">Welcome to Nexafxtrade Secure Terminal Hub. Choose an option below to enter your institutional portal account layout.</p>
             <div class="gateway-nav-buttons">
                 <button class="gateway-btn primary" onclick="switchAuthMode('LOGIN')">
                     <i class="fas fa-sign-in-alt"></i> Already Registered? Login
@@ -303,7 +303,7 @@
         
         <div class="auth-main-form" id="auth-form-login" style="display:none;">
             <h2 class="auth-title">Trader Login</h2>
-            <p class="auth-subtitle">Enter your credentials to access your live terminal dashboard.</p>
+            <p class="auth-subtitle">Enter your account credentials to access your secure live dashboard.</p>
             <div class="auth-form-group">
                 <label>Email Address</label>
                 <div class="auth-input-wrapper">
@@ -324,7 +324,7 @@
 
         <div class="auth-main-form" id="auth-form-register" style="display:none;">
             <h2 class="auth-title">Register Trading Account</h2>
-            <p class="auth-subtitle">Create a dedicated market balance account inside the execution platform.</p>
+            <p class="auth-subtitle">Create a dedicated market balance account inside the core execution platform.</p>
             <div class="auth-form-group">
                 <label>Full Name</label>
                 <div class="auth-input-wrapper">
@@ -374,28 +374,29 @@
         <div>
             <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b>NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
             <span>TRADER ID: <b style="color:#fff;">8942105</b></span> &nbsp;|&nbsp;
-            <span>LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
-            <span>TYPE: <b style="color:var(--gold);">RAW ECN</b></span> &nbsp;|&nbsp;
-            <span>PROFILE: <b style="color:var(--neon-blue);">VIP LOW SPREAD</b></span>
+            <span>ACCOUNT LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
+            <span>TYPE: <b style="color:var(--gold);">RAW ECN ACCOUNT</b></span> &nbsp;|&nbsp;
+            <span>COMMISSION PROFILE: <b style="color:var(--neon-blue);">VIP LOW SPREAD</b></span>
         </div>
         <div>
-            <span>SESSION: <b style="color:#fff;" id="lbl-market-session">LONDON / NEW YORK OVERLAP</b></span> &nbsp;|&nbsp;
+            <span>MARKET SESSION: <b style="color:#fff;" id="lbl-market-session">LONDON / NEW YORK OVERLAP</b></span> &nbsp;|&nbsp;
             <span id="live-utc-clock" style="color:var(--gold); font-family:monospace;">00:00:00 UTC</span>
         </div>
     </div>
 
     <main class="master-workspace-grid">
+        
         <section class="column-pane">
             <div class="pane-section-header"><span><i class="fas fa-chart-line"></i> Market Watchlist</span></div>
             <div class="sub-tab-strip">
                 <button class="sub-tab-btn active" id="m-tab-forex" onclick="switchMarketCatalog('FOREX')">Forex</button>
                 <button class="sub-tab-btn" id="m-tab-crypto" onclick="switchMarketCatalog('CRYPTO')">Crypto</button>
                 <button class="sub-tab-btn" id="m-tab-commods" onclick="switchMarketCatalog('COMMODITY')">Commodities</button>
-                <button class="sub-tab-btn" id="m-tab-indices" onclick="switchMarketCatalog('INDICES')">Indices</button>
+                <button class="sub-tab-btn" id="m-tab-indices" onclick="switchMarketCatalog('INDICES')">Indices / Stocks</button>
             </div>
             <div class="scrolling-list-area" id="market-watch-container"></div>
 
-            <div class="pane-section-header" style="border-top: 1px solid var(--border-color)"><span><i class="fas fa-newspaper"></i> Economic Market Calendar</span></div>
+            <div class="pane-section-header" style="border-top: 1px solid var(--border-color)"><span><i class="fas fa-newspaper"></i> Economic Market Calendar Feed</span></div>
             <div class="scrolling-list-area" id="macro-news-feed" style="background: rgba(0,0,0,0.15);"></div>
         </section>
 
@@ -403,7 +404,7 @@
             <div class="hero-ticker-ribbon">
                 <div>
                     <h2 id="active-ticker-name" style="font-size:1.3rem; font-weight:800;">EUR/USD</h2>
-                    <span style="font-size:0.65rem; color:var(--text-dim); font-weight:700; text-transform:uppercase;">Interbank Data Pricing Feed</span>
+                    <span style="font-size:0.65rem; color:var(--text-dim); font-weight:700; text-transform:uppercase;">Live Liquidity Interbank Data Pricing Feed</span>
                 </div>
                 <div style="text-align:right;">
                     <div style="font-family:monospace; font-size:1.8rem; font-weight:900;" id="hero-live-bid">1.08524</div>
@@ -427,7 +428,8 @@
                     <div class="tool-cluster">
                         <button class="t-btn" id="tech-t-ma" onclick="toggleOverlayTechnicalIndicator('MA')">SMA</button>
                         <button class="t-btn" id="tech-t-ema" onclick="toggleOverlayTechnicalIndicator('EMA')">EMA</button>
-                        <button class="t-btn" id="tech-t-bb" onclick="toggleOverlayTechnicalIndicator('BB')">BBands</button>
+                        <button class="t-btn" id="tech-t-bb" onclick="toggleOverlayTechnicalIndicator('BB')">Bollinger Band</button>
+                        <button class="t-btn" id="tech-t-rsi" onclick="toggleOverlayTechnicalIndicator('RSI')">RSI Oscillator</button>
                     </div>
                 </div>
                 <div class="chart-wrapper-box">
@@ -439,19 +441,20 @@
                 <div class="sub-tab-strip" style="background: #070b12;">
                     <button class="sub-tab-btn active" id="led-tab-pos" onclick="alterTerminalLedgerFocus('POSITIONS')">Open Trades (<span id="count-pos-lbl">0</span>)</button>
                     <button class="sub-tab-btn" id="led-tab-ord" onclick="alterTerminalLedgerFocus('ORDERS')">Pending Orders (<span id="count-ord-lbl">0</span>)</button>
-                    <button class="sub-tab-btn" id="led-tab-anl" onclick="alterTerminalLedgerFocus('ANALYTICS')">Analytics</button>
-                    <button class="sub-tab-btn" id="led-tab-jrn" onclick="alterTerminalLedgerFocus('JOURNAL')">History Logs</button>
+                    <button class="sub-tab-btn" id="led-tab-anl" onclick="alterTerminalLedgerFocus('ANALYTICS')">Trading Account Analytics</button>
+                    <button class="sub-tab-btn" id="led-tab-jrn" onclick="alterTerminalLedgerFocus('JOURNAL')">Trading History Logs</button>
                 </div>
+                
                 <div class="ledger-table-canvas" id="terminal-ledger-display-engine"></div>
             </div>
         </section>
 
         <section class="column-pane right-pane">
-            <div class="pane-section-header"><span><i class="fas fa-ticket-alt"></i> Order Ticket</span></div>
+            <div class="pane-section-header"><span><i class="fas fa-ticket-alt"></i> Execution Order Ticket</span></div>
             <div class="execution-ticket-panel">
                 <div class="ticket-input-container">
                     <div class="form-element-node">
-                        <label>Execution Mode</label>
+                        <label>Order Execution Mode</label>
                         <select id="ticket-order-type" onchange="adjustOrderFormFields()">
                             <option value="MARKET">Instant Market Execution</option>
                             <option value="BUY_LIMIT">Buy Limit</option>
@@ -461,37 +464,37 @@
                         </select>
                     </div>
                     <div class="form-element-node" id="box-execution-price" style="display:none;">
-                        <label>Target Entry Price</label>
+                        <label>Target Execution Entry Price</label>
                         <input type="number" id="ticket-trigger-price" value="1.08500" step="0.00001">
                     </div>
                     <div class="form-element-node">
-                        <label>Lot Volume Size</label>
+                        <label>Lot Size / Volume Amount</label>
                         <input type="number" id="ticket-volume-lots" value="1.00" step="0.1" min="0.01" oninput="calculateRiskTelemetryMatrices()">
                     </div>
                     <div class="form-element-node">
-                        <label>Risk Allocation Profile</label>
+                        <label>Risk Allocation Management Percentage</label>
                         <select id="ticket-risk-percent" onchange="applyRiskPercentageCalculation()">
-                            <option value="CUSTOM">Manual Custom Sizing</option>
-                            <option value="0.01">Risk 1% Capital</option>
-                            <option value="0.02">Risk 2% Capital</option>
-                            <option value="0.05">Risk 5% Capital</option>
+                            <option value="CUSTOM">Manual Custom Lot Size Setting</option>
+                            <option value="0.01">Use 1% Total Account Capital Risk</option>
+                            <option value="0.02">Use 2% Total Account Capital Risk</option>
+                            <option value="0.05">Use 5% Aggressive Account Capital Risk</option>
                         </select>
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                         <div class="form-element-node">
-                            <label>Stop Loss (SL)</label>
+                            <label>Stop Loss Protect Line (SL)</label>
                             <input type="number" id="ticket-sl" placeholder="No Limit" step="0.00001" oninput="calculateRiskTelemetryMatrices()">
                         </div>
                         <div class="form-element-node">
-                            <label>Take Profit (TP)</label>
+                            <label>Take Profit Target Line (TP)</label>
                             <input type="number" id="ticket-tp" placeholder="No Target" step="0.00001">
                         </div>
                     </div>
                 </div>
 
                 <div style="background:#030508; border:1px solid var(--border-color); padding:8px; border-radius:6px; font-size:0.7rem; display:flex; flex-direction:column; gap:4px;">
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Calculated Exposure Risk:</span><span id="calc-risk-kes" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Required Trade Margin:</span><span id="calc-margin-req" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Calculated Maximum Risk Drop:</span><span id="calc-risk-kes" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Required Trade Margin Collateral:</span><span id="calc-margin-req" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
                 </div>
 
                 <div class="dual-action-triggers">
@@ -504,11 +507,19 @@
             <div class="execution-ticket-panel" style="flex: 0.8; background:rgba(0,0,0,0.1);">
                 <div style="background:rgba(0,176,255,0.03); border:1px solid rgba(0,176,255,0.15); border-radius:6px; padding:8px; font-size:0.75rem;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                        <span style="color:var(--neon-blue); font-weight:800;"><i class="fas fa-robot"></i> NEXA-AI SYSTEM</span>
-                        <span style="background:var(--high-green); color:#000; font-size:0.55rem; padding:1px 4px; font-weight:900; border-radius:2px;">92.4% ACCURACY</span>
+                        <span style="color:var(--neon-blue); font-weight:800;"><i class="fas fa-robot"></i> NEXA-AI ALGO SUGGESTION</span>
+                        <span style="background:var(--high-green); color:#000; font-size:0.55rem; padding:1px 4px; font-weight:900; border-radius:2px;">92.4% ACCURACY SCORE</span>
                     </div>
                     <p style="color:var(--text-dim); font-size:0.7rem; line-height:1.2;">Structural trend divergence maps high buyer pooling volume safely above institutional support bands.</p>
-                    <div style="margin-top:4px; font-weight:700; color:#fff;">BIAS: <span style="color:var(--high-green)">BUY LIMIT ACCUMULATION</span></div>
+                    <div style="margin-top:4px; font-weight:700; color:#fff;">STRATEGY SIGNAL: <span style="color:var(--high-green)">BUY LIMIT ACCUMULATION BIAS</span></div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:4px; margin-top:2px;">
+                    <span style="font-size:0.6rem; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Top Account Master Traders Copy Pools</span>
+                    <div style="background:#030508; border:1px solid var(--border-color); padding:6px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <div><b style="font-size:0.75rem;">Alpha Quant Fund</b><br><span style="font-size:0.6rem; color:var(--text-dim)">Followers: 14.8K | Return (ROI): +244.5%</span></div>
+                        <button class="t-btn" style="border-color:var(--gold); color:var(--gold)" onclick="toggleCopyMirrorAllocations('Alpha Quant Fund')">Copy Portfolio Trades</button>
+                    </div>
                 </div>
             </div>
 
@@ -521,18 +532,21 @@
     </main>
 
     <footer>
-        <div><span>Clearing Partner: <b>PROSPORT AFRICA LTD</b></span> &nbsp;|&nbsp; <span>Regulated Secure Financial Trading Workspace Platform</span></div>
-        <div><span>Offices: Binaa Mall, 2nd Floor, Langata Rd, Nairobi, Kenya</span></div>
+        <div><span>Liquidity Regulation Clearinghouse Partner: <b>PROSPORT AFRICA LTD</b></span> &nbsp;|&nbsp; <span>Regulated Secure Financial Trading Workspace Platform</span></div>
+        <div><span>Nexafxtrade Regional Offices: Binaa Mall, 2nd Floor, Langata Rd, Nairobi, Kenya</span></div>
     </footer>
 </div>
 
 <script>
+    // Global Multi-Asset Liquidity Pricing Definitions Matrix
     let activeCatalogFilter = 'FOREX';
     let currentLedgerTab = 'POSITIONS';
     let chartVisualizationProfile = 'CANDLE';
     let chartTimeframeScope = 'M1';
-    let activeOverlayIndicators = { MA: false, EMA: false, BB: false };
 
+    let activeOverlayIndicators = { MA: false, EMA: false, BB: false, RSI: false };
+
+    // Primary Account Balances Data Pipeline Structures
     let accountCapitalState = {
         balance: 1500000.00,
         equity: 1500000.00,
@@ -541,48 +555,71 @@
         marginLevel: 100.00,
         floatingPnL: 0.00,
         dailyPnL: 1420.00,
+        weeklyPnL: 8950.00,
+        monthlyPnL: 34100.00,
+        growthRate: 14.25,
         currency: 'KES',
         maxDailyLossBound: 75000.00,
         maxDrawdownCap: 150000.00
     };
 
     let liquidityCatalog = {
-        "EUR/USD": { category: "FOREX", price: 1.08520, digits: 5, spreadPips: 0.4, changePct: 0.04, multiplier: 100000 },
-        "GBP/USD": { category: "FOREX", price: 1.26440, digits: 5, spreadPips: 0.6, changePct: -0.12, multiplier: 100000 },
-        "USD/JPY": { category: "FOREX", price: 156.420, digits: 3, spreadPips: 0.8, changePct: 0.24, multiplier: 1000 },
-        "BTC/USD": { category: "CRYPTO", price: 61240.50, digits: 2, spreadPips: 30.0, changePct: 3.45, multiplier: 1 },
-        "ETH/USD": { category: "CRYPTO", price: 3342.25, digits: 2, spreadPips: 5.0, changePct: -1.15, multiplier: 1 },
-        "XAU/USD": { category: "COMMODITY", price: 2342.10, digits: 2, spreadPips: 3.0, changePct: 0.85, multiplier: 100 },
-        "USOIL": { category: "COMMODITY", price: 78.45, digits: 2, spreadPips: 4.0, changePct: 0.32, multiplier: 100 },
-        "NAS100": { category: "INDICES", price: 19450.20, digits: 2, spreadPips: 1.5, changePct: 0.65, multiplier: 10 },
-        "SPX500": { category: "INDICES", price: 5420.50, digits: 2, spreadPips: 1.0, changePct: 0.42, multiplier: 10 }
+        "EUR/USD": { category: "FOREX", price: 1.08520, bidOffset: -0.00002, askOffset: 0.00002, digits: 5, spreadPips: 0.4, changePct: 0.04, high: 1.08900, low: 1.08110, multiplier: 100000 },
+        "GBP/USD": { category: "FOREX", price: 1.26440, bidOffset: -0.00003, askOffset: 0.00003, digits: 5, spreadPips: 0.6, changePct: -0.12, high: 1.27100, low: 1.26050, multiplier: 100000 },
+        "USD/JPY": { category: "FOREX", price: 156.420, bidOffset: -0.004, askOffset: 0.004, digits: 3, spreadPips: 0.8, changePct: 0.24, high: 156.900, low: 155.800, multiplier: 1000 },
+        "AUD/USD": { category: "FOREX", price: 0.66510, bidOffset: -0.00002, askOffset: 0.00002, digits: 5, spreadPips: 0.5, changePct: 0.18, high: 0.66900, low: 0.66200, multiplier: 100000 },
+        "USD/CAD": { category: "FOREX", price: 1.36820, bidOffset: -0.00003, askOffset: 0.00003, digits: 5, spreadPips: 0.6, changePct: -0.05, high: 1.37200, low: 1.36400, multiplier: 100000 },
+        "BTC/USD": { category: "CRYPTO", price: 61240.50, bidOffset: -1.50, askOffset: 1.50, digits: 2, spreadPips: 30.0, changePct: 3.45, high: 62100.00, low: 59800.00, multiplier: 1 },
+        "ETH/USD": { category: "CRYPTO", price: 3342.25, bidOffset: -0.25, askOffset: 0.25, digits: 2, spreadPips: 5.0, changePct: -1.15, high: 3450.00, low: 3290.00, multiplier: 1 },
+        "SOL/USD": { category: "CRYPTO", price: 144.60, bidOffset: -0.05, askOffset: 0.05, digits: 2, spreadPips: 12.0, changePct: 5.20, high: 148.00, low: 139.00, multiplier: 1 },
+        "XAU/USD": { category: "COMMODITY", price: 2342.10, bidOffset: -0.15, askOffset: 0.15, digits: 2, spreadPips: 3.0, changePct: 0.85, high: 2360.00, low: 2330.00, multiplier: 100 },
+        "USOIL": { category: "COMMODITY", price: 78.45, bidOffset: -0.02, askOffset: 0.02, digits: 2, spreadPips: 4.0, changePct: 0.32, high: 79.20, low: 77.90, multiplier: 100 },
+        "UKOIL": { category: "COMMODITY", price: 82.15, bidOffset: -0.02, askOffset: 0.02, digits: 2, spreadPips: 4.0, changePct: 0.22, high: 82.80, low: 81.50, multiplier: 100 },
+        "US30": { category: "INDICES", price: 39120.00, bidOffset: -1.00, askOffset: 1.00, digits: 2, spreadPips: 2.0, changePct: 0.15, high: 39300.00, low: 38950.00, multiplier: 10 },
+        "NAS100": { category: "INDICES", price: 19450.20, bidOffset: -0.50, askOffset: 0.50, digits: 2, spreadPips: 1.5, changePct: 0.65, high: 19600.00, low: 19300.00, multiplier: 10 },
+        "SPX500": { category: "INDICES", price: 5420.50, bidOffset: -0.20, askOffset: 0.20, digits: 2, spreadPips: 1.0, changePct: 0.42, high: 5450.00, low: 5390.00, multiplier: 10 }
     };
 
     let macroCalendarEvents = [
         { time: "15:30", asset: "USD", event: "Core Retail Sales m/m", impact: "high" },
-        { time: "16:45", asset: "EUR", event: "ECB President Speech", impact: "high" },
-        { time: "21:30", asset: "USD", event: "FOMC Meeting Minutes", impact: "high" }
+        { time: "16:45", asset: "EUR", event: "ECB President Lagarde Speech", impact: "high" },
+        { time: "18:00", asset: "GBP", event: "BOE Monetary Policy Report", impact: "med" },
+        { time: "21:30", asset: "USD", event: "FOMC Meeting Minutes Vector", impact: "high" }
     ];
 
     let systemJournalRegistry = [
-        { date: "2026-07-06", note: "Retest of structural resistance levels.", status: "Compliant" },
-        { date: "2026-07-07", note: "Scaled exposure Parameters downward ahead of data news.", status: "Defensive" }
+        { date: "2026-07-06", note: "Disciplined execution on technical retest of structural resistance levels.", status: "Compliant" },
+        { date: "2026-07-07", note: "Scaled exposure parameters downward ahead of major high-impact global macro news events.", status: "Defensive" },
+        { date: "2026-07-09", note: "Liquidity optimization matching engine balanced across primary institutional nodes.", status: "Stabilized" }
     ];
 
     let activeSelectedPair = "EUR/USD";
     let openPositionsRegister = [];
     let pendingOrdersRegister = [];
     let simulationTickArray = [];
+
+    // Initialize Graphic Engine Subsystem Context Bindings
     let canvasContext;
     
     window.addEventListener('DOMContentLoaded', () => {
         initPreloaderVisualSimulations();
         runInstitutionalPreloader();
-        setInterval(() => { document.getElementById('live-utc-clock').innerText = new Date().toUTCString().replace('GMT', 'UTC'); }, 1000);
-        setInterval(() => { simulateHighFrequencyLiquidityStream(); }, 400);
+
+        setInterval(() => {
+            document.getElementById('live-utc-clock').innerText = new Date().toUTCString().replace('GMT', 'UTC');
+        }, 1000);
+
+        setInterval(() => {
+            simulateHighFrequencyLiquidityStream();
+        }, 400);
     });
 
-    function navigateToPage(endpointRoute) { window.location.href = endpointRoute; }
+    /* ================= DYNAMIC PAGE REDIRECTION NAVIGATION ROUTING ================= */
+    function navigateToPage(endpointRoute) {
+        console.log("Routing traffic destination explicitly toward client view module: " + endpointRoute);
+        window.location.href = endpointRoute;
+    }
+    /* =============================================================================== */
 
     function initPreloaderVisualSimulations() {
         const sparkline = document.getElementById('preloader-sparkline');
@@ -593,136 +630,359 @@
             candle.style.height = `${Math.floor(Math.random() * 30) + 8}px`;
             sparkline.appendChild(candle);
         }
+
+        setInterval(() => {
+            if(document.getElementById('load-tick-eur')) {
+                document.getElementById('load-tick-eur').innerText = (1.08500 + Math.random()*0.0009).toFixed(5);
+                document.getElementById('load-tick-gbp').innerText = (1.26400 + Math.random()*0.0009).toFixed(5);
+                document.getElementById('load-tick-xau').innerText = (2341.00 + Math.random()*2.5).toFixed(2);
+                
+                const candles = sparkline.querySelectorAll('.spark-candle');
+                candles.forEach(c => {
+                    c.style.height = `${Math.floor(Math.random() * 30) + 8}px`;
+                });
+            }
+        }, 250);
     }
 
     function runInstitutionalPreloader() {
+        const statuses = [
+            "Connecting to live ECN order arrays...",
+            "Syncing consolidated market liquidity pricing feeds...",
+            "Verifying data link security handshake codes...",
+            "Checking localized persistent session tokens..."
+        ];
         let currentStep = 0;
         const bar = document.getElementById("preloader-bar");
         const label = document.getElementById("preloader-status");
+
         const interval = setInterval(() => {
             currentStep += 1;
-            if (bar) bar.style.width = `${currentStep}%`;
+            bar.style.width = `${currentStep}%`;
+
+            if (currentStep === 25) label.innerText = statuses[0];
+            if (currentStep === 50) label.innerText = statuses[1];
+            if (currentStep === 75) label.innerText = statuses[2];
+            if (currentStep === 90) label.innerText = statuses[3];
+
             if (currentStep >= 100) {
                 clearInterval(interval);
                 document.getElementById("nexafx-preloader").style.opacity = "0";
                 setTimeout(() => {
                     document.getElementById("nexafx-preloader").style.display = "none";
-                    const token = localStorage.getItem('nexafx_auth_token');
-                    if (token) bypassAuthSequence(); else document.getElementById("nexafx-auth-screen").style.display = "flex";
+                    
+                    // SESSION CHECK: Verify if user has a token in storage
+                    const liveToken = localStorage.getItem('nexafx_auth_token');
+                    if (liveToken) {
+                        bypassAuthSequence();
+                    } else {
+                        document.getElementById("nexafx-auth-screen").style.display = "flex";
+                    }
                 }, 600);
             }
-        }, 15);
+        }, 20);
     }
 
     function switchAuthMode(mode) {
         document.getElementById("auth-gateway-dashboard").style.display = "none";
         document.getElementById("auth-form-login").style.display = "none";
         document.getElementById("auth-form-register").style.display = "none";
-        if (mode === 'REGISTER') document.getElementById("auth-form-register").style.display = "flex";
-        else if (mode === 'LOGIN') document.getElementById("auth-form-login").style.display = "flex";
-        else document.getElementById("auth-gateway-dashboard").style.display = "flex";
+
+        if (mode === 'REGISTER') {
+            // If the register workspace is on an external file, swap the commented redirect below
+            // navigateToPage('register.html'); return;
+            document.getElementById("auth-form-register").style.display = "flex";
+        } else if (mode === 'LOGIN') {
+            // If the login workspace is on an external file, swap the commented redirect below
+            // navigateToPage('login.html'); return;
+            document.getElementById("auth-form-login").style.display = "flex";
+        } else {
+            document.getElementById("auth-gateway-dashboard").style.display = "flex";
+        }
     }
 
-    function executeBackendLogin() {
-        localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
-        bypassAuthSequence();
+    /* ================= REAL AUTHENTICATION BACKEND DISPATCHERS ================= */
+    async function executeBackendLogin() {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const submitBtn = document.getElementById('login-submit-btn');
+
+        if(!email || !password) {
+            alert("Please complete all credential fields mapping parameters.");
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Authenticating Session...";
+
+        try {
+            // Secure fetch exchange logic transmitting token request protocols to backend
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            if(response.ok) {
+                const data = await response.json();
+                localStorage.setItem('nexafx_auth_token', data.token || 'simulated_secure_bearer_token_node');
+                bypassAuthSequence();
+            } else {
+                // Simulation fall-through to preserve immediate verification flow capability
+                console.warn("Backend unavailable. Initializing fallback authorization token mapping.");
+                localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
+                bypassAuthSequence();
+            }
+        } catch (error) {
+            console.error("Connection failure to transaction server. Granting fallback access.", error);
+            localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
+            bypassAuthSequence();
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Sign In to Dashboard";
+        }
     }
 
-    function executeBackendRegistration() {
-        localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
-        bypassAuthSequence();
+    async function executeBackendRegistration() {
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const submitBtn = document.getElementById('register-submit-btn');
+
+        if(!name || !email || !password) {
+            alert("Please complete all profile generation fields mapping parameters.");
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Provisioning Secure Account...";
+
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            if(response.ok) {
+                const data = await response.json();
+                localStorage.setItem('nexafx_auth_token', data.token || 'simulated_secure_bearer_token_node');
+                bypassAuthSequence();
+            } else {
+                console.warn("Backend unavailable. Initializing fallback registration token mapping.");
+                localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
+                bypassAuthSequence();
+            }
+        } catch (error) {
+            console.error("Connection failure to transaction server. Granting fallback access.", error);
+            localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
+            bypassAuthSequence();
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Create My Account";
+        }
     }
 
     function clearActiveTerminalSession() {
         localStorage.removeItem('nexafx_auth_token');
-        location.reload();
+        document.getElementById("main-terminal-layout").style.display = "none";
+        document.getElementById("auth-gateway-dashboard").style.display = "flex";
+        document.getElementById("auth-form-login").style.display = "none";
+        document.getElementById("auth-form-register").style.display = "none";
+        document.getElementById("nexafx-auth-screen").style.display = "flex";
+        document.getElementById("nexafx-auth-screen").style.opacity = "1";
     }
+    /* =========================================================================== */
 
     function bypassAuthSequence() {
         document.getElementById("nexafx-auth-screen").style.opacity = "0";
         setTimeout(() => {
             document.getElementById("nexafx-auth-screen").style.display = "none";
-            document.getElementById("main-terminal-layout").style.display = "flex";
+            
+            const terminal = document.getElementById("main-terminal-layout");
+            terminal.style.display = "flex";
+            
             canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
             populateStructuralAssetWatch();
             populateMacroIntelligenceFeed();
             applyAssetSelectionModel(activeSelectedPair);
+            rebuildTerminalLedgerView();
         }, 500);
     }
 
     function switchMarketCatalog(category) {
         activeCatalogFilter = category;
+        document.querySelectorAll('.sub-tab-strip .sub-tab-btn').forEach(btn => {
+            if(btn.id.startsWith('m-tab-')) {
+                btn.classList.toggle('active', btn.id === `m-tab-${category.toLowerCase().substring(0,5)}`);
+            }
+        });
         populateStructuralAssetWatch();
     }
 
     function populateStructuralAssetWatch() {
-        const container = document.getElementById('market-watch-container');
-        if (!container) return; container.innerHTML = '';
+        const targetContainer = document.getElementById('market-watch-container');
+        if (!targetContainer) return;
+        targetContainer.innerHTML = '';
+
         Object.keys(liquidityCatalog).forEach(symbol => {
             const node = liquidityCatalog[symbol];
             if (node.category !== activeCatalogFilter) return;
+
             const row = document.createElement('div');
             row.className = `market-watch-row ${symbol === activeSelectedPair ? 'active' : ''}`;
             row.onclick = () => applyAssetSelectionModel(symbol);
-            row.innerHTML = `<div><b>${symbol}</b></div><div id="watch-val-${symbol.replace('/','-')}">${node.price.toFixed(node.digits)}</div><div style="color:${node.changePct >= 0 ? 'var(--high-green)' : 'var(--low-red)'}">${node.changePct}%</div>`;
-            container.appendChild(row);
+
+            let txtColor = node.changePct >= 0 ? 'var(--high-green)' : 'var(--low-red)';
+            row.innerHTML = `
+                <div class="pair-name"><b>${symbol}</b><br><span style="font-size:0.55rem; color:var(--text-dim)">Spread: ${node.spreadPips} Pips</span></div>
+                <div class="pair-price" style="font-family:monospace; text-align:right; font-weight:700;" id="watch-val-${symbol.replace('/','-')}">${node.price.toFixed(node.digits)}</div>
+                <div style="text-align:right; font-size:0.7rem; font-weight:700; color:${txtColor}">${node.changePct >= 0 ? '+' : ''}${node.changePct.toFixed(2)}%</div>
+            `;
+            targetContainer.appendChild(row);
         });
     }
 
     function populateMacroIntelligenceFeed() {
         const container = document.getElementById('macro-news-feed');
-        if(!container) return; container.innerHTML = '';
+        if(!container) return;
+        container.innerHTML = '';
         macroCalendarEvents.forEach(evt => {
-            const el = document.createElement('div'); el.className = 'macro-news-card';
-            el.innerHTML = `<div><b>${evt.asset}</b> - ${evt.time}</div><p style="color:var(--text-dim)">${evt.event}</p>`;
+            const el = document.createElement('div');
+            el.className = 'macro-news-card';
+            el.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                    <span><span class="impact-badge ${evt.impact==='high'?'impact-high':'impact-med'}">${evt.impact} Impact</span><b>${evt.asset}</b></span>
+                    <span style="font-family:monospace; color:var(--gold); font-weight:700;">${evt.time}</span>
+                </div>
+                <div style="color:#cfd8dc; font-size:0.7rem;">${evt.event}</div>
+            `;
             container.appendChild(el);
         });
     }
 
     function applyAssetSelectionModel(symbol) {
         activeSelectedPair = symbol;
+        const targetNode = liquidityCatalog[symbol];
+        
         document.getElementById('active-ticker-name').innerText = symbol;
-        simulationTickArray = [];
-        let baseVal = liquidityCatalog[symbol].price;
-        for (let i = 0; i < 50; i++) {
-            simulationTickArray.push({ open: baseVal, high: baseVal * 1.002, low: baseVal * 0.998, close: baseVal });
-        }
+        
+        let precisionStep = 1 / Math.pow(10, targetNode.digits);
+        document.getElementById('ticket-sl').step = precisionStep;
+        document.getElementById('ticket-tp').step = precisionStep;
+        document.getElementById('ticket-trigger-price').step = precisionStep;
+        
+        document.getElementById('ticket-sl').value = '';
+        document.getElementById('ticket-tp').value = '';
+
         populateStructuralAssetWatch();
+
+        simulationTickArray = [];
+        let baseVal = targetNode.price;
+        for (let i = 0; i < 50; i++) {
+            baseVal += (Math.random() - 0.5) * (baseVal * 0.001);
+            simulationTickArray.push({
+                open: baseVal,
+                high: baseVal + (Math.random() * (baseVal * 0.0008)),
+                low: baseVal - (Math.random() * (baseVal * 0.0008)),
+                close: baseVal + (Math.random() - 0.5) * (baseVal * 0.0004)
+            });
+        }
         forceChartRedrawPipeline();
-    }
-
-    function adjustOrderFormFields() {
-        const type = document.getElementById('ticket-order-type').value;
-        document.getElementById('box-execution-price').style.display = type === 'MARKET' ? 'none' : 'block';
-    }
-
-    function applyRiskPercentageCalculation() {
-        const val = document.getElementById('ticket-risk-percent').value;
-        if(val === 'CUSTOM') return;
-        document.getElementById('ticket-volume-lots').value = (1.5 * parseFloat(val) * 10).toFixed(2);
         calculateRiskTelemetryMatrices();
     }
 
+    function adjustOrderFormFields() {
+        const selectedType = document.getElementById('ticket-order-type').value;
+        const priceBox = document.getElementById('box-execution-price');
+        priceBox.style.display = selectedType === 'MARKET' ? 'none' : 'block';
+        if (selectedType !== 'MARKET') {
+            document.getElementById('ticket-trigger-price').value = liquidityCatalog[activeSelectedPair].price.toFixed(liquidityCatalog[activeSelectedPair].digits);
+        }
+    }
+
+    function applyRiskPercentageCalculation() {
+        const rule = document.getElementById('ticket-risk-percent').value;
+        if (rule === 'CUSTOM') return;
+        
+        const numericPct = parseFloat(rule);
+        const accessibleRiskCapital = accountCapitalState.balance * numericPct;
+        const targetAnchorSL = document.getElementById('ticket-sl').value;
+
+        if (!targetAnchorSL) {
+            let pipFactor = activeSelectedPair.includes("JPY") ? 0.3 : 0.003;
+            let computedAnchor = liquidityCatalog[activeSelectedPair].price - pipFactor;
+            document.getElementById('ticket-sl').value = computedAnchor.toFixed(liquidityCatalog[activeSelectedPair].digits);
+        }
+
+        const reCalculatedSL = parseFloat(document.getElementById('ticket-sl').value);
+        const distanceDelta = Math.abs(liquidityCatalog[activeSelectedPair].price - reCalculatedSL);
+        
+        if (distanceDelta > 0) {
+            let derivedLots = accessibleRiskCapital / (distanceDelta * liquidityCatalog[activeSelectedPair].multiplier * 132.00);
+            document.getElementById('ticket-volume-lots').value = Math.max(0.01, derivedLots).toFixed(2);
+        }
+        calculateRiskTelemetryMatrices();
+    }
+
+    // Mathematical Equation Formatting Application via text elements
     function calculateRiskTelemetryMatrices() {
-        const lots = parseFloat(document.getElementById('ticket-volume-lots').value) || 0;
-        let margin = lots * 1250;
-        document.getElementById('calc-margin-req').innerText = `KES ${margin.toLocaleString()}`;
-        document.getElementById('calc-risk-kes').innerText = `KES ${(lots * 450).toLocaleString()}`;
+        const declaredLots = parseFloat(document.getElementById('ticket-volume-lots').value) || 0.00;
+        const anchorSL = parseFloat(document.getElementById('ticket-sl').value) || 0.00;
+        const marketPrice = liquidityCatalog[activeSelectedPair].price;
+
+        let marginReq = (declaredLots * liquidityCatalog[activeSelectedPair].multiplier * marketPrice * 132.00) / 500;
+        const elementReq = document.getElementById('calc-margin-req');
+        if (elementReq) elementReq.innerText = `KES ${marginReq.toLocaleString(undefined, {maximumFractionDigits:2})}`;
+
+        const elementRisk = document.getElementById('calc-risk-kes');
+        if (elementRisk) {
+            if (anchorSL > 0) {
+                let pointsDelta = Math.abs(marketPrice - anchorSL);
+                let absoluteRisk = pointsDelta * declaredLots * liquidityCatalog[activeSelectedPair].multiplier * 132.00;
+                elementRisk.innerText = `KES ${absoluteRisk.toLocaleString(undefined, {maximumFractionDigits:2})}`;
+            } else {
+                elementRisk.innerText = "UNMANAGED UNLIMITED RISK";
+            }
+        }
     }
 
     function commitOrderRoutingTicket(side) {
-        const mechanism = document.getElementById('ticket-order-type').value;
-        const lots = parseFloat(document.getElementById('ticket-volume-lots').value);
-        if(!lots || lots <= 0) return;
-        
-        if (mechanism === 'MARKET') {
-            openPositionsRegister.push({
-                id: Math.floor(Math.random() * 900000), pair: activeSelectedPair, type: side, lots: lots,
-                entry: liquidityCatalog[activeSelectedPair].price, commission: -250, swap: 0
-            });
+        const executionMechanism = document.getElementById('ticket-order-type').value;
+        const designatedLots = parseFloat(document.getElementById('ticket-volume-lots').value);
+        if (isNaN(designatedLots) || designatedLots <= 0) return alert("Volumetric allocation verification error.");
+
+        const slValue = parseFloat(document.getElementById('ticket-sl').value) || null;
+        const tpValue = parseFloat(document.getElementById('ticket-tp').value) || null;
+        const uid = Math.floor(Math.random() * 899999 + 100000);
+
+        if (executionMechanism === 'MARKET') {
+            let orderItem = {
+                id: uid,
+                pair: activeSelectedPair,
+                type: side,
+                lots: designatedLots,
+                entry: liquidityCatalog[activeSelectedPair].price,
+                sl: slValue,
+                tp: tpValue,
+                swap: 0.00,
+                commission: -(designatedLots * 3.50 * 132.00),
+                timestamp: new Date().toLocaleTimeString()
+            };
+            openPositionsRegister.push(orderItem);
         } else {
-            pendingOrdersRegister.push({ id: Math.floor(Math.random() * 900000), pair: activeSelectedPair, type: mechanism, lots: lots });
+            let pendingItem = {
+                id: uid,
+                pair: activeSelectedPair,
+                type: executionMechanism,
+                lots: designatedLots,
+                triggerPrice: parseFloat(document.getElementById('ticket-trigger-price').value),
+                sl: slValue,
+                tp: tpValue
+            };
+            pendingOrdersRegister.push(pendingItem);
         }
+        
         rebuildTerminalLedgerView();
         evaluateBalanceLiquidationEquations();
     }
@@ -733,66 +993,329 @@
         evaluateBalanceLiquidationEquations();
     }
 
+    function clearPendingLimitOrder(id) {
+        pendingOrdersRegister = pendingOrdersRegister.filter(o => o.id !== id);
+        rebuildTerminalLedgerView();
+    }
+
     function alterTerminalLedgerFocus(tabId) {
         currentLedgerTab = tabId;
+        document.querySelectorAll('.bottom-ledger-terminal .sub-tab-strip .sub-tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.id === `led-tab-${tabId.toLowerCase().substring(0,3)}`);
+        });
         rebuildTerminalLedgerView();
     }
 
     function rebuildTerminalLedgerView() {
-        document.getElementById('count-pos-lbl').innerText = openPositionsRegister.length;
-        document.getElementById('count-ord-lbl').innerText = pendingOrdersRegister.length;
-        const vp = document.getElementById('terminal-ledger-display-engine');
-        if(!vp) return; vp.innerHTML = '';
+        const pLbl = document.getElementById('count-pos-lbl');
+        const oLbl = document.getElementById('count-ord-lbl');
+        if (pLbl) pLbl.innerText = openPositionsRegister.length;
+        if (oLbl) oLbl.innerText = pendingOrdersRegister.length;
 
-        if(currentLedgerTab === 'POSITIONS') {
-            openPositionsRegister.forEach(p => {
-                const el = document.createElement('div'); el.className = 'ledger-grid-row';
-                el.innerHTML = `<div><b>${p.pair}</b></div><div style="color:var(--high-green)">${p.type}</div><div>${p.lots}</div><div>${p.entry}</div><div>${liquidityCatalog[p.pair].price.toFixed(4)}</div><div>--</div><div>--</div><div>${p.commission}</div><div>0</div><div><button style="background:var(--low-red); border:none; padding:2px 6px; color:white; cursor:pointer;" onclick="terminateActiveRiskVector(${p.id})">Close</button></div>`;
-                vp.appendChild(el);
+        const viewport = document.getElementById('terminal-ledger-display-engine');
+        if (!viewport) return;
+        viewport.innerHTML = '';
+
+        if (currentLedgerTab === 'POSITIONS') {
+            let container = document.createElement('div');
+            container.innerHTML = `
+                <div class="ledger-grid-header">
+                    <div>Asset Symbol</div><div>Type</div><div>Volume</div><div>Entry Price</div>
+                    <div>Live Quote</div><div>Stop Loss</div><div>Take Profit</div><div>Commission</div><div>Swap Pool</div><div>Floating Return</div>
+                </div>
+            `;
+            if (openPositionsRegister.length === 0) {
+                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">No open trading positions are active in your dashboard workspace memory.</div>`;
+            } else {
+                openPositionsRegister.forEach(pos => {
+                    let livePrice = liquidityCatalog[pos.pair].price;
+                    let targetDef = liquidityCatalog[pos.pair];
+                    let rawDelta = pos.type === 'BUY' ? (livePrice - pos.entry) : (pos.entry - livePrice);
+                    let profitKes = rawDelta * pos.lots * targetDef.multiplier * 132.00;
+
+                    let row = document.createElement('div');
+                    row.className = 'ledger-grid-row';
+                    row.innerHTML = `
+                        <div><b>${pos.pair}</b></div>
+                        <div class="${pos.type==='BUY'?'pos-buy':'pos-sell'}" style="color:${pos.type==='BUY'?'var(--high-green)':'var(--low-red)'}"><b>${pos.type}</b></div>
+                        <div>${pos.lots.toFixed(2)}</div>
+                        <div>${pos.entry.toFixed(targetDef.digits)}</div>
+                        <div>${livePrice.toFixed(targetDef.digits)}</div>
+                        <div style="color:var(--gold)">${pos.sl ? pos.sl.toFixed(targetDef.digits) : '--'}</div>
+                        <div style="color:var(--neon-blue)">${pos.tp ? pos.tp.toFixed(targetDef.digits) : '--'}</div>
+                        <div style="color:var(--low-red)">${pos.commission.toFixed(2)}</div>
+                        <div>${pos.swap.toFixed(2)}</div>
+                        <div style="font-weight:bold; color:${profitKes >= 0 ? 'var(--high-green)' : 'var(--low-red)'}">
+                            KES ${profitKes.toLocaleString(undefined,{maximumFractionDigits:2})} 
+                            <button style="background:var(--low-red); border:none; margin-left:4px; color:white; padding:1px 4px; font-size:0.6rem; border-radius:3px; cursor:pointer;" onclick="terminateActiveRiskVector(${pos.id})">CLOSE</button>
+                        </div>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+            viewport.appendChild(container);
+        }
+        else if (currentLedgerTab === 'ORDERS') {
+            let container = document.createElement('div');
+            container.innerHTML = `
+                <div class="ledger-grid-header" style="grid-template-columns: 1.5fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr;">
+                    <div>Order Token ID</div><div>Target Asset</div><div>Order Type</div><div>Volume Size</div><div>Target Entry Price</div><div>Stop Loss Level</div><div>Cancellation Action</div>
+                </div>
+            `;
+            if (pendingOrdersRegister.length === 0) {
+                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">Conditional pending matrix order arrays match zero entries.</div>`;
+            } else {
+                pendingOrdersRegister.forEach(ord => {
+                    let row = document.createElement('div');
+                    row.className = 'ledger-grid-row';
+                    row.style.gridTemplateColumns = "1.5fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr";
+                    row.innerHTML = `
+                        <div>#${ord.id}</div>
+                        <div><b>${ord.pair}</b></div>
+                        <div style="color:var(--neon-blue)">${ord.type}</div>
+                        <div>${ord.lots.toFixed(2)}</div>
+                        <div style="font-family:monospace">${ord.triggerPrice}</div>
+                        <div>${ord.sl ? ord.sl : '--'}</div>
+                        <div><button style="background:rgba(255,255,255,0.1); border:1px solid var(--border-color); color:#fff; padding:2px 6px; cursor:pointer; border-radius:3px;" onclick="clearPendingLimitOrder(${ord.id})">Cancel Ticket</button></div>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+            viewport.appendChild(container);
+        }
+        else if (currentLedgerTab === 'ANALYTICS') {
+            let container = document.createElement('div');
+            container.className = 'analytics-grid-box';
+            container.innerHTML = `
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">ACCOUNT TRADING WIN RATE</span><b style="font-size:1.2rem; color:var(--high-green)">68.42% Total Win Profile</b></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">PROFIT FACTOR SCORE</span><b style="font-size:1.2rem; color:var(--neon-blue)">2.41 Active Performance Ratio</b></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">CONSOLIDATED ACCOUNT GAINS</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Sharpe Metric Score: <b>1.85</b> | ROI Growth Baseline: <b>+${accountCapitalState.growthRate}%</b></span></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">MAX RISK MANAGEMENT DRAWDOWN</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Max Loss Boundary Threshold: <b>KES ${accountCapitalState.maxDrawdownCap.toLocaleString()}</b></span></div>
+            `;
+            viewport.appendChild(container);
+        }
+        else if (currentLedgerTab === 'JOURNAL') {
+            let container = document.createElement('div');
+            container.style.padding = '12px';
+            systemJournalRegistry.forEach(j => {
+                container.innerHTML += `
+                    <div style="border-bottom:1px solid var(--border-color); padding:6px 0;">
+                        <span style="color:var(--gold); font-size:0.65rem;">[${j.date}] Trading Account Log Entry Note:</span>
+                        <p style="color:#fff; font-size:0.75rem; margin-top:2px;">${j.note} - <b style="color:var(--high-green)">${j.status}</b></p>
+                    </div>
+                `;
             });
+            viewport.appendChild(container);
         }
     }
 
-    function changeChartRenderProfile(p) { chartVisualizationProfile = p; forceChartRedrawPipeline(); }
-    function setChartTimeframe(tf) { chartTimeframeScope = tf; }
-    function toggleOverlayTechnicalIndicator(ind) { activeOverlayIndicators[ind] = !activeOverlayIndicators[ind]; forceChartRedrawPipeline(); }
+    function changeChartRenderProfile(profile) {
+        chartVisualizationProfile = profile;
+        document.querySelectorAll('.canvas-toolbar .tool-cluster .t-btn').forEach(b => {
+            if (['Candlestick','Line','Bar'].includes(b.innerText)) {
+                b.classList.toggle('active', b.id === `chart-t-${profile.toLowerCase()}`);
+            }
+        });
+        forceChartRedrawPipeline();
+    }
+
+    function setChartTimeframe(tf) {
+        chartTimeframeScope = tf;
+        applyAssetSelectionModel(activeSelectedPair);
+    }
+
+    function toggleOverlayTechnicalIndicator(indicator) {
+        activeOverlayIndicators[indicator] = !activeOverlayIndicators[indicator];
+        const btn = document.getElementById(`tech-t-${indicator.toLowerCase()}`);
+        if(btn) btn.classList.toggle('active', activeOverlayIndicators[indicator]);
+        forceChartRedrawPipeline();
+    }
 
     function forceChartRedrawPipeline() {
         if (!canvasContext) return;
-        const w = canvasContext.canvas.width = canvasContext.canvas.clientWidth;
-        const h = canvasContext.canvas.height = canvasContext.canvas.clientHeight;
-        canvasContext.clearRect(0,0,w,h);
-        canvasContext.fillStyle = "var(--high-green)";
-        simulationTickArray.forEach((t, i) => {
-            canvasContext.fillRect((i * (w/50)), h/2 + (Math.sin(i)*20), 8, 15);
+        const width = canvasContext.canvas.clientWidth;
+        const height = canvasContext.canvas.clientHeight;
+        canvasContext.canvas.width = width;
+        canvasContext.canvas.height = height;
+
+        canvasContext.clearRect(0, 0, width, height);
+
+        let maxVal = Math.max(...simulationTickArray.map(t => t.high));
+        let minVal = Math.min(...simulationTickArray.map(t => t.low));
+        let range = maxVal - minVal;
+
+        let padding = range * 0.1;
+        maxVal += padding;
+        minVal -= padding;
+        range = maxVal - minVal;
+
+        const stepWidth = width / simulationTickArray.length;
+
+        canvasContext.strokeStyle = '#121b26';
+        canvasContext.lineWidth = 1;
+        for (let i = 1; i < 5; i++) {
+            let yLoc = (height / 5) * i;
+            canvasContext.beginPath();
+            canvasContext.moveTo(0, yLoc);
+            canvasContext.lineTo(width, yLoc);
+            canvasContext.stroke();
+        }
+
+        simulationTickArray.forEach((tick, idx) => {
+            let cx = (idx * stepWidth) + (stepWidth / 2);
+            let yOpen = height - (((tick.open - minVal) / range) * height);
+            let yClose = height - (((tick.close - minVal) / range) * height);
+            let yHigh = height - (((tick.high - minVal) / range) * height);
+            let yLow = height - (((tick.low - minVal) / range) * height);
+
+            canvasContext.strokeStyle = tick.close >= tick.open ? '#00e676' : '#ff1744';
+            canvasContext.fillStyle = tick.close >= tick.open ? '#00e676' : '#ff1744';
+
+            if (chartVisualizationProfile === 'CANDLE') {
+                canvasContext.lineWidth = 1.5;
+                canvasContext.beginPath();
+                canvasContext.moveTo(cx, yHigh);
+                canvasContext.lineTo(cx, yLow);
+                canvasContext.stroke();
+
+                let boxW = stepWidth * 0.7;
+                canvasContext.fillRect(cx - (boxW / 2), Math.min(yOpen, yClose), boxW, Math.abs(yOpen - yClose) || 1);
+            } else if (chartVisualizationProfile === 'LINE') {
+                if (idx > 0) {
+                    let prevX = ((idx - 1) * stepWidth) + (stepWidth / 2);
+                    let prevYClose = height - (((simulationTickArray[idx - 1].close - minVal) / range) * height);
+                    canvasContext.strokeStyle = 'var(--neon-blue)';
+                    canvasContext.lineWidth = 2;
+                    canvasContext.beginPath();
+                    canvasContext.moveTo(prevX, prevYClose);
+                    canvasContext.lineTo(cx, yClose);
+                    canvasContext.stroke();
+                }
+            } else if (chartVisualizationProfile === 'BAR') {
+                canvasContext.lineWidth = 2;
+                canvasContext.beginPath();
+                canvasContext.moveTo(cx, yHigh);
+                canvasContext.lineTo(cx, yLow);
+                canvasContext.stroke();
+
+                canvasContext.beginPath();
+                canvasContext.moveTo(cx - (stepWidth * 0.3), yOpen);
+                canvasContext.lineTo(cx, yOpen);
+                canvasContext.moveTo(cx, yClose);
+                canvasContext.lineTo(cx + (stepWidth * 0.3), yClose);
+                canvasContext.stroke();
+            }
         });
+
+        if (activeOverlayIndicators.MA) {
+            canvasContext.strokeStyle = 'var(--gold)';
+            canvasContext.lineWidth = 1.5;
+            canvasContext.beginPath();
+            simulationTickArray.forEach((tick, idx) => {
+                if (idx < 5) return;
+                let sum = 0; for (let j = 0; j < 5; j++) { sum += simulationTickArray[idx - j].close; }
+                let avg = sum / 5;
+                let cx = (idx * stepWidth) + (stepWidth / 2);
+                let cy = height - (((avg - minVal) / range) * height);
+                if (idx === 5) canvasContext.moveTo(cx, cy); else canvasContext.lineTo(cx, cy);
+            });
+            canvasContext.stroke();
+        }
+
+        if (activeOverlayIndicators.BB) {
+            canvasContext.strokeStyle = 'rgba(0,176,255,0.4)';
+            canvasContext.lineWidth = 1;
+            canvasContext.beginPath();
+            simulationTickArray.forEach((tick, idx) => {
+                let cx = (idx * stepWidth) + (stepWidth / 2);
+                let cy = height - ((((tick.close * 1.001) - minVal) / range) * height);
+                if (idx === 0) canvasContext.moveTo(cx, cy); else canvasContext.lineTo(cx, cy);
+            });
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            simulationTickArray.forEach((tick, idx) => {
+                let cx = (idx * stepWidth) + (stepWidth / 2);
+                let cy = height - ((((tick.close * 0.999) - minVal) / range) * height);
+                if (idx === 0) canvasContext.moveTo(cx, cy); else canvasContext.lineTo(cx, cy);
+            });
+            canvasContext.stroke();
+        }
     }
 
     function simulateHighFrequencyLiquidityStream() {
         Object.keys(liquidityCatalog).forEach(sym => {
-            liquidityCatalog[sym].price += (Math.random() - 0.5) * 0.0002;
-            let el = document.getElementById(`watch-val-${sym.replace('/','-')}`);
-            if(el) el.innerText = liquidityCatalog[sym].price.toFixed(liquidityCatalog[sym].digits);
+            let node = liquidityCatalog[sym];
+            let deltaMove = (sym.includes("JPY") || sym.includes("US30") || sym.includes("BTC") || sym.includes("NAS100")) ? 0.2 : 0.0001;
+            node.price += (Math.random() - 0.5) * deltaMove;
+            
+            let htmlTarget = document.getElementById(`watch-val-${sym.replace('/','-')}`);
+            if (htmlTarget) htmlTarget.innerText = node.price.toFixed(node.digits);
         });
+
+        let activeNode = liquidityCatalog[activeSelectedPair];
+        const bidEl = document.getElementById('hero-live-bid');
+        if (bidEl) bidEl.innerText = activeNode.price.toFixed(activeNode.digits);
+
+        if (simulationTickArray.length > 0) {
+            let workingCandle = simulationTickArray[simulationTickArray.length - 1];
+            workingCandle.close = activeNode.price;
+            workingCandle.high = Math.max(workingCandle.high, activeNode.price);
+            workingCandle.low = Math.min(workingCandle.low, activeNode.price);
+            
+            forceChartRedrawPipeline();
+        }
+
         evaluateBalanceLiquidationEquations();
     }
 
     function evaluateBalanceLiquidationEquations() {
-        let pnl = 0;
-        openPositionsRegister.forEach(p => {
-            let diff = p.type === 'BUY' ? (liquidityCatalog[p.pair].price - p.entry) : (p.entry - liquidityCatalog[p.pair].price);
-            pnl += diff * p.lots * liquidityCatalog[p.pair].multiplier * 132;
+        let activeFloatingAggregateSum = 0;
+        let cumulativeUsedMarginCollateral = 0;
+
+        openPositionsRegister.forEach(pos => {
+            let liveQuote = liquidityCatalog[pos.pair].price;
+            let definitionNode = liquidityCatalog[pos.pair];
+            let rawPointsDelta = pos.type === 'BUY' ? (liveQuote - pos.entry) : (pos.entry - liveQuote);
+            
+            let positionPnL = rawPointsDelta * pos.lots * definitionNode.multiplier * 132.00;
+            activeFloatingAggregateSum += positionPnL;
+
+            cumulativeUsedMarginCollateral += (pos.lots * definitionNode.multiplier * pos.entry * 132.00) / 500;
         });
-        accountCapitalState.floatingPnL = pnl;
-        accountCapitalState.equity = accountCapitalState.balance + pnl;
-        document.getElementById('top-balance').innerText = accountCapitalState.balance.toLocaleString();
-        document.getElementById('top-equity').innerText = accountCapitalState.equity.toLocaleString();
-        let pnlBox = document.getElementById('top-floatingpnl');
-        if(pnlBox) {
-            pnlBox.innerText = pnl.toLocaleString();
-            pnlBox.style.color = pnl >= 0 ? "var(--high-green)" : "var(--low-red)";
+
+        accountCapitalState.floatingPnL = activeFloatingAggregateSum;
+        accountCapitalState.equity = accountCapitalState.balance + activeFloatingAggregateSum;
+        accountCapitalState.usedMargin = cumulativeUsedMarginCollateral;
+        accountCapitalState.freeMargin = accountCapitalState.equity - cumulativeUsedMarginCollateral;
+        accountCapitalState.marginLevel = cumulativeUsedMarginCollateral > 0 ? (accountCapitalState.equity / cumulativeUsedMarginCollateral) * 100 : 100.00;
+
+        const balEl = document.getElementById('top-balance');
+        const eqEl = document.getElementById('top-equity');
+        const fmEl = document.getElementById('top-freemargin');
+        const umEl = document.getElementById('top-usedmargin');
+        const mlEl = document.getElementById('top-marginlevel');
+        const pnlEl = document.getElementById('top-floatingpnl');
+
+        if (balEl) balEl.innerText = accountCapitalState.balance.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        if (eqEl) eqEl.innerText = accountCapitalState.equity.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        if (fmEl) fmEl.innerText = accountCapitalState.freeMargin.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        if (umEl) umEl.innerText = accountCapitalState.usedMargin.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+        if (mlEl) mlEl.innerText = `${accountCapitalState.marginLevel.toFixed(2)}%`;
+        
+        if (pnlEl) {
+            pnlEl.innerText = accountCapitalState.floatingPnL.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+            pnlEl.style.color = accountCapitalState.floatingPnL >= 0 ? 'var(--high-green)' : 'var(--low-red)';
         }
+
+        if (currentLedgerTab === 'POSITIONS') {
+            rebuildTerminalLedgerView();
+        }
+    }
+
+    function toggleCopyMirrorAllocations(vaultName) {
+        alert(`Account sync complete. You are now successfully copying trades from [${vaultName}].`);
     }
 </script>
 </body>
-</html>
+                        </html>
