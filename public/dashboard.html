@@ -92,7 +92,7 @@
         #auth-gateway-dashboard { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px; flex: 1.2; }
         .gateway-icon-cluster { font-size: 3.5rem; color: var(--neon-blue); margin-bottom: 20px; display: flex; gap: 15px; }
         .gateway-nav-buttons { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; margin-top: 15px; }
-        .gateway-btn { width: 100%; height: 44px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--border-color); transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .gateway-btn { width: 100%; height: 44px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--border-color); transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
         .gateway-btn.primary { background: var(--neon-blue); color: #fff; border: none; }
         .gateway-btn.secondary { background: var(--panel-light); color: #fff; }
         .gateway-btn:hover { transform: translateY(-2px); opacity: 0.95; box-shadow: 0 4px 12px rgba(0, 176, 255, 0.2); }
@@ -287,12 +287,12 @@
             <h2 class="auth-title">Trader Gateway Dashboard</h2>
             <p class="auth-subtitle" style="max-width: 400px; margin-left: auto; margin-right: auto;">Welcome to Nexafxtrade Secure Terminal Hub. Choose an option below to enter your institutional portal account layout.</p>
             <div class="gateway-nav-buttons">
-                <button class="gateway-btn primary" onclick="switchAuthMode('LOGIN')">
+                <a href="/login" class="gateway-btn primary">
                     <i class="fas fa-sign-in-alt"></i> Already Registered? Login
-                </button>
-                <button class="gateway-btn secondary" onclick="switchAuthMode('REGISTER')">
+                </a>
+                <a href="/register" class="gateway-btn secondary">
                     <i class="fas fa-user-plus"></i> New Trader? Create Account
-                </button>
+                </a>
             </div>
         </div>
         
@@ -347,7 +347,7 @@
     </div>
 </div>
 
-<div class="app-container" id="main-terminal-layout" style="display:none;">
+<div class="app-container" id="main-terminal-layout" style="display:block;">
     <header>
         <div class="brand">NEXAFX<span>TRADE</span></div>
         <div class="account-meta-strip">
@@ -474,7 +474,7 @@
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                         <div class="form-element-node">
-                            <label>Stop Loss Protect Line (SL)</label>
+                            <label>Secure Stop Loss Protect Line (SL)</label>
                             <input type="number" id="ticket-sl" placeholder="No Limit" step="0.00001" oninput="calculateRiskTelemetryMatrices()">
                         </div>
                         <div class="form-element-node">
@@ -601,15 +601,18 @@
         setInterval(() => {
             simulateHighFrequencyLiquidityStream();
         }, 400);
+        
+        // Setup initial structural parameters
+        canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
+        populateStructuralAssetWatch();
+        populateMacroIntelligenceFeed();
+        applyAssetSelectionModel(activeSelectedPair);
+        rebuildTerminalLedgerView();
     });
 
     function navigateToPage(endpointRoute) {
         console.log("Routing traffic destination explicitly toward client view module: " + endpointRoute);
-        if (endpointRoute === '/login' || endpointRoute === '/register') {
-            bypassAuthSequence(); 
-        } else {
-            window.location.href = endpointRoute;
-        }
+        window.location.href = endpointRoute;
     }
 
     function initPreloaderVisualSimulations() {
@@ -641,7 +644,7 @@
             "Connecting to live ECN order arrays...",
             "Syncing consolidated market liquidity pricing feeds...",
             "Verifying data link security handshake codes...",
-            "Finalizing trader platform modules view layout..."
+            "Redirecting traffic parameters safely toward secure gateway..."
         ];
         let currentStep = 0;
         const bar = document.getElementById("preloader-bar");
@@ -660,8 +663,8 @@
                 clearInterval(interval);
                 document.getElementById("nexafx-preloader").style.opacity = "0";
                 setTimeout(() => {
-                    document.getElementById("nexafx-preloader").style.display = "none";
-                    document.getElementById("nexafx-auth-screen").style.display = "flex";
+                    // IMMEDIATELY REDIRECT TO OUTSIDE GATEWAY.HTML FILE
+                    window.location.href = "gateway.html";
                 }, 600);
             }
         }, 20);
@@ -679,20 +682,6 @@
         } else {
             document.getElementById("auth-gateway-dashboard").style.display = "flex";
         }
-    }
-
-    function bypassAuthSequence() {
-        document.getElementById("nexafx-auth-screen").style.opacity = "0";
-        setTimeout(() => {
-            document.getElementById("nexafx-auth-screen").style.display = "none";
-            document.getElementById("main-terminal-layout").style.display = "flex";
-            
-            canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
-            populateStructuralAssetWatch();
-            populateMacroIntelligenceFeed();
-            applyAssetSelectionModel(activeSelectedPair);
-            rebuildTerminalLedgerView();
-        }, 500);
     }
 
     function switchMarketCatalog(category) {
@@ -877,7 +866,7 @@
         evaluateBalanceLiquidationEquations();
     }
 
-    function clearPendingLimitOrder(id) {
+    function deletePendingLimitOrder(id) {
         pendingOrdersRegister = pendingOrdersRegister.filter(o => o.id !== id);
         rebuildTerminalLedgerView();
     }
@@ -960,7 +949,7 @@
                         <div>${ord.lots.toFixed(2)}</div>
                         <div style="font-family:monospace">${ord.triggerPrice}</div>
                         <div>${ord.sl ? ord.sl : '--'}</div>
-                        <div><button style="background:rgba(255,255,255,0.1); border:1px solid var(--border-color); color:#fff; padding:2px 6px; cursor:pointer; border-radius:3px;" onclick="clearPendingLimitOrder(${ord.id})">Cancel Ticket</button></div>
+                        <div><button style="background:rgba(255,255,255,0.1); border:1px solid var(--border-color); color:#fff; padding:2px 6px; cursor:pointer; border-radius:3px;" onclick="deletePendingLimitOrder(${ord.id})">Cancel Ticket</button></div>
                     `;
                     container.appendChild(row);
                 });
