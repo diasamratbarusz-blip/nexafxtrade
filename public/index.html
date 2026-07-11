@@ -113,6 +113,7 @@
         .auth-submit-btn:hover { opacity: 0.9; }
         .auth-switch-mode { text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-dim); }
         .auth-switch-mode span { color: var(--neon-blue); cursor: pointer; font-weight: 600; }
+        .auth-status-log { text-align: center; margin-top: 10px; font-size: 0.8rem; min-height: 18px; font-weight: bold; }
 
         /* --- Institutional Main Top Ribbon Header --- */
         header {
@@ -299,6 +300,7 @@
                     <i class="fas fa-user-plus"></i> New Trader? Create Account
                 </button>
             </div>
+            <p id="gateway-msg" class="auth-status-log"></p>
         </div>
         
         <div class="auth-main-form" id="auth-form-login" style="display:none;">
@@ -319,6 +321,7 @@
                 </div>
             </div>
             <button class="auth-submit-btn" id="login-submit-btn" onclick="executeBackendLogin()">Sign In to Dashboard</button>
+            <p id="login-msg" class="auth-status-log"></p>
             <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
 
@@ -347,6 +350,7 @@
                 </div>
             </div>
             <button class="auth-submit-btn" id="register-submit-btn" onclick="executeBackendRegistration()">Create My Account</button>
+            <p id="register-msg" class="auth-status-log"></p>
             <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
     </div>
@@ -373,7 +377,7 @@
     <div class="status-sub-bar">
         <div>
             <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b>NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
-            <span>TRADER ID: <b style="color:#fff;">8942105</b></span> &nbsp;|&nbsp;
+            <span>TRADER ID: <b style="color:#fff;" id="lbl-trader-id">8942105</b></span> &nbsp;|&nbsp;
             <span>ACCOUNT LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
             <span>TYPE: <b style="color:var(--gold);">RAW ECN ACCOUNT</b></span> &nbsp;|&nbsp;
             <span>COMMISSION PROFILE: <b style="color:var(--neon-blue);">VIP LOW SPREAD</b></span>
@@ -538,6 +542,12 @@
 </div>
 
 <script>
+    // Dynamically resolve base API environment destination matching internal configuration rules
+    const getApiBase = () => {
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        return isLocal ? "http://localhost:5000/api" : "https://nexapayfx-backend.vercel.app/api"; 
+    };
+
     // Global Multi-Asset Liquidity Pricing Definitions Matrix
     let activeCatalogFilter = 'FOREX';
     let currentLedgerTab = 'POSITIONS';
@@ -671,8 +681,8 @@
                 setTimeout(() => {
                     document.getElementById("nexafx-preloader").style.display = "none";
                     
-                    // SESSION CHECK: Verify if user has a token in storage
-                    const liveToken = localStorage.getItem('nexafx_auth_token');
+                    // SESSION CHECK: Verify if user has a standard authentication token inside storage
+                    const liveToken = localStorage.getItem('token') || localStorage.getItem('nexafx_auth_token');
                     if (liveToken) {
                         bypassAuthSequence();
                     } else {
@@ -689,12 +699,8 @@
         document.getElementById("auth-form-register").style.display = "none";
 
         if (mode === 'REGISTER') {
-            // If the register workspace is on an external file, swap the commented redirect below
-            // navigateToPage('register.html'); return;
             document.getElementById("auth-form-register").style.display = "flex";
         } else if (mode === 'LOGIN') {
-            // If the login workspace is on an external file, swap the commented redirect below
-            // navigateToPage('login.html'); return;
             document.getElementById("auth-form-login").style.display = "flex";
         } else {
             document.getElementById("auth-gateway-dashboard").style.display = "flex";
@@ -703,40 +709,51 @@
 
     /* ================= REAL AUTHENTICATION BACKEND DISPATCHERS ================= */
     async function executeBackendLogin() {
-        const email = document.getElementById('login-email').value;
+        const email = document.getElementById('login-email').value.trim();
         const password = document.getElementById('login-password').value;
         const submitBtn = document.getElementById('login-submit-btn');
+        const logMsg = document.getElementById('login-msg');
 
         if(!email || !password) {
-            alert("Please complete all credential fields mapping parameters.");
+            logMsg.innerText = "⚠️ Please complete all credential parameters.";
+            logMsg.style.color = "var(--low-red)";
             return;
         }
 
         submitBtn.disabled = true;
         submitBtn.innerText = "Authenticating Session...";
+        logMsg.innerText = "Connecting to secure server...";
+        logMsg.style.color = "var(--high-green)";
 
         try {
-            // Secure fetch exchange logic transmitting token request protocols to backend
-            const response = await fetch('/api/login', {
+            const response = await fetch(`${getApiBase()}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
 
+            const data = await response.json();
+
             if(response.ok) {
-                const data = await response.json();
-                localStorage.setItem('nexafx_auth_token', data.token || 'simulated_secure_bearer_token_node');
+                logMsg.innerText = "Login successful! Syncing account space...";
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('nexafx_auth_token', data.token);
+                if (data.user) {
+                    localStorage.setItem('operatorName', data.user.name);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    if(document.getElementById('lbl-trader-id') && data.user.id) {
+                        document.getElementById('lbl-trader-id').innerText = data.user.id;
+                    }
+                }
                 bypassAuthSequence();
             } else {
-                // Simulation fall-through to preserve immediate verification flow capability
-                console.warn("Backend unavailable. Initializing fallback authorization token mapping.");
-                localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
-                bypassAuthSequence();
+                logMsg.innerText = "❌ " + (data.message || "Invalid email or password.");
+                logMsg.style.color = "var(--low-red)";
             }
         } catch (error) {
-            console.error("Connection failure to transaction server. Granting fallback access.", error);
-            localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
-            bypassAuthSequence();
+            console.error("Connection error detected during transit:", error);
+            logMsg.innerText = "❌ Connection failed. Please verify API parameters.";
+            logMsg.style.color = "var(--low-red)";
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerText = "Sign In to Dashboard";
@@ -744,39 +761,49 @@
     }
 
     async function executeBackendRegistration() {
-        const name = document.getElementById('register-name').value;
-        const email = document.getElementById('register-email').value;
+        const name = document.getElementById('register-name').value.trim();
+        const email = document.getElementById('register-email').value.trim();
         const password = document.getElementById('register-password').value;
         const submitBtn = document.getElementById('register-submit-btn');
+        const logMsg = document.getElementById('register-msg');
 
         if(!name || !email || !password) {
-            alert("Please complete all profile generation fields mapping parameters.");
+            logMsg.innerText = "⚠️ Please fill all target profile inputs.";
+            logMsg.style.color = "var(--low-red)";
             return;
         }
 
         submitBtn.disabled = true;
         submitBtn.innerText = "Provisioning Secure Account...";
+        logMsg.innerText = "Transmitting registry arrays...";
+        logMsg.style.color = "var(--high-green)";
 
         try {
-            const response = await fetch('/api/register', {
+            const response = await fetch(`${getApiBase()}/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password })
             });
 
+            const data = await response.json();
+
             if(response.ok) {
-                const data = await response.json();
-                localStorage.setItem('nexafx_auth_token', data.token || 'simulated_secure_bearer_token_node');
+                logMsg.innerText = "Account created! Routing access matrix...";
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('nexafx_auth_token', data.token);
+                if (data.user) {
+                    localStorage.setItem('operatorName', data.user.name);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                }
                 bypassAuthSequence();
             } else {
-                console.warn("Backend unavailable. Initializing fallback registration token mapping.");
-                localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
-                bypassAuthSequence();
+                logMsg.innerText = "❌ " + (data.message || "Registration parameter conflict.");
+                logMsg.style.color = "var(--low-red)";
             }
         } catch (error) {
-            console.error("Connection failure to transaction server. Granting fallback access.", error);
-            localStorage.setItem('nexafx_auth_token', 'simulated_secure_bearer_token_node');
-            bypassAuthSequence();
+            console.error("Connection error detected during transit:", error);
+            logMsg.innerText = "❌ Network processing timeout. Try again.";
+            logMsg.style.color = "var(--low-red)";
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerText = "Create My Account";
@@ -784,7 +811,10 @@
     }
 
     function clearActiveTerminalSession() {
+        localStorage.removeItem('token');
         localStorage.removeItem('nexafx_auth_token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('operatorName');
         document.getElementById("main-terminal-layout").style.display = "none";
         document.getElementById("auth-gateway-dashboard").style.display = "flex";
         document.getElementById("auth-form-login").style.display = "none";
@@ -802,6 +832,17 @@
             const terminal = document.getElementById("main-terminal-layout");
             terminal.style.display = "flex";
             
+            // Re-read local storage details to personalize UI strings if accessible
+            const savedUserStr = localStorage.getItem('user');
+            if (savedUserStr) {
+                try {
+                    const parsed = JSON.parse(savedUserStr);
+                    if (parsed.id && document.getElementById('lbl-trader-id')) {
+                        document.getElementById('lbl-trader-id').innerText = parsed.id;
+                    }
+                } catch(e) {}
+            }
+
             canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
             populateStructuralAssetWatch();
             populateMacroIntelligenceFeed();
@@ -925,7 +966,6 @@
         calculateRiskTelemetryMatrices();
     }
 
-    // Mathematical Equation Formatting Application via text elements
     function calculateRiskTelemetryMatrices() {
         const declaredLots = parseFloat(document.getElementById('ticket-volume-lots').value) || 0.00;
         const anchorSL = parseFloat(document.getElementById('ticket-sl').value) || 0.00;
@@ -1318,4 +1358,4 @@
     }
 </script>
 </body>
-                        </html>
+</html>
