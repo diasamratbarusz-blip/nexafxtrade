@@ -962,7 +962,7 @@
                         <div>${ord.sl ? ord.sl : '--'}</div>
                         <div><button style="background:rgba(255,255,255,0.1); border:1px solid var(--border-color); color:#fff; padding:2px 6px; cursor:pointer; border-radius:3px;" onclick="clearPendingLimitOrder(${ord.id})">Cancel Ticket</button></div>
                     `;
-                    container.appendChild(ord);
+                    container.appendChild(row);
                 });
             }
             viewport.appendChild(container);
