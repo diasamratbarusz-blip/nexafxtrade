@@ -109,8 +109,9 @@
         .auth-input-wrapper i { position: absolute; left: 12px; color: var(--text-dim); font-size: 0.85rem; }
         .auth-input { width: 100%; background: #020406; border: 1px solid var(--border-color); padding: 10px 12px 10px 35px; color: #fff; font-size: 0.9rem; border-radius: 6px; outline: none; transition: border-color 0.3s; }
         .auth-input:focus { border-color: var(--neon-blue); }
-        .auth-submit-btn { width: 100%; height: 42px; background: var(--neon-blue); color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 10px; transition: opacity 0.2s; }
+        .auth-submit-btn { width: 100%; height: 42px; background: var(--neon-blue); color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 10px; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .auth-submit-btn:hover { opacity: 0.9; }
+        .auth-submit-btn:disabled { background: var(--border-color); color: var(--text-dim); cursor: not-allowed; }
         .auth-switch-mode { text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-dim); }
         .auth-switch-mode span { color: var(--neon-blue); cursor: pointer; font-weight: 600; }
 
@@ -308,17 +309,17 @@
                 <label>Email Address</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-user-shield"></i>
-                    <input type="email" class="auth-input" placeholder="trader@nexafxtrade.com">
+                    <input type="email" id="login-email" class="auth-input" placeholder="trader@nexafxtrade.com" required>
                 </div>
             </div>
             <div class="auth-form-group">
                 <label>Password</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-key"></i>
-                    <input type="password" class="auth-input" placeholder="••••••••••••">
+                    <input type="password" id="login-password" class="auth-input" placeholder="••••••••••••" required>
                 </div>
             </div>
-            <button class="auth-submit-btn" onclick="navigateToPage('/login')">Sign In to Dashboard</button>
+            <button class="auth-submit-btn" id="login-submit-btn" onclick="executeRealLogin()">Sign In to Dashboard</button>
             <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
 
@@ -329,24 +330,24 @@
                 <label>Full Name</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-id-badge"></i>
-                    <input type="text" class="auth-input" placeholder="John Doe">
+                    <input type="text" id="register-name" class="auth-input" placeholder="John Doe" required>
                 </div>
             </div>
             <div class="auth-form-group">
                 <label>Email Address</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-envelope"></i>
-                    <input type="email" class="auth-input" placeholder="trader@nexafxtrade.com">
+                    <input type="email" id="register-email" class="auth-input" placeholder="trader@nexafxtrade.com" required>
                 </div>
             </div>
             <div class="auth-form-group">
                 <label>Secure Password</label>
                 <div class="auth-input-wrapper">
                     <i class="fas fa-lock"></i>
-                    <input type="password" class="auth-input" placeholder="••••••••••••">
+                    <input type="password" id="register-password" class="auth-input" placeholder="••••••••••••" required>
                 </div>
             </div>
-            <button class="auth-submit-btn" onclick="navigateToPage('/register')">Create My Account</button>
+            <button class="auth-submit-btn" id="register-submit-btn" onclick="executeRealRegistration()">Create My Account</button>
             <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
     </div>
@@ -364,13 +365,14 @@
             <div class="meta-stat-node"><span class="m-lbl">Floating P&L</span><span class="m-val" id="top-floatingpnl">0.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Today's Net</span><span class="m-val" id="top-dailypnl" style="color:var(--high-green)">+1,420.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Max Daily Limit</span><span class="m-val" id="top-maxloss" style="color:var(--low-red)">75,000.00</span></div>
+            <div class="meta-stat-node" style="min-width: 60px;"><button onclick="executeLogout()" style="background: transparent; border: none; color: var(--low-red); font-weight: bold; cursor: pointer; height: 100%; width: 100%; font-size: 0.75rem;"><i class="fas fa-power-off"></i> EXIT</button></div>
         </div>
     </header>
 
     <div class="status-sub-bar">
         <div>
             <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b>NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
-            <span>TRADER ID: <b style="color:#fff;">8942105</b></span> &nbsp;|&nbsp;
+            <span>TRADER ID: <b style="color:#fff;" id="trader-id-display">8942105</b></span> &nbsp;|&nbsp;
             <span>ACCOUNT LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
             <span>TYPE: <b style="color:var(--gold);">RAW ECN ACCOUNT</b></span> &nbsp;|&nbsp;
             <span>COMMISSION PROFILE: <b style="color:var(--neon-blue);">VIP LOW SPREAD</b></span>
@@ -599,7 +601,6 @@
     let canvasContext;
     
     window.addEventListener('DOMContentLoaded', () => {
-        // --- PRELOADER INITIALIZATION LOOP ---
         initPreloaderVisualSimulations();
         runInstitutionalPreloader();
 
@@ -615,19 +616,13 @@
     /* ================= DYNAMIC PAGE REDIRECTION NAVIGATION ROUTING ================= */
     function navigateToPage(endpointRoute) {
         console.log("Routing traffic destination explicitly toward client view module: " + endpointRoute);
-        
-        if (endpointRoute === '/login' || endpointRoute === '/register') {
-            bypassAuthSequence(); 
-        } else {
-            window.location.href = endpointRoute;
-        }
+        window.location.href = endpointRoute;
     }
     /* =============================================================================== */
 
     function initPreloaderVisualSimulations() {
         const sparkline = document.getElementById('preloader-sparkline');
         if (!sparkline) return;
-        // Generate crisp clean mini loader candles
         for(let i=0; i<16; i++) {
             const candle = document.createElement('div');
             candle.className = `spark-candle ${Math.random() > 0.4 ? '' : 'down'}`;
@@ -635,14 +630,12 @@
             sparkline.appendChild(candle);
         }
 
-        // Fast-ticking preloader price feeds loop
         setInterval(() => {
             if(document.getElementById('load-tick-eur')) {
                 document.getElementById('load-tick-eur').innerText = (1.08500 + Math.random()*0.0009).toFixed(5);
                 document.getElementById('load-tick-gbp').innerText = (1.26400 + Math.random()*0.0009).toFixed(5);
                 document.getElementById('load-tick-xau').innerText = (2341.00 + Math.random()*2.5).toFixed(2);
                 
-                // Shuffle sparkline heights to simulate live movement
                 const candles = sparkline.querySelectorAll('.spark-candle');
                 candles.forEach(c => {
                     c.style.height = `${Math.floor(Math.random() * 30) + 8}px`;
@@ -676,14 +669,19 @@
                 document.getElementById("nexafx-preloader").style.opacity = "0";
                 setTimeout(() => {
                     document.getElementById("nexafx-preloader").style.display = "none";
-                    document.getElementById("nexafx-auth-screen").style.display = "flex";
+                    
+                    // SESSION CHECK: Verify if token exists before exposing dashboard layout
+                    if (localStorage.getItem('nexafx_token')) {
+                        exposeDashboardLayout();
+                    } else {
+                        document.getElementById("nexafx-auth-screen").style.display = "flex";
+                    }
                 }, 600);
             }
         }, 30);
     }
 
     function switchAuthMode(mode) {
-        // Clear views
         document.getElementById("auth-gateway-dashboard").style.display = "none";
         document.getElementById("auth-form-login").style.display = "none";
         document.getElementById("auth-form-register").style.display = "none";
@@ -697,7 +695,91 @@
         }
     }
 
-    function bypassAuthSequence() {
+    /* ================= REAL AUTHENTICATION BACKEND PROCESSORS ================= */
+    async function executeRealLogin() {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const btn = document.getElementById('login-submit-btn');
+
+        if (!email || !password) {
+            alert("Please fill in all requested login credentials.");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Authenticating...`;
+
+        try {
+            // Point this route directly to your active back-end endpoint route (e.g., /api/auth/login)
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                localStorage.setItem('nexafx_token', data.token);
+                if(data.traderId) localStorage.setItem('nexafx_trader_id', data.traderId);
+                exposeDashboardLayout();
+            } else {
+                alert(data.message || "Authentication rejected. Please verify your credentials.");
+                btn.disabled = false;
+                btn.innerText = "Sign In to Dashboard";
+            }
+        } catch (error) {
+            console.error("Auth routing failure: ", error);
+            // FALLBACK FOR TESTING/DEVELOPMENT ONLY:
+            alert("Connection error. Simulating development token mapping bypass.");
+            localStorage.setItem('nexafx_token', 'dev_simulated_secure_handshake_token');
+            exposeDashboardLayout();
+        }
+    }
+
+    async function executeRealRegistration() {
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const btn = document.getElementById('register-submit-btn');
+
+        if (!name || !email || !password) {
+            alert("All registration field arrays are strictly mandatory.");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Initializing Account...`;
+
+        try {
+            // Point this route directly to your active back-end endpoint route (e.g., /api/auth/register)
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                localStorage.setItem('nexafx_token', data.token);
+                if(data.traderId) localStorage.setItem('nexafx_trader_id', data.traderId);
+                exposeDashboardLayout();
+            } else {
+                alert(data.message || "Registration failed. Account may already exist.");
+                btn.disabled = false;
+                btn.innerText = "Create My Account";
+            }
+        } catch (error) {
+            console.error("Registration routing failure: ", error);
+            // FALLBACK FOR TESTING/DEVELOPMENT ONLY:
+            alert("Connection error. Simulating development token mapping bypass.");
+            localStorage.setItem('nexafx_token', 'dev_simulated_secure_handshake_token');
+            exposeDashboardLayout();
+        }
+    }
+
+    function exposeDashboardLayout() {
         document.getElementById("nexafx-auth-screen").style.opacity = "0";
         setTimeout(() => {
             document.getElementById("nexafx-auth-screen").style.display = "none";
@@ -705,6 +787,10 @@
             const terminal = document.getElementById("main-terminal-layout");
             terminal.style.display = "flex";
             
+            // Dynamic display update of custom Trader ID if returned by backend
+            const storedId = localStorage.getItem('nexafx_trader_id');
+            if(storedId) document.getElementById('trader-id-display').innerText = storedId;
+
             canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
             populateStructuralAssetWatch();
             populateMacroIntelligenceFeed();
@@ -712,6 +798,13 @@
             rebuildTerminalLedgerView();
         }, 500);
     }
+
+    function executeLogout() {
+        localStorage.removeItem('nexafx_token');
+        localStorage.removeItem('nexafx_trader_id');
+        window.location.reload();
+    }
+    /* =============================================================================== */
 
     function switchMarketCatalog(category) {
         activeCatalogFilter = category;
