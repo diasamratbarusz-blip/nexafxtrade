@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexafxtrade | Institutional Digital Asset Trading & Custody</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#070B19',
+                            card: '#0F172A',
+                            accent: '#1E293B',
+                            primary: '#00EBFF',
+                            secondary: '#7000FF',
+                            success: '#10B981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glow-effect:hover {
+            box-shadow: 0 0 30px rgba(0, 235, 255, 0.2);
+            border-color: rgba(0, 235, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-white font-sans antialiased selection:bg-brand-primary selection:text-brand-dark">
+
+    <!-- Navigation Header -->
+    <header class="w-full fixed top-0 left-0 backdrop-blur-md bg-brand-dark/80 border-b border-white/5 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center py-4 px-6 sm:px-10">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl font-black tracking-wider bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
+                    NEXAFXTRADE
+                </span>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-400">
+                <a href="#features" class="hover:text-white transition">Features</a>
+                <a href="#preview" class="hover:text-white transition">Platform</a>
+                <a href="#workflow" class="hover:text-white transition">Process</a>
+                <a href="#faq" class="hover:text-white transition">FAQ</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <!-- Point directly to main gateway interface inside index.html -->
+                <a href="index.html" class="text-sm font-medium text-slate-300 hover:text-white transition">Sign In</a>
+                <a href="index.html" class="text-sm font-semibold bg-gradient-to-r from-brand-primary to-blue-500 text-brand-dark px-5 py-2.5 rounded-xl hover:opacity-90 transition duration-300 shadow-md shadow-brand-primary/10">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="relative pt-36 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+        <!-- Background Glow Orbs -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-primary/10 rounded-full blur-[130px] pointer-events-none"></div>
+        <div class="absolute top-1/3 left-1/3 w-[400px] h-[400px] bg-brand-secondary/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto text-center px-6 relative z-10">
+            <div class="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-xs text-brand-primary font-medium mb-6 backdrop-blur-sm">
+                <span>✨ New Update: Automated Instant Webhook Deposits Built-in</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-none mb-6">
+                The Next Generation of <br class="hidden md:block"/>
+                <span class="bg-gradient-to-r from-brand-primary via-blue-400 to-brand-secondary bg-clip-text text-transparent">
+                    Digital Asset Management
+                </span>
+            </h1>
+            <p class="text-slate-400 text-lg md:text-xl max-w-3xl mx-auto mb-10 font-light leading-relaxed">
+                Maximize your trading precision with institutional-grade wallet infrastructure. Securely monitor investments, enjoy instant payment processing, and scale your capital.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <a href="index.html" class="w-full sm:w-auto bg-gradient-to-r from-brand-primary to-blue-500 text-brand-dark font-bold px-8 py-4 rounded-xl shadow-lg shadow-brand-primary/20 hover:opacity-90 transition transform hover:-translate-y-0.5 duration-200 text-center">
+                    Create Secure Wallet
+                </a>
+                <a href="#preview" class="w-full sm:w-auto bg-white/5 border border-white/10 hover:bg-white/10 px-8 py-4 rounded-xl font-medium transition text-center">
+                    View Live Interface
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Live Platform Preview -->
+    <section id="preview" class="py-12 max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
+        <div class="bg-brand-card border border-white/10 rounded-2xl p-4 md:p-6 shadow-2xl relative">
+            <div class="absolute -top-3 left-6 bg-brand-primary text-brand-dark text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                Platform Interface Preview
+            </div>
+            <!-- Mock Dashboard Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-6 border-b border-white/5 gap-4">
+                <div>
+                    <p class="text-xs text-slate-500 uppercase font-semibold">Total Wallet Balance</p>
+                    <h3 class="text-3xl font-mono font-bold text-brand-primary">$14,238.50 <span class="text-xs text-brand-success font-sans font-medium ml-2">↑ +12.4% today</span></h3>
+                </div>
+                <div class="flex gap-2">
+                    <span class="bg-brand-success/10 text-brand-success text-xs font-semibold px-3 py-1.5 rounded-lg border border-brand-success/20 flex items-center">
+                        ● System Core Online
+                    </span>
+                    <span class="bg-white/5 text-slate-300 text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/5">
+                        Network: Mainnet
+                    </span>
+                </div>
+            </div>
+            <!-- Mock Transaction Log -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="text-slate-500 border-b border-white/5">
+                            <th class="pb-3 font-medium">Transaction ID</th>
+                            <th class="pb-3 font-medium">Type</th>
+                            <th class="pb-3 font-medium">Amount</th>
+                            <th class="pb-3 font-medium">Processor Info</th>
+                            <th class="pb-3 font-medium text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5 font-mono text-xs text-slate-300">
+                        <tr>
+                            <td class="py-3 text-brand-primary">#TXN-94021-NX</td>
+                            <td class="py-3 font-sans text-white font-medium">Manual Account Fund</td>
+                            <td class="py-3 text-brand-success">+$2,500.00</td>
+                            <td class="py-3 font-sans text-slate-400">Mobile Reference Verified</td>
+                            <td class="py-3 text-right font-sans"><span class="bg-brand-success/20 text-brand-success px-2 py-0.5 rounded border border-brand-success/30">Settled</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 text-brand-primary">#TXN-88391-NX</td>
+                            <td class="py-3 font-sans text-white font-medium">Webhook Deposit</td>
+                            <td class="py-3 text-brand-success">+$450.00</td>
+                            <td class="py-3 font-sans text-slate-400">Instant API Handshake</td>
+                            <td class="py-3 text-right font-sans"><span class="bg-brand-success/20 text-brand-success px-2 py-0.5 rounded border border-brand-success/30">Settled</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features Ecosystem -->
+    <section id="features" class="py-24 max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">Engineered for Modern Trade Integrity</h2>
+            <p class="text-slate-400 max-w-xl mx-auto">Explore the deep feature matrix backing our financial processing nodes.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-brand-card border border-white/5 p-8 rounded-2xl transition duration-300 glow-effect group">
+                <div class="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-brand-dark transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Instant Deposit Pipelines</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">Automated webhook payloads check network ledger updates dynamically, modifying account parameters seconds after processing validation.</p>
+            </div>
+
+            <div class="bg-brand-card border border-white/5 p-8 rounded-2xl transition duration-300 glow-effect group">
+                <div class="w-12 h-12 rounded-xl bg-brand-secondary/10 flex items-center justify-center text-brand-secondary mb-6 group-hover:bg-brand-secondary group-hover:text-white transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Protected Wallet Environments</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">Multi-layer encryption safeguards active transaction databases. High-level security configuration blocks malicious state overrides.</p>
+            </div>
+
+            <div class="bg-brand-card border border-white/5 p-8 rounded-2xl transition duration-300 glow-effect group">
+                <div class="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-6 group-hover:bg-brand-primary group-hover:text-brand-dark transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Live Status Execution</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">No delayed screens. Monitor live order paths, update status mutations, and check balance shifts within an optimized dashboard interface.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section id="workflow" class="py-20 bg-brand-card/30 border-y border-white/5 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 sm:px-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold tracking-tight mb-4">How Funding Works</h2>
+                <p class="text-slate-400 max-w-md mx-auto">Get verified and start your active trade setup in three distinct logical loops.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                <div class="text-center relative">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-brand-primary/20 text-brand-primary font-mono font-bold flex items-center justify-center text-lg mb-6 border border-brand-primary/40">01</div>
+                    <h4 class="text-lg font-bold mb-2">Request Secure Address</h4>
+                    <p class="text-slate-400 text-sm max-w-xs mx-auto">Generate unique node routing destinations or provide transaction identification credentials inside your account profile.</p>
+                </div>
+                <div class="text-center relative">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-brand-secondary/20 text-brand-secondary font-mono font-bold flex items-center justify-center text-lg mb-6 border border-brand-secondary/40">02</div>
+                    <h4 class="text-lg font-bold mb-2">Payload Handshake</h4>
+                    <p class="text-slate-400 text-sm max-w-xs mx-auto">System backend captures webhook endpoints or processes matching parameters against network phone verifications instantly.</p>
+                </div>
+                <div class="text-center relative">
+                    <div class="w-12 h-12 mx-auto rounded-full bg-brand-success/20 text-brand-success font-mono font-bold flex items-center justify-center text-lg mb-6 border border-brand-success/40">03</div>
+                    <h4 class="text-lg font-bold mb-2">Execute Market Position</h4>
+                    <p class="text-slate-400 text-sm max-w-xs mx-auto">Your account balance is credited and protected. Deploy assets instantly into real-time global charts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 max-w-4xl mx-auto px-6 relative z-10">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold tracking-tight mb-4">Frequently Asked Questions</h2>
+            <p class="text-slate-400">Clear insights regarding account mechanics and security foundations.</p>
+        </div>
+
+        <div class="space-y-4">
+            <div class="bg-brand-card border border-white/5 p-6 rounded-xl">
+                <h4 class="text-base font-semibold text-white mb-2">How fast are deposit notifications processed?</h4>
+                <p class="text-slate-400 text-sm leading-relaxed">Webhook-backed notifications are handled immediately upon receiving network callback states. Manual phone-referenced items move through a validation workflow to securely credit updates.</p>
+            </div>
+            <div class="bg-brand-card border border-white/5 p-6 rounded-xl">
+                <h4 class="text-base font-semibold text-white mb-2">Are my connected digital asset holdings secure?</h4>
+                <p class="text-slate-400 text-sm leading-relaxed">Yes. Nexafxtrade isolates transactional tracking layers from master access logs. Database modifications require valid multi-layer cryptographic validation keys.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call To Action Block -->
+    <section class="py-20 text-center relative overflow-hidden z-10 border-t border-white/5">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-4xl font-extrabold mb-4">Ready to Master the Network Trend?</h2>
+            <p class="text-slate-400 mb-8 max-w-md mx-auto text-sm">Join modern asset managers and optimize capital velocity using secure, automated tracking systems.</p>
+            <a href="index.html" class="inline-block bg-white text-brand-dark font-bold px-8 py-3.5 rounded-xl hover:bg-slate-200 transition duration-200">
+                Open Your Wallet Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Global Footer -->
+    <footer class="border-t border-white/5 bg-brand-dark py-8 text-center text-xs text-slate-500">
+        <p>&copy; 2026 Nexafxtrade Ecosystem. All engineering, data structures, and asset custody pathways reserved.</p>
+    </footer>
+
+</body>
+</html>
