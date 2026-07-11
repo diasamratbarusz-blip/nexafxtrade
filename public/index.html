@@ -111,6 +111,7 @@
         .auth-input:focus { border-color: var(--neon-blue); }
         .auth-submit-btn { width: 100%; height: 42px; background: var(--neon-blue); color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 10px; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .auth-submit-btn:hover { opacity: 0.9; }
+        .auth-submit-btn:disabled { background: var(--border-color); color: var(--text-dim); cursor: not-allowed; }
         .auth-switch-mode { text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-dim); }
         .auth-switch-mode span { color: var(--neon-blue); cursor: pointer; font-weight: 600; }
         .auth-error-message { color: var(--low-red); font-size: 0.75rem; font-weight: 600; margin-top: 8px; min-height: 14px; text-align: center; }
@@ -514,8 +515,8 @@
 <script>
     /* --- CONFIGURATION & REAL BACKEND ROUTING PORTALS --- */
     const AUTH_CONFIG = {
-        loginEndpoint: '/api/auth/login',         // Replace with your microservice/backend endpoints
-        registerEndpoint: '/api/auth/register',   // Replace with your microservice/backend endpoints
+        loginPageUrl: 'login.html',               // Target external login file
+        registerEndpoint: '/api/auth/register',   // Microservice/backend endpoint
         tokenStorageKey: 'nexafx_session_token',
         userStorageKey: 'nexafx_trader_profile'
     };
@@ -595,6 +596,12 @@
 
     /* --- AUTH REAL SERVICE ACTIONS --- */
     function switchAuthMode(targetScreen) {
+        // If the user requests to Login, immediately intercept and redirect outside to the dedicated login file
+        if (targetScreen === 'LOGIN') {
+            window.location.href = AUTH_CONFIG.loginPageUrl;
+            return;
+        }
+
         document.getElementById('auth-gateway-dashboard').style.display = 'none';
         document.getElementById('auth-form-login').style.display = 'none';
         document.getElementById('auth-form-register').style.display = 'none';
@@ -603,8 +610,6 @@
 
         if (targetScreen === 'DASHBOARD') {
             document.getElementById('auth-gateway-dashboard').style.display = 'flex';
-        } else if (targetScreen === 'LOGIN') {
-            document.getElementById('auth-form-login').style.display = 'flex';
         } else if (targetScreen === 'REGISTER') {
             document.getElementById('auth-form-register').style.display = 'flex';
         }
@@ -614,56 +619,9 @@
         event.preventDefault();
         
         if (type === 'LOGIN') {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const errorContainer = document.getElementById('login-error');
-            const submitBtn = document.getElementById('btn-submit-login');
-
-            submitBtn.innerText = 'Verifying Credentials...';
-            submitBtn.disabled = true;
-            errorContainer.innerText = '';
-
-            try {
-                /*
-                // REAL IMPLEMENTATION WIRE UP:
-                const response = await fetch(AUTH_CONFIG.loginEndpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const responseData = await response.json();
-                if(!response.ok) throw new Error(responseData.message || 'Verification Failed');
-                */
-                
-                // Clean Simulated Network Loop to preserve operational runtime safely:
-                await new Promise(resolve => setTimeout(resolve, 1200));
-                
-                // Simulating response payload tokens:
-                const responseData = {
-                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.nexafxtradelivetoken",
-                    user: { email: email, traderId: Math.floor(1000000 + Math.random() * 9000000) }
-                };
-
-                localStorage.setItem(AUTH_CONFIG.tokenStorageKey, responseData.token);
-                localStorage.setItem(AUTH_CONFIG.userStorageKey, JSON.stringify(responseData.user));
-
-                document.getElementById('lbl-trader-id').innerText = responseData.user.traderId;
-
-                // Animate transition cleanly out of gateway into layout
-                document.getElementById('nexafx-auth-screen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('nexafx-auth-screen').style.display = 'none';
-                    document.getElementById('main-terminal-layout').style.display = 'flex';
-                    document.getElementById('nexafx-auth-screen').style.opacity = '1';
-                    wakeCoreTradingEngines();
-                }, 500);
-
-            } catch (err) {
-                errorContainer.innerText = err.message || 'Authorization server rejected parameters.';
-            } finally {
-                submitBtn.innerText = 'Sign In to Dashboard';
-                submitBtn.disabled = false;
-            }
+            // Safety fallback redundancy redirection if form gets triggered directly
+            window.location.href = AUTH_CONFIG.loginPageUrl;
+            return;
 
         } else if (type === 'REGISTER') {
             const name = document.getElementById('reg-name').value;
@@ -1028,18 +986,15 @@
     }
 
     function setChartTimeframe(tf) {
-        // Structural timeframe switcher stub
         updateCoreChartVisualization();
     }
 
     function toggleOverlayTechnicalIndicator(ind) {
-        // Toggle indicators visual state hook wrapper
         updateCoreChartVisualization();
     }
 
     /* --- REALTIME HIGH FREQUENCY VOLATILITY DATASTREAM FEED ENGINE --- */
     function processRealtimeDataMarketStream() {
-        // Loop through pricing and simulate continuous tick activity updates
         Object.keys(rawInstrumentDataset).forEach(cat => {
             rawInstrumentDataset[cat].forEach(item => {
                 const delta = (Math.random() - 0.5) * (item.price * 0.0006);
@@ -1052,9 +1007,7 @@
             });
         });
 
-        // Update active positions P&L fields
         activePositionsList.forEach(p => {
-            // Find live item price reference to map P&L tracking calculations
             let livePrice = p.openPrice;
             Object.keys(rawInstrumentDataset).forEach(cat => {
                 let match = rawInstrumentDataset[cat].find(i => i.name === p.ticker);
@@ -1062,7 +1015,7 @@
             });
             p.currentPrice = livePrice;
             let tickDiff = p.direction === 'BUY' ? (livePrice - p.openPrice) : (p.openPrice - livePrice);
-            p.pnl = tickDiff * p.lots * 10000; // Simplified lot sizing modifier value mapping
+            p.pnl = tickDiff * p.lots * 10000; 
         });
 
         renderMarketWatchlist();
@@ -1115,7 +1068,6 @@
 
     function updateCoreChartVisualization() {
         if(!tradingTerminalChart) return;
-        // Regenerate datasets to map smooth switches across varying pairs
         let mockPrices = [];
         let currentPrice = 1.00;
         Object.keys(rawInstrumentDataset).forEach(cat => {
@@ -1129,7 +1081,6 @@
         }
         tradingTerminalChart.data.datasets[0].data = mockPrices;
         
-        // Dynamically shift interface trace color scheme configuration mappings matching render type profile selection
         if(chartRenderProfile === 'LINE') {
             tradingTerminalChart.data.datasets[0].borderColor = '#ffd600';
             tradingTerminalChart.data.datasets[0].backgroundColor = 'rgba(255, 214, 0, 0.02)';
@@ -1156,4 +1107,4 @@
     }
 </script>
 </body>
-                                                                                  </html>
+</html>
