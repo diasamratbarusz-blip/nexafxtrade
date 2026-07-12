@@ -97,13 +97,18 @@
         .wallet-display {
             background: #000;
             border: 1px solid var(--high-green);
-            padding: 8px 20px;
+            padding: 8px 16px;
             border-radius: 10px;
             text-align: right;
             box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
-        .wallet-label { font-size: 0.65rem; color: #888; display: block; font-weight: bold; }
-        .wallet-val { color: var(--gold); font-family: monospace; font-size: 1.1rem; font-weight: 900; }
+        .wallet-label { font-size: 0.6rem; color: #888; font-weight: bold; text-transform: uppercase; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px; margin-bottom: 2px;}
+        .balances-row { display: flex; gap: 15px; justify-content: center;}
+        .wallet-sub { font-size: 0.7rem; color: var(--text-dim); display: block; font-weight: bold;}
+        .wallet-val { color: var(--gold); font-family: monospace; font-size: 0.95rem; font-weight: 900; }
 
         .btn-back {
             background: rgba(0, 212, 255, 0.1);
@@ -396,6 +401,8 @@
             nav { padding: 15px 20px; }
             .terminal-card { padding: 30px 20px; }
             .quick-amounts { grid-template-columns: repeat(2, 1fr); }
+            .balances-row { gap: 8px; }
+            .wallet-val { font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -423,9 +430,23 @@
         NEXAFX<span>TRADE</span>
     </a>
     <div class="nav-right">
+        <!-- ADVANCED MULTI-CURRENCY VAULT DISPLAY -->
         <div class="wallet-display">
-            <span class="wallet-label">CURRENT VAULT BALANCE</span>
-            <span class="wallet-val" id="nav-balance">0.00 USD</span>
+            <span class="wallet-label">CURRENT VAULT BALANCES</span>
+            <div class="balances-row">
+                <div>
+                    <span class="wallet-sub">USD</span>
+                    <span class="wallet-val" id="nav-balance-usd">$0.00</span>
+                </div>
+                <div>
+                    <span class="wallet-sub">EUR</span>
+                    <span class="wallet-val" id="nav-balance-eur">€0.00</span>
+                </div>
+                <div>
+                    <span class="wallet-sub">GBP</span>
+                    <span class="wallet-val" id="nav-balance-gbp">£0.00</span>
+                </div>
+            </div>
         </div>
         <a href="/dashboard" class="btn-back">
             <i class="fas fa-arrow-left"></i> Terminal
@@ -449,7 +470,7 @@
             <span class="tier-badge" id="tierBadge">RAW SPREAD</span>
         </div>
 
-        <!-- MULTI-CURRENCY TRADING ACCOUNT SELECTOR -->
+        <!-- MULTI-CURRENCY TRADING ACCOUNT SELECTOR (KSH REMOVED) -->
         <div class="form-group">
             <label>Target Trading Account Currency</label>
             <div class="input-wrapper">
@@ -457,7 +478,6 @@
                     <option value="USD">NEXAFX Core Clearing Account (USD $)</option>
                     <option value="EUR">NEXAFX Eurozone Settlement Account (EUR €)</option>
                     <option value="GBP">NEXAFX Premium Sterling Account (GBP £)</option>
-                    <option value="KES">NEXAFX Local Base Account (KES Sh)</option>
                 </select>
                 <i class="fas fa-wallet"></i>
             </div>
@@ -595,7 +615,7 @@
         return isLocal ? "http://localhost:5000/api" : "https://nexapayfx-backend.vercel.app/api"; 
     };
 
-    let userBalance = 0;
+    let userBalance = 0; // Treated as baseline USD balance
     let userToken = localStorage.getItem("token");
     let userData = null;
 
@@ -603,15 +623,13 @@
     const RATES = {
         USD: 129.50,
         EUR: 141.20,
-        GBP: 165.80,
-        KES: 1.00
+        GBP: 165.80
     };
 
     const SYMBOLS = {
         USD: '$',
         EUR: '€',
-        GBP: '£',
-        KES: 'Sh'
+        GBP: '£'
     };
 
     function onCurrencyChange() {
@@ -710,9 +728,19 @@
         }
     }
 
+    // DYNAMICALLY POPULATES THE INDIVIDUAL CURRENCY SUB-VAULTS
     function updateBalanceUI() {
-        // Balances displayed at corporate global metrics layer default to USD layout stability
-        document.getElementById('nav-balance').innerText = `${userBalance.toLocaleString(undefined, {minimumFractionDigits: 2})} USD`;
+        // Base USD balance mapped out from standard user schema allocation
+        const usdBalance = userBalance;
+        
+        // Dynamic calculated balance parameters conversion from cross exchange rates relative structure
+        const kesEquiv = usdBalance * RATES.USD;
+        const eurBalance = kesEquiv / RATES.EUR;
+        const gbpBalance = kesEquiv / RATES.GBP;
+
+        document.getElementById('nav-balance-usd').innerText = `$${usdBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('nav-balance-eur').innerText = `€${eurBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('nav-balance-gbp').innerText = `£${gbpBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     }
 
     function setAmount(amount) {
