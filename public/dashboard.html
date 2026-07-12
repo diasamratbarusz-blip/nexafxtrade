@@ -602,7 +602,6 @@
             simulateHighFrequencyLiquidityStream();
         }, 400);
         
-        // Setup initial structural parameters
         canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
         populateStructuralAssetWatch();
         populateMacroIntelligenceFeed();
@@ -663,8 +662,8 @@
                 clearInterval(interval);
                 document.getElementById("nexafx-preloader").style.opacity = "0";
                 setTimeout(() => {
-                    // IMMEDIATELY REDIRECT TO OUTSIDE GATEWAY.HTML FILE
-                    window.location.href = "gateway.html";
+                    // Handshake verified, clear the loading layer seamlessly to view dashboard workspace
+                    document.getElementById("nexafx-preloader").style.display = "none";
                 }, 600);
             }
         }, 20);
