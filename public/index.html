@@ -125,7 +125,7 @@
         .brand { font-size: 1.2rem; font-weight: 900; letter-spacing: 0.5px; }
         .brand span { color: var(--neon-blue); font-weight: 400; }
 
-        .account-meta-strip { display: flex; gap: 8px; align-items: center; overflow-x: auto; max-width: 100%; padding-bottom: 4px; }
+        .account-meta-strip { display: flex; gap: 8px; align-items: center; overflow-x: auto; max-width: 80%; padding-bottom: 4px; }
         .meta-stat-node {
             background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);
             padding: 4px 10px; border-radius: 4px; text-align: right; min-width: 110px; flex-shrink: 0;
@@ -211,6 +211,12 @@
 
         .analytics-grid-box { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; }
         .analytics-card-node { background: #030508; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 4px; }
+
+        /* --- Account Switch Style Element Mode --- */
+        .account-type-toggle { display: flex; background: #020406; border: 1px solid var(--border-color); border-radius: 4px; overflow: hidden; height: 28px; }
+        .acct-toggle-btn { background: transparent; border: none; font-size: 0.65rem; font-weight: 800; color: var(--text-dim); padding: 0 10px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
+        .acct-toggle-btn.active.real-mode { background: var(--gold); color: #000; }
+        .acct-toggle-btn.active.demo-mode { background: var(--neon-blue); color: #fff; }
 
         /* --- Footer Base Block --- */
         footer { background: var(--panel); border-top: 1px solid var(--border-color); height: auto; min-height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 6px 16px; font-size: 0.6rem; color: var(--text-dim); flex-shrink: 0; flex-wrap: wrap; gap: 6px; }
@@ -388,17 +394,21 @@
             <div class="meta-stat-node"><span class="m-lbl">Today's Net</span><span class="m-val" id="top-dailypnl" style="color:var(--high-green)">+1,420.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Max Daily Limit</span><span class="m-val" id="top-maxloss" style="color:var(--low-red)">75,000.00</span></div>
         </div>
-        <div style="display: flex; align-items: center; padding-left: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="account-type-toggle">
+                <button class="acct-toggle-btn real-mode active" id="btn-acct-real" onclick="toggleTradingAccountTypeMode('REAL')">Real</button>
+                <button class="acct-toggle-btn demo-mode" id="btn-acct-demo" onclick="toggleTradingAccountTypeMode('DEMO')">Demo</button>
+            </div>
             <button class="t-btn" style="border-color: var(--low-red); color: var(--low-red); font-size: 0.7rem;" onclick="clearActiveTerminalSession()"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </header>
 
     <div class="status-sub-bar">
         <div>
-            <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b>NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
+            <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b id="lbl-live-server-node">NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
             <span>TRADER ID: <b style="color:#fff;" id="lbl-trader-id">8942105</b></span> &nbsp;|&nbsp;
             <span>ACCOUNT LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
-            <span>TYPE: <b style="color:var(--gold);">RAW ECN ACCOUNT</b></span> &nbsp;|&nbsp;
+            <span>TYPE: <b style="color:var(--gold);" id="lbl-env-label-type">REAL RAW ECN PRO</b></span> &nbsp;|&nbsp;
             <span>COMMISSION PROFILE: <b style="color:var(--neon-blue);">VIP LOW SPREAD</b></span>
         </div>
         <div>
@@ -587,25 +597,30 @@
     let currentLedgerTab = 'POSITIONS';
     let chartVisualizationProfile = 'CANDLE';
     let chartTimeframeScope = 'M1';
+    let activeEnvironmentProfileMode = 'REAL';
 
     let activeOverlayIndicators = { MA: false, EMA: false, BB: false, RSI: false };
 
-    // Primary Account Balances Data Pipeline Structures
-    let accountCapitalState = {
-        balance: 1500000.00,
-        equity: 1500000.00,
-        freeMargin: 1500000.00,
-        usedMargin: 0.00,
-        marginLevel: 100.00,
-        floatingPnL: 0.00,
-        dailyPnL: 1420.00,
-        weeklyPnL: 8950.00,
-        monthlyPnL: 34100.00,
-        growthRate: 14.25,
-        currency: 'KES',
-        maxDailyLossBound: 75000.00,
-        maxDrawdownCap: 150000.00
+    // Multi-Account Dynamic Scope Data Pipelines
+    let realAccountCapitalState = {
+        balance: 1500000.00, equity: 1500000.00, freeMargin: 1500000.00, usedMargin: 0.00, marginLevel: 100.00,
+        floatingPnL: 0.00, dailyPnL: 1420.00, maxDailyLossBound: 75000.00, maxDrawdownCap: 150000.00, growthRate: 14.25
     };
+
+    let demoAccountCapitalState = {
+        balance: 5000000.00, equity: 5000000.00, freeMargin: 5000000.00, usedMargin: 0.00, marginLevel: 100.00,
+        floatingPnL: 0.00, dailyPnL: 0.00, maxDailyLossBound: 250000.00, maxDrawdownCap: 500000.00, growthRate: 0.00
+    };
+
+    let accountCapitalState = { ...realAccountCapitalState };
+    
+    let realOpenPositionsRegister = [];
+    let demoOpenPositionsRegister = [];
+    let openPositionsRegister = [];
+
+    let realPendingOrdersRegister = [];
+    let demoPendingOrdersRegister = [];
+    let pendingOrdersRegister = [];
 
     let liquidityCatalog = {
         "EUR/USD": { category: "FOREX", price: 1.08520, bidOffset: -0.00002, askOffset: 0.00002, digits: 5, spreadPips: 0.4, changePct: 0.04, high: 1.08900, low: 1.08110, multiplier: 100000 },
@@ -638,11 +653,7 @@
     ];
 
     let activeSelectedPair = "EUR/USD";
-    let openPositionsRegister = [];
-    let pendingOrdersRegister = [];
     let simulationTickArray = [];
-
-    // Initialize Graphic Engine Subsystem Context Bindings
     let canvasContext;
     
     window.addEventListener('DOMContentLoaded', () => {
@@ -715,7 +726,6 @@
                 setTimeout(() => {
                     document.getElementById("nexafx-preloader").style.display = "none";
                     
-                    // SESSION CHECK: Verify if user has a standard authentication token inside storage
                     const liveToken = localStorage.getItem('token') || localStorage.getItem('nexafx_auth_token');
                     if (liveToken) {
                         bypassAuthSequence();
@@ -864,6 +874,46 @@
         document.getElementById("nexafx-auth-screen").style.display = "flex";
         document.getElementById("nexafx-auth-screen").style.opacity = "1";
     }
+
+    /* ================= DYNAMIC DEMO / REAL SWITCH TRACKING CORE ENGINE ================= */
+    function toggleTradingAccountTypeMode(mode) {
+        if (activeEnvironmentProfileMode === mode) return;
+
+        // Cache historical reference context before changing structures
+        if (activeEnvironmentProfileMode === 'REAL') {
+            realAccountCapitalState = { ...accountCapitalState };
+            realOpenPositionsRegister = [ ...openPositionsRegister ];
+            realPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        } else {
+            demoAccountCapitalState = { ...accountCapitalState };
+            demoOpenPositionsRegister = [ ...openPositionsRegister ];
+            demoPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        }
+
+        activeEnvironmentProfileMode = mode;
+
+        document.getElementById('btn-acct-real').classList.toggle('active', mode === 'REAL');
+        document.getElementById('btn-acct-demo').classList.toggle('active', mode === 'DEMO');
+
+        if (mode === 'REAL') {
+            accountCapitalState = { ...realAccountCapitalState };
+            openPositionsRegister = [ ...realOpenPositionsRegister ];
+            pendingOrdersRegister = [ ...realPendingOrdersRegister ];
+            document.getElementById('lbl-live-server-node').innerText = "NEXA-PRO-LIVE_4";
+            document.getElementById('lbl-env-label-type').innerText = "REAL RAW ECN PRO";
+            document.getElementById('lbl-env-label-type').style.color = "var(--gold)";
+        } else {
+            accountCapitalState = { ...demoAccountCapitalState };
+            openPositionsRegister = [ ...demoOpenPositionsRegister ];
+            pendingOrdersRegister = [ ...demoPendingOrdersRegister ];
+            document.getElementById('lbl-live-server-node').innerText = "NEXA-STAGE-DEMO_2";
+            document.getElementById('lbl-env-label-type').innerText = "DEMO SIMULATOR STAGE";
+            document.getElementById('lbl-env-label-type').style.color = "var(--neon-blue)";
+        }
+
+        rebuildTerminalLedgerView();
+        evaluateBalanceLiquidationEquations();
+    }
     /* =========================================================================== */
 
     function bypassAuthSequence() {
@@ -874,7 +924,6 @@
             const terminal = document.getElementById("main-terminal-layout");
             terminal.style.display = "flex";
             
-            // Re-read local storage details to personalize UI strings if accessible
             const savedUserStr = localStorage.getItem('user');
             if (savedUserStr) {
                 try {
@@ -888,6 +937,16 @@
             canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
             populateStructuralAssetWatch();
             populateMacroIntelligenceFeed();
+            
+            // Re-sync operational global arrays explicitly
+            if (activeEnvironmentProfileMode === 'REAL') {
+                openPositionsRegister = [ ...realOpenPositionsRegister ];
+                pendingOrdersRegister = [ ...realPendingOrdersRegister ];
+            } else {
+                openPositionsRegister = [ ...demoOpenPositionsRegister ];
+                pendingOrdersRegister = [ ...demoPendingOrdersRegister ];
+            }
+
             applyAssetSelectionModel(activeSelectedPair);
             rebuildTerminalLedgerView();
         }, 500);
@@ -1049,7 +1108,8 @@
                 tp: tpValue,
                 swap: 0.00,
                 commission: -(designatedLots * 3.50 * 132.00),
-                timestamp: new Date().toLocaleTimeString()
+                timestamp: new Date().toLocaleTimeString(),
+                tickIndex: simulationTickArray.length - 1 // Capture execution frame context index mapping
             };
             openPositionsRegister.push(orderItem);
         } else {
@@ -1064,6 +1124,15 @@
             };
             pendingOrdersRegister.push(pendingItem);
         }
+
+        // Keep local profile variables mirrored accurately during execution
+        if (activeEnvironmentProfileMode === 'REAL') {
+            realOpenPositionsRegister = [ ...openPositionsRegister ];
+            realPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        } else {
+            demoOpenPositionsRegister = [ ...openPositionsRegister ];
+            demoPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        }
         
         rebuildTerminalLedgerView();
         evaluateBalanceLiquidationEquations();
@@ -1071,12 +1140,22 @@
 
     function terminateActiveRiskVector(id) {
         openPositionsRegister = openPositionsRegister.filter(p => p.id !== id);
+        if (activeEnvironmentProfileMode === 'REAL') {
+            realOpenPositionsRegister = [ ...openPositionsRegister ];
+        } else {
+            demoOpenPositionsRegister = [ ...openPositionsRegister ];
+        }
         rebuildTerminalLedgerView();
         evaluateBalanceLiquidationEquations();
     }
 
     function clearPendingLimitOrder(id) {
         pendingOrdersRegister = pendingOrdersRegister.filter(o => o.id !== id);
+        if (activeEnvironmentProfileMode === 'REAL') {
+            realPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        } else {
+            demoPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        }
         rebuildTerminalLedgerView();
     }
 
@@ -1160,7 +1239,7 @@
                         <div>${ord.sl ? ord.sl : '--'}</div>
                         <div><button style="background:rgba(255,255,255,0.1); border:1px solid var(--border-color); color:#fff; padding:2px 6px; cursor:pointer; border-radius:3px;" onclick="clearPendingLimitOrder(${ord.id})">Cancel Ticket</button></div>
                     `;
-                    container.appendChild(ord);
+                    container.appendChild(row);
                 });
             }
             viewport.appendChild(container);
@@ -1168,11 +1247,16 @@
         else if (currentLedgerTab === 'ANALYTICS') {
             let container = document.createElement('div');
             container.className = 'analytics-grid-box';
+            
+            // Calculate real-time exposure matrices metrics for full trade detail summaries
+            let grossComm = openPositionsRegister.reduce((acc, current) => acc + current.commission, 0);
+            let activeLotsAllocated = openPositionsRegister.reduce((acc, current) => acc + current.lots, 0);
+
             container.innerHTML = `
                 <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">ACCOUNT TRADING WIN RATE</span><b style="font-size:1.2rem; color:var(--high-green)">68.42% Total Win Profile</b></div>
                 <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">PROFIT FACTOR SCORE</span><b style="font-size:1.2rem; color:var(--neon-blue)">2.41 Active Performance Ratio</b></div>
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">CONSOLIDATED ACCOUNT GAINS</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Sharpe Metric Score: <b>1.85</b> | ROI Growth Baseline: <b>+${accountCapitalState.growthRate}%</b></span></div>
-                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">MAX RISK MANAGEMENT DRAWDOWN</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Max Loss Boundary Threshold: <b>KES ${accountCapitalState.maxDrawdownCap.toLocaleString()}</b></span></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">WORKSPACE ACTIVE VOLUME EXPEDITION</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Lots Allocated: <b style="color:var(--gold)">${activeLotsAllocated.toFixed(2)} Lots</b> | Cumulative Commission: <b style="color:var(--low-red)">KES ${grossComm.toFixed(2)}</b></span></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">MAX RISK MANAGEMENT DRAWDOWN</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Max Loss Boundary Threshold: <b>KES ${accountCapitalState.maxDrawdownCap.toLocaleString()}</b> | Account Mode: <b style="color:var(--neon-blue)">${activeEnvironmentProfileMode} PROFILE</b></span></div>
             `;
             viewport.appendChild(container);
         }
@@ -1289,6 +1373,40 @@
             }
         });
 
+        /* ================= DYNAMIC BUY / SELL REAL-TIME EXECUTION CHART GRAPH VISUALIZER ================= */
+        openPositionsRegister.forEach(pos => {
+            if (pos.pair === activeSelectedPair && pos.tickIndex !== undefined && pos.tickIndex < simulationTickArray.length) {
+                let cx = (pos.tickIndex * stepWidth) + (stepWidth / 2);
+                let yEntry = height - (((pos.entry - minVal) / range) * height);
+
+                // Ensure visibility across bounds
+                if (yEntry >= 0 && yEntry <= height) {
+                    canvasContext.fillStyle = pos.type === 'BUY' ? '#00e676' : '#ff1744';
+                    canvasContext.beginPath();
+                    if (pos.type === 'BUY') {
+                        canvasContext.moveTo(cx, yEntry - 4);
+                        canvasContext.lineTo(cx - 6, yEntry + 6);
+                        canvasContext.lineTo(cx + 6, yEntry + 6);
+                    } else {
+                        canvasContext.moveTo(cx, yEntry + 4);
+                        canvasContext.lineTo(cx - 6, yEntry - 6);
+                        canvasContext.lineTo(cx + 6, yEntry - 6);
+                    }
+                    canvasContext.fill();
+
+                    // Render auxiliary contextual target horizontal baseline identifiers
+                    canvasContext.strokeStyle = pos.type === 'BUY' ? 'rgba(0,230,118,0.25)' : 'rgba(255,23,68,0.25)';
+                    canvasContext.setLineDash([4, 4]);
+                    canvasContext.beginPath();
+                    canvasContext.moveTo(0, yEntry);
+                    canvasContext.lineTo(width, yEntry);
+                    canvasContext.stroke();
+                    canvasContext.setLineDash([]);
+                }
+            }
+        });
+        /* ================================================================================================= */
+
         if (activeOverlayIndicators.MA) {
             canvasContext.strokeStyle = 'var(--gold)';
             canvasContext.lineWidth = 1.5;
@@ -1390,7 +1508,7 @@
             pnlEl.style.color = accountCapitalState.floatingPnL >= 0 ? 'var(--high-green)' : 'var(--low-red)';
         }
 
-        if (currentLedgerTab === 'POSITIONS') {
+        if (currentLedgerTab === 'POSITIONS' || currentLedgerTab === 'ANALYTICS') {
             rebuildTerminalLedgerView();
         }
     }
