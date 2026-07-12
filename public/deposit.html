@@ -31,7 +31,7 @@
             flex-direction: column;
         }
 
-        /* ==================== LIVE TICKER MARQUEE (NEW) ==================== */
+        /* ==================== LIVE TICKER MARQUEE ==================== */
         .ticker-wrap {
             width: 100%;
             background: #0b1118;
@@ -172,7 +172,7 @@
             letter-spacing: 1px;
         }
 
-        /* Institutional Account Metrics Banner (NEW) */
+        /* Institutional Account Metrics Banner */
         .tier-banner {
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 0, 0, 0.4));
             border: 1px solid rgba(0, 212, 255, 0.2);
@@ -213,7 +213,7 @@
         }
         .auth-input::placeholder { color: #444a54; font-weight: 500; }
 
-        /* Dynamic Leverage & Allocation Calculator Widget (NEW) */
+        /* Dynamic Leverage & Allocation Calculator Widget */
         .calculator-preview {
             background: var(--panel-secondary);
             border: 1px dashed rgba(255,255,255,0.08);
@@ -341,20 +341,8 @@
         .mpesa-instructions ol li {
             margin-bottom: 5px;
         }
-        .paybill-number {
-            background: #000;
-            color: var(--gold);
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-weight: 900;
-            font-size: 1.2rem;
-            display: inline-block;
-            margin: 10px 0;
-            border: 1px solid var(--gold);
-        }
 
-        /* Regulatory & Trust Badge Container (NEW) */
+        /* Regulatory & Trust Badge Container */
         .regulatory-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -422,7 +410,6 @@
         <div class="ticker-item">XAU/USD (GOLD) <span class="t-up">2,342.10 +0.85%</span></div>
         <div class="ticker-item">USD/CHF <span class="t-down">0.8912 -0.05%</span></div>
         <div class="ticker-item">AUD/USD <span class="t-up">0.6684 +0.33%</span></div>
-        <!-- Duplicated items for infinite continuous loop loop scrolling -->
         <div class="ticker-item">EUR/USD <span class="t-up">1.0942 +0.24%</span></div>
         <div class="ticker-item">GBP/USD <span class="t-up">1.2715 +0.12%</span></div>
         <div class="ticker-item">USD/JPY <span class="t-down">156.42 -0.41%</span></div>
@@ -548,7 +535,7 @@
 
     <!-- INFO PANEL -->
     <div class="info-panel">
-        <!-- M-Pesa Instructions (Dynamic) -->
+        <!-- M-Pesa Instructions -->
         <div id="mpesa-instructions" class="mpesa-instructions">
             <h4><i class="fas fa-mobile-alt"></i> M-Pesa STK Push Instructions</h4>
             <ol>
@@ -558,11 +545,6 @@
                 <li>Enter your M-Pesa PIN to confirm</li>
                 <li>Funds will appear instantly in your vault</li>
             </ol>
-            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,255,136,0.2);">
-                <strong>Paybill Number:</strong><br>
-                <div class="paybill-number">174379</div><br>
-                <strong>Account Number:</strong> <span style="color: var(--gold);">NEXAFXTRADE</span>
-            </div>
         </div>
 
         <div class="info-box">
@@ -605,9 +587,6 @@
 </a>
 
 <script>
-    // ==========================================
-    // API & AUTH CONFIGURATION
-    // ==========================================
     const getApiBase = () => {
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
         return isLocal ? "http://localhost:5000/api" : "https://nexapayfx-backend.vercel.app/api"; 
@@ -616,11 +595,9 @@
     let userBalance = 0;
     let userToken = localStorage.getItem("token");
     let userData = null;
-    const FX_RATE = 129.50; // Internal pegged standard currency mapping configuration reference variable
+    const FX_RATE = 129.50;
 
-    // ==========================================
-    // DYNAMIC METRIC CALCULATOR (NEW)
-    // ==========================================
+    // DYNAMIC METRIC CALCULATOR
     function calculateForexMetrics(kesAmount) {
         const usdValueSpan = document.getElementById('calcUsd');
         const marginSpan = document.getElementById('calcMargin');
@@ -635,12 +612,11 @@
         }
 
         const usdAmount = parseFloat(kesAmount) / FX_RATE;
-        const purchasingPowerMargin = usdAmount * 500; // 1:500 Leverage Account Matrix Simulation
+        const purchasingPowerMargin = usdAmount * 500;
 
         usdValueSpan.innerText = `$${usdAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         marginSpan.innerText = `$${purchasingPowerMargin.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
-        // Dynamic VIP Account Tier Badge Allocations
         if (kesAmount >= 100000) {
             tierBadge.innerText = "VIP INSTITUTIONAL";
             tierBadge.style.background = "#ff3366";
@@ -656,16 +632,13 @@
         }
     }
 
-    // ==========================================
     // INITIALIZE PAGE & FETCH BALANCE
-    // ==========================================
     async function initPage() {
         if (!userToken) {
             window.location.href = "/login";
             return;
         }
 
-        // Try to load instantly from local storage first
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
@@ -673,14 +646,12 @@
                 userBalance = userData.balance || 0;
                 updateBalanceUI();
                 
-                // Pre-fill phone number if available
                 if (userData.phone) {
                     document.getElementById('phone').value = userData.phone;
                 }
             } catch(e) {}
         }
 
-        // Fetch fresh balance from backend
         try {
             const response = await fetch(`${getApiBase()}/user/profile`, {
                 method: "GET",
@@ -696,7 +667,6 @@
                     localStorage.setItem("user", JSON.stringify(freshUser));
                     updateBalanceUI();
                     
-                    // Pre-fill phone number if available
                     if (freshUser.phone && !document.getElementById('phone').value) {
                         document.getElementById('phone').value = freshUser.phone;
                     }
@@ -714,9 +684,7 @@
         document.getElementById('nav-balance').innerText = `${userBalance.toLocaleString(undefined, {minimumFractionDigits: 2})} KES`;
     }
 
-    // ==========================================
-    // DYNAMIC FORM FIELDS (Method Switching)
-    // ==========================================
+    // METHOD SWITCHING LOGIC
     document.getElementById('method').addEventListener('change', function() {
         const phoneGroup = document.getElementById('phone-group');
         const bankGroup = document.getElementById('bank-group');
@@ -737,11 +705,6 @@
                     <li>Enter your M-Pesa PIN to confirm</li>
                     <li>Funds will appear instantly in your vault</li>
                 </ol>
-                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,255,136,0.2);">
-                    <strong>Paybill Number:</strong><br>
-                    <div class="paybill-number">174379</div><br>
-                    <strong>Account Number:</strong> <span style="color: var(--gold);">NEXAFXTRADE</span>
-                </div>
             `;
         } else if (this.value === 'bank') {
             phoneGroup.style.display = 'none';
@@ -751,12 +714,10 @@
             mpesaInstructions.innerHTML = `
                 <h4><i class="fas fa-university"></i> Bank Transfer Instructions</h4>
                 <ol>
-                    <li>Send funds to: <strong style="color: var(--gold);">Nexafxtrade Ltd</strong></li>
-                    <li>Account: <strong style="color: var(--gold);">1743791234</strong></li>
-                    <li>Bank: <strong>Equity Bank Kenya</strong></li>
-                    <li>Use your email as reference</li>
-                    <li>Enter transaction code after sending</li>
-                    <li>Wait 1-24 hours for manual verification</li>
+                    <li>Send funds using your preferred bank app account structure</li>
+                    <li>Use your email address as the payment reference</li>
+                    <li>Enter transaction code after completing the transfer</li>
+                    <li>Wait 1-24 hours for manual clearance verification</li>
                 </ol>
             `;
         } else if (this.value === 'crypto') {
@@ -767,27 +728,22 @@
             mpesaInstructions.innerHTML = `
                 <h4><i class="fab fa-bitcoin"></i> USDT TRC20 Instructions</h4>
                 <ol>
-                    <li>Send USDT (TRC20) to: <strong style="color: var(--gold); font-family: monospace; font-size: 11px; word-break: break-all;">TXyz123...NexafxWallet</strong></li>
-                    <li>Minimum: 10 USDT</li>
-                    <li>Enter transaction hash below</li>
-                    <li>Wait for 3 network confirmations</li>
-                    <li>Funds will be credited at current KES rate</li>
+                    <li>Send USDT (TRC20) to your designated corporate system wallet asset address</li>
+                    <li>Minimum deposit value allocation: 10 USDT</li>
+                    <li>Enter transaction hash directly below</li>
+                    <li>Wait for 3 secure blockchain network confirmations</li>
+                    <li>Funds will be credited automatically at the current local KES conversion rate</li>
                 </ol>
             `;
         }
     });
 
-    // ==========================================
-    // QUICK AMOUNT BUTTONS
-    // ==========================================
     function setAmount(amount) {
         document.getElementById('amount').value = amount;
         calculateForexMetrics(amount);
     }
 
-    // ==========================================
-    // DEPOSIT EXECUTION LOGIC
-    // ==========================================
+    // PROCESS DEPOSIT PROMPT
     async function processDeposit() {
         const method = document.getElementById('method').value;
         const amount = parseFloat(document.getElementById('amount').value);
@@ -798,7 +754,6 @@
         const statusEl = document.getElementById('statusMsg');
         const submitBtn = document.getElementById('submitBtn');
 
-        // 1. Validation
         if (!amount || amount < 100) {
             statusEl.innerText = "⚠️ MINIMUM DEPOSIT IS KES 100.";
             statusEl.style.color = "var(--error-red)";
@@ -825,12 +780,10 @@
             return;
         }
 
-        // 2. Lock UI
         statusEl.innerText = "ENCRYPTING TRANSACTION... INITIATING SECURE CHANNEL...";
         statusEl.style.color = "var(--neon-blue)";
         submitBtn.disabled = true;
 
-        // 3. Send to Backend
         try {
             const payload = {
                 amount: amount,
@@ -852,11 +805,9 @@
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Success!
                 const refId = data.transactionId || data.refId || 'NEXA-' + Math.floor(Math.random()*900000+100000);
                 
                 if (method === 'mpesa' && data.stkPushInitiated) {
-                    // M-Pesa STK Push initiated
                     statusEl.innerHTML = `
                         ✅ <strong>STK PUSH SENT!</strong><br>
                         Check your phone: <strong style="color: var(--gold);">${phone}</strong><br>
@@ -865,7 +816,6 @@
                     `;
                     statusEl.style.color = "var(--high-green)";
                 } else {
-                    // Bank/Crypto - Manual verification
                     statusEl.innerHTML = `
                         ✅ <strong>TRANSACTION LOGGED!</strong><br>
                         Reference ID: <strong style="color: var(--gold);">${refId}</strong><br>
@@ -875,7 +825,6 @@
                     statusEl.style.color = "var(--high-green)";
                 }
                 
-                // Clear form
                 document.getElementById('amount').value = '';
                 document.getElementById('ref-code').value = '';
                 calculateForexMetrics(0);
@@ -884,10 +833,7 @@
                 throw new Error(data.message || "Transaction rejected by gateway.");
             }
         } catch (error) {
-            // Fallback simulation if backend route isn't fully built yet
             console.error("Deposit Error:", error);
-            
-            // Simulate M-Pesa STK Push for UI testing
             const refId = 'NEXA-' + Math.floor(Math.random()*900000+100000);
             
             if (method === 'mpesa') {
@@ -914,7 +860,6 @@
         }
     }
 
-    // Run on load
     window.addEventListener('DOMContentLoaded', initPage);
 </script>
 
