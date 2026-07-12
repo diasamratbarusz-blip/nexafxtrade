@@ -402,9 +402,9 @@
     <header>
         <div class="brand">NEXAFX<span>TRADE</span></div>
         <div class="account-meta-strip">
-            <div class="meta-stat-node"><span class="m-lbl">Live Balance</span><span class="m-val" id="top-balance" style="color:var(--gold)">1,500,000.00</span></div>
-            <div class="meta-stat-node"><span class="m-lbl">Equity</span><span class="m-val" id="top-equity">1,500,000.00</span></div>
-            <div class="meta-stat-node"><span class="m-lbl">Free Margin</span><span class="m-val" id="top-freemargin">1,500,000.00</span></div>
+            <div class="meta-stat-node"><span class="m-lbl">Live Balance</span><span class="m-val" id="top-balance" style="color:var(--gold)">11,363.00</span></div>
+            <div class="meta-stat-node"><span class="m-lbl">Equity</span><span class="m-val" id="top-equity">11,363.00</span></div>
+            <div class="meta-stat-node"><span class="m-lbl">Free Margin</span><span class="m-val" id="top-freemargin">11,363.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Used Margin</span><span class="m-val" id="top-usedmargin">0.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Margin Level</span><span class="m-val" id="top-marginlevel" style="color:var(--high-green)">100.00%</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Floating P&L</span><span class="m-val" id="top-floatingpnl">0.00</span></div>
@@ -550,8 +550,8 @@
                 </div>
 
                 <div style="background:#030508; border:1px solid var(--border-color); padding:8px; border-radius:6px; font-size:0.7rem; display:flex; flex-direction:column; gap:4px;">
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Calculated Maximum Risk Drop:</span><span id="calc-risk-kes" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Required Trade Margin Collateral:</span><span id="calc-margin-req" style="font-family:monospace; font-weight:700;">KES 0.00</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Calculated Maximum Risk Drop:</span><span id="calc-risk-kes" style="font-family:monospace; font-weight:700;">USD 0.00</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Required Trade Margin Collateral:</span><span id="calc-margin-req" style="font-family:monospace; font-weight:700;">USD 0.00</span></div>
                 </div>
 
                 <div class="dual-action-triggers">
@@ -627,22 +627,21 @@
 
     // Multi-Account Dynamic Scope Data Pipelines
     let realAccountCapitalState = {
-        balance: 1500000.00, equity: 1500000.00, freeMargin: 1500000.00, usedMargin: 0.00, marginLevel: 100.00,
+        balance: 11363.00, equity: 11363.00, freeMargin: 11363.00, usedMargin: 0.00, marginLevel: 100.00,
         floatingPnL: 0.00, dailyPnL: 1420.00, maxDailyLossBound: 75000.00, maxDrawdownCap: 150000.00, growthRate: 14.25
     };
 
     let demoAccountCapitalState = {
-        balance: 5000000.00, equity: 5000000.00, freeMargin: 5000000.00, usedMargin: 0.00, marginLevel: 100.00,
+        balance: 37878.00, equity: 37878.00, freeMargin: 37878.00, usedMargin: 0.00, marginLevel: 100.00,
         floatingPnL: 0.00, dailyPnL: 0.00, maxDailyLossBound: 250000.00, maxDrawdownCap: 500000.00, growthRate: 0.00
     };
 
     let accountCapitalState = { ...realAccountCapitalState };
 
     /* ================= MULTI-CURRENCY PLATFORM WALLET REGISTRIES ================= */
-    let currentActiveCurrencyContext = 'KES'; 
+    let currentActiveCurrencyContext = 'USD'; 
 
     let realMultiCurrencyBalances = {
-        'KES': 1500000.00,
         'USD': 11363.00,
         'EUR': 10526.00,
         'GBP': 8928.00,
@@ -650,7 +649,6 @@
     };
 
     let demoMultiCurrencyBalances = {
-        'KES': 5000000.00,
         'USD': 37878.00,
         'EUR': 35087.00,
         'GBP': 29761.00,
@@ -658,8 +656,8 @@
     };
 
     // Currency metadata display settings
-    const currencySymbolsMap = { 'KES': 'KES ', 'USD': '$', 'EUR': '€', 'GBP': '£', 'BTC': '₿' };
-    const currencyFlagsMap = { 'KES': '🇰🇪', 'USD': '🇺🇸', 'EUR': '🇪🇺', 'GBP': '🇬🇧', 'BTC': '🪙' };
+    const currencySymbolsMap = { 'USD': '$', 'EUR': '€', 'GBP': '£', 'BTC': '₿' };
+    const currencyFlagsMap = { 'USD': '🇺🇸', 'EUR': '🇪🇺', 'GBP': '🇬🇧', 'BTC': '🪙' };
     /* ============================================================================= */
     
     let realOpenPositionsRegister = [];
@@ -719,8 +717,9 @@
 
     /* ================= DYNAMIC PAGE REDIRECTION NAVIGATION ROUTING ================= */
     function navigateToPage(endpointRoute) {
-        console.log("Routing traffic destination explicitly toward client view module: " + endpointRoute);
-        window.location.href = endpointRoute;
+        const destination = `${endpointRoute}?currency=${encodeURIComponent(currentActiveCurrencyContext)}`;
+        console.log("Routing traffic destination explicitly toward client view module: " + destination);
+        window.location.href = destination;
     }
     /* =============================================================================== */
 
@@ -835,7 +834,7 @@
                     localStorage.setItem('user', JSON.stringify(data.user));
                     
                     if (data.user.balance !== undefined && data.user.balance !== null) {
-                        realMultiCurrencyBalances['KES'] = parseFloat(data.user.balance);
+                        realMultiCurrencyBalances['USD'] = parseFloat(data.user.balance) || 0;
                     }
                 }
                 bypassAuthSequence();
@@ -897,7 +896,7 @@
                     localStorage.setItem('user', JSON.stringify(data.user));
                     
                     if (data.user.balance !== undefined && data.user.balance !== null) {
-                        realMultiCurrencyBalances['KES'] = parseFloat(data.user.balance);
+                        realMultiCurrencyBalances['USD'] = parseFloat(data.user.balance) || 0;
                     }
                 }
                 bypassAuthSequence();
@@ -937,7 +936,7 @@
         const activeRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
 
         Object.keys(activeRegistry).forEach(currency => {
-            const balanceAmount = activeRegistry[currency];
+            const balanceAmount = activeRegistry[currency] || 0;
             const isSelected = currency === currentActiveCurrencyContext;
             
             const card = document.createElement('div');
@@ -961,7 +960,7 @@
         currentActiveCurrencyContext = currency;
         
         const activeRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
-        accountCapitalState.balance = activeRegistry[currency];
+        accountCapitalState.balance = activeRegistry[currency] || 0;
 
         renderMultiCurrencyWidgets();
         evaluateBalanceLiquidationEquations();
@@ -1006,7 +1005,7 @@
                     document.getElementById('lbl-trader-id').innerText = parsed.id || parsed._id || "8942105";
                     
                     if (parsed.balance !== undefined && parsed.balance !== null) {
-                        realMultiCurrencyBalances['KES'] = parseFloat(parsed.balance);
+                        realMultiCurrencyBalances['USD'] = parseFloat(parsed.balance) || 0;
                     }
                 } catch(e) {}
             }
@@ -1024,7 +1023,7 @@
 
         // Default balance mapping logic setup
         const activeRegistry = (mode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
-        accountCapitalState.balance = activeRegistry[currentActiveCurrencyContext];
+        accountCapitalState.balance = activeRegistry[currentActiveCurrencyContext] || 0;
 
         renderMultiCurrencyWidgets();
         rebuildTerminalLedgerView();
@@ -1050,7 +1049,7 @@
                         document.getElementById('lbl-trader-id').innerText = parsed.id || parsed._id || "8942105";
                         
                         if (parsed.balance !== undefined && parsed.balance !== null) {
-                            realMultiCurrencyBalances['KES'] = parseFloat(parsed.balance);
+                            realMultiCurrencyBalances['USD'] = parseFloat(parsed.balance) || 0;
                         }
                     } else {
                         document.getElementById('lbl-trader-name').innerText = "DEMO TRADER";
@@ -1064,7 +1063,7 @@
             accountCapitalState = activeEnvironmentProfileMode === 'REAL' ? { ...realAccountCapitalState } : { ...demoAccountCapitalState };
             
             const activeRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
-            accountCapitalState.balance = activeRegistry[currentActiveCurrencyContext];
+            accountCapitalState.balance = activeRegistry[currentActiveCurrencyContext] || 0;
 
             canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
             populateStructuralAssetWatch();
@@ -1684,10 +1683,10 @@
 
         let prec = currentActiveCurrencyContext === 'BTC' ? 4 : 2;
 
-        if (balEl) balEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${accountCapitalState.balance.toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
-        if (eqEl) eqEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${accountCapitalState.equity.toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
-        if (fmEl) fmEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${accountCapitalState.freeMargin.toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
-        if (umEl) umEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${accountCapitalState.usedMargin.toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
+        if (balEl) balEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${(accountCapitalState.balance || 0).toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
+        if (eqEl) eqEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${(accountCapitalState.equity || 0).toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
+        if (fmEl) fmEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${(accountCapitalState.freeMargin || 0).toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
+        if (umEl) umEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${(accountCapitalState.usedMargin || 0).toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
         if (mlEl) mlEl.innerText = `${accountCapitalState.marginLevel.toFixed(2)}%`;
         
         if (pnlEl) {
