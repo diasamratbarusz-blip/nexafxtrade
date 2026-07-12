@@ -1132,6 +1132,12 @@
     }
 
     function commitOrderRoutingTicket(side) {
+        // Validation constraint check: Block Real Account execution if balance is exactly 0
+        if (activeEnvironmentProfileMode === 'REAL' && accountCapitalState.balance <= 0) {
+            alert("⚠️ Execution Halted: Your live account balance is 0. Please make a deposit to activate real trading capabilities.");
+            return;
+        }
+
         const executionMechanism = document.getElementById('ticket-order-type').value;
         const designatedLots = parseFloat(document.getElementById('ticket-volume-lots').value);
         if (isNaN(designatedLots) || designatedLots <= 0) return alert("Volumetric allocation verification error.");
