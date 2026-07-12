@@ -250,7 +250,7 @@
             </div>
             <div class="visual-widget">
                 <div class="visual-widget-title"><span>Interbank Candle Stream</span><span style="color:var(--neon-blue)">HFT-FEED</span></div>
-                <div class="visual-sparkline-box" id="preloader-sparkline"></div>
+                <div class="preloader-sparkline" id="preloader-sparkline"></div>
             </div>
             <div class="visual-widget">
                 <div class="visual-widget-title"><span>ECN Order Depth</span><span style="color:var(--neon-blue)">MAPPED</span></div>
@@ -406,7 +406,9 @@
     <div class="status-sub-bar">
         <div>
             <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b id="lbl-live-server-node">NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
-            <span>TRADER ID: <b style="color:#fff;" id="lbl-trader-id">8942105</b></span> &nbsp;|&nbsp;
+            <span>TRADER NAME: <b style="color:#fff;" id="lbl-trader-name">--</b></span> &nbsp;|&nbsp;
+            <span>EMAIL: <b style="color:#fff;" id="lbl-trader-email">--</b></span> &nbsp;|&nbsp;
+            <span>ID: <b style="color:#fff;" id="lbl-trader-id">8942105</b></span> &nbsp;|&nbsp;
             <span>ACCOUNT LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
             <span>TYPE: <b style="color:var(--gold);" id="lbl-env-label-type">REAL RAW ECN PRO</b></span> &nbsp;|&nbsp;
             <span>COMMISSION PROFILE: <b style="color:var(--neon-blue);">VIP LOW SPREAD</b></span>
@@ -785,8 +787,12 @@
                 if (data.user) {
                     localStorage.setItem('operatorName', data.user.name);
                     localStorage.setItem('user', JSON.stringify(data.user));
-                    if(document.getElementById('lbl-trader-id') && data.user.id) {
-                        document.getElementById('lbl-trader-id').innerText = data.user.id;
+                    
+                    // Directly map actual live balance from backend if present
+                    if (data.user.balance !== undefined && data.user.balance !== null) {
+                        realAccountCapitalState.balance = parseFloat(data.user.balance);
+                        realAccountCapitalState.equity = parseFloat(data.user.balance);
+                        realAccountCapitalState.freeMargin = parseFloat(data.user.balance);
                     }
                 }
                 bypassAuthSequence();
@@ -846,6 +852,12 @@
                 if (data.user) {
                     localStorage.setItem('operatorName', data.user.name);
                     localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    if (data.user.balance !== undefined && data.user.balance !== null) {
+                        realAccountCapitalState.balance = parseFloat(data.user.balance);
+                        realAccountCapitalState.equity = parseFloat(data.user.balance);
+                        realAccountCapitalState.freeMargin = parseFloat(data.user.balance);
+                    }
                 }
                 bypassAuthSequence();
             } else {
@@ -908,7 +920,13 @@
             if(userStr) {
                 try {
                     const parsed = JSON.parse(userStr);
-                    document.getElementById('lbl-trader-id').innerText = parsed.name || parsed.email || "8942105";
+                    document.getElementById('lbl-trader-name').innerText = parsed.name || "--";
+                    document.getElementById('lbl-trader-email').innerText = parsed.email || "--";
+                    document.getElementById('lbl-trader-id').innerText = parsed.id || parsed._id || "8942105";
+                    
+                    if (parsed.balance !== undefined && parsed.balance !== null) {
+                        accountCapitalState.balance = parseFloat(parsed.balance);
+                    }
                 } catch(e) {}
             }
         } else {
@@ -918,6 +936,8 @@
             document.getElementById('lbl-live-server-node').innerText = "NEXA-STAGE-DEMO_2";
             document.getElementById('lbl-env-label-type').innerText = "DEMO SIMULATOR STAGE";
             document.getElementById('lbl-env-label-type').style.color = "var(--neon-blue)";
+            document.getElementById('lbl-trader-name').innerText = "DEMO TRADER";
+            document.getElementById('lbl-trader-email').innerText = "demo@nexafxtrade.com";
             document.getElementById('lbl-trader-id').innerText = "GUEST_DEMO_USER";
         }
 
@@ -938,11 +958,24 @@
             if (savedUserStr) {
                 try {
                     const parsed = JSON.parse(savedUserStr);
-                    if (document.getElementById('lbl-trader-id')) {
-                        document.getElementById('lbl-trader-id').innerText = activeEnvironmentProfileMode === 'REAL' ? (parsed.name || parsed.email) : "GUEST_DEMO_USER";
+                    if (activeEnvironmentProfileMode === 'REAL') {
+                        document.getElementById('lbl-trader-name').innerText = parsed.name || "--";
+                        document.getElementById('lbl-trader-email').innerText = parsed.email || "--";
+                        document.getElementById('lbl-trader-id').innerText = parsed.id || parsed._id || "8942105";
+                        
+                        if (parsed.balance !== undefined && parsed.balance !== null) {
+                            realAccountCapitalState.balance = parseFloat(parsed.balance);
+                        }
+                    } else {
+                        document.getElementById('lbl-trader-name').innerText = "DEMO TRADER";
+                        document.getElementById('lbl-trader-email').innerText = "demo@nexafxtrade.com";
+                        document.getElementById('lbl-trader-id').innerText = "GUEST_DEMO_USER";
                     }
                 } catch(e) {}
             }
+
+            // Sync structural parameters matching updated profile states
+            accountCapitalState = activeEnvironmentProfileMode === 'REAL' ? { ...realAccountCapitalState } : { ...demoAccountCapitalState };
 
             canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
             populateStructuralAssetWatch();
