@@ -17,6 +17,7 @@
             --gold: #ffcc00;
             --border-light: rgba(255, 255, 255, 0.05);
             --input-bg: #06080a;
+            --panel-secondary: #171f2a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,6 +29,36 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+
+        /* ==================== LIVE TICKER MARQUEE (NEW) ==================== */
+        .ticker-wrap {
+            width: 100%;
+            background: #0b1118;
+            border-bottom: 1px solid var(--border-light);
+            overflow: hidden;
+            padding: 6px 0;
+            font-family: monospace;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        .ticker {
+            display: flex;
+            white-space: nowrap;
+            animation: marquee 25s linear infinite;
+        }
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 0 25px;
+            color: #fff;
+        }
+        .ticker-item span { margin-left: 6px; font-weight: bold; }
+        .t-up { color: var(--high-green); }
+        .t-down { color: var(--error-red); }
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
         }
 
         /* ==================== HEADER ==================== */
@@ -89,7 +120,7 @@
 
         /* ==================== MAIN CONTENT ==================== */
         .main-content { 
-            padding: 60px 20px; 
+            padding: 40px 20px; 
             display: flex; 
             justify-content: center; 
             gap: 40px;
@@ -102,7 +133,7 @@
         .terminal-card { 
             background: var(--panel); 
             width: 100%; 
-            max-width: 500px; 
+            max-width: 520px; 
             border-radius: 24px; 
             padding: 40px 35px; 
             border: 1px solid var(--border-light);
@@ -141,6 +172,21 @@
             letter-spacing: 1px;
         }
 
+        /* Institutional Account Metrics Banner (NEW) */
+        .tier-banner {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(0, 0, 0, 0.4));
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        .tier-info i { color: var(--neon-blue); margin-right: 6px; }
+        .tier-badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 4px; font-weight: 800; font-size: 10px; }
+
         /* Form Elements */
         .form-group { margin-bottom: 20px; }
         .form-group label { 
@@ -166,6 +212,25 @@
             box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
         }
         .auth-input::placeholder { color: #444a54; font-weight: 500; }
+
+        /* Dynamic Leverage & Allocation Calculator Widget (NEW) */
+        .calculator-preview {
+            background: var(--panel-secondary);
+            border: 1px dashed rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 6px;
+            color: var(--text-dim);
+        }
+        .calc-row:last-child { margin-bottom: 0; }
+        .calc-val { font-family: monospace; font-weight: bold; color: #fff; }
+        .calc-val.green-highlight { color: var(--high-green); }
 
         /* Quick Amount Buttons */
         .quick-amounts {
@@ -222,7 +287,7 @@
 
         /* Info Side Panel */
         .info-panel {
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -289,6 +354,34 @@
             border: 1px solid var(--gold);
         }
 
+        /* Regulatory & Trust Badge Container (NEW) */
+        .regulatory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+        .reg-badge {
+            background: var(--panel);
+            border: 1px solid var(--border-light);
+            padding: 12px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+        .reg-badge i {
+            color: var(--neon-blue);
+            font-size: 16px;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .reg-badge span {
+            display: block;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
         .warning-box {
             background: rgba(255, 82, 82, 0.05);
             border: 1px dashed var(--error-red);
@@ -320,6 +413,23 @@
 </head>
 <body>
 
+<!-- LIVE TICKER MARQUEE -->
+<div class="ticker-wrap">
+    <div class="ticker">
+        <div class="ticker-item">EUR/USD <span class="t-up">1.0942 +0.24%</span></div>
+        <div class="ticker-item">GBP/USD <span class="t-up">1.2715 +0.12%</span></div>
+        <div class="ticker-item">USD/JPY <span class="t-down">156.42 -0.41%</span></div>
+        <div class="ticker-item">XAU/USD (GOLD) <span class="t-up">2,342.10 +0.85%</span></div>
+        <div class="ticker-item">USD/CHF <span class="t-down">0.8912 -0.05%</span></div>
+        <div class="ticker-item">AUD/USD <span class="t-up">0.6684 +0.33%</span></div>
+        <!-- Duplicated items for infinite continuous loop loop scrolling -->
+        <div class="ticker-item">EUR/USD <span class="t-up">1.0942 +0.24%</span></div>
+        <div class="ticker-item">GBP/USD <span class="t-up">1.2715 +0.12%</span></div>
+        <div class="ticker-item">USD/JPY <span class="t-down">156.42 -0.41%</span></div>
+        <div class="ticker-item">XAU/USD (GOLD) <span class="t-up">2,342.10 +0.85%</span></div>
+    </div>
+</div>
+
 <nav>
     <a href="/dashboard" class="logo">
         <i class="fas fa-chart-line" style="color: var(--high-green);"></i>
@@ -344,6 +454,14 @@
             <div class="card-subtitle">Fund Your Trading Vault Instantly</div>
         </div>
 
+        <!-- Tier Banner Assessment -->
+        <div class="tier-banner">
+            <div class="tier-info">
+                <i class="fas fa-layer-group"></i> Account Feed Configuration
+            </div>
+            <span class="tier-badge" id="tierBadge">RAW SPREAD</span>
+        </div>
+
         <div class="form-group">
             <label>Payment Protocol (Method)</label>
             <div class="input-wrapper">
@@ -359,7 +477,7 @@
         <div class="form-group">
             <label>Deposit Amount (KES)</label>
             <div class="input-wrapper">
-                <input type="number" id="amount" class="auth-input" placeholder="Enter amount to deposit" min="100">
+                <input type="number" id="amount" class="auth-input" placeholder="Enter amount to deposit" min="100" oninput="calculateForexMetrics(this.value)">
                 <i class="fas fa-coins"></i>
             </div>
         </div>
@@ -370,6 +488,22 @@
             <button class="quick-btn" onclick="setAmount(1000)">1,000</button>
             <button class="quick-btn" onclick="setAmount(5000)">5,000</button>
             <button class="quick-btn" onclick="setAmount(10000)">10,000</button>
+        </div>
+
+        <!-- Live Metrics Breakdown Card Widget -->
+        <div class="calculator-preview">
+            <div class="calc-row">
+                <span>Estimated Value (USD):</span>
+                <span class="calc-val" id="calcUsd">$0.00</span>
+            </div>
+            <div class="calc-row">
+                <span>Execution Leverage Power:</span>
+                <span class="calc-val text-neon">1:500</span>
+            </div>
+            <div class="calc-row">
+                <span>Trading Margin Capacity:</span>
+                <span class="calc-val green-highlight" id="calcMargin">$0.00</span>
+            </div>
         </div>
 
         <div class="form-group" id="phone-group">
@@ -443,9 +577,25 @@
             </ul>
         </div>
 
+        <!-- Trust & Compliance Badges Grid -->
+        <div class="regulatory-grid">
+            <div class="reg-badge">
+                <i class="fas fa-user-shield"></i>
+                <span>Segregated</span>Audited Liquidity
+            </div>
+            <div class="reg-badge">
+                <i class="fas fa-cubes"></i>
+                <span>STP/ECN</span>Direct Execution
+            </div>
+            <div class="reg-badge">
+                <i class="fas fa-lock"></i>
+                <span>SSL 256bit</span>Encrypted Gate
+            </div>
+        </div>
+
         <div class="warning-box">
-            <strong><i class="fas fa-exclamation-triangle"></i> IMPORTANT NOTICE:</strong><br>
-            All deposits are final and non-refundable. Ensure you are sending funds from your registered M-Pesa number. For bank transfers, include your account email as the reference. Contact support immediately if funds don't appear within the stated timeframes.
+            <strong><i class="fas fa-exclamation-triangle"></i> INSTITUTIONAL RISK WARNING:</strong><br>
+            All deposits are processed securely into segregated provider accounts. Forex trading carries capital risk. Assets leverage margin settings directly. Confirm reference hashes perfectly before uploading logs to manual matching departments.
         </div>
     </div>
 </section>
@@ -466,6 +616,45 @@
     let userBalance = 0;
     let userToken = localStorage.getItem("token");
     let userData = null;
+    const FX_RATE = 129.50; // Internal pegged standard currency mapping configuration reference variable
+
+    // ==========================================
+    // DYNAMIC METRIC CALCULATOR (NEW)
+    // ==========================================
+    function calculateForexMetrics(kesAmount) {
+        const usdValueSpan = document.getElementById('calcUsd');
+        const marginSpan = document.getElementById('calcMargin');
+        const tierBadge = document.getElementById('tierBadge');
+        
+        if (!kesAmount || isNaN(kesAmount) || kesAmount <= 0) {
+            usdValueSpan.innerText = "$0.00";
+            marginSpan.innerText = "$0.00";
+            tierBadge.innerText = "STANDARD SPREAD";
+            tierBadge.style.background = "var(--neon-blue)";
+            return;
+        }
+
+        const usdAmount = parseFloat(kesAmount) / FX_RATE;
+        const purchasingPowerMargin = usdAmount * 500; // 1:500 Leverage Account Matrix Simulation
+
+        usdValueSpan.innerText = `$${usdAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        marginSpan.innerText = `$${purchasingPowerMargin.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+        // Dynamic VIP Account Tier Badge Allocations
+        if (kesAmount >= 100000) {
+            tierBadge.innerText = "VIP INSTITUTIONAL";
+            tierBadge.style.background = "#ff3366";
+            tierBadge.style.color = "#fff";
+        } else if (kesAmount >= 10000) {
+            tierBadge.innerText = "PRO VIP ECN";
+            tierBadge.style.background = "var(--gold)";
+            tierBadge.style.color = "#000";
+        } else {
+            tierBadge.innerText = "RAW SPREAD";
+            tierBadge.style.background = "rgba(0, 212, 255, 0.2)";
+            tierBadge.style.color = "var(--neon-blue)";
+        }
+    }
 
     // ==========================================
     // INITIALIZE PAGE & FETCH BALANCE
@@ -593,6 +782,7 @@
     // ==========================================
     function setAmount(amount) {
         document.getElementById('amount').value = amount;
+        calculateForexMetrics(amount);
     }
 
     // ==========================================
@@ -688,6 +878,7 @@
                 // Clear form
                 document.getElementById('amount').value = '';
                 document.getElementById('ref-code').value = '';
+                calculateForexMetrics(0);
                 
             } else {
                 throw new Error(data.message || "Transaction rejected by gateway.");
@@ -717,6 +908,7 @@
             statusEl.style.color = "var(--high-green)";
             
             document.getElementById('amount').value = '';
+            calculateForexMetrics(0);
         } finally {
             submitBtn.disabled = false;
         }
