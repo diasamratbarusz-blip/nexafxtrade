@@ -902,6 +902,15 @@
             document.getElementById('lbl-live-server-node').innerText = "NEXA-PRO-LIVE_4";
             document.getElementById('lbl-env-label-type').innerText = "REAL RAW ECN PRO";
             document.getElementById('lbl-env-label-type').style.color = "var(--gold)";
+            
+            // Sync up and display genuine profile meta properties if active
+            const userStr = localStorage.getItem('user');
+            if(userStr) {
+                try {
+                    const parsed = JSON.parse(userStr);
+                    document.getElementById('lbl-trader-id').innerText = parsed.name || parsed.email || "8942105";
+                } catch(e) {}
+            }
         } else {
             accountCapitalState = { ...demoAccountCapitalState };
             openPositionsRegister = [ ...demoOpenPositionsRegister ];
@@ -909,6 +918,7 @@
             document.getElementById('lbl-live-server-node').innerText = "NEXA-STAGE-DEMO_2";
             document.getElementById('lbl-env-label-type').innerText = "DEMO SIMULATOR STAGE";
             document.getElementById('lbl-env-label-type').style.color = "var(--neon-blue)";
+            document.getElementById('lbl-trader-id').innerText = "GUEST_DEMO_USER";
         }
 
         rebuildTerminalLedgerView();
@@ -928,8 +938,8 @@
             if (savedUserStr) {
                 try {
                     const parsed = JSON.parse(savedUserStr);
-                    if (parsed.id && document.getElementById('lbl-trader-id')) {
-                        document.getElementById('lbl-trader-id').innerText = parsed.id;
+                    if (document.getElementById('lbl-trader-id')) {
+                        document.getElementById('lbl-trader-id').innerText = activeEnvironmentProfileMode === 'REAL' ? (parsed.name || parsed.email) : "GUEST_DEMO_USER";
                     }
                 } catch(e) {}
             }
@@ -1097,6 +1107,8 @@
         const tpValue = parseFloat(document.getElementById('ticket-tp').value) || null;
         const uid = Math.floor(Math.random() * 899999 + 100000);
 
+        let executionCommission = (designatedLots * 3.50 * 132.00);
+
         if (executionMechanism === 'MARKET') {
             let orderItem = {
                 id: uid,
@@ -1107,11 +1119,14 @@
                 sl: slValue,
                 tp: tpValue,
                 swap: 0.00,
-                commission: -(designatedLots * 3.50 * 132.00),
+                commission: -executionCommission,
                 timestamp: new Date().toLocaleTimeString(),
-                tickIndex: simulationTickArray.length - 1 // Capture execution frame context index mapping
+                tickIndex: simulationTickArray.length - 1 
             };
             openPositionsRegister.push(orderItem);
+            
+            // Balance changes during structural operational trade submission bounds
+            accountCapitalState.balance -= executionCommission;
         } else {
             let pendingItem = {
                 id: uid,
@@ -1127,9 +1142,11 @@
 
         // Keep local profile variables mirrored accurately during execution
         if (activeEnvironmentProfileMode === 'REAL') {
+            realAccountCapitalState.balance = accountCapitalState.balance;
             realOpenPositionsRegister = [ ...openPositionsRegister ];
             realPendingOrdersRegister = [ ...pendingOrdersRegister ];
         } else {
+            demoAccountCapitalState.balance = accountCapitalState.balance;
             demoOpenPositionsRegister = [ ...openPositionsRegister ];
             demoPendingOrdersRegister = [ ...pendingOrdersRegister ];
         }
@@ -1139,10 +1156,23 @@
     }
 
     function terminateActiveRiskVector(id) {
+        const targetedPosition = openPositionsRegister.find(p => p.id === id);
+        if (targetedPosition) {
+            let livePrice = liquidityCatalog[targetedPosition.pair].price;
+            let targetDef = liquidityCatalog[targetedPosition.pair];
+            let rawDelta = targetedPosition.type === 'BUY' ? (livePrice - targetedPosition.entry) : (targetedPosition.entry - livePrice);
+            let finalProfitLossKes = rawDelta * targetedPosition.lots * targetDef.multiplier * 132.00;
+            
+            // Add or subtract absolute returned capital profits back to liquid balance parameters
+            accountCapitalState.balance += finalProfitLossKes;
+        }
+
         openPositionsRegister = openPositionsRegister.filter(p => p.id !== id);
         if (activeEnvironmentProfileMode === 'REAL') {
+            realAccountCapitalState.balance = accountCapitalState.balance;
             realOpenPositionsRegister = [ ...openPositionsRegister ];
         } else {
+            demoAccountCapitalState.balance = accountCapitalState.balance;
             demoOpenPositionsRegister = [ ...openPositionsRegister ];
         }
         rebuildTerminalLedgerView();
