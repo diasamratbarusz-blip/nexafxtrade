@@ -40,12 +40,30 @@
       backdrop-filter: blur(4px);
     }
     .telemetry-overlay span { color: #00e676; font-weight: bold; }
+    
+    /* Notification overlay for simulated institutional positions */
+    .trade-alert {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(22, 31, 43, 0.9);
+      border: 1px solid #00e676;
+      border-radius: 4px;
+      padding: 10px 15px;
+      color: #fff;
+      font-family: monospace;
+      font-size: 0.8rem;
+      z-index: 10;
+      display: none;
+      transition: opacity 0.3s ease;
+    }
   </style>
 </head>
 
 <body>
 
 <div class="telemetry-overlay">ENGINE: <span>LIGHTWEIGHT_CHARTS_v4</span> | PIP_FEED: ACTIVE</div>
+<div id="tradeAlert" class="trade-alert"></div>
 <div id="chart"></div>
 
 <script>
@@ -147,6 +165,39 @@ setInterval(() => {
   let syntheticTickPrice = activeCurrentClose + tickPriceChange;
   window.updateCandleEngineTick(syntheticTickPrice);
 }, 400);
+
+/**
+ * INSTITUTIONAL "BIG TRADE" EMULATION INJECTOR
+ * Every 12 seconds, execution engine processes an aggressive block order spike
+ */
+setInterval(() => {
+  const isBullishSpike = Math.random() > 0.45;
+  // Massive expansion pip size calculation
+  const bigTradeMagnitude = (Math.random() * 0.00350) + 0.00250;
+  const targetImpactPrice = isBullishSpike ? (activeCurrentClose + bigTradeMagnitude) : (activeCurrentClose - bigTradeMagnitude);
+  
+  // Flash UI telemetry notice banner
+  const alertEl = document.getElementById('tradeAlert');
+  alertEl.style.borderColor = isBullishSpike ? '#00e676' : '#ff1744';
+  alertEl.innerHTML = `INSTITUTIONAL BLOCK ORDER INJECTED: <span style="color:${isBullishSpike ? '#00e676' : '#ff1744'}">${isBullishSpike ? 'BUY' : 'SELL'} +${(bigTradeMagnitude * 10000).toFixed(1)} Pips</span>`;
+  alertEl.style.display = 'block';
+  
+  // Rapid multi-stage tick expansion calculation loop simulating high liquidity sweeps
+  let steps = 5;
+  let currentStep = 0;
+  let increment = (targetImpactPrice - activeCurrentClose) / steps;
+
+  const executionInterval = setInterval(() => {
+    if (currentStep >= steps) {
+      clearInterval(executionInterval);
+      setTimeout(() => { alertEl.style.display = 'none'; }, 2000);
+      return;
+    }
+    window.updateCandleEngineTick(activeCurrentClose + increment);
+    currentStep++;
+  }, 75);
+
+}, 12000);
 
 // 5. Clean Memory: Force new candle frame roll periodically
 setInterval(() => {
