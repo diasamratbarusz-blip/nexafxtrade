@@ -141,14 +141,16 @@
         .currency-node-card {
             background: var(--panel); border: 1px solid var(--border-color); border-radius: 4px;
             padding: 6px 12px; display: flex; align-items: center; gap: 10px; cursor: pointer;
-            transition: all 0.2s ease; min-width: 145px; flex-shrink: 0;
+            transition: all 0.2s ease; min-width: 165px; flex-shrink: 0; position: relative;
         }
         .currency-node-card:hover { border-color: var(--neon-blue); background: var(--panel-light); }
         .currency-node-card.active-wallet { border-color: var(--gold); background: rgba(255, 214, 0, 0.05); box-shadow: 0 0 8px rgba(255, 214, 0, 0.15); }
         .currency-flag-icon { width: 22px; height: 22px; border-radius: 50%; background: #1a2636; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--gold); }
-        .currency-info-block { display: flex; flex-direction: column; }
+        .currency-info-block { display: flex; flex-direction: column; flex-grow: 1; }
         .currency-info-block .c-ticker { font-size: 0.6rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; }
         .currency-info-block .c-balance { font-family: monospace; font-size: 0.85rem; font-weight: 700; color: #ffffff; margin-top: 1px; }
+        .currency-deposit-link-icon { font-size: 0.95rem; color: var(--text-dim); padding: 4px; transition: color 0.2s; z-index: 5; margin-left: auto; }
+        .currency-deposit-link-icon:hover { color: var(--high-green); }
 
         /* --- Operational Live Status Sub-Bar --- */
         .status-sub-bar {
@@ -402,13 +404,13 @@
     <header>
         <div class="brand">NEXAFX<span>TRADE</span></div>
         <div class="account-meta-strip">
-            <div class="meta-stat-node"><span class="m-lbl">Live Balance</span><span class="m-val" id="top-balance" style="color:var(--gold)">11,363.00</span></div>
-            <div class="meta-stat-node"><span class="m-lbl">Equity</span><span class="m-val" id="top-equity">11,363.00</span></div>
-            <div class="meta-stat-node"><span class="m-lbl">Free Margin</span><span class="m-val" id="top-freemargin">11,363.00</span></div>
+            <div class="meta-stat-node"><span class="m-lbl">Live Balance</span><span class="m-val" id="top-balance" style="color:var(--gold)">0.00</span></div>
+            <div class="meta-stat-node"><span class="m-lbl">Equity</span><span class="m-val" id="top-equity">0.00</span></div>
+            <div class="meta-stat-node"><span class="m-lbl">Free Margin</span><span class="m-val" id="top-freemargin">0.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Used Margin</span><span class="m-val" id="top-usedmargin">0.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Margin Level</span><span class="m-val" id="top-marginlevel" style="color:var(--high-green)">100.00%</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Floating P&L</span><span class="m-val" id="top-floatingpnl">0.00</span></div>
-            <div class="meta-stat-node"><span class="m-lbl">Today's Net</span><span class="m-val" id="top-dailypnl" style="color:var(--high-green)">+1,420.00</span></div>
+            <div class="meta-stat-node"><span class="m-lbl">Today's Net</span><span class="m-val" id="top-dailypnl" style="color:var(--high-green)">+0.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Max Daily Limit</span><span class="m-val" id="top-maxloss" style="color:var(--low-red)">75,000.00</span></div>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -627,8 +629,8 @@
 
     // Multi-Account Dynamic Scope Data Pipelines
     let realAccountCapitalState = {
-        balance: 11363.00, equity: 11363.00, freeMargin: 11363.00, usedMargin: 0.00, marginLevel: 100.00,
-        floatingPnL: 0.00, dailyPnL: 1420.00, maxDailyLossBound: 75000.00, maxDrawdownCap: 150000.00, growthRate: 14.25
+        balance: 0.00, equity: 0.00, freeMargin: 0.00, usedMargin: 0.00, marginLevel: 100.00,
+        floatingPnL: 0.00, dailyPnL: 0.00, maxDailyLossBound: 75000.00, maxDrawdownCap: 150000.00, growthRate: 0.00
     };
 
     let demoAccountCapitalState = {
@@ -642,10 +644,10 @@
     let currentActiveCurrencyContext = 'USD'; 
 
     let realMultiCurrencyBalances = {
-        'USD': 11363.00,
-        'EUR': 10526.00,
-        'GBP': 8928.00,
-        'BTC': 0.185
+        'USD': 0.00,
+        'EUR': 0.00,
+        'GBP': 0.00,
+        'BTC': 0.00
     };
 
     let demoMultiCurrencyBalances = {
@@ -951,6 +953,7 @@
                     <span class="c-ticker">${currency} Account</span>
                     <span class="c-balance">${currencySymbolsMap[currency]}${balanceAmount.toLocaleString(undefined, {minimumFractionDigits: decimals, maximumFractionDigits: decimals})}</span>
                 </div>
+                <i class="fas fa-plus-circle currency-deposit-link-icon" title="Deposit ${currency}" onclick="event.stopPropagation(); currentActiveCurrencyContext='${currency}'; navigateToPage('deposit.html');"></i>
             `;
             container.appendChild(card);
         });
