@@ -73,6 +73,7 @@ async function initApp() {
                     
                     console.log("💰 User balance:", balance);
                     console.log("👤 User name:", data.user.name);
+                    console.log("📧 User email:", data.user.email);
                     
                     updateBalance();
                     updateAuthUI(true, data.user);
@@ -112,6 +113,7 @@ function updateAuthUI(isLoggedIn, userData) {
     const registerBtn = document.getElementById('register-btn');
     const userInfoDisplay = document.getElementById('user-info-display');
     const userNameDisplay = document.getElementById('user-name-display');
+    const userEmailDisplay = document.getElementById('user-email-display');
 
     if (isLoggedIn && userData) {
         if (loginBtn) {
@@ -124,6 +126,7 @@ function updateAuthUI(isLoggedIn, userData) {
         
         if (userInfoDisplay) userInfoDisplay.classList.add('show');
         if (userNameDisplay) userNameDisplay.textContent = userData.name || 'User';
+        if (userEmailDisplay) userEmailDisplay.textContent = userData.email || '';
         
         console.log("✅ UI updated to logged-in state");
     } else {
@@ -136,6 +139,7 @@ function updateAuthUI(isLoggedIn, userData) {
         if (registerBtn) registerBtn.style.display = 'block';
         
         if (userInfoDisplay) userInfoDisplay.classList.remove('show');
+        if (userEmailDisplay) userEmailDisplay.textContent = '';
         
         console.log("✅ UI updated to guest state");
     }
@@ -697,7 +701,7 @@ function switchAccountMode(mode, currentBtn) {
     } else {
         currentBtn.classList.add('active-real');
         window.CURRENT_ACCOUNT_MODE = "REAL";
-        balance = window.USER_IS_AUTHENTICATED ? balance : 0.00;
+        balance = window.USER_IS_AUTHENTICATED ? (window.USER_DATA ? window.USER_DATA.balance : 0.00) : 0.00;
         addPayoutLog("Switched to Production Vault (Real Play).");
     }
     updateBalance();
