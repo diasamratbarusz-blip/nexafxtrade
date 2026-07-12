@@ -66,7 +66,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 20px 8%; 
+            padding: 20px 4%; 
             background: rgba(17, 23, 31, 0.98); 
             position: sticky; 
             top: 0; 
@@ -398,7 +398,7 @@
         @media (max-width: 900px) {
             .main-content { flex-direction: column; align-items: center; padding: 30px 15px; }
             .info-panel { max-width: 500px; }
-            nav { padding: 15px 20px; }
+            nav { padding: 15px 20px; flex-direction: column; gap: 15px; }
             .terminal-card { padding: 30px 20px; }
             .quick-amounts { grid-template-columns: repeat(2, 1fr); }
             .balances-row { gap: 8px; }
@@ -446,6 +446,10 @@
                     <span class="wallet-sub">GBP</span>
                     <span class="wallet-val" id="nav-balance-gbp">£0.00</span>
                 </div>
+                <div>
+                    <span class="wallet-sub">BTC</span>
+                    <span class="wallet-val" id="nav-balance-btc">₿0.000000</span>
+                </div>
             </div>
         </div>
         <a href="/dashboard" class="btn-back">
@@ -470,7 +474,7 @@
             <span class="tier-badge" id="tierBadge">RAW SPREAD</span>
         </div>
 
-        <!-- MULTI-CURRENCY TRADING ACCOUNT SELECTOR (KSH REMOVED) -->
+        <!-- MULTI-CURRENCY TRADING ACCOUNT SELECTOR WITH BTC -->
         <div class="form-group">
             <label>Target Trading Account Currency</label>
             <div class="input-wrapper">
@@ -478,6 +482,7 @@
                     <option value="USD">NEXAFX Core Clearing Account (USD $)</option>
                     <option value="EUR">NEXAFX Eurozone Settlement Account (EUR €)</option>
                     <option value="GBP">NEXAFX Premium Sterling Account (GBP £)</option>
+                    <option value="BTC">NEXAFX Sovereign Cryptographic Account (BTC ₿)</option>
                 </select>
                 <i class="fas fa-wallet"></i>
             </div>
@@ -623,13 +628,15 @@
     const RATES = {
         USD: 129.50,
         EUR: 141.20,
-        GBP: 165.80
+        GBP: 165.80,
+        BTC: 11500000.00 // Evaluated global market asset metric relative value to KES index
     };
 
     const SYMBOLS = {
         USD: '$',
         EUR: '€',
-        GBP: '£'
+        GBP: '£',
+        BTC: '₿'
     };
 
     function onCurrencyChange() {
@@ -651,8 +658,8 @@
         conversionLabel.innerText = `Converted Value (${selectedCurrency}):`;
 
         if (!kesAmount || isNaN(kesAmount) || kesAmount <= 0) {
-            usdValueSpan.innerText = `${symbol}0.00`;
-            marginSpan.innerText = `${symbol}0.00`;
+            usdValueSpan.innerText = selectedCurrency === 'BTC' ? `${symbol}0.000000` : `${symbol}0.00`;
+            marginSpan.innerText = selectedCurrency === 'BTC' ? `${symbol}0.000000` : `${symbol}0.00`;
             tierBadge.innerText = "STANDARD SPREAD";
             tierBadge.style.background = "var(--neon-blue)";
             return;
@@ -662,8 +669,10 @@
         const convertedAmount = parseFloat(kesAmount) / rate;
         const purchasingPowerMargin = convertedAmount * 500; // 1:500 Leverage calculation
 
-        usdValueSpan.innerText = `${symbol}${convertedAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-        marginSpan.innerText = `${symbol}${purchasingPowerMargin.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        const decimals = selectedCurrency === 'BTC' ? 6 : 2;
+
+        usdValueSpan.innerText = `${symbol}${convertedAmount.toLocaleString(undefined, {minimumFractionDigits: decimals, maximumFractionDigits: decimals})}`;
+        marginSpan.innerText = `${symbol}${purchasingPowerMargin.toLocaleString(undefined, {minimumFractionDigits: decimals, maximumFractionDigits: decimals})}`;
 
         if (kesAmount >= 100000) {
             tierBadge.innerText = "VIP INSTITUTIONAL";
@@ -737,10 +746,12 @@
         const kesEquiv = usdBalance * RATES.USD;
         const eurBalance = kesEquiv / RATES.EUR;
         const gbpBalance = kesEquiv / RATES.GBP;
+        const btcBalance = kesEquiv / RATES.BTC;
 
         document.getElementById('nav-balance-usd').innerText = `$${usdBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         document.getElementById('nav-balance-eur').innerText = `€${eurBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         document.getElementById('nav-balance-gbp').innerText = `£${gbpBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('nav-balance-btc').innerText = `₿${btcBalance.toLocaleString(undefined, {minimumFractionDigits: 6, maximumFractionDigits: 6})}`;
     }
 
     function setAmount(amount) {
@@ -780,6 +791,7 @@
 
         const convertedValue = amount / RATES[selectedCurrency];
         const currencySymbol = SYMBOLS[selectedCurrency];
+        const decimals = selectedCurrency === 'BTC' ? 6 : 2;
 
         try {
             const payload = {
@@ -809,7 +821,7 @@
                 statusEl.innerHTML = `
                     ✅ <strong>STK PUSH ROUTED!</strong><br>
                     Check phone: <strong style="color: var(--gold);">${phone}</strong><br>
-                    Converting to: <strong style="color: var(--high-green);">${currencySymbol}${convertedValue.toFixed(2)} ${selectedCurrency}</strong><br>
+                    Converting to: <strong style="color: var(--high-green);">${currencySymbol}${convertedValue.toFixed(decimals)} ${selectedCurrency}</strong><br>
                     <span style="font-size: 11px; color: var(--text-dim);">Ref: ${refId}</span>
                 `;
                 statusEl.style.color = "var(--high-green)";
@@ -827,7 +839,7 @@
             statusEl.innerHTML = `
                 ✅ <strong>STK PUSH ROUTE INITIATED!</strong><br>
                 Check phone terminal: <strong style="color: var(--gold);">${phone}</strong><br>
-                Crediting Value: <strong style="color: var(--high-green);">${currencySymbol}${convertedValue.toFixed(2)} ${selectedCurrency}</strong><br>
+                Crediting Value: <strong style="color: var(--high-green);">${currencySymbol}${convertedValue.toFixed(decimals)} ${selectedCurrency}</strong><br>
                 <span style="font-size: 11px; color: var(--text-dim);">Ref Trace: ${refId}</span>
             `;
             statusEl.style.color = "var(--high-green)";
