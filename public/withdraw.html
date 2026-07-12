@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Withdrawal Terminal | NEXAFX</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -17,6 +17,7 @@
             --gold: #ffcc00;
             --border-light: rgba(255, 255, 255, 0.05);
             --input-bg: #06080a;
+            --panel-glow: rgba(0, 212, 255, 0.03);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,12 +31,41 @@
             flex-direction: column;
         }
 
+        /* ==================== TICKER MARQUEE ==================== */
+        .ticker-wrap {
+            width: 100%;
+            background: #0b0f14;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            overflow: hidden;
+            padding: 6px 0;
+            font-family: monospace;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        .ticker {
+            display: flex;
+            white-space: nowrap;
+            animation: marquee 25s linear infinite;
+            gap: 40px;
+        }
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ticker-up { color: var(--high-green); }
+        .ticker-down { color: var(--error-red); }
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
         /* ==================== HEADER ==================== */
         nav { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 20px 8%; 
+            padding: 15px 8%; 
             background: rgba(17, 23, 31, 0.98); 
             position: sticky; 
             top: 0; 
@@ -46,16 +76,16 @@
         .logo { 
             color: white; 
             font-family: 'Outfit'; 
-            font-weight: 800; 
-            font-size: 1.3rem; 
+            font-weight: 900; 
+            font-size: 1.4rem; 
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-transform: uppercase;
             text-decoration: none;
         }
-        .logo span { color: var(--neon-blue); }
+        .logo span { color: var(--neon-blue); text-shadow: 0 0 10px rgba(0, 212, 255, 0.3); }
         
         .nav-right {
             display: flex;
@@ -66,30 +96,33 @@
         .wallet-display {
             background: #000;
             border: 1px solid var(--high-green);
-            padding: 8px 20px;
+            padding: 8px 22px;
             border-radius: 10px;
             text-align: right;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.08);
         }
-        .wallet-label { font-size: 0.65rem; color: #888; display: block; font-weight: bold; }
-        .wallet-val { color: var(--gold); font-family: monospace; font-size: 1.1rem; font-weight: 900; }
+        .wallet-label { font-size: 0.65rem; color: #888; display: block; font-weight: bold; letter-spacing: 0.5px; }
+        .wallet-val { color: var(--gold); font-family: monospace; font-size: 1.15rem; font-weight: 900; }
 
         .btn-back {
-            background: rgba(0, 212, 255, 0.1);
+            background: rgba(0, 212, 255, 0.05);
             color: var(--neon-blue);
-            border: 1px solid var(--neon-blue);
+            border: 1px solid rgba(0, 212, 255, 0.3);
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: 700;
             cursor: pointer;
             text-decoration: none;
             transition: 0.3s;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .btn-back:hover { background: var(--neon-blue); color: #000; }
+        .btn-back:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
 
         /* ==================== MAIN CONTENT ==================== */
         .main-content { 
-            padding: 60px 20px; 
+            padding: 50px 20px; 
             display: flex; 
             justify-content: center; 
             gap: 40px;
@@ -102,11 +135,11 @@
         .terminal-card { 
             background: var(--panel); 
             width: 100%; 
-            max-width: 500px; 
+            max-width: 540px; 
             border-radius: 24px; 
-            padding: 40px 35px; 
+            padding: 45px 40px; 
             border: 1px solid var(--border-light);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255,255,255,0.05);
             position: relative;
             overflow: hidden;
         }
@@ -124,81 +157,86 @@
             50% { background-position: 100% 50%; }
         }
 
-        .card-header { text-align: center; margin-bottom: 30px; }
+        .card-header { text-align: center; margin-bottom: 35px; }
         .card-title {
             font-family: 'Outfit';
-            color: var(--gold);
+            color: #ffffff;
             font-weight: 900;
-            font-size: 1.6rem;
-            letter-spacing: -1px;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
             text-transform: uppercase;
         }
+        .card-title i { color: var(--gold); margin-right: 5px; }
         .card-subtitle {
             color: var(--text-dim);
-            font-size: 0.8rem;
-            margin-top: 6px;
+            font-size: 0.75rem;
+            margin-top: 8px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 600;
         }
 
         /* Form Elements */
-        .form-group { margin-bottom: 20px; }
+        .form-group { margin-bottom: 24px; }
         .form-group label { 
-            display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; 
-            color: var(--neon-blue); text-transform: uppercase; letter-spacing: 0.5px;
+            display: block; margin-bottom: 10px; font-size: 11px; font-weight: 800; 
+            color: var(--neon-blue); text-transform: uppercase; letter-spacing: 0.8px;
         }
         
         .input-wrapper { position: relative; width: 100%; }
         .input-wrapper i {
-            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-            color: #444a54; font-size: 0.95rem; transition: color 0.3s;
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: #444a54; font-size: 1rem; transition: color 0.3s;
         }
 
         .auth-input, .auth-select { 
-            width: 100%; padding: 14px 16px 14px 45px; border-radius: 12px; 
+            width: 100%; padding: 16px 16px 16px 48px; border-radius: 12px; 
             border: 1px solid #222c3a; background: var(--input-bg); color: #ffffff; 
             font-size: 14px; font-weight: 600; outline: none; transition: all 0.3s ease;
             font-family: inherit;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
         }
-        .auth-select { cursor: pointer; appearance: none; }
+        .auth-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23707a8a' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - 15px) 50%; }
         .auth-input:focus, .auth-select:focus { 
-            border-color: var(--gold); 
-            box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.1);
+            border-color: var(--neon-blue); 
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15), inset 0 2px 4px rgba(0,0,0,0.5);
         }
-        .auth-input::placeholder { color: #444a54; font-weight: 500; }
+        .input-wrapper:focus-within i { color: var(--neon-blue); }
+        .auth-input::placeholder { color: #3d4550; font-weight: 500; }
 
         .btn-submit { 
             width: 100%; 
             background: linear-gradient(135deg, var(--gold), #ff9900);
             color: #000000; 
-            padding: 16px; 
+            padding: 18px; 
             border: none; 
             border-radius: 12px; 
-            font-weight: 800; 
+            font-weight: 900; 
             font-size: 15px; 
             cursor: pointer; 
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2);
+            margin-top: 15px;
+            box-shadow: 0 6px 20px rgba(255, 204, 0, 0.15);
         }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 204, 0, 0.4); }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255, 204, 0, 0.35); }
         .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .status-message {
-            margin-top: 15px;
+            margin-top: 20px;
             font-size: 0.85rem;
             font-weight: 700;
             text-align: center;
-            font-family: 'Courier New', monospace;
+            font-family: monospace;
             min-height: 20px;
-            line-height: 1.4;
+            line-height: 1.5;
+            letter-spacing: 0.3px;
         }
 
         /* Info Side Panel */
         .info-panel {
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -209,38 +247,49 @@
             background: var(--panel);
             border: 1px solid var(--border-light);
             border-radius: 16px;
-            padding: 25px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
         .info-box h3 {
             color: var(--high-green);
             font-family: 'Outfit';
-            font-size: 1.1rem;
-            margin-bottom: 15px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .info-box ul {
             list-style: none;
             color: var(--text-dim);
-            font-size: 13px;
-            line-height: 2;
+            font-size: 13.5px;
+            line-height: 2.2;
         }
+        .info-box ul li {
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+        }
+        .info-box ul li:last-child { border-bottom: none; }
         .info-box ul li i {
             color: var(--neon-blue);
-            margin-right: 10px;
+            margin-right: 12px;
             width: 16px;
         }
 
         .warning-box {
-            background: rgba(255, 82, 82, 0.05);
-            border: 1px dashed var(--error-red);
-            color: var(--error-red);
-            padding: 15px;
-            border-radius: 12px;
+            background: rgba(255, 82, 82, 0.03);
+            border: 1px dashed rgba(255, 82, 82, 0.3);
+            color: #ff7878;
+            padding: 20px;
+            border-radius: 14px;
             font-size: 12px;
             font-weight: 600;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         /* Floating WhatsApp */
@@ -249,18 +298,37 @@
             width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; 
             justify-content: center; font-size: 26px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
             z-index: 1000; text-decoration: none;
+            transition: 0.3s ease;
         }
+        .wa-float:hover { transform: scale(1.08); }
 
         /* Responsive */
         @media (max-width: 900px) {
             .main-content { flex-direction: column; align-items: center; padding: 30px 15px; }
-            .info-panel { max-width: 500px; }
+            .info-panel { max-width: 540px; }
             nav { padding: 15px 20px; }
-            .terminal-card { padding: 30px 20px; }
+            .terminal-card { padding: 35px 25px; }
         }
     </style>
 </head>
 <body>
+
+<!-- LIVE FOREX DATA STREAM TICKER -->
+<div class="ticker-wrap">
+    <div class="ticker">
+        <div class="ticker-item"><span>EUR/USD</span> <span class="ticker-up"><i class="fas fa-caret-up"></i> 1.09420 (+0.14%)</span></div>
+        <div class="ticker-item"><span>GBP/USD</span> <span class="ticker-down"><i class="fas fa-caret-down"></i> 1.27115 (-0.08%)</span></div>
+        <div class="ticker-item"><span>USD/JPY</span> <span class="ticker-up"><i class="fas fa-caret-up"></i> 156.440 (+0.31%)</span></div>
+        <div class="ticker-item"><span>AUD/USD</span> <span class="ticker-up"><i class="fas fa-caret-up"></i> 0.66580 (+0.05%)</span></div>
+        <div class="ticker-item"><span>USD/CHF</span> <span class="ticker-down"><i class="fas fa-caret-down"></i> 0.89230 (-0.12%)</span></div>
+        <div class="ticker-item"><span>XAU/USD (GOLD)</span> <span class="ticker-up"><i class="fas fa-caret-up"></i> 2342.10 (+0.68%)</span></div>
+        <!-- Duplicate for Infinite Loop -->
+        <div class="ticker-item"><span>EUR/USD</span> <span class="ticker-up"><i class="fas fa-caret-up"></i> 1.09420 (+0.14%)</span></div>
+        <div class="ticker-item"><span>GBP/USD</span> <span class="ticker-down"><i class="fas fa-caret-down"></i> 1.27115 (-0.08%)</span></div>
+        <div class="ticker-item"><span>USD/JPY</span> <span class="ticker-up"><i class="fas fa-caret-up"></i> 156.440 (+0.31%)</span></div>
+        <div class="ticker-item"><span>AUD/USD</span> <span class="ticker-up"><i class="fas fa-caret-up"></i> 0.66580 (+0.05%)</span></div>
+    </div>
+</div>
 
 <nav>
     <a href="/dashboard" class="logo">
@@ -269,7 +337,7 @@
     </a>
     <div class="nav-right">
         <div class="wallet-display">
-            <span class="wallet-label">AVAILABLE BALANCE</span>
+            <span class="wallet-label">AVAILABLE CLEARING BALANCE</span>
             <span class="wallet-val" id="nav-balance">0.00 KES</span>
         </div>
         <a href="/dashboard" class="btn-back">
@@ -282,7 +350,7 @@
     <!-- WITHDRAWAL FORM TERMINAL -->
     <div class="terminal-card">
         <div class="card-header">
-            <h1 class="card-title"><i class="fas fa-wallet"></i> Liquidity Offloading</h1>
+            <h1 class="card-title"><i class="fas fa-shield-alt"></i> Liquidity Offloading</h1>
             <div class="card-subtitle">Initiate Secure Fund Transfer Sequence</div>
         </div>
 
@@ -342,17 +410,17 @@
         <div class="info-box">
             <h3><i class="fas fa-bolt"></i> Processing Protocols</h3>
             <ul>
-                <li><i class="fas fa-check-circle"></i> <strong>M-Pesa:</strong> Processed instantly (0-5 mins).</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Bank Transfer:</strong> 1 to 24 business hours.</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Minimum Limit:</strong> KES 50.00</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Maximum Limit:</strong> KES 100,000.00 / day</li>
-                <li><i class="fas fa-check-circle"></i> <strong>Network Fee:</strong> 0% (Free withdrawals)</li>
+                <li><span><i class="fas fa-check-circle"></i> <strong>M-Pesa:</strong> Processed instantly (0-5 mins).</span></li>
+                <li><span><i class="fas fa-check-circle"></i> <strong>Bank Transfer:</strong> 1 to 24 business hours.</span></li>
+                <li><span><i class="fas fa-check-circle"></i> <strong>Minimum Limit:</strong> KES 50.00</span></li>
+                <li><span><i class="fas fa-check-circle"></i> <strong>Maximum Limit:</strong> KES 100,000.00 / day</span></li>
+                <li><span><i class="fas fa-check-circle"></i> <strong>Network Fee:</strong> 0% (Free withdrawals)</span></li>
             </ul>
         </div>
 
         <div class="warning-box">
-            <strong><i class="fas fa-exclamation-triangle"></i> SECURITY CLEARANCE:</strong><br>
-            Ensure your receiving details are 100% accurate. Nexafxtrade is not liable for funds lost due to incorrect phone numbers or bank accounts entered by the operator. All transactions are final.
+            <strong><i class="fas fa-exclamation-triangle"></i> SECURITY CLEARANCE & COMPLIANCE:</strong><br><br>
+            Ensure your receiving details are 100% accurate. Nexafxtrade routes asset offloads across active liquidity ledgers automatically. The brokerage is not liable for funds lost due to incorrect phone parameters or faulty banking infrastructure entered by the terminal operator. All transactions are final.
         </div>
     </div>
 </section>
@@ -491,7 +559,6 @@
                 accountNumber: account || null
             };
 
-            // Note: Ensure your backend has a POST route for /api/payments/withdraw or /api/user/withdraw
             const response = await fetch(`${getApiBase()}/payments/withdraw`, {
                 method: "POST",
                 headers: { 
