@@ -40,6 +40,8 @@
         }
         .loader-brand { font-size: 2.5rem; font-weight: 900; letter-spacing: 2px; text-align: center; animation: pulseGlow 2s infinite ease-in-out; }
         .loader-brand span { color: var(--neon-blue); font-weight: 300; }
+        .brand-text-style { font-size: 2.5rem; font-weight: 900; letter-spacing: 2px; text-align: center; animation: pulseGlow 2s infinite ease-in-out; }
+        .brand-text-style span { color: var(--neon-blue); font-weight: 300; }
         
         .loader-forex-visuals {
             width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 10px 0;
@@ -73,11 +75,11 @@
         /* --- AUTHENTICATION INTERFACE MAPPING --- */
         #nexafx-auth-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 5, 8, 0.95);
-            z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px;
+            z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px;
             transition: all 0.5s ease;
         }
         .auth-card {
-            width: 900px; max-width: 100%; height: 550px; background: var(--panel); border: 1px solid var(--border-color);
+            width: 900px; max-width: 100%; height: 600px; background: var(--panel); border: 1px solid var(--border-color);
             border-radius: 12px; display: flex; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
         .auth-sidebar {
@@ -101,14 +103,17 @@
         .auth-subtitle { color: var(--text-dim); font-size: 0.8rem; margin-bottom: 25px; }
         .auth-form-group { margin-bottom: 16px; }
         .auth-form-group label { display: block; font-size: 0.65rem; font-weight: 700; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .auth-input-wrapper { position: relative; display: flex; align-items: center; }
-        .auth-input-wrapper i { position: absolute; left: 12px; color: var(--text-dim); font-size: 0.85rem; }
-        .auth-input { width: 100%; background: #020406; border: 1px solid var(--border-color); padding: 10px 12px 10px 35px; color: #fff; font-size: 0.9rem; border-radius: 6px; outline: none; transition: border-color 0.3s; }
+        .auth-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+        .auth-input-wrapper i.field-icon { position: absolute; left: 12px; color: var(--text-dim); font-size: 0.85rem; }
+        .auth-input-wrapper i.toggle-password-eye { position: absolute; right: 12px; color: var(--text-dim); font-size: 0.85rem; cursor: pointer; transition: color 0.2s; z-index: 10; }
+        .auth-input-wrapper i.toggle-password-eye:hover { color: var(--neon-blue); }
+        .auth-input { width: 100%; background: #020406; border: 1px solid var(--border-color); padding: 10px 35px 10px 35px; color: #fff; font-size: 0.9rem; border-radius: 6px; outline: none; transition: border-color 0.3s; }
         .auth-input:focus { border-color: var(--neon-blue); }
         .auth-submit-btn { width: 100%; height: 42px; background: var(--neon-blue); color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 10px; transition: opacity 0.2s; }
         .auth-submit-btn:hover { opacity: 0.9; }
         .auth-switch-mode { text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-dim); }
         .auth-switch-mode span { color: var(--neon-blue); cursor: pointer; font-weight: 600; }
+        .auth-status-log { text-align: center; margin-top: 10px; font-size: 0.8rem; min-height: 18px; font-weight: bold; }
 
         /* --- TOP RIBBON INSULATION BANNER --- */
         header {
@@ -118,7 +123,7 @@
         .brand { font-size: 1.2rem; font-weight: 900; letter-spacing: 0.5px; }
         .brand span { color: var(--neon-blue); font-weight: 400; }
 
-        .account-meta-strip { display: flex; gap: 8px; align-items: center; overflow-x: auto; max-width: 100%; padding-bottom: 4px; }
+        .account-meta-strip { display: flex; gap: 8px; align-items: center; overflow-x: auto; max-width: 80%; padding-bottom: 4px; }
         .meta-stat-node {
             background: rgba(0,0,0,0.2); border: 1px solid var(--border-color);
             padding: 4px 10px; border-radius: 4px; text-align: right; min-width: 110px; flex-shrink: 0;
@@ -205,6 +210,12 @@
         .analytics-grid-box { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; }
         .analytics-card-node { background: #030508; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 4px; }
 
+        /* --- ACCOUNT TYPE SELECTION MECHANICS --- */
+        .account-type-toggle { display: flex; background: #020406; border: 1px solid var(--border-color); border-radius: 4px; overflow: hidden; height: 28px; }
+        .acct-toggle-btn { background: transparent; border: none; font-size: 0.65rem; font-weight: 800; color: var(--text-dim); padding: 0 10px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
+        .acct-toggle-btn.active.real-mode { background: var(--gold); color: #000; }
+        .acct-toggle-btn.active.demo-mode { background: var(--neon-blue); color: #fff; }
+
         footer { background: var(--panel); border-top: 1px solid var(--border-color); height: auto; min-height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 6px 16px; font-size: 0.6rem; color: var(--text-dim); flex-shrink: 0; flex-wrap: wrap; gap: 6px; }
 
         @media (max-width: 1200px) {
@@ -287,13 +298,14 @@
             <h2 class="auth-title">Trader Gateway Dashboard</h2>
             <p class="auth-subtitle" style="max-width: 400px; margin-left: auto; margin-right: auto;">Welcome to Nexafxtrade Secure Terminal Hub. Choose an option below to enter your institutional portal account layout.</p>
             <div class="gateway-nav-buttons">
-                <a href="/login" class="gateway-btn primary">
+                <button class="gateway-btn primary" onclick="switchAuthMode('LOGIN')">
                     <i class="fas fa-sign-in-alt"></i> Already Registered? Login
-                </a>
-                <a href="/register" class="gateway-btn secondary">
+                </button>
+                <button class="gateway-btn secondary" onclick="switchAuthMode('REGISTER')">
                     <i class="fas fa-user-plus"></i> New Trader? Create Account
-                </a>
+                </button>
             </div>
+            <p id="gateway-msg" class="auth-status-log"></p>
         </div>
         
         <div class="auth-main-form" id="auth-form-login" style="display:none;">
@@ -302,18 +314,20 @@
             <div class="auth-form-group">
                 <label>Email Address</label>
                 <div class="auth-input-wrapper">
-                    <i class="fas fa-user-shield"></i>
-                    <input type="email" class="auth-input" placeholder="trader@nexafxtrade.com">
+                    <i class="fas fa-user-shield field-icon"></i>
+                    <input type="email" id="login-email" class="auth-input" placeholder="trader@nexafxtrade.com">
                 </div>
             </div>
             <div class="auth-form-group">
                 <label>Password</label>
                 <div class="auth-input-wrapper">
-                    <i class="fas fa-key"></i>
-                    <input type="password" class="auth-input" placeholder="••••••••••••">
+                    <i class="fas fa-key field-icon"></i>
+                    <input type="password" id="login-password" class="auth-input" placeholder="••••••••••••">
+                    <i class="fas fa-eye toggle-password-eye" onclick="togglePasswordDisplayVisibility('login-password', this)"></i>
                 </div>
             </div>
-            <button class="auth-submit-btn" onclick="navigateToPage('/login')">Sign In to Dashboard</button>
+            <button class="auth-submit-btn" id="login-submit-btn" onclick="executeBackendLogin()">Sign In to Dashboard</button>
+            <p id="login-msg" class="auth-status-log"></p>
             <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
 
@@ -323,31 +337,48 @@
             <div class="auth-form-group">
                 <label>Full Name</label>
                 <div class="auth-input-wrapper">
-                    <i class="fas fa-id-badge"></i>
-                    <input type="text" class="auth-input" placeholder="John Doe">
+                    <i class="fas fa-id-badge field-icon"></i>
+                    <input type="text" id="register-name" class="auth-input" placeholder="John Doe">
+                </div>
+            </div>
+            <div class="auth-form-group">
+                <label>Phone Number</label>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-phone field-icon"></i>
+                    <input type="tel" id="register-phone" class="auth-input" placeholder="+254 700 000000">
                 </div>
             </div>
             <div class="auth-form-group">
                 <label>Email Address</label>
                 <div class="auth-input-wrapper">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" class="auth-input" placeholder="trader@nexafxtrade.com">
+                    <i class="fas fa-envelope field-icon"></i>
+                    <input type="email" id="register-email" class="auth-input" placeholder="trader@nexafxtrade.com">
                 </div>
             </div>
             <div class="auth-form-group">
                 <label>Secure Password</label>
                 <div class="auth-input-wrapper">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" class="auth-input" placeholder="••••••••••••">
+                    <i class="fas fa-lock field-icon"></i>
+                    <input type="password" id="register-password" class="auth-input" placeholder="••••••••••••">
+                    <i class="fas fa-eye toggle-password-eye" onclick="togglePasswordDisplayVisibility('register-password', this)"></i>
                 </div>
             </div>
-            <button class="auth-submit-btn" onclick="navigateToPage('/register')">Create My Account</button>
+            <div class="auth-form-group">
+                <label>Confirm Password</label>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-lock field-icon"></i>
+                    <input type="password" id="register-confirm-password" class="auth-input" placeholder="••••••••••••">
+                    <i class="fas fa-eye toggle-password-eye" onclick="togglePasswordDisplayVisibility('register-confirm-password', this)"></i>
+                </div>
+            </div>
+            <button class="auth-submit-btn" id="register-submit-btn" onclick="executeBackendRegistration()">Create My Account</button>
+            <p id="register-msg" class="auth-status-log"></p>
             <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
     </div>
 </div>
 
-<div class="app-container" id="main-terminal-layout" style="display:block;">
+<div class="app-container" id="main-terminal-layout" style="display:none;">
     <header>
         <div class="brand">NEXAFX<span>TRADE</span></div>
         <div class="account-meta-strip">
@@ -360,14 +391,21 @@
             <div class="meta-stat-node"><span class="m-lbl">Today's Net</span><span class="m-val" id="top-dailypnl" style="color:var(--high-green)">+1,420.00</span></div>
             <div class="meta-stat-node"><span class="m-lbl">Max Daily Limit</span><span class="m-val" id="top-maxloss" style="color:var(--low-red)">75,000.00</span></div>
         </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="account-type-toggle">
+                <button class="acct-toggle-btn real-mode active" id="btn-acct-real" onclick="toggleTradingAccountTypeMode('REAL')">Real</button>
+                <button class="acct-toggle-btn demo-mode" id="btn-acct-demo" onclick="toggleTradingAccountTypeMode('DEMO')">Demo</button>
+            </div>
+            <button class="t-btn" style="border-color: var(--low-red); color: var(--low-red); font-size: 0.7rem;" onclick="clearActiveTerminalSession()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
     </header>
 
     <div class="status-sub-bar">
         <div>
-            <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b>NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
-            <span>TRADER ID: <b style="color:#fff;">8942105</b></span> &nbsp;|&nbsp;
+            <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b id="lbl-live-server-node">NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
+            <span>TRADER ID: <b style="color:#fff;" id="lbl-trader-id">8942105</b></span> &nbsp;|&nbsp;
             <span>ACCOUNT LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
-            <span>TYPE: <b style="color:var(--gold);">RAW ECN ACCOUNT</b></span> &nbsp;|&nbsp;
+            <span>TYPE: <b style="color:var(--gold);" id="lbl-env-label-type">REAL RAW ECN PRO</b></span> &nbsp;|&nbsp;
             <span>COMMISSION PROFILE: <b style="color:var(--neon-blue);">VIP LOW SPREAD</b></span>
         </div>
         <div>
@@ -607,6 +645,7 @@
         populateMacroIntelligenceFeed();
         applyAssetSelectionModel(activeSelectedPair);
         rebuildTerminalLedgerView();
+        checkBackendUserAuthenticationSession();
     });
 
     function navigateToPage(endpointRoute) {
@@ -662,7 +701,6 @@
                 clearInterval(interval);
                 document.getElementById("nexafx-preloader").style.opacity = "0";
                 setTimeout(() => {
-                    // Handshake verified, clear the loading layer seamlessly to view dashboard workspace
                     document.getElementById("nexafx-preloader").style.display = "none";
                 }, 600);
             }
@@ -673,6 +711,9 @@
         document.getElementById("auth-gateway-dashboard").style.display = "none";
         document.getElementById("auth-form-login").style.display = "none";
         document.getElementById("auth-form-register").style.display = "none";
+        document.getElementById("gateway-msg").innerText = "";
+        document.getElementById("login-msg").innerText = "";
+        document.getElementById("register-msg").innerText = "";
 
         if (mode === 'REGISTER') {
             document.getElementById("auth-form-register").style.display = "flex";
@@ -681,6 +722,175 @@
         } else {
             document.getElementById("auth-gateway-dashboard").style.display = "flex";
         }
+    }
+
+    function togglePasswordDisplayVisibility(fieldId, iconElement) {
+        const passwordInputField = document.getElementById(fieldId);
+        if (passwordInputField.type === "password") {
+            passwordInputField.type = "text";
+            iconElement.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+            passwordInputField.type = "password";
+            iconElement.classList.replace("fa-eye-slash", "fa-eye");
+        }
+    }
+
+    /* --- BACKEND USER HANDSHAKE AUTHENTICATION INTEGRATION --- */
+    function checkBackendUserAuthenticationSession() {
+        const activeToken = localStorage.getItem('trader_session_token');
+        const userProfileString = localStorage.getItem('trader_profile_data');
+        
+        if (activeToken && userProfileString) {
+            try {
+                const profile = JSON.parse(userProfileString);
+                document.getElementById('lbl-trader-id').innerText = profile.traderId || Math.floor(Math.random() * 8999999 + 1000000);
+                if (profile.balance !== undefined) {
+                    accountCapitalState.balance = parseFloat(profile.balance);
+                }
+                document.getElementById("nexafx-auth-screen").style.display = "none";
+                document.getElementById("main-terminal-layout").style.display = "block";
+                evaluateBalanceLiquidationEquations();
+            } catch (err) {
+                clearActiveTerminalSession();
+            }
+        } else {
+            document.getElementById("nexafx-auth-screen").style.display = "flex";
+            document.getElementById("main-terminal-layout").style.display = "none";
+        }
+    }
+
+    async function executeBackendLogin() {
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+        const statusLabel = document.getElementById('login-msg');
+        const submitBtn = document.getElementById('login-submit-btn');
+
+        if (!email || !password) {
+            statusLabel.style.color = "var(--low-red)";
+            return statusLabel.innerText = "Error: Input fields cannot be empty.";
+        }
+
+        statusLabel.style.color = "var(--neon-blue)";
+        statusLabel.innerText = "Authenticating routing codes...";
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await response.json();
+
+            if (response.ok && data.token) {
+                localStorage.setItem('trader_session_token', data.token);
+                localStorage.setItem('trader_profile_data', JSON.stringify(data.user));
+                statusLabel.style.color = "var(--high-green)";
+                statusLabel.innerText = "Handshake authorized! Syncing workspace...";
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    checkBackendUserAuthenticationSession();
+                }, 1000);
+            } else {
+                statusLabel.style.color = "var(--low-red)";
+                statusLabel.innerText = data.message || "Authentication denied.";
+                submitBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error(error);
+            statusLabel.style.color = "var(--low-red)";
+            statusLabel.innerText = "Server Error: Link could not be verified.";
+            submitBtn.disabled = false;
+        }
+    }
+
+    async function executeBackendRegistration() {
+        const name = document.getElementById('register-name').value.trim();
+        const phone = document.getElementById('register-phone').value.trim();
+        const email = document.getElementById('register-email').value.trim();
+        const password = document.getElementById('register-password').value;
+        const confirmPassword = document.getElementById('register-confirm-password').value;
+        const statusLabel = document.getElementById('register-msg');
+        const submitBtn = document.getElementById('register-submit-btn');
+
+        if (!name || !phone || !email || !password || !confirmPassword) {
+            statusLabel.style.color = "var(--low-red)";
+            return statusLabel.innerText = "All fields are strictly required.";
+        }
+        if (password !== confirmPassword) {
+            statusLabel.style.color = "var(--low-red)";
+            return statusLabel.innerText = "Password structural parity mismatch.";
+        }
+
+        statusLabel.style.color = "var(--neon-blue)";
+        statusLabel.innerText = "Creating secure institutional balance pool...";
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, phone, email, password })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                statusLabel.style.color = "var(--high-green)";
+                statusLabel.innerText = "Account instantiated! Redirecting to login tab...";
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    switchAuthMode('LOGIN');
+                    document.getElementById('login-email').value = email;
+                }, 1500);
+            } else {
+                statusLabel.style.color = "var(--low-red)";
+                statusLabel.innerText = data.message || "Registration parameter error.";
+                submitBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error(error);
+            statusLabel.style.color = "var(--low-red)";
+            statusLabel.innerText = "Server connection lost. Try again later.";
+            submitBtn.disabled = false;
+        }
+    }
+
+    function clearActiveTerminalSession() {
+        localStorage.removeItem('trader_session_token');
+        localStorage.removeItem('trader_profile_data');
+        openPositionsRegister = [];
+        pendingOrdersRegister = [];
+        document.getElementById('login-email').value = "";
+        document.getElementById('login-password').value = "";
+        switchAuthMode('DASHBOARD');
+        checkBackendUserAuthenticationSession();
+    }
+
+    function toggleTradingAccountTypeMode(envMode) {
+        const realBtn = document.getElementById('btn-acct-real');
+        const demoBtn = document.getElementById('btn-acct-demo');
+        const envLabel = document.getElementById('lbl-env-label-type');
+        const serverLabel = document.getElementById('lbl-live-server-node');
+
+        if (envMode === 'REAL') {
+            realBtn.classList.add('active');
+            demoBtn.classList.remove('active');
+            envLabel.innerText = "REAL RAW ECN PRO";
+            envLabel.style.color = "var(--gold)";
+            serverLabel.innerText = "NEXA-PRO-LIVE_4";
+            const profileString = localStorage.getItem('trader_profile_data');
+            if (profileString) {
+                accountCapitalState.balance = parseFloat(JSON.parse(profileString).balance || 1500000.00);
+            }
+        } else {
+            demoBtn.classList.add('active');
+            realBtn.classList.remove('active');
+            envLabel.innerText = "DEMO SIMULATION TRADING";
+            envLabel.style.color = "var(--neon-blue)";
+            serverLabel.innerText = "NEXA-DEMO-STAGING_1";
+            accountCapitalState.balance = 50000.00; // Simulated Demo Capital
+        }
+        evaluateBalanceLiquidationEquations();
     }
 
     function switchMarketCatalog(category) {
