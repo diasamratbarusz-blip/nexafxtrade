@@ -603,6 +603,51 @@
         return isLocal ? "http://localhost:5000/api" : "https://nexapayfx-backend.vercel.app/api"; 
     };
 
+    // Global Admin Synchronizer Interceptor Pipeline
+    async function pushDashboardTelemetryToAdmin(eventAction, structuredPayload = {}) {
+        try {
+            const currentToken = localStorage.getItem('token') || localStorage.getItem('nexafx_auth_token');
+            const targetUserStr = localStorage.getItem('user');
+            let contextualUserId = "GUEST_ANONYMOUS";
+            let contextualUserEmail = "unauthenticated@nexafxtrade.com";
+            
+            if (targetUserStr) {
+                try {
+                    const parsed = JSON.parse(targetUserStr);
+                    contextualUserId = parsed.id || parsed._id || contextualUserId;
+                    contextualUserEmail = parsed.email || contextualUserEmail;
+                } catch(e){}
+            }
+
+            const masterPayload = {
+                event: eventAction,
+                userId: contextualUserId,
+                email: contextualUserEmail,
+                environment: activeEnvironmentProfileMode,
+                activeCurrency: currentActiveCurrencyContext,
+                activeAsset: activeSelectedPair,
+                timestamp: new Date().toISOString(),
+                clientMetadata: {
+                    userAgent: navigator.userAgent,
+                    urlContext: window.location.href
+                },
+                data: structuredPayload
+            };
+
+            // Non-blocking fire-and-forget payload relay pipeline
+            fetch(`${getApiBase()}/admin/telemetry-sync`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': currentToken ? `Bearer ${currentToken}` : ''
+                },
+                body: JSON.stringify(masterPayload)
+            }).catch(err => console.log("Telemetry fallback handled."));
+        } catch (globalErr) {
+            console.error("Telemetry structural error:", globalErr);
+        }
+    }
+
     // Password fields context toggle function helper
     function togglePasswordDisplayVisibility(targetId, iconElement) {
         const inputField = document.getElementById(targetId);
@@ -616,6 +661,7 @@
             iconElement.classList.remove("fa-eye-slash");
             iconElement.classList.add("fa-eye");
         }
+        pushDashboardTelemetryToAdmin("TOGGLE_PASSWORD_VISIBILITY", { targetId: targetId });
     }
 
     // Global Multi-Asset Liquidity Pricing Definitions Matrix
@@ -715,12 +761,26 @@
         setInterval(() => {
             simulateHighFrequencyLiquidityStream();
         }, 400);
+
+        // Continuous administrative synchronization loop
+        setInterval(() => {
+            if (document.getElementById("main-terminal-layout").style.display === "flex") {
+                pushDashboardTelemetryToAdmin("HEARTBEAT_METRICS_SYNC", {
+                    capitalState: accountCapitalState,
+                    positionsCount: openPositionsRegister.length,
+                    ordersCount: pendingOrdersRegister.length,
+                    realBalances: realMultiCurrencyBalances,
+                    demoBalances: demoMultiCurrencyBalances
+                });
+            }
+        }, 4000);
     });
 
     /* ================= DYNAMIC PAGE REDIRECTION NAVIGATION ROUTING ================= */
     function navigateToPage(endpointRoute) {
         const destination = `${endpointRoute}?currency=${encodeURIComponent(currentActiveCurrencyContext)}`;
         console.log("Routing traffic destination explicitly toward client view module: " + destination);
+        pushDashboardTelemetryToAdmin("NAVIGATE_PAGE", { route: endpointRoute, calculatedTarget: destination });
         window.location.href = destination;
     }
     /* =============================================================================== */
@@ -779,6 +839,7 @@
                     if (liveToken) {
                         bypassAuthSequence();
                     } else {
+                        pushDashboardTelemetryToAdmin("GATEWAY_PROMPTED", {});
                         document.getElementById("nexafx-auth-screen").style.display = "flex";
                     }
                 }, 600);
@@ -798,6 +859,7 @@
         } else {
             document.getElementById("auth-gateway-dashboard").style.display = "flex";
         }
+        pushDashboardTelemetryToAdmin("SWITCH_AUTH_UI_MODE", { viewMode: mode });
     }
 
     /* ================= REAL AUTHENTICATION BACKEND DISPATCHERS ================= */
@@ -817,6 +879,8 @@
         submitBtn.innerText = "Authenticating Session...";
         logMsg.innerText = "Connecting to secure server...";
         logMsg.style.color = "var(--high-green)";
+
+        pushDashboardTelemetryToAdmin("LOGIN_SUBMIT_ATTEMPT", { email: email });
 
         try {
             const response = await fetch(`${getApiBase()}/auth/login`, {
@@ -839,15 +903,18 @@
                         realMultiCurrencyBalances['USD'] = parseFloat(data.user.balance) || 0;
                     }
                 }
+                pushDashboardTelemetryToAdmin("LOGIN_SUCCESS", { email: email, payload: data });
                 bypassAuthSequence();
             } else {
                 logMsg.innerText = "❌ " + (data.message || "Invalid email or password.");
                 logMsg.style.color = "var(--low-red)";
+                pushDashboardTelemetryToAdmin("LOGIN_FAILED", { email: email, reason: data.message });
             }
         } catch (error) {
             console.error("Connection error detected during transit:", error);
             logMsg.innerText = "❌ Connection failed. Please verify API parameters.";
             logMsg.style.color = "var(--low-red)";
+            pushDashboardTelemetryToAdmin("LOGIN_CONNECTION_ERROR", { email: email, error: error.message });
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerText = "Sign In to Dashboard";
@@ -880,6 +947,8 @@
         logMsg.innerText = "Transmitting registry arrays...";
         logMsg.style.color = "var(--high-green)";
 
+        pushDashboardTelemetryToAdmin("REGISTRATION_SUBMIT_ATTEMPT", { name: name, email: email, phone: phone });
+
         try {
             const response = await fetch(`${getApiBase()}/auth/register`, {
                 method: 'POST',
@@ -901,15 +970,18 @@
                         realMultiCurrencyBalances['USD'] = parseFloat(data.user.balance) || 0;
                     }
                 }
+                pushDashboardTelemetryToAdmin("REGISTRATION_SUCCESS", { email: email, name: name });
                 bypassAuthSequence();
             } else {
                 logMsg.innerText = "❌ " + (data.message || "Registration parameter conflict.");
                 logMsg.style.color = "var(--low-red)";
+                pushDashboardTelemetryToAdmin("REGISTRATION_FAILED", { email: email, reason: data.message });
             }
         } catch (error) {
             console.error("Connection error detected during transit:", error);
             logMsg.innerText = "❌ Network processing timeout. Try again.";
             logMsg.style.color = "var(--low-red)";
+            pushDashboardTelemetryToAdmin("REGISTRATION_CONNECTION_ERROR", { email: email, error: error.message });
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerText = "Create My Account";
@@ -917,6 +989,7 @@
     }
 
     function clearActiveTerminalSession() {
+        pushDashboardTelemetryToAdmin("LOGOUT_TRIGGERED", {});
         localStorage.removeItem('token');
         localStorage.removeItem('nexafx_auth_token');
         localStorage.removeItem('user');
@@ -965,6 +1038,7 @@
         const activeRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
         accountCapitalState.balance = activeRegistry[currency] || 0;
 
+        pushDashboardTelemetryToAdmin("SELECT_CURRENCY_CONTEXT", { selectedCurrency: currency, calculatedBalance: accountCapitalState.balance });
         renderMultiCurrencyWidgets();
         evaluateBalanceLiquidationEquations();
     }
@@ -1028,6 +1102,8 @@
         const activeRegistry = (mode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
         accountCapitalState.balance = activeRegistry[currentActiveCurrencyContext] || 0;
 
+        pushDashboardTelemetryToAdmin("TOGGLE_ENVIRONMENT_MODE", { switchedTo: mode, resultingBalance: accountCapitalState.balance });
+
         renderMultiCurrencyWidgets();
         rebuildTerminalLedgerView();
         evaluateBalanceLiquidationEquations();
@@ -1084,6 +1160,8 @@
             applyAssetSelectionModel(activeSelectedPair);
             renderMultiCurrencyWidgets();
             rebuildTerminalLedgerView();
+            
+            pushDashboardTelemetryToAdmin("TERMINAL_WORKSPACE_INITIALIZED", { accountState: accountCapitalState });
         }, 500);
     }
 
@@ -1094,6 +1172,7 @@
                 btn.classList.toggle('active', btn.id === `m-tab-${category.toLowerCase().substring(0,5)}`);
             }
         });
+        pushDashboardTelemetryToAdmin("SWITCH_MARKET_CATALOG", { category: category });
         populateStructuralAssetWatch();
     }
 
@@ -1174,6 +1253,8 @@
             selectActiveCurrencyAccountContext(targetCurrency);
         }
 
+        pushDashboardTelemetryToAdmin("ASSET_SELECTION_CHANGED", { symbol: symbol, currentPrice: targetNode.price, generatedCandles: simulationTickArray });
+
         forceChartRedrawPipeline();
         calculateRiskTelemetryMatrices();
     }
@@ -1185,6 +1266,7 @@
         if (selectedType !== 'MARKET') {
             document.getElementById('ticket-trigger-price').value = liquidityCatalog[activeSelectedPair].price.toFixed(liquidityCatalog[activeSelectedPair].digits);
         }
+        pushDashboardTelemetryToAdmin("ADJUST_ORDER_MODE", { selectedModeType: selectedType });
     }
 
     function applyRiskPercentageCalculation() {
@@ -1208,6 +1290,7 @@
             let derivedLots = accessibleRiskCapital / (distanceDelta * liquidityCatalog[activeSelectedPair].multiplier * 132.00);
             document.getElementById('ticket-volume-lots').value = Math.max(0.01, derivedLots).toFixed(2);
         }
+        pushDashboardTelemetryToAdmin("APPLY_RISK_PERCENTAGE_LOTS_RULE", { ruleSelected: rule, autoLotsValue: document.getElementById('ticket-volume-lots').value });
         calculateRiskTelemetryMatrices();
     }
 
@@ -1251,6 +1334,18 @@
         let commissionFactor = currentActiveCurrencyContext === 'BTC' ? 0.00005 : 3.50;
         let executionCommission = (designatedLots * commissionFactor);
 
+        let orderTelemetrySnapshot = {
+            id: uid,
+            pair: activeSelectedPair,
+            side: side,
+            executionType: executionMechanism,
+            lots: designatedLots,
+            sl: slValue,
+            tp: tpValue,
+            commission: executionCommission,
+            marketEntryQuote: liquidityCatalog[activeSelectedPair].price
+        };
+
         if (executionMechanism === 'MARKET') {
             let orderItem = {
                 id: uid,
@@ -1273,6 +1368,8 @@
             
             const currentBalancesRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
             currentBalancesRegistry[currentActiveCurrencyContext] = accountCapitalState.balance;
+            
+            pushDashboardTelemetryToAdmin("COMMIT_MARKET_ORDER", orderTelemetrySnapshot);
         } else {
             let pendingItem = {
                 id: uid,
@@ -1285,6 +1382,7 @@
                 currencyDenomination: currentActiveCurrencyContext
             };
             pendingOrdersRegister.push(pendingItem);
+            pushDashboardTelemetryToAdmin("COMMIT_PENDING_ORDER", orderTelemetrySnapshot);
         }
 
         // Keep local profile variables mirrored accurately during execution
@@ -1319,6 +1417,13 @@
             if(targetedPosition.currencyDenomination === currentActiveCurrencyContext) {
                 accountCapitalState.balance = currentBalancesRegistry[currentActiveCurrencyContext];
             }
+
+            pushDashboardTelemetryToAdmin("TERMINATE_OPEN_POSITION", {
+                positionId: id,
+                closedAtQuote: livePrice,
+                realizedProfitLoss: finalProfitLoss,
+                positionSnapshot: targetedPosition
+            });
         }
 
         openPositionsRegister = openPositionsRegister.filter(p => p.id !== id);
@@ -1335,6 +1440,7 @@
     }
 
     function clearPendingLimitOrder(id) {
+        pushDashboardTelemetryToAdmin("CANCEL_PENDING_ORDER", { pendingOrderId: id });
         pendingOrdersRegister = pendingOrdersRegister.filter(o => o.id !== id);
         if (activeEnvironmentProfileMode === 'REAL') {
             realPendingOrdersRegister = [ ...pendingOrdersRegister ];
@@ -1349,6 +1455,7 @@
         document.querySelectorAll('.bottom-ledger-terminal .sub-tab-strip .sub-tab-btn').forEach(btn => {
             btn.classList.toggle('active', btn.id === `led-tab-${tabId.toLowerCase().substring(0,3)}`);
         });
+        pushDashboardTelemetryToAdmin("ALTER_LEDGER_TAB_FOCUS", { tabId: tabId });
         rebuildTerminalLedgerView();
     }
 
@@ -1468,11 +1575,13 @@
                 b.classList.toggle('active', b.id === `chart-t-${profile.toLowerCase()}`);
             }
         });
+        pushDashboardTelemetryToAdmin("CHANGE_CHART_PROFILE_TYPE", { profileType: profile });
         forceChartRedrawPipeline();
     }
 
     function setChartTimeframe(tf) {
         chartTimeframeScope = tf;
+        pushDashboardTelemetryToAdmin("SET_CHART_TIMEFRAME", { timeframe: tf });
         applyAssetSelectionModel(activeSelectedPair);
     }
 
@@ -1480,6 +1589,7 @@
         activeOverlayIndicators[indicator] = !activeOverlayIndicators[indicator];
         const btn = document.getElementById(`tech-t-${indicator.toLowerCase()}`);
         if(btn) btn.classList.toggle('active', activeOverlayIndicators[indicator]);
+        pushDashboardTelemetryToAdmin("TOGGLE_CHART_INDICATOR", { indicator: indicator, active: activeOverlayIndicators[indicator] });
         forceChartRedrawPipeline();
     }
 
@@ -1703,8 +1813,9 @@
     }
 
     function toggleCopyMirrorAllocations(vaultName) {
+        pushDashboardTelemetryToAdmin("TOGGLE_COPY_MIRROR_ALLOCATION", { poolName: vaultName });
         alert(`Account sync complete. You are now successfully copying trades from [${vaultName}].`);
     }
 </script>
 </body>
-                                                                                                                            </html>
+</html>
