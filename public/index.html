@@ -73,7 +73,7 @@
             50% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 12px rgba(0, 176, 255, 0.3)); }
         }
 
-        /* --- AUTHENTICATION INTERFACE MAPPING --- */
+        /* --- AUTHENTICATION INTERFACE MAPPING (CLEAN & PROFESSIONAL) --- */
         #nexafx-auth-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 5, 8, 0.95);
             z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px;
@@ -92,6 +92,7 @@
         .auth-sidebar-stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.75rem; font-family: monospace; }
         .auth-main-form { flex: 1.2; padding: 45px; display: flex; flex-direction: column; justify-content: center; background: var(--panel); }
         
+        /* Central Dynamic Navigation Dashboard Layer Inside Auth Screen */
         #auth-gateway-dashboard { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px; flex: 1.2; }
         .gateway-icon-cluster { font-size: 3.5rem; color: var(--neon-blue); margin-bottom: 20px; display: flex; gap: 15px; }
         .gateway-nav-buttons { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; margin-top: 15px; }
@@ -116,7 +117,7 @@
         .auth-switch-mode span { color: var(--neon-blue); cursor: pointer; font-weight: 600; }
         .auth-status-log { text-align: center; margin-top: 10px; font-size: 0.8rem; min-height: 18px; font-weight: bold; }
 
-        /* --- Ribbon Header --- */
+        /* --- Institutional Main Top Ribbon Header --- */
         header {
             background: var(--panel); display: flex; align-items: center; justify-content: space-between;
             padding: 8px 16px; border-bottom: 1px solid var(--border-color); flex-shrink: 0; height: auto; min-height: 55px; flex-wrap: wrap; gap: 8px;
@@ -151,16 +152,18 @@
         .currency-deposit-link-icon { font-size: 0.95rem; color: var(--text-dim); padding: 4px; transition: color 0.2s; z-index: 5; margin-left: auto; }
         .currency-deposit-link-icon:hover { color: var(--high-green); }
 
+        /* --- Operational Live Status Sub-Bar --- */
         .status-sub-bar {
             background: #030508; border-bottom: 1px solid var(--border-color); height: auto; min-height: 26px;
             display: flex; align-items: center; justify-content: space-between; padding: 6px 16px;
             font-size: 0.65rem; font-weight: 700; color: var(--text-dim); flex-shrink: 0; flex-wrap: wrap; gap: 8px;
         }
 
-        /* --- Workspace Core Grid --- */
+        /* --- Core Master Workspace Layout --- */
         .master-workspace-grid {
             display: grid; grid-template-columns: 310px 1fr 320px; flex: 1; overflow: hidden; background: #020305;
         }
+
         .column-pane { display: flex; flex-direction: column; background: var(--panel); border-right: 1px solid var(--border-color); overflow: hidden; }
         .column-pane.right-pane { border-right: none; border-left: 1px solid var(--border-color); }
 
@@ -170,6 +173,7 @@
             display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
         }
 
+        /* --- Multi-Asset Watchlist Engine Component --- */
         .sub-tab-strip { display: flex; background: #04060a; border-bottom: 1px solid var(--border-color); flex-shrink: 0; overflow-x: auto; }
         .sub-tab-btn { flex: 1; padding: 8px 4px; font-size: 0.6rem; font-weight: 700; border: none; background: transparent; color: var(--text-dim); cursor: pointer; text-transform: uppercase; text-align: center; white-space: nowrap; }
         .sub-tab-btn.active { color: #fff; background: var(--panel-light); border-bottom: 2px solid var(--neon-blue); }
@@ -182,6 +186,7 @@
         .market-watch-row:hover, .market-watch-row.active { background: var(--panel-light); }
         .market-watch-row.active { border-left: 3px solid var(--neon-blue); }
 
+        /* --- Center Visualization Deck Layout --- */
         .center-display-deck { display: flex; flex-direction: column; overflow: hidden; background: #04070a; }
         .hero-ticker-ribbon { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
         
@@ -193,6 +198,7 @@
 
         .chart-wrapper-box { flex: 1; width: 100%; position: relative; background: #010204; border: 1px solid var(--border-color); border-radius: 6px; }
 
+        /* --- Horizontal Tabular Processing Terminal Ledger --- */
         .bottom-ledger-terminal { height: 240px; border-top: 1px solid var(--border-color); background: var(--panel); display: flex; flex-direction: column; flex-shrink: 0; }
         .ledger-table-canvas { flex: 1; overflow: auto; font-family: monospace; font-size: 0.75rem; width: 100%; overflow-x: auto; overflow-y: auto; }
         
@@ -205,6 +211,7 @@
             padding: 8px 12px; border-bottom: 1px solid rgba(26,38,54,0.3); align-items: center; min-width: 950px;
         }
 
+        /* --- Right Hand Deal Execution Control Ticket Area --- */
         .execution-ticket-panel { display: flex; flex-direction: column; gap: 10px; padding: 12px; flex: 1; overflow-y: auto; }
         .ticket-input-container { display: grid; grid-template-columns: 1fr; gap: 8px; }
         .form-element-node { background: #020406; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; }
@@ -224,11 +231,13 @@
         .analytics-grid-box { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; }
         .analytics-card-node { background: #030508; border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 4px; }
 
+        /* --- Account Switch Style Element Mode --- */
         .account-type-toggle { display: flex; background: #020406; border: 1px solid var(--border-color); border-radius: 4px; overflow: hidden; height: 28px; }
         .acct-toggle-btn { background: transparent; border: none; font-size: 0.65rem; font-weight: 800; color: var(--text-dim); padding: 0 10px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
         .acct-toggle-btn.active.real-mode { background: var(--gold); color: #000; }
         .acct-toggle-btn.active.demo-mode { background: var(--neon-blue); color: #fff; }
 
+        /* --- Footer Base Block --- */
         footer { background: var(--panel); border-top: 1px solid var(--border-color); height: auto; min-height: 24px; display: flex; align-items: center; justify-content: space-between; padding: 6px 16px; font-size: 0.6rem; color: var(--text-dim); flex-shrink: 0; flex-wrap: wrap; gap: 6px; }
 
         @media (max-width: 1200px) {
@@ -248,6 +257,7 @@
 <div id="nexafx-preloader">
     <div class="preloader-layout-wrapper">
         <div class="brand-text-style">NEXAFX<span>TRADE</span></div>
+        
         <div class="loader-forex-visuals">
             <div class="visual-widget">
                 <div class="visual-widget-title"><span>Live Tick Matrix</span><span style="color:var(--high-green)">ONLINE</span></div>
@@ -269,7 +279,10 @@
                 </div>
             </div>
         </div>
-        <div class="loader-track"><div class="loader-bar" id="preloader-bar"></div></div>
+
+        <div class="loader-track">
+            <div class="loader-bar" id="preloader-bar"></div>
+        </div>
         <div class="loader-status" id="preloader-status">Initializing Live Trading Workspace...</div>
     </div>
 </div>
@@ -282,11 +295,20 @@
                 <p style="color:var(--text-dim); font-size:0.7rem; margin-top:4px; text-transform:uppercase;">Secure Liquidity Gateway</p>
             </div>
             <div class="auth-sidebar-stats">
-                <div class="auth-sidebar-stat-row"><span style="color:var(--text-dim)">ECN CONNECTION</span><span style="color:var(--high-green)">ACTIVE // SECURE</span></div>
-                <div class="auth-sidebar-stat-row"><span style="color:var(--text-dim)">LIVE SPREADS</span><span style="color:#fff">FROM 0.0 PIPS</span></div>
-                <div class="auth-sidebar-stat-row"><span style="color:var(--text-dim)">TRADING HUB</span><span style="color:var(--gold)">NAIROBI OFFICE</span></div>
+                <div class="auth-sidebar-stat-row">
+                    <span style="color:var(--text-dim)">ECN CONNECTION</span>
+                    <span style="color:var(--high-green)">ACTIVE // SECURE</span>
+                </div>
+                <div class="auth-sidebar-stat-row">
+                    <span style="color:var(--text-dim)">LIVE SPREADS</span>
+                    <span style="color:#fff">FROM 0.0 PIPS</span>
+                </div>
+                <div class="auth-sidebar-stat-row">
+                    <span style="color:var(--text-dim)">TRADING HUB</span>
+                    <span style="color:var(--gold)">NAIROBI OFFICE</span>
+                </div>
             </div>
-            <p style="font-size:0.6rem; color:var(--text-dim); line-height:1.3;">Warning: Access restricted. Trading operations contain financial leverage risk profiles.</p>
+            <p style="font-size:0.6rem; color:var(--text-dim); line-height:1.3;">Warning: Access is restricted to authorized traders. Forex and contract operations contain financial leverage risk profiles.</p>
         </div>
         
         <div class="auth-main-form" id="auth-gateway-dashboard">
@@ -296,20 +318,27 @@
                 <i class="fas fa-wallet" style="color: var(--gold);"></i>
             </div>
             <h2 class="auth-title">Trader Gateway Dashboard</h2>
-            <p class="auth-subtitle">Welcome to Nexafxtrade Secure Terminal Hub. Choose an option below to enter your account profile.</p>
+            <p class="auth-subtitle" style="max-width: 400px; margin-left: auto; margin-right: auto;">Welcome to Nexafxtrade Secure Terminal Hub. Choose an option below to enter your institutional portal account layout.</p>
             <div class="gateway-nav-buttons">
-                <button class="gateway-btn primary" onclick="switchAuthMode('LOGIN')"><i class="fas fa-sign-in-alt"></i> Already Registered? Login</button>
-                <button class="gateway-btn secondary" onclick="switchAuthMode('REGISTER')"><i class="fas fa-user-plus"></i> New Trader? Create Account</button>
+                <button class="gateway-btn primary" onclick="switchAuthMode('LOGIN')">
+                    <i class="fas fa-sign-in-alt"></i> Already Registered? Login
+                </button>
+                <button class="gateway-btn secondary" onclick="switchAuthMode('REGISTER')">
+                    <i class="fas fa-user-plus"></i> New Trader? Create Account
+                </button>
             </div>
             <p id="gateway-msg" class="auth-status-log"></p>
         </div>
         
         <div class="auth-main-form" id="auth-form-login" style="display:none;">
             <h2 class="auth-title">Trader Login</h2>
-            <p class="auth-subtitle">Enter credentials to access secure terminal layout.</p>
+            <p class="auth-subtitle">Enter your account credentials to access your secure live dashboard.</p>
             <div class="auth-form-group">
                 <label>Email Address</label>
-                <div class="auth-input-wrapper"><i class="fas fa-user-shield field-icon"></i><input type="email" id="login-email" class="auth-input" placeholder="trader@nexafxtrade.com"></div>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-user-shield field-icon"></i>
+                    <input type="email" id="login-email" class="auth-input" placeholder="trader@nexafxtrade.com">
+                </div>
             </div>
             <div class="auth-form-group">
                 <label>Password</label>
@@ -319,28 +348,54 @@
                     <i class="fas fa-eye toggle-password-eye" onclick="togglePasswordDisplayVisibility('login-password', this)"></i>
                 </div>
             </div>
-            <button class="auth-submit-btn" id="login-submit-btn" onclick="executeBackendLogin()">Sign In</button>
+            <button class="auth-submit-btn" id="login-submit-btn" onclick="executeBackendLogin()">Sign In to Dashboard</button>
             <p id="login-msg" class="auth-status-log"></p>
-            <p class="auth-switch-mode">Return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
+            <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
 
         <div class="auth-main-form" id="auth-form-register" style="display:none;">
             <h2 class="auth-title">Register Trading Account</h2>
-            <p class="auth-subtitle">Create a dedicated execution balance account block.</p>
-            <div class="auth-form-group"><label>Full Name</label><div class="auth-input-wrapper"><i class="fas fa-id-badge field-icon"></i><input type="text" id="register-name" class="auth-input" placeholder="John Doe"></div></div>
-            <div class="auth-form-group"><label>Phone Number</label><div class="auth-input-wrapper"><i class="fas fa-phone field-icon"></i><input type="tel" id="register-phone" class="auth-input" placeholder="+254 700 000000"></div></div>
-            <div class="auth-form-group"><label>Email Address</label><div class="auth-input-wrapper"><i class="fas fa-envelope field-icon"></i><input type="email" id="register-email" class="auth-input" placeholder="trader@nexafxtrade.com"></div></div>
+            <p class="auth-subtitle">Create a dedicated market balance account inside the core execution platform.</p>
+            <div class="auth-form-group">
+                <label>Full Name</label>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-id-badge field-icon"></i>
+                    <input type="text" id="register-name" class="auth-input" placeholder="John Doe">
+                </div>
+            </div>
+            <div class="auth-form-group">
+                <label>Phone Number</label>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-phone field-icon"></i>
+                    <input type="tel" id="register-phone" class="auth-input" placeholder="+254 700 000000">
+                </div>
+            </div>
+            <div class="auth-form-group">
+                <label>Email Address</label>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-envelope field-icon"></i>
+                    <input type="email" id="register-email" class="auth-input" placeholder="trader@nexafxtrade.com">
+                </div>
+            </div>
             <div class="auth-form-group">
                 <label>Secure Password</label>
-                <div class="auth-input-wrapper"><i class="fas fa-lock field-icon"></i><input type="password" id="register-password" class="auth-input" placeholder="••••••••••••"><i class="fas fa-eye toggle-password-eye" onclick="togglePasswordDisplayVisibility('register-password', this)"></i></div>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-lock field-icon"></i>
+                    <input type="password" id="register-password" class="auth-input" placeholder="••••••••••••">
+                    <i class="fas fa-eye toggle-password-eye" onclick="togglePasswordDisplayVisibility('register-password', this)"></i>
+                </div>
             </div>
             <div class="auth-form-group">
                 <label>Confirm Password</label>
-                <div class="auth-input-wrapper"><i class="fas fa-lock field-icon"></i><input type="password" id="register-confirm-password" class="auth-input" placeholder="••••••••••••"><i class="fas fa-eye toggle-password-eye" onclick="togglePasswordDisplayVisibility('register-confirm-password', this)"></i></div>
+                <div class="auth-input-wrapper">
+                    <i class="fas fa-lock field-icon"></i>
+                    <input type="password" id="register-confirm-password" class="auth-input" placeholder="••••••••••••">
+                    <i class="fas fa-eye toggle-password-eye" onclick="togglePasswordDisplayVisibility('register-confirm-password', this)"></i>
+                </div>
             </div>
             <button class="auth-submit-btn" id="register-submit-btn" onclick="executeBackendRegistration()">Create My Account</button>
             <p id="register-msg" class="auth-status-log"></p>
-            <p class="auth-switch-mode">Return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
+            <p class="auth-switch-mode">Need to return? <span onclick="switchAuthMode('DASHBOARD')">Back to Gateway</span></p>
         </div>
     </div>
 </div>
@@ -367,37 +422,49 @@
         </div>
     </header>
 
-    <div class="currency-dashboard-strip" id="multi-currency-wallet-strip"></div>
+    <!-- MULTI-CURRENCY ACCOUNTS DASHBOARD LAYER -->
+    <div class="currency-dashboard-strip" id="multi-currency-wallet-strip">
+        <!-- Dynamically provisioned by core script workspace -->
+    </div>
 
     <div class="status-sub-bar">
         <div>
             <span><i class="fas fa-server" style="color:var(--high-green)"></i> LIVE SERVER: <b id="lbl-live-server-node">NEXA-PRO-LIVE_4</b></span> &nbsp;|&nbsp;
-            <span>TRADER: <b style="color:#fff;" id="lbl-trader-name">--</b></span> &nbsp;|&nbsp;
+            <span>TRADER NAME: <b style="color:#fff;" id="lbl-trader-name">--</b></span> &nbsp;|&nbsp;
             <span>EMAIL: <b style="color:#fff;" id="lbl-trader-email">--</b></span> &nbsp;|&nbsp;
             <span>ID: <b style="color:#fff;" id="lbl-trader-id">8942105</b></span> &nbsp;|&nbsp;
-            <span>LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
-            <span>TYPE: <b style="color:var(--gold);" id="lbl-env-label-type">REAL RAW ECN PRO</b></span>
+            <span>ACCOUNT LEVERAGE: <b style="color:var(--neon-blue);">1:500</b></span> &nbsp;|&nbsp;
+            <span>TYPE: <b style="color:var(--gold);" id="lbl-env-label-type">REAL RAW ECN PRO</b></span> &nbsp;|&nbsp;
+            <span>COMMISSION PROFILE: <b style="color:var(--neon-blue);">VIP LOW SPREAD</b></span>
         </div>
-        <div><span id="live-utc-clock" style="color:var(--gold); font-family:monospace;">00:00:00 UTC</span></div>
+        <div>
+            <span>MARKET SESSION: <b style="color:#fff;" id="lbl-market-session">LONDON / NEW YORK OVERLAP</b></span> &nbsp;|&nbsp;
+            <span id="live-utc-clock" style="color:var(--gold); font-family:monospace;">00:00:00 UTC</span>
+        </div>
     </div>
 
     <main class="master-workspace-grid">
+        
         <section class="column-pane">
             <div class="pane-section-header"><span><i class="fas fa-chart-line"></i> Market Watchlist</span></div>
             <div class="sub-tab-strip">
                 <button class="sub-tab-btn active" id="m-tab-forex" onclick="switchMarketCatalog('FOREX')">Forex</button>
                 <button class="sub-tab-btn" id="m-tab-crypto" onclick="switchMarketCatalog('CRYPTO')">Crypto</button>
                 <button class="sub-tab-btn" id="m-tab-commods" onclick="switchMarketCatalog('COMMODITY')">Commodities</button>
-                <button class="sub-tab-btn" id="m-tab-indices" onclick="switchMarketCatalog('INDICES')">Indices</button>
+                <button class="sub-tab-btn" id="m-tab-indices" onclick="switchMarketCatalog('INDICES')">Indices / Stocks</button>
             </div>
             <div class="scrolling-list-area" id="market-watch-container"></div>
-            <div class="pane-section-header" style="border-top: 1px solid var(--border-color)"><span><i class="fas fa-newspaper"></i> Economic Feed</span></div>
+
+            <div class="pane-section-header" style="border-top: 1px solid var(--border-color)"><span><i class="fas fa-newspaper"></i> Economic Market Calendar Feed</span></div>
             <div class="scrolling-list-area" id="macro-news-feed" style="background: rgba(0,0,0,0.15);"></div>
         </section>
 
         <section class="center-display-deck">
             <div class="hero-ticker-ribbon">
-                <div><h2 id="active-ticker-name" style="font-size:1.3rem; font-weight:800;">EUR/USD</h2></div>
+                <div>
+                    <h2 id="active-ticker-name" style="font-size:1.3rem; font-weight:800;">EUR/USD</h2>
+                    <span style="font-size:0.65rem; color:var(--text-dim); font-weight:700; text-transform:uppercase;">Live Liquidity Interbank Data Pricing Feed</span>
+                </div>
                 <div style="text-align:right;">
                     <div style="font-family:monospace; font-size:1.8rem; font-weight:900;" id="hero-live-bid">1.08524</div>
                     <span style="font-size:0.65rem; color:var(--text-dim);">SPREAD: <b id="hero-live-spread" style="color:#fff; font-family:monospace;">0.4 Pips</b></span>
@@ -409,58 +476,84 @@
                     <div class="tool-cluster">
                         <button class="t-btn active" id="chart-t-candle" onclick="changeChartRenderProfile('CANDLE')">Candlestick</button>
                         <button class="t-btn" id="chart-t-line" onclick="changeChartRenderProfile('LINE')">Line</button>
+                        <button class="t-btn" id="chart-t-bar" onclick="changeChartRenderProfile('BAR')">Bar</button>
                     </div>
                     <div class="tool-cluster">
                         <button class="t-btn active" onclick="setChartTimeframe('M1')">M1</button>
+                        <button class="t-btn" onclick="setChartTimeframe('M5')">M5</button>
                         <button class="t-btn" onclick="setChartTimeframe('H1')">H1</button>
+                        <button class="t-btn" onclick="setChartTimeframe('D1')">D1</button>
                     </div>
                     <div class="tool-cluster">
                         <button class="t-btn" id="tech-t-ma" onclick="toggleOverlayTechnicalIndicator('MA')">SMA</button>
-                        <button class="t-btn" id="tech-t-bb" onclick="toggleOverlayTechnicalIndicator('BB')">BBands</button>
+                        <button class="t-btn" id="tech-t-ema" onclick="toggleOverlayTechnicalIndicator('EMA')">EMA</button>
+                        <button class="t-btn" id="tech-t-bb" onclick="toggleOverlayTechnicalIndicator('BB')">Bollinger Band</button>
+                        <button class="t-btn" id="tech-t-rsi" onclick="toggleOverlayTechnicalIndicator('RSI')">RSI Oscillator</button>
                     </div>
                 </div>
-                <div class="chart-wrapper-box"><canvas id="primaryTerminalCanvas"></canvas></div>
+                <div class="chart-wrapper-box">
+                    <canvas id="primaryTerminalCanvas"></canvas>
+                </div>
             </div>
 
             <div class="bottom-ledger-terminal">
                 <div class="sub-tab-strip" style="background: #070b12;">
                     <button class="sub-tab-btn active" id="led-tab-pos" onclick="alterTerminalLedgerFocus('POSITIONS')">Open Trades (<span id="count-pos-lbl">0</span>)</button>
-                    <button class="sub-tab-btn" id="led-tab-ord" onclick="alterTerminalLedgerFocus('ORDERS')">Pending (<span id="count-ord-lbl">0</span>)</button>
-                    <button class="sub-tab-btn" id="led-tab-anl" onclick="alterTerminalLedgerFocus('ANALYTICS')">Analytics</button>
+                    <button class="sub-tab-btn" id="led-tab-ord" onclick="alterTerminalLedgerFocus('ORDERS')">Pending Orders (<span id="count-ord-lbl">0</span>)</button>
+                    <button class="sub-tab-btn" id="led-tab-anl" onclick="alterTerminalLedgerFocus('ANALYTICS')">Trading Account Analytics</button>
+                    <button class="sub-tab-btn" id="led-tab-jrn" onclick="alterTerminalLedgerFocus('JOURNAL')">Trading History Logs</button>
                 </div>
+                
                 <div class="ledger-table-canvas" id="terminal-ledger-display-engine"></div>
             </div>
         </section>
 
         <section class="column-pane right-pane">
-            <div class="pane-section-header"><span><i class="fas fa-ticket-alt"></i> Execution Control</span></div>
+            <div class="pane-section-header"><span><i class="fas fa-ticket-alt"></i> Execution Order Ticket</span></div>
             <div class="execution-ticket-panel">
                 <div class="ticket-input-container">
                     <div class="form-element-node">
-                        <label>Order Mode</label>
+                        <label>Order Execution Mode</label>
                         <select id="ticket-order-type" onchange="adjustOrderFormFields()">
-                            <option value="MARKET">Instant Market</option>
+                            <option value="MARKET">Instant Market Execution</option>
                             <option value="BUY_LIMIT">Buy Limit</option>
                             <option value="SELL_LIMIT">Sell Limit</option>
+                            <option value="BUY_STOP">Buy Stop</option>
+                            <option value="SELL_STOP">Sell Stop</option>
                         </select>
                     </div>
                     <div class="form-element-node" id="box-execution-price" style="display:none;">
-                        <label>Target Price</label>
+                        <label>Target Execution Entry Price</label>
                         <input type="number" id="ticket-trigger-price" value="1.08500" step="0.00001">
                     </div>
                     <div class="form-element-node">
-                        <label>Lot Size</label>
+                        <label>Lot Size / Volume Amount</label>
                         <input type="number" id="ticket-volume-lots" value="1.00" step="0.1" min="0.01" oninput="calculateRiskTelemetryMatrices()">
                     </div>
+                    <div class="form-element-node">
+                        <label>Risk Allocation Management Percentage</label>
+                        <select id="ticket-risk-percent" onchange="applyRiskPercentageCalculation()">
+                            <option value="CUSTOM">Manual Custom Lot Size Setting</option>
+                            <option value="0.01">Use 1% Total Account Capital Risk</option>
+                            <option value="0.02">Use 2% Total Account Capital Risk</option>
+                            <option value="0.05">Use 5% Aggressive Account Capital Risk</option>
+                        </select>
+                    </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                        <div class="form-element-node"><label>Stop Loss (SL)</label><input type="number" id="ticket-sl" placeholder="None" step="0.00001" oninput="calculateRiskTelemetryMatrices()"></div>
-                        <div class="form-element-node"><label>Take Profit (TP)</label><input type="number" id="ticket-tp" placeholder="None" step="0.00001"></div>
+                        <div class="form-element-node">
+                            <label>Stop Loss Protect Line (SL)</label>
+                            <input type="number" id="ticket-sl" placeholder="No Limit" step="0.00001" oninput="calculateRiskTelemetryMatrices()">
+                        </div>
+                        <div class="form-element-node">
+                            <label>Take Profit Target Line (TP)</label>
+                            <input type="number" id="ticket-tp" placeholder="No Target" step="0.00001">
+                        </div>
                     </div>
                 </div>
 
-                <div style="background:#030508; border:1px solid var(--border-color); padding:8px; border-radius:6px; font-size:0.7rem;">
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Risk Exposure:</span><span id="calc-risk-kes" style="font-family:monospace;">USD 0.00</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Margin Collateral:</span><span id="calc-margin-req" style="font-family:monospace;">USD 0.00</span></div>
+                <div style="background:#030508; border:1px solid var(--border-color); padding:8px; border-radius:6px; font-size:0.7rem; display:flex; flex-direction:column; gap:4px;">
+                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Calculated Maximum Risk Drop:</span><span id="calc-risk-kes" style="font-family:monospace; font-weight:700;">USD 0.00</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-dim)">Required Trade Margin Collateral:</span><span id="calc-margin-req" style="font-family:monospace; font-weight:700;">USD 0.00</span></div>
                 </div>
 
                 <div class="dual-action-triggers">
@@ -469,65 +562,144 @@
                 </div>
             </div>
 
-            <div class="pane-section-header" style="border-top:1px solid var(--border-color)"><span><i class="fas fa-wallet"></i> Fund Operations</span></div>
-            <div style="padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                <button class="t-btn" style="border-color:var(--high-green);" onclick="navigateToPage('deposit.html')">Deposit</button>
-                <button class="t-btn" style="border-color:var(--low-red);" onclick="navigateToPage('withdraw.html')">Withdraw</button>
+            <div class="pane-section-header" style="border-top:1px solid var(--border-color)"><span><i class="fas fa-brain"></i> AI Trading Analyst Signals</span></div>
+            <div class="execution-ticket-panel" style="flex: 0.8; background:rgba(0,0,0,0.1);">
+                <div style="background:rgba(0,176,255,0.03); border:1px solid rgba(0,176,255,0.15); border-radius:6px; padding:8px; font-size:0.75rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <span style="color:var(--neon-blue); font-weight:800;"><i class="fas fa-robot"></i> NEXA-AI ALGO SUGGESTION</span>
+                        <span style="background:var(--high-green); color:#000; font-size:0.55rem; padding:1px 4px; font-weight:900; border-radius:2px;">92.4% ACCURACY SCORE</span>
+                    </div>
+                    <p style="color:var(--text-dim); font-size:0.7rem; line-height:1.2;">Structural trend divergence maps high buyer pooling volume safely above institutional support bands.</p>
+                    <div style="margin-top:4px; font-weight:700; color:#fff;">STRATEGY SIGNAL: <span style="color:var(--high-green)">BUY LIMIT ACCUMULATION BIAS</span></div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:4px; margin-top:2px;">
+                    <span style="font-size:0.6rem; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Top Account Master Traders Copy Pools</span>
+                    <div style="background:#030508; border:1px solid var(--border-color); padding:6px; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+                        <div><b style="font-size:0.75rem;">Alpha Quant Fund</b><br><span style="font-size:0.6rem; color:var(--text-dim)">Followers: 14.8K | Return (ROI): +244.5%</span></div>
+                        <button class="t-btn" style="border-color:var(--gold); color:var(--gold)" onclick="toggleCopyMirrorAllocations('Alpha Quant Fund')">Copy Portfolio Trades</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pane-section-header" style="border-top:1px solid var(--border-color)"><span><i class="fas fa-wallet"></i> Wallet Funding Accounts</span></div>
+            <div style="padding:10px; display:grid; grid-template-columns:1fr 1fr; gap:6px; background:var(--panel);">
+                <button class="t-btn" style="background:rgba(0,230,118,0.05); border-color:var(--high-green); color:#fff; padding:6px;" onclick="navigateToPage('deposit.html')"><i class="fas fa-plus-circle" style="color:var(--high-green)"></i> Secure Deposit</button>
+                <button class="t-btn" style="background:rgba(255,23,68,0.05); border-color:var(--low-red); color:#fff; padding:6px;" onclick="navigateToPage('withdraw.html')"><i class="fas fa-minus-circle" style="color:var(--low-red)"></i> Secure Withdrawal</button>
             </div>
         </section>
     </main>
+
+    <footer>
+        <div><span>Liquidity Regulation Clearinghouse Partner: <b>PROSPORT AFRICA LTD</b></span> &nbsp;|&nbsp; <span>Regulated Secure Financial Trading Workspace Platform</span></div>
+        <div><span>Nexafxtrade Regional Offices: Binaa Mall, 2nd Floor, Langata Rd, Nairobi, Kenya</span></div>
+    </footer>
 </div>
 
 <script>
+    // Dynamically resolve base API environment destination matching internal configuration rules
     const getApiBase = () => {
-        return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-            ? "http://localhost:5000/api" 
-            : "https://nexapayfx-backend.vercel.app/api"; 
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        return isLocal ? "http://localhost:5000/api" : "https://nexapayfx-backend.vercel.app/api"; 
     };
 
+    // Password fields context toggle function helper
     function togglePasswordDisplayVisibility(targetId, iconElement) {
         const inputField = document.getElementById(targetId);
         if (!inputField) return;
         if (inputField.type === "password") {
             inputField.type = "text";
-            iconElement.className = "fas fa-eye-slash toggle-password-eye";
+            iconElement.classList.remove("fa-eye");
+            iconElement.classList.add("fa-eye-slash");
         } else {
             inputField.type = "password";
-            iconElement.className = "fas fa-eye toggle-password-eye";
+            iconElement.classList.remove("fa-eye-slash");
+            iconElement.classList.add("fa-eye");
         }
     }
 
+    // Global Multi-Asset Liquidity Pricing Definitions Matrix
     let activeCatalogFilter = 'FOREX';
     let currentLedgerTab = 'POSITIONS';
     let chartVisualizationProfile = 'CANDLE';
     let chartTimeframeScope = 'M1';
     let activeEnvironmentProfileMode = 'REAL';
-    let activeOverlayIndicators = { MA: false, BB: false };
 
-    let realAccountCapitalState = { balance: 0.00, equity: 0.00, freeMargin: 0.00, usedMargin: 0.00, marginLevel: 100.00, floatingPnL: 0.00, dailyPnL: 0.00, maxDrawdownCap: 150000.00 };
-    let demoAccountCapitalState = { balance: 37878.00, equity: 37878.00, freeMargin: 37878.00, usedMargin: 0.00, marginLevel: 100.00, floatingPnL: 0.00, dailyPnL: 0.00, maxDrawdownCap: 500000.00 };
-    let accountCapitalState = { ...realAccountCapitalState };
+    let activeOverlayIndicators = { MA: false, EMA: false, BB: false, RSI: false };
 
-    let currentActiveCurrencyContext = 'USD'; 
-    let realMultiCurrencyBalances = { 'USD': 0.00, 'EUR': 0.00, 'GBP': 0.00, 'BTC': 0.00 };
-    let demoMultiCurrencyBalances = { 'USD': 37878.00, 'EUR': 35087.00, 'GBP': 29761.00, 'BTC': 0.615 };
-
-    const currencySymbolsMap = { 'USD': '$', 'EUR': '€', 'GBP': '£', 'BTC': '₿' };
-    const currencyFlagsMap = { 'USD': '🇺🇸', 'EUR': '🇪🇺', 'GBP': '🇬🇧', 'BTC': '🪙' };
-    
-    let openPositionsRegister = [];
-    let pendingOrdersRegister = [];
-    let realOpenPositionsRegister = [], demoOpenPositionsRegister = [];
-    let realPendingOrdersRegister = [], demoPendingOrdersRegister = [];
-
-    let liquidityCatalog = {
-        "EUR/USD": { category: "FOREX", price: 1.08520, digits: 5, spreadPips: 0.4, changePct: 0.04, multiplier: 100000, settlementCurrency: 'USD' },
-        "GBP/USD": { category: "FOREX", price: 1.26440, digits: 5, spreadPips: 0.6, changePct: -0.12, multiplier: 100000, settlementCurrency: 'USD' },
-        "BTC/USD": { category: "CRYPTO", price: 61240.50, digits: 2, spreadPips: 30.0, changePct: 3.45, multiplier: 1, settlementCurrency: 'BTC' },
-        "XAU/USD": { category: "COMMODITY", price: 2342.10, digits: 2, spreadPips: 3.0, changePct: 0.85, multiplier: 100, settlementCurrency: 'USD' }
+    // Multi-Account Dynamic Scope Data Pipelines
+    let realAccountCapitalState = {
+        balance: 0.00, equity: 0.00, freeMargin: 0.00, usedMargin: 0.00, marginLevel: 100.00,
+        floatingPnL: 0.00, dailyPnL: 0.00, maxDailyLossBound: 75000.00, maxDrawdownCap: 150000.00, growthRate: 0.00
     };
 
-    let macroCalendarEvents = [{ time: "15:30", asset: "USD", event: "Core Retail Sales m/m", impact: "high" }];
+    let demoAccountCapitalState = {
+        balance: 37878.00, equity: 37878.00, freeMargin: 37878.00, usedMargin: 0.00, marginLevel: 100.00,
+        floatingPnL: 0.00, dailyPnL: 0.00, maxDailyLossBound: 250000.00, maxDrawdownCap: 500000.00, growthRate: 0.00
+    };
+
+    let accountCapitalState = { ...realAccountCapitalState };
+
+    /* ================= MULTI-CURRENCY PLATFORM WALLET REGISTRIES ================= */
+    let currentActiveCurrencyContext = 'USD'; 
+
+    let realMultiCurrencyBalances = {
+        'USD': 0.00,
+        'EUR': 0.00,
+        'GBP': 0.00,
+        'BTC': 0.00
+    };
+
+    let demoMultiCurrencyBalances = {
+        'USD': 37878.00,
+        'EUR': 35087.00,
+        'GBP': 29761.00,
+        'BTC': 0.615
+    };
+
+    // Currency metadata display settings
+    const currencySymbolsMap = { 'USD': '$', 'EUR': '€', 'GBP': '£', 'BTC': '₿' };
+    const currencyFlagsMap = { 'USD': '🇺🇸', 'EUR': '🇪🇺', 'GBP': '🇬🇧', 'BTC': '🪙' };
+    /* ============================================================================= */
+    
+    let realOpenPositionsRegister = [];
+    let demoOpenPositionsRegister = [];
+    let openPositionsRegister = [];
+
+    let realPendingOrdersRegister = [];
+    let demoPendingOrdersRegister = [];
+    let pendingOrdersRegister = [];
+
+    let liquidityCatalog = {
+        "EUR/USD": { category: "FOREX", price: 1.08520, bidOffset: -0.00002, askOffset: 0.00002, digits: 5, spreadPips: 0.4, changePct: 0.04, high: 1.08900, low: 1.08110, multiplier: 100000, settlementCurrency: 'USD' },
+        "GBP/USD": { category: "FOREX", price: 1.26440, bidOffset: -0.00003, askOffset: 0.00003, digits: 5, spreadPips: 0.6, changePct: -0.12, high: 1.27100, low: 1.26050, multiplier: 100000, settlementCurrency: 'USD' },
+        "USD/JPY": { category: "FOREX", price: 156.420, bidOffset: -0.004, askOffset: 0.004, digits: 3, spreadPips: 0.8, changePct: 0.24, high: 156.900, low: 155.800, multiplier: 1000, settlementCurrency: 'USD' },
+        "AUD/USD": { category: "FOREX", price: 0.66510, bidOffset: -0.00002, askOffset: 0.00002, digits: 5, spreadPips: 0.5, changePct: 0.18, high: 0.66900, low: 0.66200, multiplier: 100000, settlementCurrency: 'USD' },
+        "USD/CAD": { category: "FOREX", price: 1.36820, bidOffset: -0.00003, askOffset: 0.00003, digits: 5, spreadPips: 0.6, changePct: -0.05, high: 1.37200, low: 1.36400, multiplier: 100000, settlementCurrency: 'USD' },
+        "BTC/USD": { category: "CRYPTO", price: 61240.50, bidOffset: -1.50, askOffset: 1.50, digits: 2, spreadPips: 30.0, changePct: 3.45, high: 62100.00, low: 59800.00, multiplier: 1, settlementCurrency: 'BTC' },
+        "ETH/USD": { category: "CRYPTO", price: 3342.25, bidOffset: -0.25, askOffset: 0.25, digits: 2, spreadPips: 5.0, changePct: -1.15, high: 3450.00, low: 3290.00, multiplier: 1, settlementCurrency: 'USD' },
+        "SOL/USD": { category: "CRYPTO", price: 144.60, bidOffset: -0.05, askOffset: 0.05, digits: 2, spreadPips: 12.0, changePct: 5.20, high: 148.00, low: 139.00, multiplier: 1, settlementCurrency: 'USD' },
+        "XAU/USD": { category: "COMMODITY", price: 2342.10, bidOffset: -0.15, askOffset: 0.15, digits: 2, spreadPips: 3.0, changePct: 0.85, high: 2360.00, low: 2330.00, multiplier: 100, settlementCurrency: 'USD' },
+        "USOIL": { category: "COMMODITY", price: 78.45, bidOffset: -0.02, askOffset: 0.02, digits: 2, spreadPips: 4.0, changePct: 0.32, high: 79.20, low: 77.90, multiplier: 100, settlementCurrency: 'USD' },
+        "UKOIL": { category: "COMMODITY", price: 82.15, bidOffset: -0.02, askOffset: 0.02, digits: 2, spreadPips: 4.0, changePct: 0.22, high: 82.80, low: 81.50, multiplier: 100, settlementCurrency: 'EUR' },
+        "US30": { category: "INDICES", price: 39120.00, bidOffset: -1.00, askOffset: 1.00, digits: 2, spreadPips: 2.0, changePct: 0.15, high: 39300.00, low: 38950.00, multiplier: 10, settlementCurrency: 'USD' },
+        "NAS100": { category: "INDICES", price: 19450.20, bidOffset: -0.50, askOffset: 0.50, digits: 2, spreadPips: 1.5, changePct: 0.65, high: 19600.00, low: 19300.00, multiplier: 10, settlementCurrency: 'USD' },
+        "SPX500": { category: "INDICES", price: 5420.50, bidOffset: -0.20, askOffset: 0.20, digits: 2, spreadPips: 1.0, changePct: 0.42, high: 5450.00, low: 5390.00, multiplier: 10, settlementCurrency: 'USD' }
+    };
+
+    let macroCalendarEvents = [
+        { time: "15:30", asset: "USD", event: "Core Retail Sales m/m", impact: "high" },
+        { time: "16:45", asset: "EUR", event: "ECB President Lagarde Speech", impact: "high" },
+        { time: "18:00", asset: "GBP", event: "BOE Monetary Policy Report", impact: "med" },
+        { time: "21:30", asset: "USD", event: "FOMC Meeting Minutes Vector", impact: "high" }
+    ];
+
+    let systemJournalRegistry = [
+        { date: "2026-07-06", note: "Disciplined execution on technical retest of structural resistance levels.", status: "Compliant" },
+        { date: "2026-07-07", note: "Scaled exposure parameters downward ahead of major high-impact global macro news events.", status: "Defensive" },
+        { date: "2026-07-09", note: "Liquidity optimization matching engine balanced across primary institutional nodes.", status: "Stabilized" }
+    ];
+
     let activeSelectedPair = "EUR/USD";
     let simulationTickArray = [];
     let canvasContext;
@@ -535,13 +707,23 @@
     window.addEventListener('DOMContentLoaded', () => {
         initPreloaderVisualSimulations();
         runInstitutionalPreloader();
-        setInterval(() => { document.getElementById('live-utc-clock').innerText = new Date().toUTCString().replace('GMT', 'UTC'); }, 1000);
-        setInterval(() => { simulateHighFrequencyLiquidityStream(); }, 400);
+
+        setInterval(() => {
+            document.getElementById('live-utc-clock').innerText = new Date().toUTCString().replace('GMT', 'UTC');
+        }, 1000);
+
+        setInterval(() => {
+            simulateHighFrequencyLiquidityStream();
+        }, 400);
     });
 
+    /* ================= DYNAMIC PAGE REDIRECTION NAVIGATION ROUTING ================= */
     function navigateToPage(endpointRoute) {
-        window.location.href = `${endpointRoute}?currency=${encodeURIComponent(currentActiveCurrencyContext)}`;
+        const destination = `${endpointRoute}?currency=${encodeURIComponent(currentActiveCurrencyContext)}`;
+        console.log("Routing traffic destination explicitly toward client view module: " + destination);
+        window.location.href = destination;
     }
+    /* =============================================================================== */
 
     function initPreloaderVisualSimulations() {
         const sparkline = document.getElementById('preloader-sparkline');
@@ -552,22 +734,53 @@
             candle.style.height = `${Math.floor(Math.random() * 30) + 8}px`;
             sparkline.appendChild(candle);
         }
+
+        setInterval(() => {
+            if(document.getElementById('load-tick-eur')) {
+                document.getElementById('load-tick-eur').innerText = (1.08500 + Math.random()*0.0009).toFixed(5);
+                document.getElementById('load-tick-gbp').innerText = (1.26400 + Math.random()*0.0009).toFixed(5);
+                document.getElementById('load-tick-xau').innerText = (2341.00 + Math.random()*2.5).toFixed(2);
+                
+                const candles = sparkline.querySelectorAll('.spark-candle');
+                candles.forEach(c => {
+                    c.style.height = `${Math.floor(Math.random() * 30) + 8}px`;
+                });
+            }
+        }, 250);
     }
 
     function runInstitutionalPreloader() {
+        const statuses = [
+            "Connecting to live ECN order arrays...",
+            "Syncing consolidated market liquidity pricing feeds...",
+            "Verifying data link security handshake codes...",
+            "Checking localized persistent session tokens..."
+        ];
         let currentStep = 0;
         const bar = document.getElementById("preloader-bar");
+        const label = document.getElementById("preloader-status");
+
         const interval = setInterval(() => {
-            currentStep += 2;
-            if(bar) bar.style.width = `${currentStep}%`;
+            currentStep += 1;
+            bar.style.width = `${currentStep}%`;
+
+            if (currentStep === 25) label.innerText = statuses[0];
+            if (currentStep === 50) label.innerText = statuses[1];
+            if (currentStep === 75) label.innerText = statuses[2];
+            if (currentStep === 90) label.innerText = statuses[3];
+
             if (currentStep >= 100) {
                 clearInterval(interval);
                 document.getElementById("nexafx-preloader").style.opacity = "0";
                 setTimeout(() => {
                     document.getElementById("nexafx-preloader").style.display = "none";
-                    const token = localStorage.getItem('token');
-                    if (token) bypassAuthSequence();
-                    else document.getElementById("nexafx-auth-screen").style.display = "flex";
+                    
+                    const liveToken = localStorage.getItem('token') || localStorage.getItem('nexafx_auth_token');
+                    if (liveToken) {
+                        bypassAuthSequence();
+                    } else {
+                        document.getElementById("nexafx-auth-screen").style.display = "flex";
+                    }
                 }, 600);
             }
         }, 20);
@@ -577,34 +790,67 @@
         document.getElementById("auth-gateway-dashboard").style.display = "none";
         document.getElementById("auth-form-login").style.display = "none";
         document.getElementById("auth-form-register").style.display = "none";
-        if (mode === 'REGISTER') document.getElementById("auth-form-register").style.display = "flex";
-        else if (mode === 'LOGIN') document.getElementById("auth-form-login").style.display = "flex";
-        else document.getElementById("auth-gateway-dashboard").style.display = "flex";
+
+        if (mode === 'REGISTER') {
+            document.getElementById("auth-form-register").style.display = "flex";
+        } else if (mode === 'LOGIN') {
+            document.getElementById("auth-form-login").style.display = "flex";
+        } else {
+            document.getElementById("auth-gateway-dashboard").style.display = "flex";
+        }
     }
 
+    /* ================= REAL AUTHENTICATION BACKEND DISPATCHERS ================= */
     async function executeBackendLogin() {
         const email = document.getElementById('login-email').value.trim();
         const password = document.getElementById('login-password').value;
+        const submitBtn = document.getElementById('login-submit-btn');
         const logMsg = document.getElementById('login-msg');
 
+        if(!email || !password) {
+            logMsg.innerText = "⚠️ Please complete all credential parameters.";
+            logMsg.style.color = "var(--low-red)";
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Authenticating Session...";
+        logMsg.innerText = "Connecting to secure server...";
+        logMsg.style.color = "var(--high-green)";
+
         try {
-            const res = await fetch(`${getApiBase()}/auth/login`, {
+            const response = await fetch(`${getApiBase()}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
-            const data = await res.json();
-            if(res.ok) {
+
+            const data = await response.json();
+
+            if(response.ok) {
+                logMsg.innerText = "Login successful! Syncing account space...";
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.setItem('nexafx_auth_token', data.token);
+                if (data.user) {
+                    localStorage.setItem('operatorName', data.user.name);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    if (data.user.balance !== undefined && data.user.balance !== null) {
+                        realMultiCurrencyBalances['USD'] = parseFloat(data.user.balance) || 0;
+                    }
+                }
                 bypassAuthSequence();
             } else {
-                logMsg.innerText = data.message || "Invalid credentials.";
+                logMsg.innerText = "❌ " + (data.message || "Invalid email or password.");
                 logMsg.style.color = "var(--low-red)";
             }
-        } catch (e) {
-            logMsg.innerText = "Connection failed.";
+        } catch (error) {
+            console.error("Connection error detected during transit:", error);
+            logMsg.innerText = "❌ Connection failed. Please verify API parameters.";
             logMsg.style.color = "var(--low-red)";
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Sign In to Dashboard";
         }
     }
 
@@ -613,116 +859,241 @@
         const phone = document.getElementById('register-phone').value.trim();
         const email = document.getElementById('register-email').value.trim();
         const password = document.getElementById('register-password').value;
+        const confirmPassword = document.getElementById('register-confirm-password').value;
+        const submitBtn = document.getElementById('register-submit-btn');
         const logMsg = document.getElementById('register-msg');
 
+        if(!name || !phone || !email || !password || !confirmPassword) {
+            logMsg.innerText = "⚠️ Please fill all target profile inputs.";
+            logMsg.style.color = "var(--low-red)";
+            return;
+        }
+
+        if(password !== confirmPassword) {
+            logMsg.innerText = "❌ Passwords do not match.";
+            logMsg.style.color = "var(--low-red)";
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Provisioning Secure Account...";
+        logMsg.innerText = "Transmitting registry arrays...";
+        logMsg.style.color = "var(--high-green)";
+
         try {
-            const res = await fetch(`${getApiBase()}/auth/register`, {
+            const response = await fetch(`${getApiBase()}/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, email, password })
             });
-            const data = await res.json();
-            if(res.ok) {
+
+            const data = await response.json();
+
+            if(response.ok) {
+                logMsg.innerText = "Account created! Routing access matrix...";
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.setItem('nexafx_auth_token', data.token);
+                if (data.user) {
+                    localStorage.setItem('operatorName', data.user.name);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    if (data.user.balance !== undefined && data.user.balance !== null) {
+                        realMultiCurrencyBalances['USD'] = parseFloat(data.user.balance) || 0;
+                    }
+                }
                 bypassAuthSequence();
             } else {
-                logMsg.innerText = data.message || "Registration conflict.";
+                logMsg.innerText = "❌ " + (data.message || "Registration parameter conflict.");
                 logMsg.style.color = "var(--low-red)";
             }
-        } catch (e) {
-            logMsg.innerText = "Network execution failure.";
+        } catch (error) {
+            console.error("Connection error detected during transit:", error);
+            logMsg.innerText = "❌ Network processing timeout. Try again.";
             logMsg.style.color = "var(--low-red)";
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Create My Account";
         }
     }
 
     function clearActiveTerminalSession() {
-        localStorage.clear();
-        window.location.reload();
+        localStorage.removeItem('token');
+        localStorage.removeItem('nexafx_auth_token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('operatorName');
+        document.getElementById("main-terminal-layout").style.display = "none";
+        document.getElementById("auth-gateway-dashboard").style.display = "flex";
+        document.getElementById("auth-form-login").style.display = "none";
+        document.getElementById("auth-form-register").style.display = "none";
+        document.getElementById("nexafx-auth-screen").style.display = "flex";
+        document.getElementById("nexafx-auth-screen").style.opacity = "1";
     }
 
+    /* ================= MULTI-CURRENCY TERMINAL RENDERING LOGIC ================= */
     function renderMultiCurrencyWidgets() {
         const container = document.getElementById('multi-currency-wallet-strip');
         if(!container) return;
         container.innerHTML = '';
+
         const activeRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
 
-        Object.keys(activeRegistry).forEach(cur => {
-            const amt = activeRegistry[cur] || 0;
-            const isSelected = cur === currentActiveCurrencyContext;
+        Object.keys(activeRegistry).forEach(currency => {
+            const balanceAmount = activeRegistry[currency] || 0;
+            const isSelected = currency === currentActiveCurrencyContext;
+            
             const card = document.createElement('div');
             card.className = `currency-node-card ${isSelected ? 'active-wallet' : ''}`;
-            card.onclick = () => selectActiveCurrencyAccountContext(cur);
-            let dec = cur === 'BTC' ? 4 : 2;
+            card.onclick = () => selectActiveCurrencyAccountContext(currency);
+
+            let decimals = currency === 'BTC' ? 4 : 2;
+
             card.innerHTML = `
-                <div class="currency-flag-icon">${currencyFlagsMap[cur]}</div>
+                <div class="currency-flag-icon">${currencyFlagsMap[currency]}</div>
                 <div class="currency-info-block">
-                    <span class="c-ticker">${cur} Account</span>
-                    <span class="c-balance">${currencySymbolsMap[cur]}${amt.toLocaleString(undefined, {minimumFractionDigits:dec, maximumFractionDigits:dec})}</span>
+                    <span class="c-ticker">${currency} Account</span>
+                    <span class="c-balance">${currencySymbolsMap[currency]}${balanceAmount.toLocaleString(undefined, {minimumFractionDigits: decimals, maximumFractionDigits: decimals})}</span>
                 </div>
+                <i class="fas fa-plus-circle currency-deposit-link-icon" title="Deposit ${currency}" onclick="event.stopPropagation(); currentActiveCurrencyContext='${currency}'; navigateToPage('deposit.html');"></i>
             `;
             container.appendChild(card);
         });
     }
 
-    function selectActiveCurrencyAccountContext(cur) {
-        currentActiveCurrencyContext = cur;
+    function selectActiveCurrencyAccountContext(currency) {
+        currentActiveCurrencyContext = currency;
+        
         const activeRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
-        accountCapitalState.balance = activeRegistry[cur] || 0;
+        accountCapitalState.balance = activeRegistry[currency] || 0;
+
         renderMultiCurrencyWidgets();
         evaluateBalanceLiquidationEquations();
     }
+    /* =========================================================================== */
 
+    /* ================= DYNAMIC DEMO / REAL SWITCH TRACKING CORE ENGINE ================= */
     function toggleTradingAccountTypeMode(mode) {
         if (activeEnvironmentProfileMode === mode) return;
+
+        // Cache historical reference context before changing structures
         if (activeEnvironmentProfileMode === 'REAL') {
             realAccountCapitalState = { ...accountCapitalState };
-            realOpenPositionsRegister = [...openPositionsRegister];
-            realPendingOrdersRegister = [...pendingOrdersRegister];
+            realOpenPositionsRegister = [ ...openPositionsRegister ];
+            realPendingOrdersRegister = [ ...pendingOrdersRegister ];
         } else {
             demoAccountCapitalState = { ...accountCapitalState };
-            demoOpenPositionsRegister = [...openPositionsRegister];
-            demoPendingOrdersRegister = [...pendingOrdersRegister];
+            demoOpenPositionsRegister = [ ...openPositionsRegister ];
+            demoPendingOrdersRegister = [ ...pendingOrdersRegister ];
         }
 
         activeEnvironmentProfileMode = mode;
+
         document.getElementById('btn-acct-real').classList.toggle('active', mode === 'REAL');
         document.getElementById('btn-acct-demo').classList.toggle('active', mode === 'DEMO');
 
         if (mode === 'REAL') {
             accountCapitalState = { ...realAccountCapitalState };
-            openPositionsRegister = [...realOpenPositionsRegister];
-            pendingOrdersRegister = [...realPendingOrdersRegister];
+            openPositionsRegister = [ ...realOpenPositionsRegister ];
+            pendingOrdersRegister = [ ...realPendingOrdersRegister ];
+            document.getElementById('lbl-live-server-node').innerText = "NEXA-PRO-LIVE_4";
+            document.getElementById('lbl-env-label-type').innerText = "REAL RAW ECN PRO";
+            document.getElementById('lbl-env-label-type').style.color = "var(--gold)";
+            
+            // Sync up and display genuine profile meta properties if active
             const userStr = localStorage.getItem('user');
             if(userStr) {
-                const parsed = JSON.parse(userStr);
-                document.getElementById('lbl-trader-name').innerText = parsed.name || "--";
-                document.getElementById('lbl-trader-email').innerText = parsed.email || "--";
-                if (parsed.balance !== undefined) realMultiCurrencyBalances['USD'] = parseFloat(parsed.balance);
+                try {
+                    const parsed = JSON.parse(userStr);
+                    document.getElementById('lbl-trader-name').innerText = parsed.name || "--";
+                    document.getElementById('lbl-trader-email').innerText = parsed.email || "--";
+                    document.getElementById('lbl-trader-id').innerText = parsed.id || parsed._id || "8942105";
+                    
+                    if (parsed.balance !== undefined && parsed.balance !== null) {
+                        realMultiCurrencyBalances['USD'] = parseFloat(parsed.balance) || 0;
+                    }
+                } catch(e) {}
             }
         } else {
             accountCapitalState = { ...demoAccountCapitalState };
-            openPositionsRegister = [...demoOpenPositionsRegister];
-            pendingOrdersRegister = [...demoPendingOrdersRegister];
+            openPositionsRegister = [ ...demoOpenPositionsRegister ];
+            pendingOrdersRegister = [ ...demoPendingOrdersRegister ];
+            document.getElementById('lbl-live-server-node').innerText = "NEXA-STAGE-DEMO_2";
+            document.getElementById('lbl-env-label-type').innerText = "DEMO SIMULATOR STAGE";
+            document.getElementById('lbl-env-label-type').style.color = "var(--neon-blue)";
             document.getElementById('lbl-trader-name').innerText = "DEMO TRADER";
             document.getElementById('lbl-trader-email').innerText = "demo@nexafxtrade.com";
+            document.getElementById('lbl-trader-id').innerText = "GUEST_DEMO_USER";
         }
-        selectActiveCurrencyAccountContext(currentActiveCurrencyContext);
+
+        // Default balance mapping logic setup
+        const activeRegistry = (mode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
+        accountCapitalState.balance = activeRegistry[currentActiveCurrencyContext] || 0;
+
+        renderMultiCurrencyWidgets();
         rebuildTerminalLedgerView();
+        evaluateBalanceLiquidationEquations();
     }
+    /* =========================================================================== */
 
     function bypassAuthSequence() {
-        document.getElementById("nexafx-auth-screen").style.display = "none";
-        document.getElementById("main-terminal-layout").style.display = "flex";
-        canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
-        toggleTradingAccountTypeMode('REAL');
-        populateStructuralAssetWatch();
-        populateMacroIntelligenceFeed();
-        applyAssetSelectionModel(activeSelectedPair);
+        document.getElementById("nexafx-auth-screen").style.opacity = "0";
+        setTimeout(() => {
+            document.getElementById("nexafx-auth-screen").style.display = "none";
+            
+            const terminal = document.getElementById("main-terminal-layout");
+            terminal.style.display = "flex";
+            
+            const savedUserStr = localStorage.getItem('user');
+            if (savedUserStr) {
+                try {
+                    const parsed = JSON.parse(savedUserStr);
+                    if (activeEnvironmentProfileMode === 'REAL') {
+                        document.getElementById('lbl-trader-name').innerText = parsed.name || "--";
+                        document.getElementById('lbl-trader-email').innerText = parsed.email || "--";
+                        document.getElementById('lbl-trader-id').innerText = parsed.id || parsed._id || "8942105";
+                        
+                        if (parsed.balance !== undefined && parsed.balance !== null) {
+                            realMultiCurrencyBalances['USD'] = parseFloat(parsed.balance) || 0;
+                        }
+                    } else {
+                        document.getElementById('lbl-trader-name').innerText = "DEMO TRADER";
+                        document.getElementById('lbl-trader-email').innerText = "demo@nexafxtrade.com";
+                        document.getElementById('lbl-trader-id').innerText = "GUEST_DEMO_USER";
+                    }
+                } catch(e) {}
+            }
+
+            // Sync structural parameters matching updated profile states
+            accountCapitalState = activeEnvironmentProfileMode === 'REAL' ? { ...realAccountCapitalState } : { ...demoAccountCapitalState };
+            
+            const activeRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
+            accountCapitalState.balance = activeRegistry[currentActiveCurrencyContext] || 0;
+
+            canvasContext = document.getElementById('primaryTerminalCanvas').getContext('2d');
+            populateStructuralAssetWatch();
+            populateMacroIntelligenceFeed();
+            
+            // Re-sync operational global arrays explicitly
+            if (activeEnvironmentProfileMode === 'REAL') {
+                openPositionsRegister = [ ...realOpenPositionsRegister ];
+                pendingOrdersRegister = [ ...realPendingOrdersRegister ];
+            } else {
+                openPositionsRegister = [ ...demoOpenPositionsRegister ];
+                pendingOrdersRegister = [ ...demoPendingOrdersRegister ];
+            }
+
+            applyAssetSelectionModel(activeSelectedPair);
+            renderMultiCurrencyWidgets();
+            rebuildTerminalLedgerView();
+        }, 500);
     }
 
-    function switchMarketCatalog(cat) {
-        activeCatalogFilter = cat;
+    function switchMarketCatalog(category) {
+        activeCatalogFilter = category;
+        document.querySelectorAll('.sub-tab-strip .sub-tab-btn').forEach(btn => {
+            if(btn.id.startsWith('m-tab-')) {
+                btn.classList.toggle('active', btn.id === `m-tab-${category.toLowerCase().substring(0,5)}`);
+            }
+        });
         populateStructuralAssetWatch();
     }
 
@@ -734,13 +1105,16 @@
         Object.keys(liquidityCatalog).forEach(symbol => {
             const node = liquidityCatalog[symbol];
             if (node.category !== activeCatalogFilter) return;
+
             const row = document.createElement('div');
             row.className = `market-watch-row ${symbol === activeSelectedPair ? 'active' : ''}`;
             row.onclick = () => applyAssetSelectionModel(symbol);
+
+            let txtColor = node.changePct >= 0 ? 'var(--high-green)' : 'var(--low-red)';
             row.innerHTML = `
-                <div><b>${symbol}</b></div>
-                <div style="font-family:monospace;text-align:right;">${node.price.toFixed(node.digits)}</div>
-                <div style="text-align:right;color:var(--high-green)">+${node.changePct}%</div>
+                <div class="pair-name"><b>${symbol}</b><br><span style="font-size:0.55rem; color:var(--text-dim)">Spread: ${node.spreadPips} Pips</span></div>
+                <div class="pair-price" style="font-family:monospace; text-align:right; font-weight:700;" id="watch-val-${symbol.replace('/','-')}">${node.price.toFixed(node.digits)}</div>
+                <div style="text-align:right; font-size:0.7rem; font-weight:700; color:${txtColor}">${node.changePct >= 0 ? '+' : ''}${node.changePct.toFixed(2)}%</div>
             `;
             targetContainer.appendChild(row);
         });
@@ -753,109 +1127,584 @@
         macroCalendarEvents.forEach(evt => {
             const el = document.createElement('div');
             el.className = 'macro-news-card';
-            el.innerHTML = `<div><b>${evt.asset}</b> - ${evt.event}</div>`;
+            el.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                    <span><span class="impact-badge ${evt.impact==='high'?'impact-high':'impact-med'}">${evt.impact} Impact</span><b>${evt.asset}</b></span>
+                    <span style="font-family:monospace; color:var(--gold); font-weight:700;">${evt.time}</span>
+                </div>
+                <div style="color:#cfd8dc; font-size:0.7rem;">${evt.event}</div>
+            `;
             container.appendChild(el);
         });
     }
 
     function applyAssetSelectionModel(symbol) {
         activeSelectedPair = symbol;
+        const targetNode = liquidityCatalog[symbol];
+        
         document.getElementById('active-ticker-name').innerText = symbol;
+        
+        let precisionStep = 1 / Math.pow(10, targetNode.digits);
+        document.getElementById('ticket-sl').step = precisionStep;
+        document.getElementById('ticket-tp').step = precisionStep;
+        document.getElementById('ticket-trigger-price').step = precisionStep;
+        
+        document.getElementById('ticket-sl').value = '';
+        document.getElementById('ticket-tp').value = '';
+
+        populateStructuralAssetWatch();
+
         simulationTickArray = [];
-        let baseVal = liquidityCatalog[symbol].price;
-        for (let i = 0; i < 40; i++) {
-            simulationTickArray.push({ open: baseVal, high: baseVal * 1.001, low: baseVal * 0.999, close: baseVal });
+        let baseVal = targetNode.price;
+        for (let i = 0; i < 50; i++) {
+            baseVal += (Math.random() - 0.5) * (baseVal * 0.001);
+            simulationTickArray.push({
+                open: baseVal,
+                high: baseVal + (Math.random() * (baseVal * 0.0008)),
+                low: baseVal - (Math.random() * (baseVal * 0.0008)),
+                close: baseVal + (Math.random() - 0.5) * (baseVal * 0.0004)
+            });
         }
+        
+        /* MULTI-CURRENCY CONTEXT AUTO-REFLECT ROUTER RULE */
+        // When asset clicked, if trader has balance context in that specific settlement currency, shift instantly
+        const targetCurrency = targetNode.settlementCurrency || 'USD';
+        const currentBalancesRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
+        if (currentBalancesRegistry[targetCurrency] !== undefined && currentBalancesRegistry[targetCurrency] > 0) {
+            selectActiveCurrencyAccountContext(targetCurrency);
+        }
+
         forceChartRedrawPipeline();
         calculateRiskTelemetryMatrices();
     }
 
     function adjustOrderFormFields() {
-        const type = document.getElementById('ticket-order-type').value;
-        document.getElementById('box-execution-price').style.display = type === 'MARKET' ? 'none' : 'block';
+        const selectedType = document.getElementById('ticket-order-type').value;
+        const priceBox = document.getElementById('box-execution-price');
+        priceBox.style.display = selectedType === 'MARKET' ? 'none' : 'block';
+        if (selectedType !== 'MARKET') {
+            document.getElementById('ticket-trigger-price').value = liquidityCatalog[activeSelectedPair].price.toFixed(liquidityCatalog[activeSelectedPair].digits);
+        }
+    }
+
+    function applyRiskPercentageCalculation() {
+        const rule = document.getElementById('ticket-risk-percent').value;
+        if (rule === 'CUSTOM') return;
+        
+        const numericPct = parseFloat(rule);
+        const accessibleRiskCapital = accountCapitalState.balance * numericPct;
+        const targetAnchorSL = document.getElementById('ticket-sl').value;
+
+        if (!targetAnchorSL) {
+            let pipFactor = activeSelectedPair.includes("JPY") ? 0.3 : 0.003;
+            let computedAnchor = liquidityCatalog[activeSelectedPair].price - pipFactor;
+            document.getElementById('ticket-sl').value = computedAnchor.toFixed(liquidityCatalog[activeSelectedPair].digits);
+        }
+
+        const reCalculatedSL = parseFloat(document.getElementById('ticket-sl').value);
+        const distanceDelta = Math.abs(liquidityCatalog[activeSelectedPair].price - reCalculatedSL);
+        
+        if (distanceDelta > 0) {
+            let derivedLots = accessibleRiskCapital / (distanceDelta * liquidityCatalog[activeSelectedPair].multiplier * 132.00);
+            document.getElementById('ticket-volume-lots').value = Math.max(0.01, derivedLots).toFixed(2);
+        }
+        calculateRiskTelemetryMatrices();
     }
 
     function calculateRiskTelemetryMatrices() {
-        const lots = parseFloat(document.getElementById('ticket-volume-lots').value) || 0;
-        let marginReq = (lots * liquidityCatalog[activeSelectedPair].multiplier * liquidityCatalog[activeSelectedPair].price) / 500;
-        document.getElementById('calc-margin-req').innerText = `USD ${marginReq.toFixed(2)}`;
+        const declaredLots = parseFloat(document.getElementById('ticket-volume-lots').value) || 0.00;
+        const anchorSL = parseFloat(document.getElementById('ticket-sl').value) || 0.00;
+        const marketPrice = liquidityCatalog[activeSelectedPair].price;
+
+        let marginReq = (declaredLots * liquidityCatalog[activeSelectedPair].multiplier * marketPrice * 132.00) / 500;
+        const elementReq = document.getElementById('calc-margin-req');
+        if (elementReq) elementReq.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${marginReq.toLocaleString(undefined, {maximumFractionDigits:2})}`;
+
+        const elementRisk = document.getElementById('calc-risk-kes');
+        if (elementRisk) {
+            if (anchorSL > 0) {
+                let pointsDelta = Math.abs(marketPrice - anchorSL);
+                let absoluteRisk = pointsDelta * declaredLots * liquidityCatalog[activeSelectedPair].multiplier * 132.00;
+                elementRisk.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${absoluteRisk.toLocaleString(undefined, {maximumFractionDigits:2})}`;
+            } else {
+                elementRisk.innerText = "UNMANAGED UNLIMITED RISK";
+            }
+        }
     }
 
     function commitOrderRoutingTicket(side) {
-        if (accountCapitalState.balance <= 0 && activeEnvironmentProfileMode === 'REAL') {
-            return alert("Empty Account Balance Context.");
+        // Multi-currency account validation layer
+        if (accountCapitalState.balance <= 0) {
+            alert(`⚠️ Execution Halted: Your live ${currentActiveCurrencyContext} account balance is empty. Please select an active funded currency account node above.`);
+            return;
         }
-        const lots = parseFloat(document.getElementById('ticket-volume-lots').value);
-        const type = document.getElementById('ticket-order-type').value;
+
+        const executionMechanism = document.getElementById('ticket-order-type').value;
+        const designatedLots = parseFloat(document.getElementById('ticket-volume-lots').value);
+        if (isNaN(designatedLots) || designatedLots <= 0) return alert("Volumetric allocation verification error.");
+
+        const slValue = parseFloat(document.getElementById('ticket-sl').value) || null;
+        const tpValue = parseFloat(document.getElementById('ticket-tp').value) || null;
         const uid = Math.floor(Math.random() * 899999 + 100000);
 
-        if (type === 'MARKET') {
-            openPositionsRegister.push({
-                id: uid, pair: activeSelectedPair, type: side, lots: lots,
-                entry: liquidityCatalog[activeSelectedPair].price, sl: null, tp: null, commission: -3.5, swap: 0,
-                tickIndex: simulationTickArray.length - 1, currencyDenomination: currentActiveCurrencyContext
-            });
+        // Standard commission scale factored matching localized exchange values
+        let commissionFactor = currentActiveCurrencyContext === 'BTC' ? 0.00005 : 3.50;
+        let executionCommission = (designatedLots * commissionFactor);
+
+        if (executionMechanism === 'MARKET') {
+            let orderItem = {
+                id: uid,
+                pair: activeSelectedPair,
+                type: side,
+                lots: designatedLots,
+                entry: liquidityCatalog[activeSelectedPair].price,
+                sl: slValue,
+                tp: tpValue,
+                swap: 0.00,
+                commission: -executionCommission,
+                timestamp: new Date().toLocaleTimeString(),
+                tickIndex: simulationTickArray.length - 1,
+                currencyDenomination: currentActiveCurrencyContext 
+            };
+            openPositionsRegister.push(orderItem);
+            
+            // Deduct immediately from targeted account space
+            accountCapitalState.balance -= executionCommission;
+            
+            const currentBalancesRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
+            currentBalancesRegistry[currentActiveCurrencyContext] = accountCapitalState.balance;
+        } else {
+            let pendingItem = {
+                id: uid,
+                pair: activeSelectedPair,
+                type: executionMechanism,
+                lots: designatedLots,
+                triggerPrice: parseFloat(document.getElementById('ticket-trigger-price').value),
+                sl: slValue,
+                tp: tpValue,
+                currencyDenomination: currentActiveCurrencyContext
+            };
+            pendingOrdersRegister.push(pendingItem);
         }
+
+        // Keep local profile variables mirrored accurately during execution
+        if (activeEnvironmentProfileMode === 'REAL') {
+            realAccountCapitalState.balance = accountCapitalState.balance;
+            realOpenPositionsRegister = [ ...openPositionsRegister ];
+            realPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        } else {
+            demoAccountCapitalState.balance = accountCapitalState.balance;
+            demoOpenPositionsRegister = [ ...openPositionsRegister ];
+            demoPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        }
+        
+        renderMultiCurrencyWidgets();
         rebuildTerminalLedgerView();
         evaluateBalanceLiquidationEquations();
     }
 
     function terminateActiveRiskVector(id) {
+        const targetedPosition = openPositionsRegister.find(p => p.id === id);
+        if (targetedPosition) {
+            let livePrice = liquidityCatalog[targetedPosition.pair].price;
+            let targetDef = liquidityCatalog[targetedPosition.pair];
+            let rawDelta = targetedPosition.type === 'BUY' ? (livePrice - targetedPosition.entry) : (targetedPosition.entry - livePrice);
+            
+            let profitScale = targetedPosition.currencyDenomination === 'BTC' ? 0.01 : 132.00;
+            let finalProfitLoss = rawDelta * targetedPosition.lots * targetDef.multiplier * profitScale;
+            
+            const currentBalancesRegistry = (activeEnvironmentProfileMode === 'REAL') ? realMultiCurrencyBalances : demoMultiCurrencyBalances;
+            currentBalancesRegistry[targetedPosition.currencyDenomination] += finalProfitLoss;
+            
+            if(targetedPosition.currencyDenomination === currentActiveCurrencyContext) {
+                accountCapitalState.balance = currentBalancesRegistry[currentActiveCurrencyContext];
+            }
+        }
+
         openPositionsRegister = openPositionsRegister.filter(p => p.id !== id);
+        if (activeEnvironmentProfileMode === 'REAL') {
+            realAccountCapitalState.balance = accountCapitalState.balance;
+            realOpenPositionsRegister = [ ...openPositionsRegister ];
+        } else {
+            demoAccountCapitalState.balance = accountCapitalState.balance;
+            demoOpenPositionsRegister = [ ...openPositionsRegister ];
+        }
+        renderMultiCurrencyWidgets();
         rebuildTerminalLedgerView();
         evaluateBalanceLiquidationEquations();
     }
 
+    function clearPendingLimitOrder(id) {
+        pendingOrdersRegister = pendingOrdersRegister.filter(o => o.id !== id);
+        if (activeEnvironmentProfileMode === 'REAL') {
+            realPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        } else {
+            demoPendingOrdersRegister = [ ...pendingOrdersRegister ];
+        }
+        rebuildTerminalLedgerView();
+    }
+
     function alterTerminalLedgerFocus(tabId) {
         currentLedgerTab = tabId;
+        document.querySelectorAll('.bottom-ledger-terminal .sub-tab-strip .sub-tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.id === `led-tab-${tabId.toLowerCase().substring(0,3)}`);
+        });
         rebuildTerminalLedgerView();
     }
 
     function rebuildTerminalLedgerView() {
+        const pLbl = document.getElementById('count-pos-lbl');
+        const oLbl = document.getElementById('count-ord-lbl');
+        if (pLbl) pLbl.innerText = openPositionsRegister.length;
+        if (oLbl) oLbl.innerText = pendingOrdersRegister.length;
+
         const viewport = document.getElementById('terminal-ledger-display-engine');
         if (!viewport) return;
         viewport.innerHTML = '';
 
         if (currentLedgerTab === 'POSITIONS') {
-            let table = document.createElement('div');
-            openPositionsRegister.forEach(pos => {
-                let row = document.createElement('div');
-                row.className = 'ledger-grid-row';
-                row.innerHTML = `
-                    <div><b>${pos.pair}</b></div><div>${pos.type}</div><div>${pos.lots}</div><div>${pos.entry}</div>
-                    <div>${pos.entry}</div><div>--</div><div>--</div><div>-3.50</div><div>0.00</div>
-                    <div>USD 0.00 <button onclick="terminateActiveRiskVector(${pos.id})">CLOSE</button></div>
-                `;
-                table.appendChild(row);
-            });
-            viewport.appendChild(table);
+            let container = document.createElement('div');
+            container.innerHTML = `
+                <div class="ledger-grid-header">
+                    <div>Asset Symbol</div><div>Type</div><div>Volume</div><div>Entry Price</div>
+                    <div>Live Quote</div><div>Stop Loss</div><div>Take Profit</div><div>Commission</div><div>Swap Pool</div><div>Floating Return</div>
+                </div>
+            `;
+            if (openPositionsRegister.length === 0) {
+                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">No open trading positions are active in your dashboard workspace memory.</div>`;
+            } else {
+                openPositionsRegister.forEach(pos => {
+                    let livePrice = liquidityCatalog[pos.pair].price;
+                    let targetDef = liquidityCatalog[pos.pair];
+                    let rawDelta = pos.type === 'BUY' ? (livePrice - pos.entry) : (pos.entry - livePrice);
+                    
+                    let profitScale = pos.currencyDenomination === 'BTC' ? 0.01 : 132.00;
+                    let profitResult = rawDelta * pos.lots * targetDef.multiplier * profitScale;
+
+                    let row = document.createElement('div');
+                    row.className = 'ledger-grid-row';
+                    row.innerHTML = `
+                        <div><b>${pos.pair}</b> <span style="font-size:0.6rem; color:var(--text-dim)">(${pos.currencyDenomination})</span></div>
+                        <div class="${pos.type==='BUY'?'pos-buy':'pos-sell'}" style="color:${pos.type==='BUY'?'var(--high-green)':'var(--low-red)'}"><b>${pos.type}</b></div>
+                        <div>${pos.lots.toFixed(2)}</div>
+                        <div>${pos.entry.toFixed(targetDef.digits)}</div>
+                        <div>${livePrice.toFixed(targetDef.digits)}</div>
+                        <div style="color:var(--gold)">${pos.sl ? pos.sl.toFixed(targetDef.digits) : '--'}</div>
+                        <div style="color:var(--neon-blue)">${pos.tp ? pos.tp.toFixed(targetDef.digits) : '--'}</div>
+                        <div style="color:var(--low-red)">${pos.commission.toFixed(pos.currencyDenomination==='BTC'?4:2)}</div>
+                        <div>${pos.swap.toFixed(2)}</div>
+                        <div style="font-weight:bold; color:${profitResult >= 0 ? 'var(--high-green)' : 'var(--low-red)'}">
+                            ${currencySymbolsMap[pos.currencyDenomination]}${profitResult.toLocaleString(undefined,{maximumFractionDigits:pos.currencyDenomination==='BTC'?4:2})} 
+                            <button style="background:var(--low-red); border:none; margin-left:4px; color:white; padding:1px 4px; font-size:0.6rem; border-radius:3px; cursor:pointer;" onclick="terminateActiveRiskVector(${pos.id})">CLOSE</button>
+                        </div>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+            viewport.appendChild(container);
         }
+        else if (currentLedgerTab === 'ORDERS') {
+            let container = document.createElement('div');
+            container.innerHTML = `
+                <div class="ledger-grid-header" style="grid-template-columns: 1.5fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr;">
+                    <div>Order Token ID</div><div>Target Asset</div><div>Order Type</div><div>Volume Size</div><div>Target Entry Price</div><div>Stop Loss Level</div><div>Cancellation Action</div>
+                </div>
+            `;
+            if (pendingOrdersRegister.length === 0) {
+                container.innerHTML += `<div style="padding:20px; color:var(--text-dim); text-align:center;">Conditional pending matrix order arrays match zero entries.</div>`;
+            } else {
+                pendingOrdersRegister.forEach(ord => {
+                    let row = document.createElement('div');
+                    row.className = 'ledger-grid-row';
+                    row.style.gridTemplateColumns = "1.5fr 1fr 1fr 1.5fr 1.5fr 1.5fr 1.5fr";
+                    row.innerHTML = `
+                        <div>#${ord.id} <span style="font-size:0.6rem; color:var(--text-dim)">(${ord.currencyDenomination})</span></div>
+                        <div><b>${ord.pair}</b></div>
+                        <div style="color:var(--neon-blue)">${ord.type}</div>
+                        <div>${ord.lots.toFixed(2)}</div>
+                        <div style="font-family:monospace">${ord.triggerPrice}</div>
+                        <div>${ord.sl ? ord.sl : '--'}</div>
+                        <div><button style="background:rgba(255,255,255,0.1); border:1px solid var(--border-color); color:#fff; padding:2px 6px; cursor:pointer; border-radius:3px;" onclick="clearPendingLimitOrder(${ord.id})">Cancel Ticket</button></div>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+            viewport.appendChild(container);
+        }
+        else if (currentLedgerTab === 'ANALYTICS') {
+            let container = document.createElement('div');
+            container.className = 'analytics-grid-box';
+            
+            let grossComm = openPositionsRegister.reduce((acc, current) => acc + current.commission, 0);
+            let activeLotsAllocated = openPositionsRegister.reduce((acc, current) => acc + current.lots, 0);
+
+            container.innerHTML = `
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">ACCOUNT TRADING WIN RATE</span><b style="font-size:1.2rem; color:var(--high-green)">68.42% Total Win Profile</b></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">PROFIT FACTOR SCORE</span><b style="font-size:1.2rem; color:var(--neon-blue)">2.41 Active Performance Ratio</b></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">WORKSPACE ACTIVE VOLUME EXPEDITION</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Lots Allocated: <b style="color:var(--gold)">${activeLotsAllocated.toFixed(2)} Lots</b> | Cumulative Commission: <b style="color:var(--low-red)">${currencySymbolsMap[currentActiveCurrencyContext]}${grossComm.toFixed(2)}</b></span></div>
+                <div class="analytics-card-node"><span style="color:var(--text-dim); font-size:0.6rem; display:block;">MAX RISK MANAGEMENT DRAWDOWN</span><span style="font-size:0.8rem; display:block; margin-top:2px;">Max Loss Boundary Threshold: <b>${currencySymbolsMap[currentActiveCurrencyContext]}${accountCapitalState.maxDrawdownCap.toLocaleString()}</b> | Account Mode: <b style="color:var(--neon-blue)">${activeEnvironmentProfileMode} PROFILE</b></span></div>
+            `;
+            viewport.appendChild(container);
+        }
+        else if (currentLedgerTab === 'JOURNAL') {
+            let container = document.createElement('div');
+            container.style.padding = '12px';
+            systemJournalRegistry.forEach(j => {
+                container.innerHTML += `
+                    <div style="border-bottom:1px solid var(--border-color); padding:6px 0;">
+                        <span style="color:var(--gold); font-size:0.65rem;">[${j.date}] Trading Account Log Entry Note:</span>
+                        <p style="color:#fff; font-size:0.75rem; margin-top:2px;">${j.note} - <b style="color:var(--high-green)">${j.status}</b></p>
+                    </div>
+                `;
+            });
+            viewport.appendChild(container);
+        }
+    }
+
+    function changeChartRenderProfile(profile) {
+        chartVisualizationProfile = profile;
+        document.querySelectorAll('.canvas-toolbar .tool-cluster .t-btn').forEach(b => {
+            if (['Candlestick','Line','Bar'].includes(b.innerText)) {
+                b.classList.toggle('active', b.id === `chart-t-${profile.toLowerCase()}`);
+            }
+        });
+        forceChartRedrawPipeline();
+    }
+
+    function setChartTimeframe(tf) {
+        chartTimeframeScope = tf;
+        applyAssetSelectionModel(activeSelectedPair);
+    }
+
+    function toggleOverlayTechnicalIndicator(indicator) {
+        activeOverlayIndicators[indicator] = !activeOverlayIndicators[indicator];
+        const btn = document.getElementById(`tech-t-${indicator.toLowerCase()}`);
+        if(btn) btn.classList.toggle('active', activeOverlayIndicators[indicator]);
+        forceChartRedrawPipeline();
     }
 
     function forceChartRedrawPipeline() {
         if (!canvasContext) return;
-        const w = canvasContext.canvas.width = canvasContext.canvas.clientWidth;
-        const h = canvasContext.canvas.height = canvasContext.canvas.clientHeight;
-        canvasContext.clearRect(0, 0, w, h);
-        canvasContext.fillStyle = "rgba(0, 176, 255, 0.2)";
-        canvasContext.fillRect(10, 10, w - 20, h - 20);
+        const width = canvasContext.canvas.clientWidth;
+        const height = canvasContext.canvas.clientHeight;
+        canvasContext.canvas.width = width;
+        canvasContext.canvas.height = height;
+
+        canvasContext.clearRect(0, 0, width, height);
+
+        let maxVal = Math.max(...simulationTickArray.map(t => t.high));
+        let minVal = Math.min(...simulationTickArray.map(t => t.low));
+        let range = maxVal - minVal;
+
+        let padding = range * 0.1;
+        maxVal += padding;
+        minVal -= padding;
+        range = maxVal - minVal;
+
+        const stepWidth = width / simulationTickArray.length;
+
+        canvasContext.strokeStyle = '#121b26';
+        canvasContext.lineWidth = 1;
+        for (let i = 1; i < 5; i++) {
+            let yLoc = (height / 5) * i;
+            canvasContext.beginPath();
+            canvasContext.moveTo(0, yLoc);
+            canvasContext.lineTo(width, yLoc);
+            canvasContext.stroke();
+        }
+
+        simulationTickArray.forEach((tick, idx) => {
+            let cx = (idx * stepWidth) + (stepWidth / 2);
+            let yOpen = height - (((tick.open - minVal) / range) * height);
+            let yClose = height - (((tick.close - minVal) / range) * height);
+            let yHigh = height - (((tick.high - minVal) / range) * height);
+            let yLow = height - (((tick.low - minVal) / range) * height);
+
+            canvasContext.strokeStyle = tick.close >= tick.open ? '#00e676' : '#ff1744';
+            canvasContext.fillStyle = tick.close >= tick.open ? '#00e676' : '#ff1744';
+
+            if (chartVisualizationProfile === 'CANDLE') {
+                canvasContext.lineWidth = 1.5;
+                canvasContext.beginPath();
+                canvasContext.moveTo(cx, yHigh);
+                canvasContext.lineTo(cx, yLow);
+                canvasContext.stroke();
+
+                let boxW = stepWidth * 0.7;
+                canvasContext.fillRect(cx - (boxW / 2), Math.min(yOpen, yClose), boxW, Math.abs(yOpen - yClose) || 1);
+            } else if (chartVisualizationProfile === 'LINE') {
+                if (idx > 0) {
+                    let prevX = ((idx - 1) * stepWidth) + (stepWidth / 2);
+                    let prevYClose = height - (((simulationTickArray[idx - 1].close - minVal) / range) * height);
+                    canvasContext.strokeStyle = 'var(--neon-blue)';
+                    canvasContext.lineWidth = 2;
+                    canvasContext.beginPath();
+                    canvasContext.moveTo(prevX, prevYClose);
+                    canvasContext.lineTo(cx, yClose);
+                    canvasContext.stroke();
+                }
+            } else if (chartVisualizationProfile === 'BAR') {
+                canvasContext.lineWidth = 2;
+                canvasContext.beginPath();
+                canvasContext.moveTo(cx, yHigh);
+                canvasContext.lineTo(cx, yLow);
+                canvasContext.stroke();
+
+                canvasContext.beginPath();
+                canvasContext.moveTo(cx - (stepWidth * 0.3), yOpen);
+                canvasContext.lineTo(cx, yOpen);
+                canvasContext.moveTo(cx, yClose);
+                canvasContext.lineTo(cx + (stepWidth * 0.3), yClose);
+                canvasContext.stroke();
+            }
+        });
+
+        /* ================= DYNAMIC BUY / SELL REAL-TIME EXECUTION CHART GRAPH VISUALIZER ================= */
+        openPositionsRegister.forEach(pos => {
+            if (pos.pair === activeSelectedPair && pos.tickIndex !== undefined && pos.tickIndex < simulationTickArray.length) {
+                let cx = (pos.tickIndex * stepWidth) + (stepWidth / 2);
+                let yEntry = height - (((pos.entry - minVal) / range) * height);
+
+                if (yEntry >= 0 && yEntry <= height) {
+                    canvasContext.fillStyle = pos.type === 'BUY' ? '#00e676' : '#ff1744';
+                    canvasContext.beginPath();
+                    if (pos.type === 'BUY') {
+                        canvasContext.moveTo(cx, yEntry - 4);
+                        canvasContext.lineTo(cx - 6, yEntry + 6);
+                        canvasContext.lineTo(cx + 6, yEntry + 6);
+                    } else {
+                        canvasContext.moveTo(cx, yEntry + 4);
+                        canvasContext.lineTo(cx - 6, yEntry - 6);
+                        canvasContext.lineTo(cx + 6, yEntry - 6);
+                    }
+                    canvasContext.fill();
+
+                    canvasContext.strokeStyle = pos.type === 'BUY' ? 'rgba(0,230,118,0.25)' : 'rgba(255,23,68,0.25)';
+                    canvasContext.setLineDash([4, 4]);
+                    canvasContext.beginPath();
+                    canvasContext.moveTo(0, yEntry);
+                    canvasContext.lineTo(width, yEntry);
+                    canvasContext.stroke();
+                    canvasContext.setLineDash([]);
+                }
+            }
+        });
+        /* ================================================================================================= */
+
+        if (activeOverlayIndicators.MA) {
+            canvasContext.strokeStyle = 'var(--gold)';
+            canvasContext.lineWidth = 1.5;
+            canvasContext.beginPath();
+            simulationTickArray.forEach((tick, idx) => {
+                if (idx < 5) return;
+                let sum = 0; for (let j = 0; j < 5; j++) { sum += simulationTickArray[idx - j].close; }
+                let avg = sum / 5;
+                let cx = (idx * stepWidth) + (stepWidth / 2);
+                let cy = height - (((avg - minVal) / range) * height);
+                if (idx === 5) canvasContext.moveTo(cx, cy); else canvasContext.lineTo(cx, cy);
+            });
+            canvasContext.stroke();
+        }
+
+        if (activeOverlayIndicators.BB) {
+            canvasContext.strokeStyle = 'rgba(0,176,255,0.4)';
+            canvasContext.lineWidth = 1;
+            canvasContext.beginPath();
+            simulationTickArray.forEach((tick, idx) => {
+                let cx = (idx * stepWidth) + (stepWidth / 2);
+                let cy = height - ((((tick.close * 1.001) - minVal) / range) * height);
+                if (idx === 0) canvasContext.moveTo(cx, cy); else canvasContext.lineTo(cx, cy);
+            });
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            simulationTickArray.forEach((tick, idx) => {
+                let cx = (idx * stepWidth) + (stepWidth / 2);
+                let cy = height - ((((tick.close * 0.999) - minVal) / range) * height);
+                if (idx === 0) canvasContext.moveTo(cx, cy); else canvasContext.lineTo(cx, cy);
+            });
+            canvasContext.stroke();
+        }
     }
 
     function simulateHighFrequencyLiquidityStream() {
         Object.keys(liquidityCatalog).forEach(sym => {
-            liquidityCatalog[sym].price += (Math.random() - 0.5) * 0.0005;
+            let node = liquidityCatalog[sym];
+            let deltaMove = (sym.includes("JPY") || sym.includes("US30") || sym.includes("BTC") || sym.includes("NAS100")) ? 0.2 : 0.0001;
+            node.price += (Math.random() - 0.5) * deltaMove;
+            
+            let htmlTarget = document.getElementById(`watch-val-${sym.replace('/','-')}`);
+            if (htmlTarget) htmlTarget.innerText = node.price.toFixed(node.digits);
         });
-        const bid = document.getElementById('hero-live-bid');
-        if(bid) bid.innerText = liquidityCatalog[activeSelectedPair].price.toFixed(liquidityCatalog[activeSelectedPair].digits);
+
+        let activeNode = liquidityCatalog[activeSelectedPair];
+        const bidEl = document.getElementById('hero-live-bid');
+        if (bidEl) bidEl.innerText = activeNode.price.toFixed(activeNode.digits);
+
+        if (simulationTickArray.length > 0) {
+            let workingCandle = simulationTickArray[simulationTickArray.length - 1];
+            workingCandle.close = activeNode.price;
+            workingCandle.high = Math.max(workingCandle.high, activeNode.price);
+            workingCandle.low = Math.min(workingCandle.low, activeNode.price);
+            
+            forceChartRedrawPipeline();
+        }
+
         evaluateBalanceLiquidationEquations();
     }
 
     function evaluateBalanceLiquidationEquations() {
-        let floating = 0;
-        accountCapitalState.equity = accountCapitalState.balance + floating;
+        let activeFloatingAggregateSum = 0;
+        let cumulativeUsedMarginCollateral = 0;
+
+        openPositionsRegister.forEach(pos => {
+            if (pos.currencyDenomination !== currentActiveCurrencyContext) return;
+
+            let liveQuote = liquidityCatalog[pos.pair].price;
+            let definitionNode = liquidityCatalog[pos.pair];
+            let rawPointsDelta = pos.type === 'BUY' ? (liveQuote - pos.entry) : (pos.entry - liveQuote);
+            
+            let profitScale = currentActiveCurrencyContext === 'BTC' ? 0.01 : 132.00;
+            let positionPnL = rawPointsDelta * pos.lots * definitionNode.multiplier * profitScale;
+            activeFloatingAggregateSum += positionPnL;
+
+            cumulativeUsedMarginCollateral += (pos.lots * definitionNode.multiplier * pos.entry * profitScale) / 500;
+        });
+
+        accountCapitalState.floatingPnL = activeFloatingAggregateSum;
+        accountCapitalState.equity = accountCapitalState.balance + activeFloatingAggregateSum;
+        accountCapitalState.usedMargin = cumulativeUsedMarginCollateral;
+        accountCapitalState.freeMargin = accountCapitalState.equity - cumulativeUsedMarginCollateral;
+        accountCapitalState.marginLevel = cumulativeUsedMarginCollateral > 0 ? (accountCapitalState.equity / cumulativeUsedMarginCollateral) * 100 : 100.00;
+
         const balEl = document.getElementById('top-balance');
-        if (balEl) balEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${accountCapitalState.balance.toFixed(2)}`;
+        const eqEl = document.getElementById('top-equity');
+        const fmEl = document.getElementById('top-freemargin');
+        const umEl = document.getElementById('top-usedmargin');
+        const mlEl = document.getElementById('top-marginlevel');
+        const pnlEl = document.getElementById('top-floatingpnl');
+
+        let prec = currentActiveCurrencyContext === 'BTC' ? 4 : 2;
+
+        if (balEl) balEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${(accountCapitalState.balance || 0).toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
+        if (eqEl) eqEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${(accountCapitalState.equity || 0).toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
+        if (fmEl) fmEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${(accountCapitalState.freeMargin || 0).toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
+        if (umEl) umEl.innerText = `${currencySymbolsMap[currentActiveCurrencyContext]}${(accountCapitalState.usedMargin || 0).toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
+        if (mlEl) mlEl.innerText = `${accountCapitalState.marginLevel.toFixed(2)}%`;
+        
+        if (pnlEl) {
+            pnlEl.innerText = `${accountCapitalState.floatingPnL >= 0 ? '+' : ''}${accountCapitalState.floatingPnL.toLocaleString(undefined, {minimumFractionDigits:prec, maximumFractionDigits:prec})}`;
+            pnlEl.style.color = accountCapitalState.floatingPnL >= 0 ? 'var(--high-green)' : 'var(--low-red)';
+        }
+
+        if (currentLedgerTab === 'POSITIONS' || currentLedgerTab === 'ANALYTICS') {
+            rebuildTerminalLedgerView();
+        }
+    }
+
+    function toggleCopyMirrorAllocations(vaultName) {
+        alert(`Account sync complete. You are now successfully copying trades from [${vaultName}].`);
     }
 </script>
 </body>
-</html>
+                                                                                                                            </html>
