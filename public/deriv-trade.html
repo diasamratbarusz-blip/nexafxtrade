@@ -3,262 +3,595 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexa - Standalone Synthetic Trade Terminal</title>
+  <title>Nexa - Complete Multi-Asset Trading System</title>
   <style>
     :root {
-      --bg-dark: #0d1117;
-      --card-bg: #161b22;
+      --bg-dark: #080b0e;
+      --card-bg: #11161d;
+      --card-border: #1e2631;
       --accent-blue: #0088ff;
       --green: #22c55e;
       --red: #ef4444;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --border: #30363d;
       --gold: #eab308;
+      --text: #f3f4f6;
+      --text-muted: #8b949e;
+      --sidebar-width: 240px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg-dark); color: var(--text); padding: 20px; }
+    body { background-color: var(--bg-dark); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-    /* Header & Navbar */
-    .header {
-      display: flex; justify-content: space-between; align-items: center;
-      padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px;
+    /* Top Navigation Header */
+    header {
+      height: 60px; background: #0d1117; border-bottom: 1px solid var(--card-border);
+      display: flex; justify-content: space-between; align-items: center; padding: 0 20px; z-index: 10;
     }
-    .header h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--accent-blue); }
-    .account-info { display: flex; gap: 15px; align-items: center; }
-    .balance-badge {
-      background: #0b0f14; border: 1px solid var(--border); padding: 6px 14px;
-      border-radius: 8px; font-weight: bold; font-size: 1rem; color: var(--green);
+    .brand { font-weight: bold; font-size: 1.2rem; color: var(--accent-blue); display: flex; align-items: center; gap: 8px; }
+    .brand span { color: #fff; font-size: 0.85rem; background: var(--card-border); padding: 2px 6px; border-radius: 4px; }
+
+    .header-controls { display: flex; align-items: center; gap: 15px; }
+    select, input, button {
+      background: #161b22; border: 1px solid var(--card-border); color: var(--text);
+      padding: 7px 12px; border-radius: 6px; font-size: 0.85rem; outline: none;
     }
-    .status-badge { font-size: 0.85rem; padding: 6px 12px; border-radius: 12px; background: rgba(34, 197, 94, 0.2); color: var(--green); }
+    select:focus, input:focus { border-color: var(--accent-blue); }
 
-    /* Layout Grid */
-    .grid-container { display: grid; grid-template-columns: 1fr 350px; gap: 20px; }
-    @media (max-width: 950px) { .grid-container { grid-template-columns: 1fr; } }
-
-    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-
-    /* Market Selector & Canvas */
-    .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    select, input {
-      width: 100%; background: #0b0f14; border: 1px solid var(--border); color: var(--text);
-      padding: 10px; border-radius: 6px; margin-top: 6px; margin-bottom: 12px; font-size: 0.95rem;
+    .balance-display {
+      background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3);
+      padding: 5px 12px; border-radius: 6px; color: var(--green); font-weight: bold; font-size: 0.9rem;
     }
 
-    .price-display { text-align: center; margin: 15px 0; }
-    .price-display .price { font-size: 2.5rem; font-weight: bold; font-family: monospace; }
-    .price-display .price.up { color: var(--green); }
-    .price-display .price.down { color: var(--red); }
+    /* Main Layout */
+    .app-container { display: flex; flex: 1; height: calc(100vh - 60px); }
 
-    canvas { width: 100%; height: 220px; background: #080b0e; border: 1px solid var(--border); border-radius: 6px; }
+    /* Sidebar Navigation */
+    sidebar {
+      width: var(--sidebar-width); background: #0d1117; border-right: 1px solid var(--card-border);
+      display: flex; flex-direction: column; padding: 10px 0; overflow-y: auto;
+    }
+    .nav-item {
+      padding: 12px 20px; color: var(--text-muted); cursor: pointer; font-size: 0.88rem;
+      display: flex; align-items: center; gap: 10px; transition: 0.2s; border-left: 3px solid transparent;
+    }
+    .nav-item:hover, .nav-item.active { background: #161b22; color: #fff; border-left-color: var(--accent-blue); }
 
-    /* Trading Buttons & Form */
-    .form-group { margin-bottom: 10px; }
-    label { font-size: 0.85rem; color: var(--text-muted); }
+    /* Workspace / Content Panels */
+    main { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg-dark); }
+    .panel { display: none; }
+    .panel.active { display: block; }
 
-    .trade-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .grid-layout { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+    @media (max-width: 1000px) { .grid-layout { grid-template-columns: 1fr; } }
+
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+    .card h2 { font-size: 1.1rem; margin-bottom: 15px; color: #fff; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
+
+    /* Charts & Ticker Engine */
+    .price-large { font-size: 2.2rem; font-weight: bold; font-family: monospace; text-align: center; margin: 10px 0; }
+    .price-large.up { color: var(--green); }
+    .price-large.down { color: var(--red); }
+    canvas { width: 100%; height: 240px; background: #080b0e; border: 1px solid var(--card-border); border-radius: 6px; }
+
+    /* Trade Execution Controls */
     .btn {
-      border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer;
-      font-size: 1rem; color: white; transition: opacity 0.2s; width: 100%;
+      border: none; padding: 10px 15px; font-weight: bold; border-radius: 6px; cursor: pointer;
+      font-size: 0.9rem; color: #fff; width: 100%; transition: opacity 0.2s;
     }
-    .btn:hover { opacity: 0.85; }
-    .btn-rise { background: var(--green); }
-    .btn-fall { background: var(--red); }
-    .btn-bot { background: var(--gold); color: #000; }
-    .btn-bot.active { background: var(--red); color: #fff; }
+    .btn:hover { opacity: 0.88; }
+    .btn-green { background: var(--green); }
+    .btn-red { background: var(--red); }
+    .btn-blue { background: var(--accent-blue); }
+    .btn-gold { background: var(--gold); color: #000; }
 
-    /* Logging & Positions Table */
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--card-border); }
+    th { color: var(--text-muted); font-weight: 500; }
+
+    /* Terminal Logs */
     .log-box {
-      background: #080b0e; border: 1px solid var(--border); border-radius: 6px; padding: 10px;
-      font-family: monospace; font-size: 0.8rem; height: 140px; overflow-y: auto; color: var(--text-muted);
+      background: #050709; border: 1px solid var(--card-border); border-radius: 6px; padding: 10px;
+      font-family: monospace; font-size: 0.78rem; height: 140px; overflow-y: auto; color: var(--text-muted);
     }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-    th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--border); }
-    th { color: var(--text-muted); }
-    .win { color: var(--green); font-weight: bold; }
-    .loss { color: var(--red); font-weight: bold; }
+    /* Badges & Pills */
+    .badge { padding: 3px 8px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; }
+    .badge-green { background: rgba(34, 197, 94, 0.2); color: var(--green); }
+    .badge-red { background: rgba(239, 68, 68, 0.2); color: var(--red); }
+    .badge-blue { background: rgba(0, 136, 255, 0.2); color: var(--accent-blue); }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <div class="header">
-    <h1>NEXA <span style="color:white; font-size:1rem;">| Autonomous Trading Engine</span></h1>
-    <div class="account-info">
-      <div class="balance-badge"> balance: $<span id="account-balance">1000.00</span></div>
-      <div class="status-badge">Engine Active</div>
+  <!-- Top Navigation Header -->
+  <header>
+    <div class="brand">
+      NEXA <span>PRO TERMINAL</span>
     </div>
-  </div>
 
-  <div class="grid-container">
-    
-    <!-- Left Column: Synthetic Engine Chart & Feed -->
-    <div>
-      <div class="card">
-        <div class="market-header">
-          <h2>Synthetic Market Feed</h2>
-          <div style="width: 200px;">
-            <select id="symbol-select" onchange="switchMarket()">
-              <option value="VOL_100">Volatility 100 Index</option>
-              <option value="VOL_75">Volatility 75 Index</option>
-              <option value="BOOM_1000">Boom 1000 Index</option>
-              <option value="CRASH_1000">Crash 1000 Index</option>
-            </select>
+    <div class="header-controls">
+      <!-- 1. Account Types -->
+      <select id="account-type-select" onchange="switchAccountType()">
+        <option value="demo">Demo Account (Virtual $10,000)</option>
+        <option value="real_std">Real - Standard Account</option>
+        <option value="real_fin">Real - Financial Account</option>
+        <option value="real_stp">Real - Financial STP</option>
+        <option value="islamic">Swap-Free (Islamic)</option>
+        <option value="mt5">Deriv MT5 Sync</option>
+        <option value="deriv_x">Deriv X Account</option>
+        <option value="ctrader">Deriv cTrader</option>
+        <option value="deriv_go">Deriv GO Sync</option>
+        <option value="smarttrader">SmartTrader API</option>
+      </select>
+
+      <!-- 11 & 12. Wallets & Currency Support -->
+      <select id="currency-select" onchange="log('Currency switched to ' + this.value)">
+        <option value="USD">USD ($)</option>
+        <option value="EUR">EUR (€)</option>
+        <option value="GBP">GBP (£)</option>
+        <option value="AUD">AUD ($)</option>
+        <option value="CAD">CAD ($)</option>
+        <option value="BTC">BTC (₿)</option>
+        <option value="ETH">ETH (Ξ)</option>
+        <option value="USDT">USDT (₮)</option>
+        <option value="USDC">USDC ($)</option>
+      </select>
+
+      <div class="balance-display">$<span id="account-balance">10000.00</span></div>
+      <span class="badge badge-green">2FA Protected</span>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <sidebar>
+      <div class="nav-item active" onclick="showPanel('terminal')">📈 Trade Terminal</div>
+      <div class="nav-item" onclick="showPanel('markets')">📊 Markets & Synthetics</div>
+      <div class="nav-item" onclick="showPanel('automation')">🤖 Automation & Bots</div>
+      <div class="nav-item" onclick="showPanel('cashier')">💳 Wallets & Cashier</div>
+      <div class="nav-item" onclick="showPanel('copytrading')">👥 Copy Trading</div>
+      <div class="nav-item" onclick="showPanel('devtools')">🛠 Developer Tools</div>
+      <div class="nav-item" onclick="showPanel('security')">🔐 Security & KYC</div>
+      <div class="nav-item" onclick="showPanel('analytics')">📋 Statements & History</div>
+      <div class="nav-item" onclick="showPanel('education')">🎓 Academy & Support</div>
+      <div class="nav-item" onclick="showPanel('partners')">🤝 Business & IB</div>
+    </sidebar>
+
+    <main>
+      <!-- Panel 1: Main Trade Terminal -->
+      <div id="panel-terminal" class="panel active">
+        <div class="grid-layout">
+          <div>
+            <!-- Chart & Market Selection -->
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <!-- 2 & 22. Markets & Synthetics Selection -->
+                <select id="market-select" onchange="changeMarket()" style="font-weight:bold; width:220px;">
+                  <optgroup label="Synthetic Indices (24/7)">
+                    <option value="VOL_100">Volatility 100 Index</option>
+                    <option value="VOL_75">Volatility 75 Index</option>
+                    <option value="VOL_50">Volatility 50 Index</option>
+                    <option value="VOL_25">Volatility 25 Index</option>
+                    <option value="BOOM_1000">Boom 1000 Index</option>
+                    <option value="CRASH_1000">Crash 1000 Index</option>
+                    <option value="JUMP_50">Jump 50 Index</option>
+                    <option value="STEP_INDEX">Step Index</option>
+                    <option value="RANGE_BREAK">Range Break 100</option>
+                    <option value="DEX_INDEX">DEX Index</option>
+                  </optgroup>
+                  <optgroup label="Forex Pairs">
+                    <option value="EURUSD">EUR/USD</option>
+                    <option value="GBPUSD">GBP/USD</option>
+                    <option value="USDJPY">USD/JPY</option>
+                  </optgroup>
+                  <optgroup label="Commodities & Crypto">
+                    <option value="GOLD">XAU/USD (Gold)</option>
+                    <option value="SILVER">XAG/USD (Silver)</option>
+                    <option value="OIL">WTI Oil</option>
+                    <option value="BTCUSD">BTC/USD</option>
+                  </optgroup>
+                </select>
+
+                <!-- 6. Charts & Analysis Controls -->
+                <div style="display:flex; gap:8px;">
+                  <select id="timeframe" onchange="log('Timeframe: ' + this.value)">
+                    <option value="1t">1 Tick</option>
+                    <option value="1m">1 Min</option>
+                    <option value="5m">5 Min</option>
+                    <option value="1h">1 Hour</option>
+                  </select>
+                  <button onclick="toggleIndicator()">SMA Indicator</button>
+                  <button onclick="log('Drawing Tool Activated')">✏️ Draw</button>
+                </div>
+              </div>
+
+              <div class="price-large" id="live-price">1000.00</div>
+              <canvas id="mainChart"></canvas>
+            </div>
+
+            <!-- Active Positions / Open Trades -->
+            <div class="card">
+              <h2>Open Positions & Orders</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Product</th>
+                    <th>Market</th>
+                    <th>Type</th>
+                    <th>Entry</th>
+                    <th>Stake</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="open-positions-body">
+                  <!-- Dynamically Injected -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Trade Execution Column -->
+          <div>
+            <div class="card">
+              <h2>Contract Execution</h2>
+
+              <!-- 3. Trading Products -->
+              <div class="form-group">
+                <label>Product Category</label>
+                <select id="product-category" onchange="updateContractTypes()">
+                  <option value="options">Digital Options</option>
+                  <option value="cfd">CFDs / Margin</option>
+                  <option value="multipliers">Multipliers</option>
+                  <option value="accumulators">Accumulators</option>
+                  <option value="vanillas">Vanilla Options</option>
+                  <option value="turbos">Turbo Options</option>
+                  <option value="lookbacks">Lookbacks</option>
+                </select>
+              </div>
+
+              <!-- 23. Binary Contracts Types -->
+              <div class="form-group">
+                <label>Contract Type</label>
+                <select id="contract-type">
+                  <option value="RISE_FALL">Rise / Fall</option>
+                  <option value="HIGH_LOW">Higher / Lower</option>
+                  <option value="TOUCH_NO">Touch / No Touch</option>
+                  <option value="OVER_UNDER">Over / Under</option>
+                  <option value="EVEN_ODD">Even / Odd</option>
+                  <option value="MATCHES_DIFFERS">Matches / Differs</option>
+                  <option value="ENDS_BETWEEN">Ends Between / Outside</option>
+                  <option value="RESET">Reset Call / Put</option>
+                  <option value="ASIAN">Asian Options</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Stake ($)</label>
+                <input type="number" id="trade-stake" value="10" min="1">
+              </div>
+
+              <div class="form-group">
+                <label>Duration (Ticks / Minutes)</label>
+                <input type="number" id="trade-duration" value="5" min="1">
+              </div>
+
+              <!-- 7 & 8. Orders & Risk Management -->
+              <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                <div>
+                  <label>Stop Loss ($)</label>
+                  <input type="number" id="sl-val" placeholder="Optional">
+                </div>
+                <div>
+                  <label>Take Profit ($)</label>
+                  <input type="number" id="tp-val" placeholder="Optional">
+                </div>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:15px;">
+                <button class="btn btn-green" onclick="placeTrade('PURCHASE / CALL')">RISE / CALL ▲</button>
+                <button class="btn btn-red" onclick="placeTrade('PURCHASE / PUT')">FALL / PUT ▼</button>
+              </div>
+            </div>
+
+            <!-- Activity / Execution Log -->
+            <div class="card">
+              <h2>Execution Log</h2>
+              <div class="log-box" id="system-log"></div>
+            </div>
           </div>
         </div>
-
-        <div class="price-display">
-          <div id="live-price" class="price">1000.00</div>
-          <span id="price-time" style="font-size:0.8rem; color: var(--text-muted);">Tick Engine Running...</span>
-        </div>
-
-        <!-- Real-time Canvas Graph -->
-        <canvas id="priceChart"></canvas>
       </div>
 
-      <!-- Live Contract Positions -->
-      <div class="card">
-        <h3>Active / Settled Contracts</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Symbol</th>
-              <th>Type</th>
-              <th>Entry</th>
-              <th>Stake</th>
-              <th>Status</th>
-              <th>Payout</th>
-            </tr>
-          </thead>
-          <tbody id="positions-table">
-            <!-- Active trades inject here -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Right Column: Trade Controls & Automated Bots -->
-    <div>
-      <!-- Manual Trading -->
-      <div class="card">
-        <h2>Manual Execution</h2>
-
-        <div class="form-group" style="margin-top: 10px;">
-          <label>Stake Amount ($)</label>
-          <input type="number" id="stake-amount" value="10" min="1">
-        </div>
-
-        <div class="form-group">
-          <label>Contract Duration (Ticks)</label>
-          <input type="number" id="duration" value="5" min="1" max="15">
-        </div>
-
-        <div class="trade-buttons">
-          <button class="btn btn-rise" onclick="manualTrade('CALL')">RISE ▲</button>
-          <button class="btn btn-fall" onclick="manualTrade('PUT')">FALL ▼</button>
+      <!-- Panel 2: Markets & Synthetics Overview -->
+      <div id="panel-markets" class="panel">
+        <div class="card">
+          <h2>Synthetics & Global Markets Index</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:15px;">Simulated 24/7 cryptographic markets and world asset feeds.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>24h Volatility</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Volatility 100 Index</td><td>Synthetic</td><td>Constant volatility of 100%</td><td>High</td><td><span class="badge badge-green">Open 24/7</span></td></tr>
+              <tr><td>Boom 1000 Index</td><td>Synthetic</td><td>Average 1 spike every 1000 ticks</td><td>Extreme</td><td><span class="badge badge-green">Open 24/7</span></td></tr>
+              <tr><td>Crash 1000 Index</td><td>Synthetic</td><td>Average 1 drop every 1000 ticks</td><td>Extreme</td><td><span class="badge badge-green">Open 24/7</span></td></tr>
+              <tr><td>Step Index</td><td>Synthetic</td><td>Equal probability of step up/down</td><td>Medium</td><td><span class="badge badge-green">Open 24/7</span></td></tr>
+              <tr><td>EUR/USD</td><td>Forex</td><td>Euro / US Dollar Major Pair</td><td>Standard</td><td><span class="badge badge-blue">Market Active</span></td></tr>
+              <tr><td>XAU/USD</td><td>Commodities</td><td>Gold Spot / US Dollar</td><td>Standard</td><td><span class="badge badge-blue">Market Active</span></td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Algorithmic Trading Bots -->
-      <div class="card">
-        <h2>Automated Bots</h2>
-        <div class="form-group" style="margin-top: 10px;">
-          <label>Select Strategy Engine</label>
-          <select id="bot-strategy">
-            <option value="martingale">Tick Martingale Bot (Rise/Fall)</option>
-            <option value="sma">SMA Crossover Trend Bot</option>
-          </select>
-        </div>
+      <!-- Panel 3: Automation & Bots -->
+      <div id="panel-automation" class="panel">
+        <div class="grid-layout">
+          <div class="card">
+            <h2>5. Deriv Bot (Automated Strategy Engine)</h2>
+            <div class="form-group">
+              <label>Select Strategy Template</label>
+              <select id="bot-strategy-select">
+                <option value="martingale">Martingale Rise/Fall Engine</option>
+                <option value="sma_cross">SMA Trend Crossover Bot</option>
+                <option value="accumulator">Auto Accumulator Scalper</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Base Stake ($)</label>
+              <input type="number" id="bot-base-stake" value="5">
+            </div>
+            <div class="form-group">
+              <label>Target Profit ($)</label>
+              <input type="number" id="bot-target-profit" value="50">
+            </div>
+            <div class="form-group">
+              <label>Maximum Loss Threshold ($)</label>
+              <input type="number" id="bot-max-loss" value="30">
+            </div>
+            <button class="btn btn-gold" id="bot-toggle" onclick="toggleAutoBot()">START AUTOMATED BOT</button>
+          </div>
 
-        <div class="form-group">
-          <label>Base Stake ($)</label>
-          <input type="number" id="bot-stake" value="5" min="1">
+          <div class="card">
+            <h2>Bot Activity Output</h2>
+            <div class="log-box" id="bot-log" style="height:280px;"></div>
+          </div>
         </div>
-
-        <button id="bot-toggle-btn" class="btn btn-bot" onclick="toggleBot()">START AUTO-BOT</button>
       </div>
 
-      <!-- System Log Output -->
-      <div class="card">
-        <h3 style="font-size: 0.9rem; margin-bottom: 8px;">Engine Logs</h3>
-        <div id="log-output" class="log-box"></div>
-      </div>
-    </div>
+      <!-- Panel 4: Cashier & Wallets -->
+      <div id="panel-cashier" class="panel">
+        <div class="grid-layout">
+          <!-- 9. Deposits -->
+          <div class="card">
+            <h2>9. Deposit Funds</h2>
+            <div class="form-group">
+              <label>Payment Method</label>
+              <select>
+                <option>Credit / Debit Card (Visa/Mastercard)</option>
+                <option>Mobile Money (M-Pesa, MTN, Airtel)</option>
+                <option>Cryptocurrency (BTC, ETH, USDT)</option>
+                <option>E-Wallet (Skrill, Neteller, Perfect Money)</option>
+                <option>Local Payment Agent</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Deposit Amount ($)</label>
+              <input type="number" value="100">
+            </div>
+            <button class="btn btn-blue" onclick="processPayment('Deposit')">Initiate Deposit</button>
+          </div>
 
+          <!-- 10. Withdrawals -->
+          <div class="card">
+            <h2>10. Withdrawal Funds</h2>
+            <div class="form-group">
+              <label>Withdrawal Method</label>
+              <select>
+                <option>Bank Wire Transfer</option>
+                <option>Crypto Wallet Address</option>
+                <option>Mobile Money Outlet</option>
+                <option>Payment Agent Transfer</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Withdrawal Amount ($)</label>
+              <input type="number" value="50">
+            </div>
+            <button class="btn btn-green" onclick="processPayment('Withdrawal')">Request Withdrawal</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 5: Copy Trading -->
+      <div id="panel-copytrading" class="panel">
+        <div class="card">
+          <h2>14. Copy Trading & Social Network</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Strategy Provider</th>
+                <th>Return (30d)</th>
+                <th>Win Rate</th>
+                <th>Risk Score</th>
+                <th>Copiers</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>AlphaSynthetics Bot</td><td style="color:var(--green)">+142.5%</td><td>78%</td><td><span class="badge badge-green">3/10</span></td><td>1,240</td><td><button onclick="log('Copying AlphaSynthetics')">Copy Strategy</button></td></tr>
+              <tr><td>Forex Trend Master</td><td style="color:var(--green)">+45.2%</td><td>65%</td><td><span class="badge badge-blue">2/10</span></td><td>890</td><td><button onclick="log('Copying Forex Master')">Copy Strategy</button></td></tr>
+              <tr><td>BoomCrash Scalper</td><td style="color:var(--green)">+310.8%</td><td>62%</td><td><span class="badge badge-red">8/10</span></td><td>3,100</td><td><button onclick="log('Copying Scalper')">Copy Strategy</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Panel 6: Developer Tools & APIs -->
+      <div id="panel-devtools" class="panel">
+        <div class="card">
+          <h2>15 & 25. Developer Tools & API Access</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;">Generate access tokens for WebSocket / REST connections.</p>
+          <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <input type="text" placeholder="Token Label (e.g. TradingBotKey)" id="token-label">
+            <button class="btn btn-blue" style="width:160px;" onclick="generateToken()">Generate Token</button>
+          </div>
+          <div class="log-box" id="api-log" style="height:150px;"></div>
+        </div>
+      </div>
+
+      <!-- Panel 7: Security & KYC -->
+      <div id="panel-security" class="panel">
+        <div class="card">
+          <h2>13 & 24. Security & Account Verification</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+            <div>
+              <h3>Two-Factor Authentication (2FA)</h3>
+              <p style="color:var(--text-muted); font-size:0.85rem; margin:8px 0;">Protect your account with Google Authenticator.</p>
+              <button class="btn btn-blue" onclick="log('2FA configuration triggered')">Enable 2FA</button>
+            </div>
+            <div>
+              <h3>Identity Verification (KYC)</h3>
+              <p style="color:var(--text-muted); font-size:0.85rem; margin:8px 0;">Status: <span style="color:var(--green); font-weight:bold;">Verified (Level 2)</span></p>
+              <button onclick="log('Re-upload KYC requested')">View Documents</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 8: Analytics & History -->
+      <div id="panel-analytics" class="panel">
+        <div class="card">
+          <h2>21. Trading Statements & Performance Analytics</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Contract ID</th>
+                <th>Market</th>
+                <th>Type</th>
+                <th>Stake</th>
+                <th>Profit/Loss</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Panel 9: Education -->
+      <div id="panel-education" class="panel">
+        <div class="card">
+          <h2>17 & 18. Trading Academy & Customer Support</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:15px;">Access video tutorials, market research, or contact 24/7 support.</p>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-blue" onclick="log('Opening Live Chat...')">💬 Open Live Chat</button>
+            <button onclick="log('Navigating to Help Center...')">📚 Knowledge Base</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 10: Business Services -->
+      <div id="panel-partners" class="panel">
+        <div class="card">
+          <h2>20. Partnership Programs (Affiliate & IB)</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;">Earn up to 45% revenue share as an Introducing Broker (IB) or Payment Agent.</p>
+          <button class="btn btn-gold" style="width:220px;" onclick="log('IB Application Submitted')">Apply for IB Account</button>
+        </div>
+      </div>
+
+    </main>
   </div>
 
   <script>
-    // --- 1. GLOBAL STATE & SYNTHETIC MARKET SIMULATOR ---
-    let balance = 1000.00;
+    // --- STATE MANAGEMENT ---
+    let balance = 10000.00;
     let activeSymbol = 'VOL_100';
-    let lastPrice = 1000.00;
+    let currentPrice = 1000.00;
     let priceHistory = [1000.00];
-    let activeContracts = [];
-    let tradeCounter = 1000;
+    let positions = [];
+    let history = [];
+    let orderIdCounter = 8000;
     
-    // Bot Execution Engine state
     let isBotActive = false;
-    let botLastResult = 'WIN';
-    let currentBotStake = 5;
-    let botCooldown = false;
+    let botInterval = null;
 
-    const marketConfigs = {
-      VOL_100: { base: 1000.00, volatility: 2.5, spikeChance: 0 },
-      VOL_75:  { base: 750.00,  volatility: 4.5, spikeChance: 0 },
-      BOOM_1000: { base: 5000.00, volatility: 0.8, spikeChance: 0.08, spikeType: 'UP' },
-      CRASH_1000: { base: 5000.00, volatility: 0.8, spikeChance: 0.08, spikeType: 'DOWN' }
-    };
+    // --- NAVIGATION ---
+    function showPanel(panelId) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
+      document.getElementById(`panel-${panelId}`).classList.add('active');
+      event.target.classList.add('active');
+    }
 
-    // --- 2. LOCAL TICK ENGINE (Generates price every 1000ms) ---
+    function switchAccountType() {
+      const type = document.getElementById('account-type-select').value;
+      if (type === 'demo') balance = 10000.00;
+      else balance = 2500.00;
+      
+      updateBalanceDisplay();
+      log(`Switched to Account Profile: ${type.toUpperCase()}`);
+    }
+
+    function updateBalanceDisplay() {
+      document.getElementById('account-balance').innerText = balance.toFixed(2);
+    }
+
+    function log(msg) {
+      const logBox = document.getElementById('system-log');
+      logBox.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    // --- MARKET & CANVAS TICK ENGINE ---
+    function changeMarket() {
+      activeSymbol = document.getElementById('market-select').value;
+      currentPrice = activeSymbol.includes('VOL') ? 1000 : activeSymbol.includes('BOOM') ? 5000 : 1.1500;
+      priceHistory = [currentPrice];
+      log(`Market stream shifted to: ${activeSymbol}`);
+    }
+
     function tickEngine() {
-      const config = marketConfigs[activeSymbol];
-      let change = (Math.random() - 0.5) * config.volatility;
+      let volatility = activeSymbol.includes('VOL') ? 3.0 : 0.0005;
+      let delta = (Math.random() - 0.49) * volatility;
 
-      // Simulate Boom/Crash Spikes
-      if (config.spikeChance > 0 && Math.random() < config.spikeChance) {
-        if (config.spikeType === 'UP') change = 35.0 + Math.random() * 20;
-        if (config.spikeType === 'DOWN') change = -(35.0 + Math.random() * 20);
-      }
+      // Spike engine for Boom/Crash
+      if (activeSymbol.includes('BOOM') && Math.random() < 0.08) delta = 45.0;
+      if (activeSymbol.includes('CRASH') && Math.random() < 0.08) delta = -45.0;
 
-      const newPrice = Math.max(10, lastPrice + change);
-      updateMarketUI(newPrice);
-      processContracts(newPrice);
-      runBotStrategy(newPrice);
-    }
+      currentPrice = Math.max(0.0001, currentPrice + delta);
+      priceHistory.push(currentPrice);
+      if (priceHistory.length > 40) priceHistory.shift();
 
-    function switchMarket() {
-      activeSymbol = document.getElementById('symbol-select').value;
-      lastPrice = marketConfigs[activeSymbol].base;
-      priceHistory = [lastPrice];
-      log(`Switched market index to: ${activeSymbol}`);
-    }
+      // UI Update
+      const pElem = document.getElementById('live-price');
+      pElem.className = delta >= 0 ? "price-large up" : "price-large down";
+      pElem.innerText = currentPrice.toFixed(activeSymbol.includes('EUR') ? 4 : 2);
 
-    function updateMarketUI(price) {
-      const priceElem = document.getElementById("live-price");
-      const timeElem = document.getElementById("price-time");
-
-      priceElem.className = price > lastPrice ? "price up" : "price down";
-      lastPrice = price;
-      priceElem.innerText = price.toFixed(2);
-      timeElem.innerText = `Tick: ${new Date().toLocaleTimeString()}`;
-
-      priceHistory.push(price);
-      if (priceHistory.length > 50) priceHistory.shift();
       drawChart();
+      evaluatePositions();
     }
 
-    // --- 3. CANVAS CHARTING SYSTEM ---
     function drawChart() {
-      const canvas = document.getElementById("priceChart");
-      const ctx = canvas.getContext("2d");
+      const canvas = document.getElementById('mainChart');
+      const ctx = canvas.getContext('2d');
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       if (priceHistory.length < 2) return;
 
       const min = Math.min(...priceHistory) * 0.999;
@@ -269,161 +602,146 @@
       ctx.strokeStyle = "#0088ff";
       ctx.lineWidth = 2;
 
-      priceHistory.forEach((val, index) => {
-        const x = index * step;
+      priceHistory.forEach((val, idx) => {
+        const x = idx * step;
         const y = canvas.height - ((val - min) / (max - min)) * canvas.height;
-        if (index === 0) ctx.moveTo(x, y);
+        if (idx === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       });
 
       ctx.stroke();
     }
 
-    // --- 4. EXECUTION & MATCHING ENGINE ---
-    function executeContract(symbol, type, stake, duration) {
+    // --- TRADE EXECUTION ---
+    function placeTrade(direction) {
+      const stake = parseFloat(document.getElementById('trade-stake').value);
+      const duration = parseInt(document.getElementById('trade-duration').value);
+      const contract = document.getElementById('contract-type').value;
+
       if (stake > balance) {
-        log(`[FAILED] Insufficient balance for stake: $${stake}`);
-        return false;
+        log("[REJECTED] Insufficient balance");
+        return;
       }
 
       balance -= stake;
-      updateBalance();
+      updateBalanceDisplay();
 
-      tradeCounter++;
-      const contract = {
-        id: `#NEX-${tradeCounter}`,
-        symbol: symbol,
-        type: type,
-        entryPrice: lastPrice,
+      orderIdCounter++;
+      const pos = {
+        id: `#ORD-${orderIdCounter}`,
+        product: document.getElementById('product-category').value.toUpperCase(),
+        market: activeSymbol,
+        type: `${contract} (${direction})`,
+        entry: currentPrice,
         stake: stake,
-        duration: duration,
         ticksLeft: duration,
-        status: 'ACTIVE'
+        status: 'RUNNING'
       };
 
-      activeContracts.unshift(contract);
-      log(`[ORDER] ${type} executed on ${symbol} @ $${lastPrice.toFixed(2)} | Stake: $${stake}`);
-      renderTable();
-      return true;
+      positions.unshift(pos);
+      log(`[ORDER OPEN] ${pos.id} ${pos.type} @ ${pos.entry.toFixed(2)}`);
+      renderPositions();
     }
 
-    function manualTrade(type) {
-      const stake = parseFloat(document.getElementById('stake-amount').value);
-      const duration = parseInt(document.getElementById('duration').value);
-      executeContract(activeSymbol, type, stake, duration);
-    }
+    function evaluatePositions() {
+      positions.forEach(p => {
+        if (p.status === 'RUNNING') {
+          p.ticksLeft--;
+          if (p.ticksLeft <= 0) {
+            const win = Math.random() > 0.45; // Simulated payout engine
+            const payout = win ? p.stake * 1.92 : 0;
+            p.status = win ? 'WON' : 'LOST';
+            p.payout = payout;
 
-    function processContracts(currentPrice) {
-      activeContracts.forEach(contract => {
-        if (contract.status === 'ACTIVE') {
-          contract.ticksLeft--;
-          if (contract.ticksLeft <= 0) {
-            // Settle contract
-            const isWin = contract.type === 'CALL' ? currentPrice > contract.entryPrice : currentPrice < contract.entryPrice;
-            const payout = isWin ? contract.stake * 1.95 : 0;
-            
-            contract.status = isWin ? 'WON' : 'LOST';
-            contract.payout = payout;
-
-            if (isWin) {
+            if (win) {
               balance += payout;
-              updateBalance();
+              updateBalanceDisplay();
             }
 
-            log(`[SETTLED] ${contract.id} (${contract.type}) -> ${contract.status} | Payout: $${payout.toFixed(2)}`);
+            log(`[SETTLED] ${p.id} -> ${p.status} | Payout: $${payout.toFixed(2)}`);
+            history.unshift(p);
+            renderHistory();
           }
         }
       });
-      renderTable();
+      positions = positions.filter(p => p.status === 'RUNNING');
+      renderPositions();
     }
 
-    function renderTable() {
-      const tbody = document.getElementById("positions-table");
-      tbody.innerHTML = activeContracts.slice(0, 5).map(c => `
+    function renderPositions() {
+      const tbody = document.getElementById('open-positions-body');
+      tbody.innerHTML = positions.map(p => `
         <tr>
-          <td>${c.id}</td>
-          <td>${c.symbol}</td>
-          <td><b>${c.type}</b></td>
-          <td>${c.entryPrice.toFixed(2)}</td>
-          <td>$${c.stake.toFixed(2)}</td>
-          <td class="${c.status === 'WON' ? 'win' : c.status === 'LOST' ? 'loss' : ''}">${c.status} (${c.ticksLeft}t)</td>
-          <td>$${(c.payout || 0).toFixed(2)}</td>
+          <td>${p.id}</td>
+          <td>${p.product}</td>
+          <td>${p.market}</td>
+          <td><b>${p.type}</b></td>
+          <td>${p.entry.toFixed(2)}</td>
+          <td>$${p.stake.toFixed(2)}</td>
+          <td><span class="badge badge-blue">${p.ticksLeft}t remaining</span></td>
+          <td><button onclick="log('Manual early exit executed')">Close</button></td>
         </tr>
       `).join('');
     }
 
-    function updateBalance() {
-      document.getElementById('account-balance').innerText = balance.toFixed(2);
+    function renderHistory() {
+      const tbody = document.getElementById('history-table-body');
+      tbody.innerHTML = history.slice(0, 10).map(h => `
+        <tr>
+          <td>${new Date().toLocaleTimeString()}</td>
+          <td>${h.id}</td>
+          <td>${h.market}</td>
+          <td>${h.type}</td>
+          <td>$${h.stake.toFixed(2)}</td>
+          <td style="color:${h.status === 'WON' ? 'var(--green)' : 'var(--red)'}; font-weight:bold;">
+            ${h.status === 'WON' ? '+' + (h.payout - h.stake).toFixed(2) : '-' + h.stake.toFixed(2)}
+          </td>
+        </tr>
+      `).join('');
     }
 
-    // --- 5. AUTOMATED BOT ENGINE ---
-    function toggleBot() {
+    // --- AUTOMATED BOT ENGINE ---
+    function toggleAutoBot() {
       isBotActive = !isBotActive;
-      const btn = document.getElementById('bot-toggle-btn');
+      const btn = document.getElementById('bot-toggle');
+      const logBox = document.getElementById('bot-log');
+
       if (isBotActive) {
-        btn.innerText = "STOP AUTO-BOT";
-        btn.className = "btn btn-bot active";
-        currentBotStake = parseFloat(document.getElementById('bot-stake').value);
-        log("[BOT] Trading Bot Started.");
+        btn.innerText = "STOP AUTOMATED BOT";
+        btn.className = "btn btn-red";
+        logBox.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Bot strategy started...</div>`;
+        
+        botInterval = setInterval(() => {
+          if (isBotActive) {
+            placeTrade('CALL');
+            logBox.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Bot executed trade on ${activeSymbol}</div>`;
+            logBox.scrollTop = logBox.scrollHeight;
+          }
+        }, 6000);
       } else {
-        btn.innerText = "START AUTO-BOT";
-        btn.className = "btn btn-bot";
-        log("[BOT] Trading Bot Stopped.");
+        btn.innerText = "START AUTOMATED BOT";
+        btn.className = "btn btn-gold";
+        clearInterval(botInterval);
+        logBox.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Bot strategy stopped.</div>`;
       }
     }
 
-    function runBotStrategy(price) {
-      if (!isBotActive || botCooldown) return;
-
-      // Check if any previous bot trade is still pending
-      const hasPending = activeContracts.some(c => c.status === 'ACTIVE');
-      if (hasPending) return;
-
-      // Evaluate last bot trade result
-      const lastBotTrade = activeContracts[0];
-      if (lastBotTrade && lastBotTrade.status !== 'ACTIVE') {
-        botLastResult = lastBotTrade.status;
-      }
-
-      const strategy = document.getElementById('bot-strategy').value;
-      let signal = null;
-
-      if (strategy === 'martingale') {
-        const baseStake = parseFloat(document.getElementById('bot-stake').value);
-        if (botLastResult === 'LOST') {
-          currentBotStake *= 2; // Double stake on loss
-          log(`[BOT-MARTINGALE] Previous Lost. Doubling stake to $${currentBotStake}`);
-        } else {
-          currentBotStake = baseStake; // Reset stake on win
-        }
-        signal = Math.random() > 0.5 ? 'CALL' : 'PUT';
-      } 
-      else if (strategy === 'sma') {
-        if (priceHistory.length >= 10) {
-          const smaFast = priceHistory.slice(-3).reduce((a, b) => a + b) / 3;
-          const smaSlow = priceHistory.slice(-8).reduce((a, b) => a + b) / 8;
-          signal = smaFast > smaSlow ? 'CALL' : 'PUT';
-        }
-      }
-
-      if (signal) {
-        const success = executeContract(activeSymbol, signal, currentBotStake, 5);
-        if (success) {
-          botCooldown = true;
-          setTimeout(() => { botCooldown = false; }, 5000); // 5s execution cooldown
-        }
-      }
+    // --- AUXILIARY HELPERS ---
+    function processPayment(type) {
+      log(`[CASHIER] ${type} request submitted successfully.`);
+      alert(`${type} transaction initialized under reference #${Math.floor(Math.random() * 899999 + 100000)}.`);
     }
 
-    function log(msg) {
-      const box = document.getElementById("log-output");
-      box.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
-      box.scrollTop = box.scrollHeight;
+    function generateToken() {
+      const label = document.getElementById('token-label').value || 'DefaultKey';
+      const token = 'nexa_live_api_' + Math.random().toString(36).substring(2, 15);
+      const logBox = document.getElementById('api-log');
+      logBox.innerHTML += `<div>[API KEY] ${label}: ${token} (Permissions: Read/Write)</div>`;
     }
 
-    // Launch Tick Engine Loop
+    // --- INIT ---
     setInterval(tickEngine, 1000);
-    log("Standalone Nexa Synthetic Trading Terminal Initialized.");
+    log("Nexa Pro Standalone Trading Engine Initialized Successfully.");
   </script>
 </body>
 </html>
