@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Nexa - Ultimate Multi-Asset Terminal</title>
+  <title>Nexa - Pro Multi-Asset & DBot Terminal</title>
   <style>
     :root {
       --bg-dark: #080b0e;
@@ -15,8 +15,9 @@
       --gold: #eab308;
       --text: #f3f4f6;
       --text-muted: #8b949e;
-      --sidebar-width: 260px;
-      --header-height: 60px;
+      --sidebar-width: 240px;
+      --block-bg: #161b22;
+      --block-border: #30363d;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -24,83 +25,95 @@
 
     /* Header */
     header {
-      height: var(--header-height); background: #0d1117; border-bottom: 1px solid var(--card-border);
-      display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 50; position: relative;
+      height: 60px; background: #0d1117; border-bottom: 1px solid var(--card-border);
+      display: flex; justify-content: space-between; align-items: center; padding: 0 15px; z-index: 50;
     }
-    .brand { font-weight: bold; font-size: 1.2rem; color: var(--accent-blue); display: flex; align-items: center; gap: 8px; }
-    .brand span { color: #fff; font-size: 0.75rem; background: var(--card-border); padding: 3px 6px; border-radius: 4px; }
+    .brand { font-weight: bold; font-size: 1.1rem; color: var(--accent-blue); display: flex; align-items: center; gap: 8px; }
+    .brand span { color: #fff; font-size: 0.75rem; background: var(--card-border); padding: 2px 6px; border-radius: 4px; }
     
-    .menu-toggle { display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+    .menu-toggle { display: none; background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; }
     
     .header-controls { display: flex; align-items: center; gap: 10px; }
     select, input, button {
       background: #161b22; border: 1px solid var(--card-border); color: var(--text);
-      padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; outline: none; width: 100%;
+      padding: 7px 10px; border-radius: 6px; font-size: 0.85rem; outline: none;
     }
     select:focus, input:focus { border-color: var(--accent-blue); }
 
-    .balance-badge { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); padding: 5px 12px; border-radius: 6px; color: var(--green); font-weight: bold; white-space: nowrap; }
+    .balance-badge { background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); padding: 5px 10px; border-radius: 6px; color: var(--green); font-weight: bold; white-space: nowrap; font-size: 0.85rem; }
 
-    /* Main Layout */
-    .app-container { display: flex; flex: 1; height: calc(100vh - var(--header-height)); position: relative; }
+    /* App Container */
+    .app-container { display: flex; flex: 1; height: calc(100vh - 60px); position: relative; }
 
-    /* Sidebar - Responsive */
+    /* Sidebar */
     sidebar {
       width: var(--sidebar-width); background: #0d1117; border-right: 1px solid var(--card-border);
       display: flex; flex-direction: column; overflow-y: auto; z-index: 40; transition: transform 0.3s ease;
     }
-    .nav-item { padding: 14px 20px; color: var(--text-muted); cursor: pointer; font-size: 0.88rem; border-left: 3px solid transparent; border-bottom: 1px solid #11161d; }
+    .nav-item { padding: 12px 16px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; border-left: 3px solid transparent; border-bottom: 1px solid #11161d; display: flex; align-items: center; gap: 8px; }
     .nav-item:hover, .nav-item.active { background: #161b22; color: #fff; border-left-color: var(--accent-blue); }
 
-    /* Overlay for mobile sidebar */
     .sidebar-overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 30; }
 
-    /* Main Content Area */
+    /* Main Area */
     main { flex: 1; padding: 15px; overflow-y: auto; background: var(--bg-dark); }
-    .panel { display: none; animation: fadeIn 0.3s; }
+    .panel { display: none; animation: fadeIn 0.2s ease-in-out; }
     .panel.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Grids & Cards */
-    .grid-layout { display: grid; grid-template-columns: 1fr 350px; gap: 15px; }
+    /* Layout Grids */
+    .grid-layout { display: grid; grid-template-columns: 1fr 340px; gap: 15px; }
     .grid-half { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-    .card h2 { font-size: 1rem; margin-bottom: 12px; color: #fff; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
+    .card h2 { font-size: 0.95rem; margin-bottom: 12px; color: #fff; border-bottom: 1px solid var(--card-border); padding-bottom: 6px; }
 
-    /* Charts & Ticker */
-    .price-large { font-size: 2rem; font-weight: bold; font-family: monospace; text-align: center; margin: 10px 0; }
-    .price-large.up { color: var(--green); }
-    .price-large.down { color: var(--red); }
+    /* Charts & Execution */
+    .price-large { font-size: 1.8rem; font-weight: bold; font-family: monospace; text-align: center; margin: 8px 0; }
+    .price-large.up { color: var(--green); } .price-large.down { color: var(--red); }
     canvas { width: 100%; height: 220px; background: #050709; border: 1px solid var(--card-border); border-radius: 6px; }
 
-    /* Forms & Buttons */
-    .form-group { margin-bottom: 10px; }
-    .form-group label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
-    .flex-row { display: flex; gap: 10px; }
-    
-    .btn { border: none; padding: 10px; font-weight: bold; border-radius: 6px; cursor: pointer; color: #fff; text-align: center; }
+    .btn { border: none; padding: 9px 12px; font-weight: bold; border-radius: 6px; cursor: pointer; color: #fff; text-align: center; font-size: 0.85rem; }
     .btn-green { background: var(--green); } .btn-red { background: var(--red); }
     .btn-blue { background: var(--accent-blue); } .btn-gold { background: var(--gold); color: #000; }
 
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+    .flex-row { display: flex; gap: 10px; }
+
     /* Responsive Tables */
     .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 500px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 450px; }
     th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--card-border); }
-    th { color: var(--text-muted); }
+    th { color: var(--text-muted); font-weight: 500; }
 
-    .badge { padding: 3px 6px; border-radius: 4px; font-size: 0.7rem; }
+    .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
     .bg-green { background: rgba(34, 197, 94, 0.2); color: var(--green); }
+    .bg-red { background: rgba(239, 68, 68, 0.2); color: var(--red); }
     .bg-blue { background: rgba(0, 136, 255, 0.2); color: var(--accent-blue); }
 
-    .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; }
+    /* --- DBOT STYLES --- */
+    .bot-sub-nav { display: flex; gap: 10px; border-bottom: 1px solid var(--card-border); padding-bottom: 10px; margin-bottom: 15px; }
+    .bot-tab { padding: 6px 14px; background: var(--block-bg); border: 1px solid var(--card-border); border-radius: 6px; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); }
+    .bot-tab.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
 
-    /* --- RESPONSIVE MEDIA QUERIES --- */
-    @media (max-width: 900px) {
-      .grid-layout { grid-template-columns: 1fr; }
-    }
+    .block-card { background: var(--block-bg); border: 1px solid var(--block-border); border-radius: 6px; padding: 12px; margin-bottom: 10px; }
+    .block-header { background: #1f2937; margin: -12px -12px 10px -12px; padding: 8px 12px; border-radius: 5px 5px 0 0; font-weight: bold; font-size: 0.8rem; color: var(--accent-blue); display: flex; align-items: center; gap: 6px; }
+    
+    .block-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; font-size: 0.8rem; }
+    .block-row label { color: var(--text-muted); font-size: 0.75rem; }
+
+    /* DBot Live Status Bar */
+    .bot-stats-bar { background: #0d1117; border: 1px solid var(--card-border); border-radius: 8px; padding: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; text-align: center; margin-bottom: 15px; }
+    .stat-box { font-size: 0.75rem; color: var(--text-muted); }
+    .stat-val { font-size: 0.95rem; font-weight: bold; color: var(--text); margin-top: 2px; }
+
+    .bot-status-pill { display: flex; justify-content: space-between; align-items: center; background: rgba(34, 197, 94, 0.15); border: 1px solid var(--green); padding: 8px 12px; border-radius: 6px; color: var(--green); font-weight: bold; font-size: 0.85rem; margin-bottom: 10px; }
+
+    /* Mobile Queries */
+    @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
       .menu-toggle { display: block; }
-      .header-controls .hide-mobile { display: none; }
+      .hide-mobile { display: none; }
       sidebar { position: absolute; height: 100%; transform: translateX(-100%); }
       sidebar.open { transform: translateX(0); }
       .sidebar-overlay.open { display: block; }
@@ -110,26 +123,26 @@
 </head>
 <body>
 
+  <!-- Header -->
   <header>
     <div style="display:flex; align-items:center; gap:10px;">
       <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-      <div class="brand">NEXA <span>v2.0</span></div>
+      <div class="brand">NEXA <span>v2.0 PRO</span></div>
     </div>
     
     <div class="header-controls">
-      <!-- 1 & 12. Account Types & Currencies -->
-      <select class="hide-mobile" id="account-select" style="width: auto;">
-        <optgroup label="1. Account Types">
-          <option>Demo Account ($10,000)</option>
-          <option>Real - Standard</option>
-          <option>Real - Financial STP</option>
-          <option>Swap-Free (Islamic)</option>
+      <!-- 1. Account Types -->
+      <select class="hide-mobile" id="account-select" onchange="switchAccount()">
+        <optgroup label="Account Types">
+          <option value="demo">Demo Account ($10,000)</option>
+          <option value="real_std">Real - Standard</option>
+          <option value="real_fin">Real - Financial STP</option>
+          <option value="islamic">Swap-Free (Islamic)</option>
         </optgroup>
       </select>
+      <!-- 12. Currencies -->
       <select class="hide-mobile" style="width: auto;">
-        <optgroup label="12. Currencies">
-          <option>USD ($)</option><option>EUR (€)</option><option>BTC (₿)</option><option>USDT (₮)</option>
-        </optgroup>
+        <option>USD ($)</option><option>EUR (€)</option><option>BTC (₿)</option><option>USDT (₮)</option>
       </select>
       <div class="balance-badge">$<span id="bal">10000.00</span></div>
     </div>
@@ -137,19 +150,22 @@
 
   <div class="app-container">
     <div class="sidebar-overlay" onclick="toggleMenu()"></div>
+    
+    <!-- Sidebar -->
     <sidebar id="sidebar">
       <div class="nav-item active" onclick="nav('terminal')">📈 1-7. Trade Terminal & Charts</div>
-      <div class="nav-item" onclick="nav('risk')">🛡️ 8 & 16. Risk & Trade Features</div>
+      <div class="nav-item" onclick="nav('auto')">🤖 5. DBot Builder Engine</div>
+      <div class="nav-item" onclick="nav('risk')">🛡️ 8 & 16. Risk & Features</div>
       <div class="nav-item" onclick="nav('cashier')">💳 9-11. Cashier & Wallets</div>
       <div class="nav-item" onclick="nav('social')">👥 14. Copy Trading</div>
-      <div class="nav-item" onclick="nav('auto')">🤖 5 & 15. Auto Bots & APIs</div>
+      <div class="nav-item" onclick="nav('devtools')">🛠️ 15 & 25. Dev Tools & APIs</div>
       <div class="nav-item" onclick="nav('account')">🔐 13, 19, 24. Account & Mobile</div>
       <div class="nav-item" onclick="nav('stats')">📊 21. Analytics & History</div>
       <div class="nav-item" onclick="nav('support')">🎓 17, 18, 20. Support & Business</div>
     </sidebar>
 
     <main>
-      <!-- Panel A: Terminal (Covers 2, 3, 4, 6, 7, 22, 23) -->
+      <!-- PANEL A: Terminal (Categories 1, 2, 3, 4, 6, 7, 22, 23) -->
       <div id="panel-terminal" class="panel active">
         <div class="grid-layout">
           <div>
@@ -159,16 +175,15 @@
                 <select id="market-select" onchange="switchMarket()">
                   <optgroup label="22. Synthetic Indices">
                     <option value="VOL_100">Volatility 100 Index</option>
+                    <option value="VOL_10">Volatility 10 (1s) Index</option>
                     <option value="BOOM_1000">Boom 1000 Index</option>
                     <option value="CRASH_500">Crash 500 Index</option>
                     <option value="STEP">Step Index</option>
-                    <option value="JUMP">Jump Indices</option>
                   </optgroup>
                   <optgroup label="2. Global Markets">
                     <option>Forex (EUR/USD, GBP/JPY)</option>
                     <option>Commodities (Gold, Oil)</option>
                     <option>Cryptocurrencies (BTC, ETH)</option>
-                    <option>Stock Indices (US500)</option>
                   </optgroup>
                 </select>
                 <select style="width:100px;">
@@ -178,15 +193,6 @@
               <div class="price-large" id="live-price">1000.00</div>
               <canvas id="mainChart"></canvas>
             </div>
-            
-            <div class="card">
-              <h2>4. Platform Integrations</h2>
-              <div class="flex-row">
-                <button class="btn btn-blue">Deriv MT5 Sync</button>
-                <button class="btn btn-blue">Deriv X App</button>
-                <button class="btn btn-blue">cTrader API</button>
-              </div>
-            </div>
           </div>
 
           <div>
@@ -194,169 +200,250 @@
               <h2>3, 7, 23. Order Execution</h2>
               <div class="form-group">
                 <label>3. Trading Products</label>
-                <select>
-                  <option>Options (Digital/Vanilla)</option><option>CFDs</option>
-                  <option>Multipliers</option><option>Accumulators</option>
-                </select>
+                <select><option>Options (Digital/Vanilla)</option><option>CFDs</option><option>Multipliers</option><option>Accumulators</option></select>
               </div>
               <div class="form-group">
                 <label>23. Binary Contracts</label>
-                <select>
-                  <option>Rise/Fall</option><option>Higher/Lower</option>
-                  <option>Touch/No Touch</option><option>Over/Under</option>
-                  <option>Matches/Differs</option><option>Even/Odd</option>
-                </select>
+                <select><option>Rise/Fall</option><option>Higher/Lower</option><option>Touch/No Touch</option><option>Over/Under</option><option>Matches/Differs</option></select>
               </div>
               <div class="form-group">
                 <label>7. Order Types</label>
-                <select>
-                  <option>Market Order (Instant)</option><option>Limit Order</option>
-                  <option>Stop Order</option><option>Pending Order</option>
-                </select>
+                <select><option>Market Order (Instant)</option><option>Limit Order</option><option>Stop Order</option></select>
               </div>
-              
               <div class="flex-row">
-                <div class="form-group" style="flex:1;"><label>Stake ($)</label><input type="number" value="10"></div>
-                <div class="form-group" style="flex:1;"><label>Ticks/Time</label><input type="number" value="5"></div>
+                <div class="form-group" style="flex:1;"><label>Stake ($)</label><input type="number" id="manual-stake" value="10"></div>
+                <div class="form-group" style="flex:1;"><label>Duration</label><input type="number" value="5"></div>
               </div>
-              
               <div class="flex-row" style="margin-top:10px;">
-                <button class="btn btn-green" style="flex:1;" onclick="trade()">RISE ▲</button>
-                <button class="btn btn-red" style="flex:1;" onclick="trade()">FALL ▼</button>
+                <button class="btn btn-green" style="flex:1;" onclick="execManualTrade('RISE')">RISE ▲</button>
+                <button class="btn btn-red" style="flex:1;" onclick="execManualTrade('FALL')">FALL ▼</button>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Panel B: Risk & Features (8, 16) -->
+      <!-- PANEL B: DBot Builder (Category 5 - Matching dbot.deriv.com Video UI) -->
+      <div id="panel-auto" class="panel">
+        <div class="bot-sub-nav">
+          <button class="bot-tab active" onclick="switchBotTab('builder')">🤖 Bot Builder</button>
+          <button class="bot-tab" onclick="switchBotTab('transactions')">📊 Transactions & Journal</button>
+        </div>
+
+        <!-- Bot Builder View -->
+        <div id="bot-tab-builder">
+          <div class="grid-layout">
+            <div>
+              <!-- Block 1: Trade Parameters -->
+              <div class="block-card">
+                <div class="block-header">1. Trade Parameters</div>
+                <div class="block-row">
+                  <label>Market:</label>
+                  <select id="bot-market"><option>Derived > Continuous Indices > Volatility 10 (1s) Index</option><option>Derived > Volatility 100 Index</option></select>
+                </div>
+                <div class="block-row">
+                  <label>Trade Type:</label>
+                  <select id="bot-tradetype"><option>Digits > Over/Under</option><option>Rise/Fall</option></select>
+                  <label>Contract Type:</label>
+                  <select><option>Over</option><option>Under</option></select>
+                </div>
+                <div class="block-row">
+                  <label>Default Candle Interval:</label>
+                  <select><option>1 minute</option><option>1 tick</option></select>
+                </div>
+                <div class="block-row">
+                  <input type="checkbox" id="restart-err" checked>
+                  <label for="restart-err">Restart buy/sell on error (disable for better performance)</label>
+                </div>
+              </div>
+
+              <!-- Block 2: Run Once at Start (Variables) -->
+              <div class="block-card">
+                <div class="block-header">2. Run Once at Start</div>
+                <div class="block-row">
+                  <label>PRINT:</label>
+                  <input type="text" value="Auto X-Set It_Forget IT 🤖" style="flex:1;">
+                </div>
+                <div class="block-row">
+                  <label>SET <b>stop loss</b> TO:</label>
+                  <input type="number" id="bot-sl" value="100" style="width:80px;">
+                  <label>SET <b>martingale</b> TO:</label>
+                  <input type="number" id="bot-mg" value="0" style="width:60px;">
+                </div>
+                <div class="block-row">
+                  <label>SET <b>profit</b> TO:</label>
+                  <input type="number" id="bot-tp" value="19.95" style="width:80px;">
+                  <label>SET <b>initial amount</b> TO:</label>
+                  <input type="number" id="bot-init" value="11" style="width:60px;">
+                </div>
+                <div class="block-row">
+                  <label>SET <b>win amount</b> TO:</label>
+                  <input type="number" id="bot-winamt" value="15" style="width:80px;">
+                </div>
+              </div>
+
+              <!-- Block 3: Trade Options -->
+              <div class="block-card">
+                <div class="block-header">3. Trade Options</div>
+                <div class="block-row">
+                  <label>Duration:</label>
+                  <input type="number" value="1" style="width:50px;">
+                  <select style="width:80px;"><option>Ticks</option><option>Seconds</option></select>
+                  <label>Stake:</label>
+                  <select style="width:70px;"><option>USD</option></select>
+                  <label>Initial Amount:</label>
+                  <input type="number" id="bot-stake-input" value="11" style="width:80px;">
+                </div>
+              </div>
+
+              <button class="btn btn-green" id="bot-run-btn" style="width:100%; padding:12px; font-size:1rem;" onclick="toggleDBot()">▶ Run Bot</button>
+            </div>
+
+            <!-- Bot Live Monitoring Panel -->
+            <div>
+              <div class="bot-status-pill" id="bot-status-indicator">
+                <span id="bot-status-text">Bot is not running</span>
+                <span id="bot-spinner">⚪</span>
+              </div>
+
+              <div class="bot-stats-bar">
+                <div class="stat-box">Total stake<div class="stat-val" id="dbot-stake">0.00 USD</div></div>
+                <div class="stat-box">Total payout<div class="stat-val" id="dbot-payout">0.00 USD</div></div>
+                <div class="stat-box">No. of runs<div class="stat-val" id="dbot-runs">0</div></div>
+                <div class="stat-box">Contracts lost<div class="stat-val" id="dbot-lost" style="color:var(--red);">0</div></div>
+                <div class="stat-box">Contracts won<div class="stat-val" id="dbot-won" style="color:var(--green);">0</div></div>
+                <div class="stat-box">Total profit/loss<div class="stat-val" id="dbot-pl">+0.00 USD</div></div>
+              </div>
+
+              <div class="card">
+                <h2>Real-time Bot Output Journal</h2>
+                <div id="bot-journal" style="height:220px; overflow-y:auto; font-family:monospace; font-size:0.75rem; color:var(--text-muted); background:#050709; padding:10px; border-radius:6px; border:1px solid var(--card-border);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bot Transactions Tab View -->
+        <div id="bot-tab-transactions" style="display:none;">
+          <div class="card">
+            <h2>Live Contract Transactions</h2>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Entry/Exit Spot</th>
+                    <th>Buy Price and P/L</th>
+                  </tr>
+                </thead>
+                <tbody id="dbot-tx-body">
+                  <!-- Dynamically Injected -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL C: Risk & Features (8, 16) -->
       <div id="panel-risk" class="panel">
         <div class="grid-half">
           <div class="card">
             <h2>8. Risk Management</h2>
             <div class="form-group"><label>Stop Loss ($)</label><input type="number" placeholder="Enter amount"></div>
             <div class="form-group"><label>Take Profit ($)</label><input type="number" placeholder="Enter amount"></div>
-            <div class="toggle-row"><span>Trailing Stop</span><input type="checkbox" checked></div>
             <div class="toggle-row"><span>Negative Balance Protection</span><span class="badge bg-green">Active</span></div>
-            <div class="toggle-row"><span>Margin Monitoring alerts</span><input type="checkbox" checked></div>
           </div>
           <div class="card">
             <h2>16. Trading Features</h2>
             <div class="form-group"><label>Leverage (CFDs)</label><select><option>1:100</option><option>1:500</option><option>1:1000</option></select></div>
             <div class="toggle-row"><span>One-click Trading</span><input type="checkbox" checked></div>
-            <div class="toggle-row"><span>Partial Closing</span><span class="badge bg-blue">Supported</span></div>
-            <div class="toggle-row"><span>Multi-chart View</span><button>Open Split View</button></div>
           </div>
         </div>
       </div>
 
-      <!-- Panel C: Cashier (9, 10, 11) -->
+      <!-- PANEL D: Cashier (9, 10, 11) -->
       <div id="panel-cashier" class="panel">
-        <div class="card">
-          <h2>11. Wallets & Internal Transfers</h2>
-          <div class="flex-row">
-            <select><option>Fiat Wallet (USD)</option><option>Crypto Wallet (BTC)</option></select>
-            <button class="btn btn-blue">Convert Currency</button>
-          </div>
-        </div>
         <div class="grid-half">
           <div class="card">
             <h2>9. Deposits</h2>
-            <select style="margin-bottom:10px;"><option>Visa/Mastercard</option><option>Mobile Money (M-Pesa/MTN)</option><option>Cryptocurrency</option><option>E-Wallets (Skrill/Neteller)</option><option>Local Payment Agents</option></select>
+            <select style="margin-bottom:10px;"><option>Visa/Mastercard</option><option>Mobile Money (M-Pesa/MTN)</option><option>Cryptocurrency</option><option>Local Payment Agents</option></select>
             <input type="number" placeholder="Amount" style="margin-bottom:10px;">
             <button class="btn btn-green">Deposit Now</button>
           </div>
           <div class="card">
             <h2>10. Withdrawals</h2>
-            <select style="margin-bottom:10px;"><option>Bank Wire Transfer</option><option>Crypto Wallet</option><option>Mobile Money</option><option>Payment Agent</option></select>
+            <select style="margin-bottom:10px;"><option>Bank Wire Transfer</option><option>Crypto Wallet</option><option>Mobile Money</option></select>
             <input type="number" placeholder="Amount" style="margin-bottom:10px;">
             <button class="btn btn-red">Request Withdrawal</button>
           </div>
         </div>
       </div>
 
-      <!-- Panel D: Copy Trading (14) -->
+      <!-- PANEL E: Social (14) -->
       <div id="panel-social" class="panel">
         <div class="card">
-          <h2>14. Copy Trading & Social</h2>
+          <h2>14. Copy Trading & Strategy Providers</h2>
           <div class="table-responsive">
             <table>
-              <tr><th>Strategy Provider</th><th>Win Rate</th><th>Risk Score</th><th>Copiers</th><th>Action</th></tr>
-              <tr><td>Nexa Alpha Bot</td><td>82%</td><td><span class="badge bg-green">Low</span></td><td>4,120</td><td><button>Copy</button></td></tr>
-              <tr><td>Forex Scalper X</td><td>64%</td><td><span class="badge bg-blue">Med</span></td><td>1,050</td><td><button>Copy</button></td></tr>
+              <tr><th>Provider</th><th>Win Rate</th><th>Risk Score</th><th>Copiers</th><th>Action</th></tr>
+              <tr><td>Nexa Auto-X Bot</td><td>82%</td><td><span class="badge bg-green">Low</span></td><td>4,120</td><td><button class="btn btn-blue">Copy</button></td></tr>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- Panel E: Bots & Dev (5, 15, 25) -->
-      <div id="panel-auto" class="panel">
-        <div class="grid-half">
-          <div class="card">
-            <h2>5. Automation</h2>
-            <div class="form-group"><label>Deriv Bot (No-Code)</label><select><option>Martingale Strategy</option><option>SMA Crossover</option></select></div>
-            <button class="btn btn-gold">Start Bot</button>
-            <p style="font-size:0.75rem; margin-top:10px; color:var(--text-muted);">Also supports Custom bots, Signal integrations, and Third-party API bots.</p>
+      <!-- PANEL F: Dev Tools (15, 25) -->
+      <div id="panel-devtools" class="panel">
+        <div class="card">
+          <h2>15 & 25. Developer Tools & WebSocket APIs</h2>
+          <div class="flex-row" style="margin-bottom:10px;">
+            <input type="text" placeholder="Token Name">
+            <button class="btn btn-blue">Create Token</button>
           </div>
-          <div class="card">
-            <h2>15 & 25. Developer Tools & APIs</h2>
-            <div class="form-group"><label>Generate Token (OAuth/Webhooks)</label>
-              <div class="flex-row"><input type="text" placeholder="Token Name"><button class="btn btn-blue" style="width:100px;">Create</button></div>
-            </div>
-            <label style="font-size:0.75rem;">25. Available API Endpoints:</label>
-            <p style="font-size:0.7rem; color:var(--text-muted);">Account API, Trading API, Market Data, Tick Stream, Proposal, Buy/Sell, Portfolio, Transaction API.</p>
-          </div>
+          <p style="font-size:0.75rem; color:var(--text-muted);">Available Endpoints: Account API, Trading API, Market Data, Tick Stream, Proposal, Buy/Sell APIs.</p>
         </div>
       </div>
 
-      <!-- Panel F: Account & Mobile (13, 19, 24) -->
+      <!-- PANEL G: Security & Account (13, 19, 24) -->
       <div id="panel-account" class="panel">
         <div class="grid-half">
           <div class="card">
             <h2>13 & 24. Security & Account Management</h2>
             <div class="toggle-row"><span>KYC / Identity Verification</span><span class="badge bg-green">Verified</span></div>
             <div class="toggle-row"><span>Two-Factor Auth (2FA)</span><button>Enable</button></div>
-            <div class="toggle-row"><span>Address & Tax Information</span><button>Update</button></div>
-            <div class="toggle-row"><span>Login History & Devices</span><button>View</button></div>
           </div>
           <div class="card">
-            <h2>19. Mobile App Features</h2>
+            <h2>19. Mobile Features</h2>
             <div class="toggle-row"><span>Face ID / Fingerprint Login</span><input type="checkbox" checked></div>
             <div class="toggle-row"><span>Push Notifications</span><input type="checkbox" checked></div>
-            <div class="toggle-row"><span>In-App Price Alerts</span><input type="checkbox" checked></div>
-            <p style="font-size:0.75rem; color:var(--text-muted); margin-top:10px;">Full account management, deposit, and withdrawal fully supported via iOS/Android apps.</p>
           </div>
         </div>
       </div>
 
-      <!-- Panel G: Analytics (21) -->
+      <!-- PANEL H: Analytics (21) -->
       <div id="panel-stats" class="panel">
         <div class="card">
-          <h2>21. Trading Statistics & History</h2>
+          <h2>21. Account Statements & Trading Statistics</h2>
           <div class="table-responsive">
             <table>
-              <tr><th>Date</th><th>Ref ID</th><th>Account Statement</th><th>Performance</th><th>Balance History</th></tr>
-              <tr><td>Today</td><td>#TX-991</td><td>Profit/Loss Report</td><td><span style="color:var(--green)">+ $45.00</span></td><td>$10,045.00</td></tr>
+              <tr><th>Date</th><th>Ref ID</th><th>Statement</th><th>P/L</th><th>Balance</th></tr>
+              <tr><td>Today</td><td>#TX-1092</td><td>Trade Settlement</td><td><span style="color:var(--green)">+$3.47</span></td><td>$10,003.47</td></tr>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- Panel H: Support & Business (17, 18, 20) -->
+      <!-- PANEL I: Support & Business (17, 18, 20) -->
       <div id="panel-support" class="panel">
         <div class="grid-half">
           <div class="card">
-            <h2>17 & 18. Education & Customer Support</h2>
-            <div class="flex-row" style="margin-bottom:10px;">
-              <button class="btn btn-blue" style="flex:1;">Live Chat 24/7</button>
-              <button class="btn btn-blue" style="flex:1;">Help Centre</button>
-            </div>
-            <p style="font-size:0.75rem; color:var(--text-muted);">Access Trading Academy, Video Tutorials, Webinars, Glossary, and Community Forums.</p>
+            <h2>17 & 18. Education & Support</h2>
+            <button class="btn btn-blue">Live Chat 24/7</button>
           </div>
           <div class="card">
             <h2>20. Business Services</h2>
-            <button class="btn btn-gold" style="margin-bottom:10px;">Apply for IB (Introducing Broker)</button>
-            <p style="font-size:0.75rem; color:var(--text-muted);">Affiliate programs, Payment Agent program, API partner programs, and White-label opportunities available.</p>
+            <button class="btn btn-gold">Apply for IB Program</button>
           </div>
         </div>
       </div>
@@ -365,15 +452,28 @@
   </div>
 
   <script>
-    // Navigation & Mobile Menu Logic
+    // --- GLOBAL STATE ---
+    let balance = 10000.00;
+    let price = 1000.00;
+    let priceHist = [1000.00];
+
+    // DBot Engine State
+    let isBotRunning = false;
+    let botTimer = null;
+    let totalStake = 0;
+    let totalPayout = 0;
+    let runsCount = 0;
+    let contractsWon = 0;
+    let contractsLost = 0;
+    let totalPL = 0;
+
+    // --- NAVIGATION ---
     function nav(panelId) {
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.getElementById(`panel-${panelId}`).classList.add('active');
       event.currentTarget.classList.add('active');
-      
-      // Auto-close menu on mobile after selection
-      if(window.innerWidth <= 768) toggleMenu();
+      if (window.innerWidth <= 768) toggleMenu();
     }
 
     function toggleMenu() {
@@ -381,37 +481,145 @@
       document.querySelector('.sidebar-overlay').classList.toggle('open');
     }
 
-    // Chart & Ticker Simulator
-    let price = 1000;
-    let hist = [1000];
-    
-    function switchMarket() { price = 1000; hist = [1000]; }
-    
+    function switchAccount() {
+      const type = document.getElementById('account-select').value;
+      balance = type === 'demo' ? 10000.00 : 2500.00;
+      document.getElementById('bal').innerText = balance.toFixed(2);
+    }
+
+    function switchBotTab(tab) {
+      document.querySelectorAll('.bot-tab').forEach(t => t.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById('bot-tab-builder').style.display = tab === 'builder' ? 'block' : 'none';
+      document.getElementById('bot-tab-transactions').style.display = tab === 'transactions' ? 'block' : 'none';
+    }
+
+    // --- CHART ENGINE ---
+    function switchMarket() { price = 1000.00; priceHist = [1000.00]; }
+
     setInterval(() => {
-      price += (Math.random() - 0.5) * 3;
-      hist.push(price);
-      if(hist.length > 30) hist.shift();
-      
-      document.getElementById('live-price').innerText = price.toFixed(2);
-      document.getElementById('live-price').className = Math.random() > 0.5 ? 'price-large up' : 'price-large down';
-      
+      let delta = (Math.random() - 0.49) * 2.5;
+      price = Math.max(10, price + delta);
+      priceHist.push(price);
+      if (priceHist.length > 35) priceHist.shift();
+
+      const pElem = document.getElementById('live-price');
+      if (pElem) {
+        pElem.innerText = price.toFixed(2);
+        pElem.className = delta >= 0 ? "price-large up" : "price-large down";
+      }
+
       const canvas = document.getElementById('mainChart');
-      if(!canvas) return;
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
       canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      
-      const min = Math.min(...hist), max = Math.max(...hist);
+
+      const min = Math.min(...priceHist), max = Math.max(...priceHist);
       ctx.beginPath(); ctx.strokeStyle = '#0088ff'; ctx.lineWidth = 2;
-      hist.forEach((v, i) => {
-        const x = i * (canvas.width / 29);
+      priceHist.forEach((v, i) => {
+        const x = i * (canvas.width / 34);
         const y = canvas.height - ((v - min) / (max - min || 1)) * canvas.height;
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
       ctx.stroke();
     }, 1000);
 
-    function trade() { alert("Trade executed successfully!"); }
+    // --- MANUAL TRADING ---
+    function execManualTrade(type) {
+      let stake = parseFloat(document.getElementById('manual-stake').value);
+      if (stake > balance) return alert("Insufficient balance");
+      balance -= stake;
+      document.getElementById('bal').innerText = balance.toFixed(2);
+      alert(`${type} trade opened for $${stake}`);
+    }
+
+    // --- DBOT ENGINE ---
+    function toggleDBot() {
+      isBotRunning = !isBotRunning;
+      const btn = document.getElementById('bot-run-btn');
+      const indicator = document.getElementById('bot-status-indicator');
+      const text = document.getElementById('bot-status-text');
+
+      if (isBotRunning) {
+        btn.innerText = "■ Stop Bot";
+        btn.className = "btn btn-red";
+        indicator.style.borderColor = "var(--green)";
+        text.innerText = "Bot is running...";
+        logBotJournal("Bot strategy execution initiated.");
+
+        botTimer = setInterval(runBotCycle, 4000);
+      } else {
+        btn.innerText = "▶ Run Bot";
+        btn.className = "btn btn-green";
+        indicator.style.borderColor = "var(--card-border)";
+        text.innerText = "Bot is not running";
+        clearInterval(botTimer);
+        logBotJournal("Bot strategy stopped by user.");
+      }
+    }
+
+    function runBotCycle() {
+      if (!isBotRunning) return;
+
+      let stakeInput = parseFloat(document.getElementById('bot-init').value) || 11;
+      if (balance < stakeInput) {
+        logBotJournal("Insufficient funds. Stopping bot.");
+        toggleDBot();
+        return;
+      }
+
+      runsCount++;
+      totalStake += stakeInput;
+      balance -= stakeInput;
+
+      let win = Math.random() > 0.45; // 55% Win Rate simulation
+      let profit = win ? stakeInput * 0.315 : -stakeInput; // ~31.5% payout
+      let payout = win ? stakeInput + profit : 0;
+
+      if (win) {
+        contractsWon++;
+        totalPayout += payout;
+        balance += payout;
+      } else {
+        contractsLost++;
+      }
+
+      totalPL += profit;
+
+      // Update UI Stats Bar
+      document.getElementById('dbot-stake').innerText = `${totalStake.toFixed(2)} USD`;
+      document.getElementById('dbot-payout').innerText = `${totalPayout.toFixed(2)} USD`;
+      document.getElementById('dbot-runs').innerText = runsCount;
+      document.getElementById('dbot-won').innerText = contractsWon;
+      document.getElementById('dbot-lost').innerText = contractsLost;
+      
+      const plElem = document.getElementById('dbot-pl');
+      plElem.innerText = `${totalPL >= 0 ? '+' : ''}${totalPL.toFixed(2)} USD`;
+      plElem.style.color = totalPL >= 0 ? 'var(--green)' : 'var(--red)';
+      document.getElementById('bal').innerText = balance.toFixed(2);
+
+      // Add to Transactions Table
+      let entrySpot = price.toFixed(2);
+      let exitSpot = (price + (win ? 0.4 : -0.4)).toFixed(2);
+      
+      let txBody = document.getElementById('dbot-tx-body');
+      let row = `
+        <tr>
+          <td><span class="badge ${win ? 'bg-green' : 'bg-red'}">${win ? 'Won' : 'Lost'}</span></td>
+          <td>⭕ ${entrySpot}<br>⭕ ${exitSpot}</td>
+          <td>${stakeInput.toFixed(2)} USD<br><b style="color:${win ? 'var(--green)' : 'var(--red)'}">${win ? '+' + profit.toFixed(2) : profit.toFixed(2)} USD</b></td>
+        </tr>
+      `;
+      txBody.innerHTML = row + txBody.innerHTML;
+
+      logBotJournal(`Run #${runsCount}: Contract ${win ? 'WON (+$' + profit.toFixed(2) + ')' : 'LOST (-$' + stakeInput.toFixed(2) + ')'}`);
+    }
+
+    function logBotJournal(msg) {
+      let j = document.getElementById('bot-journal');
+      j.innerHTML = `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>` + j.innerHTML;
+    }
   </script>
 </body>
 </html>
