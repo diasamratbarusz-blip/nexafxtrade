@@ -787,8 +787,9 @@
     }
 
     function redirectToDerivTrade() {
-        pushDashboardTelemetryToAdmin("REDIRECT_DERIV_TRADE", { targetUrl: "https://track.deriv.com/" });
-        window.open("https://track.deriv.com/", "_blank");
+        const destination = `deriv-trade.html?currency=${encodeURIComponent(currentActiveCurrencyContext)}`;
+        pushDashboardTelemetryToAdmin("REDIRECT_DERIV_TRADE", { targetUrl: destination });
+        window.location.href = destination;
     }
     /* =============================================================================== */
 
