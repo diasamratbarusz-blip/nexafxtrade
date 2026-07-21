@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexa - Deriv Trade Terminal</title>
+  <style>
+    :root {
+      --bg-dark: #0d1117;
+      --card-bg: #161b22;
+      --accent-blue: #0088ff;
+      --green: #22c55e;
+      --red: #ef4444;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border: #30363d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text); padding: 20px; }
+
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px;
+    }
+    .header h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--accent-blue); }
+    .status-badge { font-size: 0.85rem; padding: 4px 10px; border-radius: 12px; background: var(--border); }
+    .status-badge.connected { background: rgba(34, 197, 94, 0.2); color: var(--green); }
+
+    .grid-container {
+      display: grid; grid-template-columns: 1fr 340px; gap: 20px;
+    }
+    @media (max-width: 900px) { .grid-container { grid-template-columns: 1fr; } }
+
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+
+    /* Market Selector & Display */
+    .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    select, input {
+      width: 100%; background: #0b0f14; border: 1px solid var(--border); color: var(--text);
+      padding: 10px; border-radius: 6px; margin-top: 6px; margin-bottom: 15px; font-size: 0.95rem;
+    }
+
+    .price-display { text-align: center; margin: 40px 0; }
+    .price-display .price { font-size: 2.8rem; font-weight: bold; font-family: monospace; }
+    .price-display .price.up { color: var(--green); }
+    .price-display .price.down { color: var(--red); }
+
+    /* Trading Form */
+    .form-group { margin-bottom: 15px; }
+    label { font-size: 0.85rem; color: var(--text-muted); }
+
+    .trade-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .btn {
+      border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer;
+      font-size: 1rem; color: white; transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-rise { background: var(--green); }
+    .btn-fall { background: var(--red); }
+    .btn-auth { background: var(--accent-blue); width: 100%; }
+
+    /* Logs Area */
+    .log-box {
+      background: #080b0e; border: 1px solid var(--border); border-radius: 6px; padding: 10px;
+      font-family: monospace; font-size: 0.8rem; height: 160px; overflow-y: auto; color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>NEXA <span style="color:white; font-size:1rem;">| Deriv Trade Terminal</span></h1>
+    <div id="connection-status" class="status-badge">Connecting to Deriv...</div>
+  </div>
+
+  <div class="grid-container">
+    
+    <!-- Left Column: Live Market Feed -->
+    <div class="card">
+      <div class="market-header">
+        <h2>Live Market Feed</h2>
+        <div style="width: 200px;">
+          <select id="symbol-select" onchange="switchSymbol()">
+            <option value="R_100">Volatility 100 Index</option>
+            <option value="1HZ100V">Volatility 100 (1s) Index</option>
+            <option value="R_50">Volatility 50 Index</option>
+            <option value="frxGBPUSD">GBP/USD</option>
+            <option value="frxEURUSD">EUR/USD</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="price-display">
+        <span style="color: var(--text-muted); font-size:0.9rem;">SPOT PRICE</span>
+        <div id="live-price" class="price">---.--</div>
+        <span id="price-time" style="font-size:0.8rem; color: var(--text-muted);">Awaiting data...</span>
+      </div>
+
+      <h3 style="font-size: 0.9rem; margin-bottom: 8px;">Activity Log</h3>
+      <div id="log-output" class="log-box"></div>
+    </div>
+
+    <!-- Right Column: Trade Execution -->
+    <div class="card">
+      <h2>Execute Trade</h2>
+      
+      <div class="form-group" style="margin-top: 15px;">
+        <label for="api-token">Deriv API Token (Optional for Auth)</label>
+        <input type="password" id="api-token" placeholder="Paste your API Token">
+        <button class="btn btn-auth" onclick="authorizeToken()">Authenticate Account</button>
+      </div>
+
+      <hr style="border-color: var(--border); margin: 15px 0;">
+
+      <div class="form-group">
+        <label>Stake Amount (USD)</label>
+        <input type="number" id="stake-amount" value="10" min="1" step="1">
+      </div>
+
+      <div class="form-group">
+        <label>Duration (Ticks)</label>
+        <input type="number" id="duration" value="5" min="1" max="10">
+      </div>
+
+      <div class="trade-buttons">
+        <button class="btn btn-rise" onclick="executeTrade('CALL')">RISE ▲</button>
+        <button class="btn btn-fall" onclick="executeTrade('PUT')">FALL ▼</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Config: 1089 is Deriv's default public testing App ID
+    const APP_ID = 1089;
+    const WS_URL = `wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`;
+    
+    let ws;
+    let currentSymbol = 'R_100';
+    let currentSubscriptionId = null;
+    let lastPrice = 0;
+
+    function initWebSocket() {
+      ws = new WebSocket(WS_URL);
+
+      ws.onopen = () => {
+        updateStatus("Connected", true);
+        log("WebSocket connected to Deriv.");
+        subscribeTicks(currentSymbol);
+        startKeepAlive();
+      };
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        // Handle Live Price Ticks
+        if (data.msg_type === 'tick' && data.tick) {
+          updatePrice(data.tick.quote, data.tick.epoch);
+        }
+
+        // Handle Trade Proposal Responses
+        if (data.msg_type === 'proposal') {
+          log(`Proposal: Payout $${data.proposal.payout} | Ask Price: $${data.proposal.ask_price}`);
+        }
+
+        // Handle Auth Response
+        if (data.msg_type === 'authorize') {
+          if (data.error) {
+            log(`Auth Error: ${data.error.message}`);
+          } else {
+            log(`Authenticated as: ${data.authorize.email} (Balance: $${data.authorize.balance})`);
+          }
+        }
+
+        // Handle Errors
+        if (data.error) {
+          log(`API Error: ${data.error.message}`);
+        }
+      };
+
+      ws.onclose = () => {
+        updateStatus("Disconnected", false);
+        log("WebSocket connection closed. Retrying in 3s...");
+        setTimeout(initWebSocket, 3000);
+      };
+    }
+
+    function subscribeTicks(symbol) {
+      if (currentSubscriptionId) {
+        ws.send(JSON.stringify({ forget: currentSubscriptionId }));
+      }
+      ws.send(JSON.stringify({
+        ticks: symbol,
+        subscribe: 1
+      }));
+      log(`Subscribed to ${symbol}`);
+    }
+
+    function switchSymbol() {
+      currentSymbol = document.getElementById("symbol-select").value;
+      subscribeTicks(currentSymbol);
+    }
+
+    function updatePrice(price, epoch) {
+      const priceElem = document.getElementById("live-price");
+      const timeElem = document.getElementById("price-time");
+
+      if (price > lastPrice) {
+        priceElem.className = "price up";
+      } else if (price < lastPrice) {
+        priceElem.className = "price down";
+      }
+      
+      lastPrice = price;
+      priceElem.innerText = parseFloat(price).toFixed(2);
+      timeElem.innerText = `Updated: ${new Date(epoch * 1000).toLocaleTimeString()}`;
+    }
+
+    function authorizeToken() {
+      const token = document.getElementById("api-token").value.trim();
+      if (!token) return alert("Please enter an API Token");
+      
+      ws.send(JSON.stringify({ authorize: token }));
+      log("Authorizing user token...");
+    }
+
+    function executeTrade(contractType) {
+      const stake = document.getElementById("stake-amount").value;
+      const duration = document.getElementById("duration").value;
+
+      log(`Requesting proposal for ${contractType} (${duration} ticks, $${stake})...`);
+
+      ws.send(JSON.stringify({
+        proposal: 1,
+        amount: parseFloat(stake),
+        basis: "stake",
+        contract_type: contractType,
+        currency: "USD",
+        duration: parseInt(duration),
+        duration_unit: "t",
+        symbol: currentSymbol
+      }));
+    }
+
+    function startKeepAlive() {
+      setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ ping: 1 }));
+        }
+      }, 30000);
+    }
+
+    function updateStatus(text, isConnected) {
+      const badge = document.getElementById("connection-status");
+      badge.innerText = text;
+      badge.className = isConnected ? "status-badge connected" : "status-badge";
+    }
+
+    function log(msg) {
+      const box = document.getElementById("log-output");
+      box.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+      box.scrollTop = box.scrollHeight;
+    }
+
+    // Start WebSocket on Load
+    initWebSocket();
+  </script>
+</body>
+</html>
