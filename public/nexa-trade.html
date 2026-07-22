@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexa Trade | Internal Crypto Exchange</title>
-    <!-- Charting Library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -19,178 +18,125 @@
             --border: #2b313a;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Top Header Navigation */
+        /* Navigation Bar */
         header {
             background-color: var(--bg-card);
             border-bottom: 1px solid var(--border);
-            padding: 10px 20px;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             height: 60px;
         }
 
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: var(--yellow);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
+        .logo { font-size: 20px; font-weight: bold; color: var(--yellow); display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .logo span { color: var(--text-main); }
 
-        .nav-stats {
-            display: flex;
-            gap: 25px;
-            font-size: 13px;
-        }
-
-        .stat-item { display: flex; flex-direction: column; }
-        .stat-label { color: var(--text-muted); font-size: 11px; }
-
-        .btn-back {
-            background-color: var(--bg-hover);
+        .nav-links { display: flex; gap: 10px; overflow-x: auto; padding: 5px 0; }
+        .nav-btn {
+            background: var(--bg-hover);
             color: var(--text-main);
-            border: none;
-            padding: 8px 16px;
+            border: 1px solid var(--border);
+            padding: 6px 12px;
             border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
+            white-space: nowrap;
+            transition: 0.2s;
         }
+        .nav-btn:hover { background: var(--yellow); color: #000; }
 
-        /* Main Workspace Layout */
+        .nav-stats { display: flex; gap: 20px; font-size: 12px; }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-label { color: var(--text-muted); font-size: 10px; }
+
+        /* Workspace Grid Layout */
         .grid-container {
             display: grid;
-            grid-template-columns: 260px 1fr 300px;
-            grid-template-rows: 1fr 280px;
+            grid-template-columns: 260px 1fr 320px;
+            grid-template-rows: 1fr 240px;
             gap: 2px;
             background-color: var(--border);
             height: calc(100vh - 60px);
         }
 
-        .panel {
-            background-color: var(--bg-card);
-            padding: 15px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+        .panel { background-color: var(--bg-card); padding: 15px; overflow: hidden; display: flex; flex-direction: column; }
+        .panel-title { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;}
 
-        .panel-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
+        /* Feature Sub-Bar */
+        .sub-nav { background-color: #121418; border-bottom: 1px solid var(--border); display: flex; gap: 8px; padding: 6px 20px; overflow-x: auto; }
 
-        /* Ticker / Pair Selector */
+        /* Tickers */
         .ticker-list { list-style: none; overflow-y: auto; }
-        .ticker-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 5px;
-            cursor: pointer;
-            border-bottom: 1px solid #23272e;
-            font-size: 13px;
-        }
+        .ticker-item { display: flex; justify-content: space-between; padding: 10px 5px; cursor: pointer; border-bottom: 1px solid #23272e; font-size: 13px; }
         .ticker-item:hover, .ticker-item.active { background-color: var(--bg-hover); }
 
-        /* Chart Section */
+        /* Chart */
         .chart-container { flex: 1; position: relative; }
 
-        /* Order Book Panel */
-        .order-book-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-        }
+        /* Order Book Table */
+        .order-book-table { width: 100%; border-collapse: collapse; font-size: 12px; }
         .order-book-table th { text-align: left; color: var(--text-muted); padding-bottom: 5px; }
         .order-book-table td { padding: 3px 0; }
         .text-green { color: var(--green); }
         .text-red { color: var(--red); }
 
-        /* Trade Execution Box */
-        .trade-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-        .tab-btn {
-            flex: 1;
-            padding: 8px;
-            background: var(--bg-hover);
-            border: none;
-            color: var(--text-main);
-            cursor: pointer;
-            border-radius: 4px;
-            font-weight: bold;
-        }
+        /* Order Box */
+        .trade-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+        .tab-btn { flex: 1; padding: 6px; background: var(--bg-hover); border: none; color: var(--text-main); cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 12px; }
         .tab-btn.active-buy { background: var(--green); color: #000; }
         .tab-btn.active-sell { background: var(--red); color: #fff; }
 
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-        .form-group input {
-            width: 100%;
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 8px;
-            border-radius: 4px;
-            outline: none;
+        .form-group { margin-bottom: 8px; }
+        .form-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
+        .form-group input, .form-group select {
+            width: 100%; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main); padding: 6px; border-radius: 4px; outline: none; font-size: 12px;
         }
 
-        .btn-action {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+        .btn-action { width: 100%; padding: 10px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px; }
         .btn-buy { background-color: var(--green); color: #000; }
         .btn-sell { background-color: var(--red); color: #fff; }
 
-        /* Bottom Orders / History Panel */
-        .bottom-panel {
-            grid-column: 1 / span 3;
-            overflow-y: auto;
-        }
-
-        .order-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-            text-align: left;
-        }
+        .bottom-panel { grid-column: 1 / span 3; overflow-y: auto; }
+        .order-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
         .order-table th { background: var(--bg-dark); color: var(--text-muted); padding: 8px; }
         .order-table td { padding: 8px; border-bottom: 1px solid var(--border); }
+
+        /* Universal Drawer Modals */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }
+        .modal-content { background-color: var(--bg-card); margin: 5% auto; padding: 20px; border: 1px solid var(--border); width: 80%; max-width: 900px; border-radius: 8px; max-height: 80vh; overflow-y: auto; }
+        .close { color: var(--text-muted); float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover { color: #fff; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .feature-card { background: var(--bg-dark); border: 1px solid var(--border); padding: 15px; border-radius: 6px; text-decoration: none; color: var(--text-main); }
+        .feature-card:hover { border-color: var(--yellow); }
     </style>
 </head>
 <body>
 
-    <!-- Header Navigation -->
+    <!-- Header Navigation Bar -->
     <header>
-        <div class="logo">
-            ⚡ NEXA <span>TRADE</span>
+        <a href="index.html" class="logo">⚡ NEXA <span>TRADE</span></a>
+
+        <div class="nav-links">
+            <a href="core.html" class="nav-btn">Core Platform</a>
+            <a href="security.html" class="nav-btn">Security</a>
+            <a href="wallets.html" class="nav-btn">Wallets</a>
+            <a href="trading.html" class="nav-btn">Trading Engine</a>
+            <a href="earn.html" class="nav-btn">Earn Programs</a>
+            <a href="payments.html" class="nav-btn">Payments</a>
+            <a href="p2p.html" class="nav-btn">P2P Market</a>
+            <a href="web3.html" class="nav-btn">Web3 Hub</a>
+            <a href="nfts.html" class="nav-btn">NFTs</a>
+            <a href="analytics.html" class="nav-btn">Analytics</a>
+            <a href="admin.html" class="nav-btn">Admin Panel</a>
+            <a href="apis.html" class="nav-btn">APIs & Devs</a>
+            <a href="roadmap.html" class="nav-btn">Roadmap</a>
         </div>
 
         <div class="nav-stats">
@@ -202,25 +148,27 @@
                 <span class="stat-label">Price</span>
                 <span id="stat-price" class="text-green">$64,250.00</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-label">24h Change</span>
-                <span class="text-green">+3.42%</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">System Mode</span>
-                <span style="color: var(--yellow);">Internal Engine</span>
-            </div>
         </div>
-
-        <a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
     </header>
+
+    <!-- Sub Navigation Context Bar -->
+    <div class="sub-nav">
+        <button class="nav-btn" onclick="openModal('orderTypesModal')">⚙️ Order Types</button>
+        <button class="nav-btn" onclick="openModal('botsModal')">🤖 Trading Bots</button>
+        <button class="nav-btn" onclick="openModal('mobileModal')">📱 Apps & Downloads</button>
+        <a href="payments.html" class="nav-btn" style="background: #113828; color: var(--green);">💳 Quick Deposit (M-PESA / Cards)</a>
+        <a href="p2p.html" class="nav-btn" style="background: #3e2e0a; color: var(--yellow);">🤝 P2P Quick Buy</a>
+    </div>
 
     <!-- Workspace Grid Layout -->
     <div class="grid-container">
 
-        <!-- 1. Asset / Market Selector -->
+        <!-- 1. Markets Sidebar -->
         <div class="panel">
-            <div class="panel-title">Markets</div>
+            <div class="panel-title">
+                Markets 
+                <a href="analytics.html" style="color:var(--yellow); font-size:10px; text-decoration:none;">View All</a>
+            </div>
             <ul class="ticker-list">
                 <li class="ticker-item active" onclick="switchPair('BTC/USDT', 64250)">
                     <span>BTC/USDT</span>
@@ -241,41 +189,45 @@
             </ul>
         </div>
 
-        <!-- 2. Interactive Chart Section -->
+        <!-- 2. Chart Workspace -->
         <div class="panel">
-            <div class="panel-title" id="chart-header">BTC/USDT Price Movement (Internal Real-Time)</div>
+            <div class="panel-title" id="chart-header">BTC/USDT TradingView Live Execution</div>
             <div class="chart-container">
                 <canvas id="nexaChart"></canvas>
             </div>
         </div>
 
-        <!-- 3. Order Book & Execution Form -->
+        <!-- 3. Trading Execution Box -->
         <div class="panel">
-            <div class="panel-title">Order Book (Asks / Bids)</div>
-            <table class="order-book-table">
-                <thead>
-                    <tr><th>Price</th><th>Amount</th></tr>
-                </thead>
-                <tbody id="order-book-body">
-                    <!-- Dynamic Asks/Bids inserted here -->
-                </tbody>
-            </table>
-
-            <hr style="border-color: var(--border); margin: 15px 0;">
-
-            <!-- Trade Execution Engine -->
+            <div class="panel-title">Execution Panel</div>
+            
             <div class="trade-tabs">
                 <button class="tab-btn active-buy" id="btn-tab-buy" onclick="setSide('BUY')">Buy</button>
                 <button class="tab-btn" id="btn-tab-sell" onclick="setSide('SELL')">Sell</button>
             </div>
 
             <div class="form-group">
-                <label>Price (USDT)</label>
+                <label>Order Type Execution</label>
+                <select id="order-type">
+                    <option value="Market">Market Order</option>
+                    <option value="Limit">Limit Order</option>
+                    <option value="Stop-Limit">Stop-Limit</option>
+                    <option value="Stop-Market">Stop-Market</option>
+                    <option value="Take Profit">Take Profit</option>
+                    <option value="Trailing Stop">Trailing Stop</option>
+                    <option value="OCO">OCO (One-Cancels-Other)</option>
+                    <option value="Iceberg">Iceberg</option>
+                    <option value="TWAP">TWAP</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Execution Price (USDT)</label>
                 <input type="number" id="trade-price" value="64250">
             </div>
 
             <div class="form-group">
-                <label>Amount</label>
+                <label>Volume / Amount</label>
                 <input type="number" id="trade-amount" placeholder="0.00" oninput="calculateTotal()">
             </div>
 
@@ -284,29 +236,71 @@
                 <input type="number" id="trade-total" readonly placeholder="0.00">
             </div>
 
-            <button class="btn-action btn-buy" id="btn-submit" onclick="executeInternalTrade()">Execute Order</button>
+            <button class="btn-action btn-buy" id="btn-submit" onclick="executeInternalTrade()">Execute Trade</button>
         </div>
 
-        <!-- 4. Bottom Open Orders & History -->
+        <!-- 4. Bottom Order History -->
         <div class="panel bottom-panel">
-            <div class="panel-title">Internal Trade Ledger / Executed Orders</div>
+            <div class="panel-title">System Trade History & Execution Logs</div>
             <table class="order-table">
                 <thead>
                     <tr>
-                        <th>Time</th>
+                        <th>Timestamp</th>
                         <th>Pair</th>
+                        <th>Side</th>
                         <th>Type</th>
                         <th>Price</th>
                         <th>Amount</th>
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody id="trade-history">
-                    <!-- Dynamic Order Logs -->
-                </tbody>
+                <tbody id="trade-history"></tbody>
             </table>
         </div>
+    </div>
 
+    <!-- Modals for Special Sub-Sections -->
+    <div id="orderTypesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('orderTypesModal')">&times;</span>
+            <h2>Advanced Order Types Supported</h2>
+            <div class="feature-grid">
+                <div class="feature-card"><h3>Market</h3><p>Instant fill at current price.</p></div>
+                <div class="feature-card"><h3>Limit</h3><p>Execute at specific price or better.</p></div>
+                <div class="feature-card"><h3>Stop-Limit</h3><p>Trigger limit order once stop price hit.</p></div>
+                <div class="feature-card"><h3>Stop-Market</h3><p>Trigger market order at stop price.</p></div>
+                <div class="feature-card"><h3>Take Profit</h3><p>Auto-close positions at profit target.</p></div>
+                <div class="feature-card"><h3>Trailing Stop</h3><p>Dynamic stop level tracks position.</p></div>
+                <div class="feature-card"><h3>OCO</h3><p>One-Cancels-The-Other twin orders.</p></div>
+                <div class="feature-card"><h3>Iceberg</h3><p>Hide total size by splitting orders.</p></div>
+                <div class="feature-card"><h3>TWAP</h3><p>Time-Weighted Average Execution.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="botsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('botsModal')">&times;</span>
+            <h2>Automated Trading Bots</h2>
+            <div class="feature-grid">
+                <div class="feature-card"><h3>Grid Bots</h3><p>Automate buy-low sell-high grids.</p></div>
+                <div class="feature-card"><h3>DCA Bots</h3><p>Dollar-Cost Average investments automatically.</p></div>
+                <div class="feature-card"><h3>Copy Trading</h3><p>Mirror lead traders in real-time.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('mobileModal')">&times;</span>
+            <h2>Applications & Cross-Platform Downloads</h2>
+            <div class="feature-grid">
+                <div class="feature-card"><h3>Android App</h3><p>Download APK / Google Play Package.</p></div>
+                <div class="feature-card"><h3>iOS App</h3><p>Download TestFlight or App Store build.</p></div>
+                <div class="feature-card"><h3>Desktop Application</h3><p>Install native Windows/macOS client.</p></div>
+                <div class="feature-card"><h3>Responsive Web Platform</h3><p>Optimized for touch device browsers.</p></div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -315,7 +309,6 @@
         let currentSide = "BUY";
         let chartInstance = null;
 
-        // Initialize Internal Trading Chart
         function initChart() {
             const ctx = document.getElementById('nexaChart').getContext('2d');
             chartInstance = new Chart(ctx, {
@@ -343,47 +336,17 @@
             });
         }
 
-        // Generate Internal Mock Order Book Data
-        function renderOrderBook() {
-            const tbody = document.getElementById('order-book-body');
-            tbody.innerHTML = '';
-            
-            // Asks (Sells)
-            for (let i = 3; i >= 1; i--) {
-                let askPrice = (currentPrice + (i * 12.5)).toFixed(2);
-                let askQty = (Math.random() * 1.5).toFixed(4);
-                tbody.innerHTML += `<tr class="text-red"><td>${askPrice}</td><td>${askQty}</td></tr>`;
-            }
-
-            // Current Price Display
-            tbody.innerHTML += `<tr><td colspan="2" style="padding: 6px 0; font-weight: bold; border-top: 1px solid #2b313a; border-bottom: 1px solid #2b313a;" class="text-green">⚡ ${currentPrice.toFixed(2)}</td></tr>`;
-
-            // Bids (Buys)
-            for (let i = 1; i <= 3; i++) {
-                let bidPrice = (currentPrice - (i * 10.5)).toFixed(2);
-                let bidQty = (Math.random() * 1.5).toFixed(4);
-                tbody.innerHTML += `<tr class="text-green"><td>${bidPrice}</td><td>${bidQty}</td></tr>`;
-            }
-        }
-
-        // Switch Active Asset Pair
         function switchPair(pair, price) {
             currentPair = pair;
             currentPrice = price;
             document.getElementById('stat-pair').innerText = pair;
             document.getElementById('stat-price').innerText = '$' + price.toFixed(2);
-            document.getElementById('chart-header').innerText = pair + ' Price Movement (Internal Real-Time)';
+            document.getElementById('chart-header').innerText = pair + ' Price Movement';
             document.getElementById('trade-price').value = price;
-            
-            // Update Chart Data Randomly
-            let newData = [price - 50, price - 20, price - 35, price + 10, price - 5, price];
-            chartInstance.data.datasets[0].data = newData;
+            chartInstance.data.datasets[0].data = [price - 50, price - 20, price - 35, price + 10, price - 5, price];
             chartInstance.update();
-
-            renderOrderBook();
         }
 
-        // Change Buy / Sell Mode
         function setSide(side) {
             currentSide = side;
             const btnBuy = document.getElementById('btn-tab-buy');
@@ -403,21 +366,19 @@
             }
         }
 
-        // Auto-calculate Total Amount
         function calculateTotal() {
             let p = parseFloat(document.getElementById('trade-price').value) || 0;
             let a = parseFloat(document.getElementById('trade-amount').value) || 0;
             document.getElementById('trade-total').value = (p * a).toFixed(2);
         }
 
-        // Process Internal Order
         function executeInternalTrade() {
             let amount = document.getElementById('trade-amount').value;
             let price = document.getElementById('trade-price').value;
-            let total = document.getElementById('trade-total').value;
+            let type = document.getElementById('order-type').value;
 
             if(!amount || amount <= 0) {
-                alert('Please enter a valid order amount.');
+                alert('Enter valid order amount.');
                 return;
             }
 
@@ -428,24 +389,22 @@
                 <td>${now}</td>
                 <td>${currentPair}</td>
                 <td class="${currentSide === 'BUY' ? 'text-green' : 'text-red'}">${currentSide}</td>
+                <td>${type}</td>
                 <td>${price}</td>
                 <td>${amount}</td>
-                <td><span style="color: var(--green);">Filled (Internal)</span></td>
+                <td><span style="color: var(--green);">Executed</span></td>
             </tr>`;
 
             historyTable.innerHTML = row + historyTable.innerHTML;
-
-            // Reset inputs
             document.getElementById('trade-amount').value = '';
             document.getElementById('trade-total').value = '';
-            alert(`Internal ${currentSide} Order executed successfully for ${amount} ${currentPair.split('/')[0]}!`);
+            alert(`${type} ${currentSide} order executed successfully!`);
         }
 
-        // Initialize Page
-        window.onload = function() {
-            initChart();
-            renderOrderBook();
-        };
+        function openModal(id) { document.getElementById(id).style.display = "block"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+        window.onload = function() { initChart(); };
     </script>
 </body>
 </html>
