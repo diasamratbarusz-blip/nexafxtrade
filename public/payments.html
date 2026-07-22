@@ -1,8 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>Payments | Nexa Trade</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Payments | Nexa Trade</title>
+    <!-- FontAwesome Core CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --high-green: #00e676;
+            --low-red: #ff1744;
+            --neon-blue: #00b0ff;
+            --bg-black: #0a0e12;
+            --panel: #121820;
+            --panel-light: #1a222d;
+            --gold: #ffd600;
+            --text-dim: #90a4ae;
+            --border-color: #232f3e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            background: var(--bg-black);
+            color: #ffffff;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Top Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .logo span {
+            color: var(--neon-blue);
+        }
+
+        .btn-back {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-back:hover {
+            color: var(--neon-blue);
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .card:hover {
+            border-color: #34465d;
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 18px;
+            flex-grow: 1;
+        }
+
+        /* Text Input Styling */
+        .card input {
+            background: #000000;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #ffffff;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            width: 100%;
+            outline: none;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .card input:focus {
+            border-color: var(--neon-blue);
+        }
+
+        /* Buttons */
+        .card button {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--panel-light);
+            color: #ffffff;
+            transition: background 0.2s, border-color 0.2s;
+            outline: none;
+        }
+
+        .card button:hover {
+            background: #243142;
+            border-color: var(--neon-blue);
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -10,15 +174,52 @@
             <a href="index.html" class="logo">⚡ NEXA <span>PAYMENTS</span></a>
             <a href="index.html" class="btn-back">← Back to Trading Engine</a>
         </header>
+
         <h1 class="page-title">Fiat & Crypto Payment Gateway</h1>
+
         <div class="grid">
-            <div class="card"><h3>Bank Deposits</h3><p>Wire, SWIFT, SEPA, and ACH direct bank transfers.</p><button onclick="alert('Wire details generated!')">Deposit via Wire</button></div>
-            <div class="card"><h3>Card Payments</h3><p>Buy crypto instantly using Visa or Mastercard.</p><button onclick="alert('Redirecting to Card Gateway...')">Pay with Card</button></div>
-            <div class="card"><h3>Mobile Money (M-PESA)</h3><p>Direct M-PESA STK push integration for instant deposits & payouts.</p><input placeholder="Phone Number (e.g. 254...)"><button onclick="alert('STK Push Sent to Phone!')">Deposit via M-PESA</button></div>
-            <div class="card"><h3>Crypto Deposits</h3><p>Receive crypto assets via public blockchain networks.</p><button onclick="alert('Address Generated')">Generate Wallet Address</button></div>
-            <div class="card"><h3>Crypto Withdrawals</h3><p>Send digital assets on-chain to external addresses.</p><button onclick="alert('Withdrawal Requested!')">Submit Withdrawal</button></div>
-            <div class="card"><h3>Merchant Payments</h3><p>E-commerce checkout integration for business operators.</p><button onclick="alert('Merchant Console Open')">Merchant Portal</button></div>
-            <div class="card"><h3>QR Payments</h3><p>Generate QR codes for point-of-sale mobile crypto payments.</p><button onclick="alert('QR Code Rendered!')">Generate QR Code</button></div>
+            <div class="card">
+                <h3>Bank Deposits</h3>
+                <p>Wire, SWIFT, SEPA, and ACH direct bank transfers.</p>
+                <button onclick="alert('Wire details generated!')">Deposit via Wire</button>
+            </div>
+
+            <div class="card">
+                <h3>Card Payments</h3>
+                <p>Buy crypto instantly using Visa or Mastercard.</p>
+                <button onclick="alert('Redirecting to Card Gateway...')">Pay with Card</button>
+            </div>
+
+            <div class="card">
+                <h3>Mobile Money (M-PESA)</h3>
+                <p>Direct M-PESA STK push integration for instant deposits & payouts.</p>
+                <input placeholder="Phone Number (e.g. 254...)">
+                <button onclick="alert('STK Push Sent to Phone!')">Deposit via M-PESA</button>
+            </div>
+
+            <div class="card">
+                <h3>Crypto Deposits</h3>
+                <p>Receive crypto assets via public blockchain networks.</p>
+                <button onclick="alert('Address Generated')">Generate Wallet Address</button>
+            </div>
+
+            <div class="card">
+                <h3>Crypto Withdrawals</h3>
+                <p>Send digital assets on-chain to external addresses.</p>
+                <button onclick="alert('Withdrawal Requested!')">Submit Withdrawal</button>
+            </div>
+
+            <div class="card">
+                <h3>Merchant Payments</h3>
+                <p>E-commerce checkout integration for business operators.</p>
+                <button onclick="alert('Merchant Console Open')">Merchant Portal</button>
+            </div>
+
+            <div class="card">
+                <h3>QR Payments</h3>
+                <p>Generate QR codes for point-of-sale mobile crypto payments.</p>
+                <button onclick="alert('QR Code Rendered!')">Generate QR Code</button>
+            </div>
         </div>
     </div>
 </body>
