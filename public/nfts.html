@@ -1,8 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>NFT Marketplace | Nexa Trade</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NFT Marketplace | Nexa Trade</title>
+    <!-- FontAwesome Core CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --high-green: #00e676;
+            --low-red: #ff1744;
+            --neon-blue: #00b0ff;
+            --bg-black: #0a0e12;
+            --panel: #121820;
+            --panel-light: #1a222d;
+            --gold: #ffd600;
+            --text-dim: #90a4ae;
+            --border-color: #232f3e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            background: var(--bg-black);
+            color: #ffffff;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Top Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .logo span {
+            color: var(--neon-blue);
+        }
+
+        .btn-back {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-back:hover {
+            color: var(--neon-blue);
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .card:hover {
+            border-color: #34465d;
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 18px;
+            flex-grow: 1;
+        }
+
+        /* Buttons */
+        .card button {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--panel-light);
+            color: #ffffff;
+            transition: background 0.2s, border-color 0.2s;
+            outline: none;
+        }
+
+        .card button:hover {
+            background: #243142;
+            border-color: var(--neon-blue);
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -10,13 +156,39 @@
             <a href="index.html" class="logo">⚡ NEXA <span>NFTs</span></a>
             <a href="index.html" class="btn-back">← Back to Trading Engine</a>
         </header>
+
         <h1 class="page-title">Digital Collectibles Marketplace</h1>
+
         <div class="grid">
-            <div class="card"><h3>NFT Marketplace</h3><p>Buy, sell, and trade digital collectibles across multi-chains.</p><button onclick="alert('Opening NFT Gallery...')">Explore Marketplace</button></div>
-            <div class="card"><h3>NFT Minting Desk</h3><p>Deploy custom smart contracts and mint new single NFTs or series.</p><button onclick="alert('Minting Suite Loaded')">Mint NFT</button></div>
-            <div class="card"><h3>Auctions</h3><p>Place dynamic bids on timed digital asset auctions.</p><button onclick="alert('Opening Active Bids')">View Auctions</button></div>
-            <div class="card"><h3>Collections</h3><p>Explore verified collection metrics, volume, and floor prices.</p><button onclick="alert('Collections Loaded')">Browse Collections</button></div>
-            <div class="card"><h3>Creator Royalties</h3><p>Set persistent secondary market creator royalty percentages.</p><button onclick="alert('Royalties set to 5%')">Configure Royalties</button></div>
+            <div class="card">
+                <h3>NFT Marketplace</h3>
+                <p>Buy, sell, and trade digital collectibles across multi-chains.</p>
+                <button onclick="alert('Opening NFT Gallery...')">Explore Marketplace</button>
+            </div>
+
+            <div class="card">
+                <h3>NFT Minting Desk</h3>
+                <p>Deploy custom smart contracts and mint new single NFTs or series.</p>
+                <button onclick="alert('Minting Suite Loaded')">Mint NFT</button>
+            </div>
+
+            <div class="card">
+                <h3>Auctions</h3>
+                <p>Place dynamic bids on timed digital asset auctions.</p>
+                <button onclick="alert('Opening Active Bids')">View Auctions</button>
+            </div>
+
+            <div class="card">
+                <h3>Collections</h3>
+                <p>Explore verified collection metrics, volume, and floor prices.</p>
+                <button onclick="alert('Collections Loaded')">Browse Collections</button>
+            </div>
+
+            <div class="card">
+                <h3>Creator Royalties</h3>
+                <p>Set persistent secondary market creator royalty percentages.</p>
+                <button onclick="alert('Royalties set to 5%')">Configure Royalties</button>
+            </div>
         </div>
     </div>
 </body>
