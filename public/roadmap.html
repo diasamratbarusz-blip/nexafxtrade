@@ -1,8 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"><title>Roadmap & Stack | Nexa Trade</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Roadmap & Stack | Nexa Trade</title>
+    <!-- FontAwesome Core CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --high-green: #00e676;
+            --low-red: #ff1744;
+            --neon-blue: #00b0ff;
+            --bg-black: #0a0e12;
+            --panel: #121820;
+            --panel-light: #1a222d;
+            --gold: #ffd600;
+            --text-dim: #90a4ae;
+            --border-color: #232f3e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            background: var(--bg-black);
+            color: #ffffff;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Top Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .logo span {
+            color: var(--neon-blue);
+        }
+
+        .btn-back {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-back:hover {
+            color: var(--neon-blue);
+        }
+
+        /* Page Title & Section Headers */
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 16px;
+            color: var(--gold);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .card:hover {
+            border-color: #34465d;
+            transform: translateY(-2px);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 0;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -10,23 +143,51 @@
             <a href="index.html" class="logo">⚡ NEXA <span>ROADMAP</span></a>
             <a href="index.html" class="btn-back">← Back to Trading Engine</a>
         </header>
+
         <h1 class="page-title">Development Phases & Technology Stack</h1>
         
-        <h2 style="margin-top: 20px; margin-bottom: 10px; color: var(--yellow);">Development Roadmap Status</h2>
+        <h2 class="section-title">Development Roadmap Status</h2>
         <div class="grid">
-            <div class="card"><h3>Phase 1 (Completed)</h3><p>Authentication, Wallets, Spot Trading, Deposits, Withdrawals, Admin Dashboard.</p></div>
-            <div class="card"><h3>Phase 2 (Active Rollout)</h3><p>Margin Trading, Futures, P2P Engine, Earn Programs, Referral System.</p></div>
-            <div class="card"><h3>Phase 3 (In Development)</h3><p>Copy Trading, Trading Bots, Web3 Wallet, NFT Marketplace, Launchpad, Institutional Suite.</p></div>
+            <div class="card">
+                <h3>Phase 1 (Completed)</h3>
+                <p>Authentication, Wallets, Spot Trading, Deposits, Withdrawals, Admin Dashboard.</p>
+            </div>
+            <div class="card">
+                <h3>Phase 2 (Active Rollout)</h3>
+                <p>Margin Trading, Futures, P2P Engine, Earn Programs, Referral System.</p>
+            </div>
+            <div class="card">
+                <h3>Phase 3 (In Development)</h3>
+                <p>Copy Trading, Trading Bots, Web3 Wallet, NFT Marketplace, Launchpad, Institutional Suite.</p>
+            </div>
         </div>
 
-        <h2 style="margin-top: 30px; margin-bottom: 10px; color: var(--yellow);">Deployed Technology Stack</h2>
+        <h2 class="section-title">Deployed Technology Stack</h2>
         <div class="grid">
-            <div class="card"><h3>Frontend Application</h3><p>Next.js / React Web Platform</p></div>
-            <div class="card"><h3>Mobile Application</h3><p>Flutter Cross-Platform Engine</p></div>
-            <div class="card"><h3>Backend Microservices</h3><p>Node.js (NestJS) + Go Execution Engine</p></div>
-            <div class="card"><h3>Database Storage</h3><p>PostgreSQL + Redis Cache Layer</p></div>
-            <div class="card"><h3>Blockchain Integrations</h3><p>Bitcoin, Ethereum, BNB Chain, Solana, Tron</p></div>
-            <div class="card"><h3>Real-Time Communications</h3><p>WebSocket Infrastructure</p></div>
+            <div class="card">
+                <h3>Frontend Application</h3>
+                <p>Next.js / React Web Platform</p>
+            </div>
+            <div class="card">
+                <h3>Mobile Application</h3>
+                <p>Flutter Cross-Platform Engine</p>
+            </div>
+            <div class="card">
+                <h3>Backend Microservices</h3>
+                <p>Node.js (NestJS) + Go Execution Engine</p>
+            </div>
+            <div class="card">
+                <h3>Database Storage</h3>
+                <p>PostgreSQL + Redis Cache Layer</p>
+            </div>
+            <div class="card">
+                <h3>Blockchain Integrations</h3>
+                <p>Bitcoin, Ethereum, BNB Chain, Solana, Tron</p>
+            </div>
+            <div class="card">
+                <h3>Real-Time Communications</h3>
+                <p>WebSocket Infrastructure</p>
+            </div>
         </div>
     </div>
 </body>
