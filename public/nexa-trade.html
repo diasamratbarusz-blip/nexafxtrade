@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa Trade | Internal Crypto Exchange</title>
+    <!-- Charting Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0b0e11;
+            --bg-card: #181a20;
+            --bg-hover: #2b313a;
+            --text-main: #eaecef;
+            --text-muted: #848e9c;
+            --green: #0ecb81;
+            --red: #f6465d;
+            --yellow: #f0b90b;
+            --border: #2b313a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Top Header Navigation */
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--yellow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span { color: var(--text-main); }
+
+        .nav-stats {
+            display: flex;
+            gap: 25px;
+            font-size: 13px;
+        }
+
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-label { color: var(--text-muted); font-size: 11px; }
+
+        .btn-back {
+            background-color: var(--bg-hover);
+            color: var(--text-main);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Main Workspace Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 260px 1fr 300px;
+            grid-template-rows: 1fr 280px;
+            gap: 2px;
+            background-color: var(--border);
+            height: calc(100vh - 60px);
+        }
+
+        .panel {
+            background-color: var(--bg-card);
+            padding: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Ticker / Pair Selector */
+        .ticker-list { list-style: none; overflow-y: auto; }
+        .ticker-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 5px;
+            cursor: pointer;
+            border-bottom: 1px solid #23272e;
+            font-size: 13px;
+        }
+        .ticker-item:hover, .ticker-item.active { background-color: var(--bg-hover); }
+
+        /* Chart Section */
+        .chart-container { flex: 1; position: relative; }
+
+        /* Order Book Panel */
+        .order-book-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .order-book-table th { text-align: left; color: var(--text-muted); padding-bottom: 5px; }
+        .order-book-table td { padding: 3px 0; }
+        .text-green { color: var(--green); }
+        .text-red { color: var(--red); }
+
+        /* Trade Execution Box */
+        .trade-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            background: var(--bg-hover);
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .tab-btn.active-buy { background: var(--green); color: #000; }
+        .tab-btn.active-sell { background: var(--red); color: #fff; }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+        .form-group input {
+            width: 100%;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-buy { background-color: var(--green); color: #000; }
+        .btn-sell { background-color: var(--red); color: #fff; }
+
+        /* Bottom Orders / History Panel */
+        .bottom-panel {
+            grid-column: 1 / span 3;
+            overflow-y: auto;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            text-align: left;
+        }
+        .order-table th { background: var(--bg-dark); color: var(--text-muted); padding: 8px; }
+        .order-table td { padding: 8px; border-bottom: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo">
+            ⚡ NEXA <span>TRADE</span>
+        </div>
+
+        <div class="nav-stats">
+            <div class="stat-item">
+                <span class="stat-label">Active Pair</span>
+                <span id="stat-pair" style="font-weight: bold;">BTC/USDT</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Price</span>
+                <span id="stat-price" class="text-green">$64,250.00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">24h Change</span>
+                <span class="text-green">+3.42%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">System Mode</span>
+                <span style="color: var(--yellow);">Internal Engine</span>
+            </div>
+        </div>
+
+        <a href="dashboard.html" class="btn-back">← Back to Dashboard</a>
+    </header>
+
+    <!-- Workspace Grid Layout -->
+    <div class="grid-container">
+
+        <!-- 1. Asset / Market Selector -->
+        <div class="panel">
+            <div class="panel-title">Markets</div>
+            <ul class="ticker-list">
+                <li class="ticker-item active" onclick="switchPair('BTC/USDT', 64250)">
+                    <span>BTC/USDT</span>
+                    <span class="text-green">$64,250.00</span>
+                </li>
+                <li class="ticker-item" onclick="switchPair('ETH/USDT', 3480)">
+                    <span>ETH/USDT</span>
+                    <span class="text-green">$3,480.00</span>
+                </li>
+                <li class="ticker-item" onclick="switchPair('SOL/USDT', 145)">
+                    <span>SOL/USDT</span>
+                    <span class="text-red">$145.20</span>
+                </li>
+                <li class="ticker-item" onclick="switchPair('BNB/USDT', 580)">
+                    <span>BNB/USDT</span>
+                    <span class="text-green">$580.50</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 2. Interactive Chart Section -->
+        <div class="panel">
+            <div class="panel-title" id="chart-header">BTC/USDT Price Movement (Internal Real-Time)</div>
+            <div class="chart-container">
+                <canvas id="nexaChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 3. Order Book & Execution Form -->
+        <div class="panel">
+            <div class="panel-title">Order Book (Asks / Bids)</div>
+            <table class="order-book-table">
+                <thead>
+                    <tr><th>Price</th><th>Amount</th></tr>
+                </thead>
+                <tbody id="order-book-body">
+                    <!-- Dynamic Asks/Bids inserted here -->
+                </tbody>
+            </table>
+
+            <hr style="border-color: var(--border); margin: 15px 0;">
+
+            <!-- Trade Execution Engine -->
+            <div class="trade-tabs">
+                <button class="tab-btn active-buy" id="btn-tab-buy" onclick="setSide('BUY')">Buy</button>
+                <button class="tab-btn" id="btn-tab-sell" onclick="setSide('SELL')">Sell</button>
+            </div>
+
+            <div class="form-group">
+                <label>Price (USDT)</label>
+                <input type="number" id="trade-price" value="64250">
+            </div>
+
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="number" id="trade-amount" placeholder="0.00" oninput="calculateTotal()">
+            </div>
+
+            <div class="form-group">
+                <label>Total Value (USDT)</label>
+                <input type="number" id="trade-total" readonly placeholder="0.00">
+            </div>
+
+            <button class="btn-action btn-buy" id="btn-submit" onclick="executeInternalTrade()">Execute Order</button>
+        </div>
+
+        <!-- 4. Bottom Open Orders & History -->
+        <div class="panel bottom-panel">
+            <div class="panel-title">Internal Trade Ledger / Executed Orders</div>
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Pair</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="trade-history">
+                    <!-- Dynamic Order Logs -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        let currentPair = "BTC/USDT";
+        let currentPrice = 64250;
+        let currentSide = "BUY";
+        let chartInstance = null;
+
+        // Initialize Internal Trading Chart
+        function initChart() {
+            const ctx = document.getElementById('nexaChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['10:00', '10:05', '10:10', '10:15', '10:20', '10:25'],
+                    datasets: [{
+                        label: 'Price',
+                        data: [64000, 64120, 63980, 64150, 64200, 64250],
+                        borderColor: '#0ecb81',
+                        backgroundColor: 'rgba(14, 203, 129, 0.1)',
+                        fill: true,
+                        tension: 0.2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: '#2b313a' }, ticks: { color: '#848e9c' } },
+                        y: { grid: { color: '#2b313a' }, ticks: { color: '#848e9c' } }
+                    }
+                }
+            });
+        }
+
+        // Generate Internal Mock Order Book Data
+        function renderOrderBook() {
+            const tbody = document.getElementById('order-book-body');
+            tbody.innerHTML = '';
+            
+            // Asks (Sells)
+            for (let i = 3; i >= 1; i--) {
+                let askPrice = (currentPrice + (i * 12.5)).toFixed(2);
+                let askQty = (Math.random() * 1.5).toFixed(4);
+                tbody.innerHTML += `<tr class="text-red"><td>${askPrice}</td><td>${askQty}</td></tr>`;
+            }
+
+            // Current Price Display
+            tbody.innerHTML += `<tr><td colspan="2" style="padding: 6px 0; font-weight: bold; border-top: 1px solid #2b313a; border-bottom: 1px solid #2b313a;" class="text-green">⚡ ${currentPrice.toFixed(2)}</td></tr>`;
+
+            // Bids (Buys)
+            for (let i = 1; i <= 3; i++) {
+                let bidPrice = (currentPrice - (i * 10.5)).toFixed(2);
+                let bidQty = (Math.random() * 1.5).toFixed(4);
+                tbody.innerHTML += `<tr class="text-green"><td>${bidPrice}</td><td>${bidQty}</td></tr>`;
+            }
+        }
+
+        // Switch Active Asset Pair
+        function switchPair(pair, price) {
+            currentPair = pair;
+            currentPrice = price;
+            document.getElementById('stat-pair').innerText = pair;
+            document.getElementById('stat-price').innerText = '$' + price.toFixed(2);
+            document.getElementById('chart-header').innerText = pair + ' Price Movement (Internal Real-Time)';
+            document.getElementById('trade-price').value = price;
+            
+            // Update Chart Data Randomly
+            let newData = [price - 50, price - 20, price - 35, price + 10, price - 5, price];
+            chartInstance.data.datasets[0].data = newData;
+            chartInstance.update();
+
+            renderOrderBook();
+        }
+
+        // Change Buy / Sell Mode
+        function setSide(side) {
+            currentSide = side;
+            const btnBuy = document.getElementById('btn-tab-buy');
+            const btnSell = document.getElementById('btn-tab-sell');
+            const btnSubmit = document.getElementById('btn-submit');
+
+            if (side === 'BUY') {
+                btnBuy.className = 'tab-btn active-buy';
+                btnSell.className = 'tab-btn';
+                btnSubmit.className = 'btn-action btn-buy';
+                btnSubmit.innerText = 'Buy ' + currentPair.split('/')[0];
+            } else {
+                btnBuy.className = 'tab-btn';
+                btnSell.className = 'tab-btn active-sell';
+                btnSubmit.className = 'btn-action btn-sell';
+                btnSubmit.innerText = 'Sell ' + currentPair.split('/')[0];
+            }
+        }
+
+        // Auto-calculate Total Amount
+        function calculateTotal() {
+            let p = parseFloat(document.getElementById('trade-price').value) || 0;
+            let a = parseFloat(document.getElementById('trade-amount').value) || 0;
+            document.getElementById('trade-total').value = (p * a).toFixed(2);
+        }
+
+        // Process Internal Order
+        function executeInternalTrade() {
+            let amount = document.getElementById('trade-amount').value;
+            let price = document.getElementById('trade-price').value;
+            let total = document.getElementById('trade-total').value;
+
+            if(!amount || amount <= 0) {
+                alert('Please enter a valid order amount.');
+                return;
+            }
+
+            let historyTable = document.getElementById('trade-history');
+            let now = new Date().toLocaleTimeString();
+
+            let row = `<tr>
+                <td>${now}</td>
+                <td>${currentPair}</td>
+                <td class="${currentSide === 'BUY' ? 'text-green' : 'text-red'}">${currentSide}</td>
+                <td>${price}</td>
+                <td>${amount}</td>
+                <td><span style="color: var(--green);">Filled (Internal)</span></td>
+            </tr>`;
+
+            historyTable.innerHTML = row + historyTable.innerHTML;
+
+            // Reset inputs
+            document.getElementById('trade-amount').value = '';
+            document.getElementById('trade-total').value = '';
+            alert(`Internal ${currentSide} Order executed successfully for ${amount} ${currentPair.split('/')[0]}!`);
+        }
+
+        // Initialize Page
+        window.onload = function() {
+            initChart();
+            renderOrderBook();
+        };
+    </script>
+</body>
+</html>
