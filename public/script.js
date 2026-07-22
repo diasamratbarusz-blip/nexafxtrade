@@ -6,6 +6,7 @@
     <title>NEXAFX | Universal Institutional Trading Terminal</title>
     <!-- Chart.js and FontAwesome Core CDNs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/socket.io/socket.io.js" onerror="console.warn('[NEXAFX] Socket server layer unavailable; falling back to internal edge liquidity emulator.')"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
