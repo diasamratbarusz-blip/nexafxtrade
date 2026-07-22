@@ -24,6 +24,15 @@
             --text-light: #ffffff;
             --text-dim: #556a85;
             --gold-text: #ffd600;
+
+            /* Newly Added Custom Variables */
+            --bg-hover: #2b313a;
+            --text-main: #eaecef;
+            --text-muted: #848e9c;
+            --green: #0ecb81;
+            --red: #f6465d;
+            --yellow: #f0b90b;
+            --border: #2b313a;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -181,6 +190,35 @@
         /* --- Footer Contexts --- */
         .legal-footer { background: var(--bg-card); padding: 12px 20px; text-align: center; font-size: 0.65rem; color: var(--text-dim); border-top: 1px solid var(--border-color); flex-shrink: 0; }
         .legal-footer a { color: var(--primary); text-decoration: none; }
+
+        /* --- Newly Appended Navigation & Component Rules --- */
+        header {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .logo { font-size: 20px; font-weight: bold; color: var(--yellow); text-decoration: none; }
+        .logo span { color: var(--text-main); }
+        .btn-back { background: var(--bg-hover); color: var(--text-main); border: 1px solid var(--border); padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: 600; }
+        .btn-back:hover { background: var(--yellow); color: #000; }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+        .page-title { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+        .card h3 { color: var(--yellow); margin-bottom: 10px; font-size: 16px; }
+        .card p { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+        .card button, .btn-action { margin-top: 15px; background: var(--bg-hover); color: var(--text-main); border: 1px solid var(--border); padding: 8px 12px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: 600; }
+        .card button:hover { background: var(--green); color: #000; }
+
+        input, select { width: 100%; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main); padding: 8px; border-radius: 4px; margin-top: 5px; margin-bottom: 15px; outline: none; }
 
         @media (max-width: 1024px) {
             .content-grid { grid-template-columns: 1fr; overflow-y: auto; height: auto; gap: 16px; }
