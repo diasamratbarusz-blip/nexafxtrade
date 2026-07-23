@@ -30,7 +30,7 @@
     </script>
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Custom Styles for Glassmorphism & Animations -->
+    <!-- Custom Styles -->
     <style>
         .glass-panel {
             background: rgba(18, 24, 36, 0.75);
@@ -71,49 +71,60 @@
     <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Brand & Page Title -->
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center space-x-2">
+                <!-- Brand Logo & Badge -->
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <div class="flex items-center space-x-2 cursor-pointer" onclick="switchTab('marketplace')">
                         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-indigo-500/30">
                             N
                         </div>
                         <span class="text-xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">NEXA</span>
                     </div>
-                    <span class="text-slate-600 font-light">|</span>
+                    <span class="text-slate-700 font-light hidden sm:inline">|</span>
                     <div class="flex items-center space-x-2">
                         <span class="px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5">
                             <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Escrow Secured
                         </span>
-                        <h1 class="text-lg font-bold text-white hidden md:block">Merchant Trade</h1>
                     </div>
                 </div>
 
-                <!-- Navigation Tabs -->
+                <!-- Navigation Tabs (Desktop) -->
                 <nav class="hidden lg:flex items-center space-x-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800">
-                    <button onclick="switchTab('marketplace')" id="tab-marketplace" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-white bg-indigo-600 shadow-md">P2P Marketplace</button>
-                    <button onclick="switchTab('express')" id="tab-express" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-all">Express Trade</button>
-                    <button onclick="switchTab('orders')" id="tab-orders" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
-                        My Orders <span class="bg-indigo-500/20 text-indigo-300 text-xs px-1.5 py-0.5 rounded-full">2</span>
+                    <button onclick="switchTab('marketplace')" id="tab-marketplace" class="px-3.5 py-2 rounded-lg text-xs font-bold transition-all text-white bg-indigo-600 shadow-md">Marketplace</button>
+                    <button onclick="switchTab('orders')" id="tab-orders" class="px-3.5 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+                        My Orders <span class="bg-indigo-500/20 text-indigo-300 text-[10px] px-1.5 py-0.5 rounded-full">2</span>
                     </button>
-                    <button onclick="switchTab('merchant-dashboard')" id="tab-merchant-dashboard" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-all">Merchant Portal</button>
+                    <button onclick="switchTab('merchant-dashboard')" id="tab-merchant-dashboard" class="px-3.5 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">Merchant Portal</button>
+                    <button onclick="switchTab('merchant-profile')" id="tab-merchant-profile" class="px-3.5 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">Profile</button>
+                    <button onclick="switchTab('security-center')" id="tab-security-center" class="px-3.5 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">KYC & Security</button>
+                    <button onclick="switchTab('admin-panel')" id="tab-admin-panel" class="px-3.5 py-2 rounded-lg text-xs font-bold text-amber-400/80 hover:text-amber-300 transition-all">Admin Desk</button>
                 </nav>
 
                 <!-- Action Controls -->
                 <div class="flex items-center space-x-3">
-                    <button onclick="openModal('becomeMerchantModal')" class="hidden sm:flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-sm transition-all shadow-lg shadow-orange-500/20">
+                    <button onclick="openModal('becomeMerchantModal')" class="hidden sm:flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition-all shadow-lg shadow-orange-500/20">
                         <i data-lucide="award" class="w-4 h-4"></i>
-                        <span>Become a Merchant</span>
+                        <span>Become Merchant</span>
                     </button>
                     <div class="flex items-center space-x-2 border-l border-slate-800 pl-3">
-                        <div class="text-right hidden sm:block">
-                            <div class="text-xs text-slate-400">Escrow Wallet</div>
-                            <div class="text-sm font-bold text-emerald-400">$2,450.00 USDT</div>
+                        <div class="text-right hidden md:block">
+                            <div class="text-[10px] uppercase tracking-wider text-slate-400">Escrow Wallet</div>
+                            <div class="text-xs font-bold text-emerald-400">$2,450.00 USDT</div>
                         </div>
-                        <div class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300">
-                            <i data-lucide="user" class="w-5 h-5"></i>
+                        <div class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 cursor-pointer hover:border-indigo-500" onclick="switchTab('security-center')">
+                            <i data-lucide="user" class="w-4 h-4"></i>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Mobile Navigation Bar -->
+            <div class="flex lg:hidden overflow-x-auto py-2 border-t border-slate-800/60 custom-scrollbar gap-1">
+                <button onclick="switchTab('marketplace')" id="mob-tab-marketplace" class="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 text-white bg-indigo-600">Marketplace</button>
+                <button onclick="switchTab('orders')" id="mob-tab-orders" class="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 text-slate-400">My Orders (2)</button>
+                <button onclick="switchTab('merchant-dashboard')" id="mob-tab-merchant-dashboard" class="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 text-slate-400">Merchant Portal</button>
+                <button onclick="switchTab('merchant-profile')" id="mob-tab-merchant-profile" class="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 text-slate-400">Profile</button>
+                <button onclick="switchTab('security-center')" id="mob-tab-security-center" class="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 text-slate-400">KYC & Security</button>
+                <button onclick="switchTab('admin-panel')" id="mob-tab-admin-panel" class="px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 text-amber-400">Admin Desk</button>
             </div>
         </div>
     </header>
@@ -124,362 +135,242 @@
         <!-- 24h Market Stats Bar -->
         <section class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
             <div class="glass-card p-3 rounded-xl border border-slate-800">
-                <span class="text-xs text-slate-400 block">24h P2P Volume</span>
-                <span class="text-base font-bold text-white">$1,284,500</span>
-                <span class="text-xs text-emerald-400 flex items-center gap-0.5 mt-0.5"><i data-lucide="trending-up" class="w-3 h-3"></i> +12.4%</span>
+                <span class="text-[11px] text-slate-400 block">24h P2P Volume</span>
+                <span class="text-sm sm:text-base font-bold text-white">$1,284,500</span>
+                <span class="text-[10px] text-emerald-400 flex items-center gap-0.5 mt-0.5"><i data-lucide="trending-up" class="w-3 h-3"></i> +12.4%</span>
             </div>
             <div class="glass-card p-3 rounded-xl border border-slate-800">
-                <span class="text-xs text-slate-400 block">Active Merchants</span>
-                <span class="text-base font-bold text-white">412 Online</span>
-                <span class="text-xs text-indigo-400 flex items-center gap-0.5 mt-0.5"><i data-lucide="users" class="w-3 h-3"></i> Verified VIPs</span>
+                <span class="text-[11px] text-slate-400 block">Active Merchants</span>
+                <span class="text-sm sm:text-base font-bold text-white">412 Online</span>
+                <span class="text-[10px] text-indigo-400 flex items-center gap-0.5 mt-0.5"><i data-lucide="users" class="w-3 h-3"></i> Verified VIPs</span>
             </div>
             <div class="glass-card p-3 rounded-xl border border-slate-800">
-                <span class="text-xs text-slate-400 block">Avg Release Time</span>
-                <span class="text-base font-bold text-emerald-400">2.4 Minutes</span>
-                <span class="text-xs text-slate-400 mt-0.5 block">Ultra Fast</span>
+                <span class="text-[11px] text-slate-400 block">Avg Release Time</span>
+                <span class="text-sm sm:text-base font-bold text-emerald-400">2.4 Minutes</span>
+                <span class="text-[10px] text-slate-400 mt-0.5 block">Ultra Fast</span>
             </div>
             <div class="glass-card p-3 rounded-xl border border-slate-800">
-                <span class="text-xs text-slate-400 block">Escrow Guarantee</span>
-                <span class="text-base font-bold text-indigo-400">100% Protected</span>
-                <span class="text-xs text-slate-400 mt-0.5 block">Automated Lock</span>
+                <span class="text-[11px] text-slate-400 block">Escrow Guarantee</span>
+                <span class="text-sm sm:text-base font-bold text-indigo-400">100% Protected</span>
+                <span class="text-[10px] text-slate-400 mt-0.5 block">Automated Lock</span>
             </div>
             <div class="glass-card p-3 rounded-xl border border-slate-800 hidden lg:block">
-                <span class="text-xs text-slate-400 block">Best USDT/KES Rate</span>
+                <span class="text-[11px] text-slate-400 block">Best USDT Rate</span>
                 <span class="text-base font-bold text-white">129.50 KES</span>
-                <span class="text-xs text-emerald-400 mt-0.5 block">M-PESA / Bank</span>
+                <span class="text-[10px] text-emerald-400 mt-0.5 block">M-PESA / Bank</span>
             </div>
             <div class="glass-card p-3 rounded-xl border border-slate-800 hidden lg:block">
-                <span class="text-xs text-slate-400 block">Order Success Rate</span>
+                <span class="text-[11px] text-slate-400 block">Order Success</span>
                 <span class="text-base font-bold text-amber-400">99.8%</span>
-                <span class="text-xs text-slate-400 mt-0.5 block">Dispute Free</span>
+                <span class="text-[10px] text-slate-400 mt-0.5 block">Dispute Free</span>
             </div>
         </section>
 
         <!-- VIEW 1: P2P MARKETPLACE -->
         <div id="view-marketplace" class="space-y-6">
-
-            <!-- Filter Controls Bar -->
             <div class="glass-panel p-4 rounded-2xl space-y-4">
-                
-                <!-- Top Filter Row: Buy/Sell & Crypto Assets -->
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
-                    
-                    <!-- Buy/Sell Toggle Switcher -->
                     <div class="flex items-center space-x-2 bg-slate-900 p-1 rounded-xl border border-slate-800 w-fit">
-                        <button id="btn-side-buy" onclick="setSide('BUY')" class="px-6 py-2 rounded-lg font-bold text-sm bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">
-                            <i data-lucide="arrow-down-left" class="w-4 h-4"></i> Buy Crypto
+                        <button id="btn-side-buy" onclick="setSide('BUY')" class="px-5 py-2 rounded-lg font-bold text-xs bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">
+                            <i data-lucide="arrow-down-left" class="w-3.5 h-3.5"></i> Buy Crypto
                         </button>
-                        <button id="btn-side-sell" onclick="setSide('SELL')" class="px-6 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-white transition-all flex items-center gap-2">
-                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i> Sell Crypto
+                        <button id="btn-side-sell" onclick="setSide('SELL')" class="px-5 py-2 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition-all flex items-center gap-2">
+                            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i> Sell Crypto
                         </button>
                     </div>
 
-                    <!-- Crypto Assets Bar -->
                     <div class="flex items-center space-x-2 overflow-x-auto pb-2 lg:pb-0 custom-scrollbar">
-                        <button class="px-4 py-2 rounded-xl text-sm font-bold bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 flex items-center gap-2 shrink-0">
+                        <button class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 flex items-center gap-2 shrink-0">
                             <span class="w-2 h-2 rounded-full bg-emerald-400"></span> USDT
                         </button>
-                        <button class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white transition-all shrink-0">BTC</button>
-                        <button class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white transition-all shrink-0">ETH</button>
-                        <button class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white transition-all shrink-0">USDC</button>
-                        <button class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white transition-all shrink-0">BNB</button>
+                        <button class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white transition-all shrink-0">BTC</button>
+                        <button class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white transition-all shrink-0">ETH</button>
+                        <button class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white transition-all shrink-0">USDC</button>
+                        <button class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white transition-all shrink-0">BNB</button>
                     </div>
                 </div>
 
-                <!-- Detailed Filters Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-                    
-                    <!-- Amount Filter -->
                     <div>
-                        <label class="text-xs text-slate-400 font-medium mb-1 block">Amount</label>
+                        <label class="text-[11px] text-slate-400 font-medium mb-1 block">Amount</label>
                         <div class="relative">
-                            <input type="number" placeholder="Enter amount..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 pl-3 pr-12">
-                            <span class="absolute right-3 top-2.5 text-xs text-slate-500 font-bold">KES</span>
+                            <input type="number" placeholder="Enter amount..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 pl-3 pr-12">
+                            <span class="absolute right-3 top-2.5 text-[10px] text-slate-500 font-bold">KES</span>
                         </div>
                     </div>
 
-                    <!-- Fiat Currency Selector -->
                     <div>
-                        <label class="text-xs text-slate-400 font-medium mb-1 block">Fiat Currency</label>
-                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <label class="text-[11px] text-slate-400 font-medium mb-1 block">Fiat Currency</label>
+                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
                             <option value="KES">KES - Kenyan Shilling</option>
                             <option value="USD">USD - US Dollar</option>
                             <option value="EUR">EUR - Euro</option>
                             <option value="GBP">GBP - British Pound</option>
                             <option value="NGN">NGN - Nigerian Naira</option>
-                            <option value="GHS">GHS - Ghanaian Cedi</option>
                         </select>
                     </div>
 
-                    <!-- Payment Method -->
                     <div>
-                        <label class="text-xs text-slate-400 font-medium mb-1 block">Payment Method</label>
-                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <label class="text-[11px] text-slate-400 font-medium mb-1 block">Payment Method</label>
+                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
                             <option value="ALL">All Payment Methods</option>
                             <option value="MPESA">M-PESA Express / Till</option>
                             <option value="BANK">Bank Transfer (Instant)</option>
                             <option value="AIRTEL">Airtel Money</option>
-                            <option value="REVOLUT">Revolut / Wise</option>
                         </select>
                     </div>
 
-                    <!-- Country / Region -->
                     <div>
-                        <label class="text-xs text-slate-400 font-medium mb-1 block">Merchant Region</label>
-                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <label class="text-[11px] text-slate-400 font-medium mb-1 block">Merchant Region</label>
+                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
                             <option value="ALL">All Regions</option>
                             <option value="KE">Kenya</option>
                             <option value="US">United States</option>
                             <option value="EU">Europe</option>
-                            <option value="NG">Nigeria</option>
                         </select>
                     </div>
 
-                    <!-- Merchant Tier Badge -->
                     <div>
-                        <label class="text-xs text-slate-400 font-medium mb-1 block">Merchant Status</label>
-                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <label class="text-[11px] text-slate-400 font-medium mb-1 block">Merchant Tier</label>
+                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
                             <option value="ALL">All Merchants</option>
-                            <option value="VIP">PRO & Gold Merchants</option>
+                            <option value="VIP">PRO & VIP Merchants</option>
                             <option value="VERIFIED">Verified Badge Only</option>
                         </select>
                     </div>
 
-                    <!-- Sort By Option -->
                     <div>
-                        <label class="text-xs text-slate-400 font-medium mb-1 block">Sort By</label>
-                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <label class="text-[11px] text-slate-400 font-medium mb-1 block">Sort By</label>
+                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
                             <option value="PRICE">Best Price</option>
                             <option value="FASTEST">Fastest Release</option>
                             <option value="COMPLETION">Highest Completion %</option>
-                            <option value="TRADES">Most Trades</option>
                         </select>
                     </div>
                 </div>
-
-                <!-- Toggles Strip -->
-                <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-slate-800/50 text-xs">
-                    <div class="flex items-center space-x-6">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" checked class="rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
-                            <span class="text-slate-300">Online Merchants Only</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" class="rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
-                            <span class="text-slate-300">Instant Release Auto-Escrow</span>
-                        </label>
-                    </div>
-                    <button class="text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-semibold">
-                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Filters
-                    </button>
-                </div>
             </div>
 
-            <!-- Merchant Cards List -->
+            <!-- Merchant Offer Cards -->
             <div class="space-y-3">
                 <div class="text-xs font-semibold text-slate-400 px-2 flex justify-between items-center">
-                    <span>Showing <strong class="text-white">18</strong> active merchant offers</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Rates Updated</span>
+                    <span>Active offers for <strong class="text-white">USDT</strong></span>
+                    <span class="flex items-center gap-1 text-[11px]"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Syncing</span>
                 </div>
 
-                <!-- Merchant Card 1 -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                    <!-- Merchant Profile Summary -->
-                    <div class="flex items-start space-x-4 min-w-[280px]">
-                        <div class="relative">
-                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center font-bold text-white text-lg shadow-md">
+                <!-- Offer 1 -->
+                <div class="glass-card p-4 sm:p-5 rounded-2xl border border-slate-800 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                    <div class="flex items-start space-x-3 sm:space-x-4 min-w-[260px]">
+                        <div class="relative cursor-pointer" onclick="switchTab('merchant-profile')">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center font-bold text-white text-base shadow-md">
                                 EX
                             </div>
-                            <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full" title="Online Now"></span>
+                            <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
                         </div>
                         <div>
                             <div class="flex items-center space-x-2">
-                                <h3 class="font-bold text-white hover:text-indigo-400 cursor-pointer transition-colors">ExpressP2P_Global</h3>
-                                <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-extrabold px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                                    <i data-lucide="shield-alert" class="w-3 h-3"></i> VIP PRO
+                                <h3 onclick="switchTab('merchant-profile')" class="font-bold text-sm sm:text-base text-white hover:text-indigo-400 cursor-pointer transition-colors">ExpressP2P_Global</h3>
+                                <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[9px] font-extrabold px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                                    <i data-lucide="shield-alert" class="w-2.5 h-2.5"></i> VIP PRO
                                 </span>
                             </div>
-                            <div class="flex items-center space-x-3 text-xs text-slate-400 mt-1">
+                            <div class="flex items-center space-x-2 text-[11px] text-slate-400 mt-1">
                                 <span><strong>3,420</strong> trades</span>
                                 <span>•</span>
-                                <span class="text-emerald-400 font-semibold">99.7% completion</span>
+                                <span class="text-emerald-400 font-semibold">99.7%</span>
                                 <span>•</span>
                                 <span class="flex items-center gap-0.5 text-amber-400"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 4.98</span>
                             </div>
-                            <div class="flex items-center space-x-3 text-[11px] text-slate-500 mt-1">
-                                <span><i data-lucide="clock" class="w-3 h-3 inline"></i> ~1.8 min release</span>
-                                <span>•</span>
-                                <span>Trust Score: 99/100</span>
-                            </div>
                         </div>
                     </div>
 
-                    <!-- Limits & Prices -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 w-full lg:w-auto text-left lg:text-left border-y lg:border-y-0 border-slate-800/80 py-3 lg:py-0">
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 w-full lg:w-auto text-left border-y lg:border-y-0 border-slate-800/80 py-3 lg:py-0">
                         <div>
-                            <span class="text-xs text-slate-400 block">Unit Price</span>
-                            <span class="text-xl font-extrabold text-emerald-400">129.50 <span class="text-xs text-slate-300">KES</span></span>
+                            <span class="text-[11px] text-slate-400 block">Unit Price</span>
+                            <span class="text-lg font-extrabold text-emerald-400">129.50 <span class="text-xs text-slate-300">KES</span></span>
                         </div>
                         <div>
-                            <span class="text-xs text-slate-400 block">Available Balance</span>
-                            <span class="text-sm font-bold text-slate-200">15,450.00 USDT</span>
+                            <span class="text-[11px] text-slate-400 block">Available</span>
+                            <span class="text-xs font-bold text-slate-200">15,450.00 USDT</span>
                         </div>
                         <div class="col-span-2 md:col-span-1">
-                            <span class="text-xs text-slate-400 block">Order Limits</span>
-                            <span class="text-xs font-semibold text-slate-300 block">Min: 1,000 KES</span>
-                            <span class="text-xs font-semibold text-slate-300 block">Max: 500,000 KES</span>
+                            <span class="text-[11px] text-slate-400 block">Order Limits</span>
+                            <span class="text-[11px] font-semibold text-slate-300 block">1,000 - 500,000 KES</span>
                         </div>
                     </div>
 
-                    <!-- Payment Methods & Trade Trigger -->
                     <div class="flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end justify-between gap-3 w-full lg:w-auto">
-                        <div class="flex flex-wrap items-center gap-1.5 justify-start lg:justify-end">
-                            <span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-bold">M-PESA Express</span>
-                            <span class="px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[11px] font-bold">Equity Bank</span>
-                            <span class="px-2 py-1 rounded bg-slate-800 text-slate-300 text-[11px]">Airtel Money</span>
+                        <div class="flex flex-wrap items-center gap-1">
+                            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">M-PESA</span>
+                            <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-bold">Equity Bank</span>
                         </div>
                         <div class="flex items-center space-x-2 w-full sm:w-auto">
-                            <button onclick="openChatModal('ExpressP2P_Global')" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all" title="Chat with Merchant">
+                            <button onclick="openChatModal('ExpressP2P_Global')" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">
                                 <i data-lucide="message-square" class="w-4 h-4"></i>
                             </button>
-                            <button onclick="openTradeModal('ExpressP2P_Global', '129.50', 'BUY')" class="flex-grow sm:flex-grow-0 px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all">
+                            <button onclick="openTradeModal('ExpressP2P_Global', '129.50', 'BUY')" class="flex-grow sm:flex-grow-0 px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20">
                                 Buy USDT
                             </button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Merchant Card 2 -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                    <!-- Merchant Profile Summary -->
-                    <div class="flex items-start space-x-4 min-w-[280px]">
-                        <div class="relative">
-                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-bold text-white text-lg shadow-md">
-                                NK
-                            </div>
-                            <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full" title="Online Now"></span>
-                        </div>
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <h3 class="font-bold text-white hover:text-indigo-400 cursor-pointer transition-colors">NairobiCrypto_King</h3>
-                                <span class="bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-extrabold px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                                    <i data-lucide="badge-check" class="w-3 h-3"></i> VERIFIED
-                                </span>
-                            </div>
-                            <div class="flex items-center space-x-3 text-xs text-slate-400 mt-1">
-                                <span><strong>1,890</strong> trades</span>
-                                <span>•</span>
-                                <span class="text-emerald-400 font-semibold">98.9% completion</span>
-                                <span>•</span>
-                                <span class="flex items-center gap-0.5 text-amber-400"><i data-lucide="star" class="w-3 h-3 fill-amber-400"></i> 4.92</span>
-                            </div>
-                            <div class="flex items-center space-x-3 text-[11px] text-slate-500 mt-1">
-                                <span><i data-lucide="clock" class="w-3 h-3 inline"></i> ~3.5 min release</span>
-                                <span>•</span>
-                                <span>Trust Score: 95/100</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Limits & Prices -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 w-full lg:w-auto text-left border-y lg:border-y-0 border-slate-800/80 py-3 lg:py-0">
-                        <div>
-                            <span class="text-xs text-slate-400 block">Unit Price</span>
-                            <span class="text-xl font-extrabold text-emerald-400">129.80 <span class="text-xs text-slate-300">KES</span></span>
-                        </div>
-                        <div>
-                            <span class="text-xs text-slate-400 block">Available Balance</span>
-                            <span class="text-sm font-bold text-slate-200">8,200.00 USDT</span>
-                        </div>
-                        <div class="col-span-2 md:col-span-1">
-                            <span class="text-xs text-slate-400 block">Order Limits</span>
-                            <span class="text-xs font-semibold text-slate-300 block">Min: 500 KES</span>
-                            <span class="text-xs font-semibold text-slate-300 block">Max: 150,000 KES</span>
-                        </div>
-                    </div>
-
-                    <!-- Payment Methods & Trade Trigger -->
-                    <div class="flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end justify-between gap-3 w-full lg:w-auto">
-                        <div class="flex flex-wrap items-center gap-1.5 justify-start lg:justify-end">
-                            <span class="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-bold">M-PESA Paybill</span>
-                            <span class="px-2 py-1 rounded bg-slate-800 text-slate-300 text-[11px]">KCB Bank</span>
-                        </div>
-                        <div class="flex items-center space-x-2 w-full sm:w-auto">
-                            <button onclick="openChatModal('NairobiCrypto_King')" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all" title="Chat with Merchant">
-                                <i data-lucide="message-square" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="openTradeModal('NairobiCrypto_King', '129.80', 'BUY')" class="flex-grow sm:flex-grow-0 px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all">
-                                Buy USDT
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
         <!-- VIEW 2: MY ORDERS & ACTIVE TRADES -->
         <div id="view-orders" class="hidden space-y-6">
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-bold text-white">My Active P2P Escrow Orders</h2>
-                <div class="flex space-x-2">
-                    <button class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Active (2)</button>
-                    <button class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-xs font-semibold">Completed</button>
-                    <button class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white text-xs font-semibold">Appeals / Disputes</button>
-                </div>
+                <h2 class="text-lg font-bold text-white">Active Orders & Escrow Operations</h2>
+                <span class="text-xs text-indigo-400">Automated Monitoring Active</span>
             </div>
 
             <!-- Active Order Card -->
-            <div class="glass-panel p-6 rounded-2xl border-l-4 border-amber-500 space-y-4">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div class="glass-panel p-5 rounded-2xl border-l-4 border-amber-500 space-y-4">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                     <div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded font-bold uppercase">Pending Payment</span>
+                            <span class="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded font-bold uppercase">Pending Payment</span>
                             <span class="text-xs text-slate-500">Order ID: NX-8894210</span>
                         </div>
-                        <h3 class="text-lg font-bold text-white mt-1">Buying 150.00 USDT from ExpressP2P_Global</h3>
+                        <h3 class="text-base font-bold text-white mt-1">Buying 150.00 USDT from ExpressP2P_Global</h3>
                     </div>
                     <div class="flex items-center space-x-3">
                         <div class="text-right">
-                            <span class="text-xs text-slate-400 block">Timer Remaining</span>
-                            <span class="text-lg font-mono font-bold text-amber-400" id="escrow-timer">14:25</span>
+                            <span class="text-[11px] text-slate-400 block">Timer Remaining</span>
+                            <span class="text-base font-mono font-bold text-amber-400" id="escrow-timer">14:25</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800/80">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
                     <div>
-                        <span class="text-xs text-slate-400">Total Payable</span>
-                        <span class="text-base font-bold text-white block">19,425.00 KES</span>
+                        <span class="text-[11px] text-slate-400">Total Payable</span>
+                        <span class="text-sm font-bold text-white block">19,425.00 KES</span>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400">Price Per Unit</span>
-                        <span class="text-base font-bold text-slate-300 block">129.50 KES</span>
+                        <span class="text-[11px] text-slate-400">Price Per Unit</span>
+                        <span class="text-sm font-bold text-slate-300 block">129.50 KES</span>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400">Payment Method</span>
-                        <span class="text-base font-bold text-emerald-400 block">M-PESA Till # 882910</span>
+                        <span class="text-[11px] text-slate-400">Payment Details</span>
+                        <span class="text-sm font-bold text-emerald-400 block">M-PESA Till # 882910</span>
                     </div>
                     <div>
-                        <span class="text-xs text-slate-400">Escrow Security</span>
-                        <span class="text-xs font-semibold text-indigo-400 flex items-center gap-1 mt-1"><i data-lucide="lock" class="w-3 h-3"></i> Funds Locked in Contract</span>
+                        <span class="text-[11px] text-slate-400">Escrow Vault</span>
+                        <span class="text-xs font-semibold text-indigo-400 flex items-center gap-1 mt-0.5"><i data-lucide="lock" class="w-3 h-3"></i> Locked in Vault</span>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
-                    <div class="flex items-center space-x-3">
-                        <button onclick="openChatModal('ExpressP2P_Global')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-2">
-                            <i data-lucide="message-square" class="w-4 h-4"></i> Open Trade Chat
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                    <div class="flex items-center space-x-2">
+                        <button onclick="openChatModal('ExpressP2P_Global')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-1.5">
+                            <i data-lucide="message-square" class="w-3.5 h-3.5"></i> Open Chat
                         </button>
-                        <button class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-400 text-xs font-bold border border-rose-500/20">
-                            Cancel Order
+                        <button onclick="openModal('disputeModal')" class="px-3.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold border border-rose-500/20">
+                            Raise Dispute
                         </button>
                     </div>
-                    <div class="flex items-center space-x-3">
-                        <button onclick="alert('Please upload receipt in the modal.')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold flex items-center gap-1.5">
-                            <i data-lucide="upload" class="w-3.5 h-3.5"></i> Upload Receipt
-                        </button>
-                        <button class="px-6 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20">
+                    <div class="flex items-center space-x-2">
+                        <button class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20">
                             I Have Transferred Payment
                         </button>
                     </div>
@@ -489,69 +380,61 @@
 
         <!-- VIEW 3: MERCHANT PORTAL / DASHBOARD -->
         <div id="view-merchant-dashboard" class="hidden space-y-6">
-            <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
+            <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-6">
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                            Merchant Control Hub <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs px-2 py-0.5 rounded font-semibold">Pro Level 2</span>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            Merchant Control Hub <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] px-2 py-0.5 rounded font-semibold">Pro Level 2</span>
                         </h2>
-                        <p class="text-xs text-slate-400 mt-1">Manage your active buy/sell advertisements, pricing formulas, and payment details.</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Manage live trade advertisements, auto-pricing margins, and inventory balances.</p>
                     </div>
-                    <button onclick="openModal('createAdModal')" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+                    <button onclick="openModal('createAdModal')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 flex items-center gap-2">
                         <i data-lucide="plus-circle" class="w-4 h-4"></i> Post New Trade Ad
                     </button>
                 </div>
 
-                <!-- Merchant Quick Metrics -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                        <span class="text-xs text-slate-400">Total Profit (30 Days)</span>
-                        <div class="text-xl font-bold text-emerald-400 mt-1">+45,280 KES</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                        <span class="text-[11px] text-slate-400">Total Profit (30 Days)</span>
+                        <div class="text-base font-bold text-emerald-400 mt-0.5">+45,280 KES</div>
                     </div>
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                        <span class="text-xs text-slate-400">Merchant Escrow Balance</span>
-                        <div class="text-xl font-bold text-white mt-1">5,000.00 USDT</div>
+                    <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                        <span class="text-[11px] text-slate-400">Escrow Balance</span>
+                        <div class="text-base font-bold text-white mt-0.5">5,000.00 USDT</div>
                     </div>
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                        <span class="text-xs text-slate-400">Active Advertisements</span>
-                        <div class="text-xl font-bold text-indigo-400 mt-1">3 Live</div>
+                    <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                        <span class="text-[11px] text-slate-400">Active Ads</span>
+                        <div class="text-base font-bold text-indigo-400 mt-0.5">3 Live</div>
                     </div>
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                        <span class="text-xs text-slate-400">Merchant Rating</span>
-                        <div class="text-xl font-bold text-amber-400 mt-1">4.99 / 5.0</div>
+                    <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                        <span class="text-[11px] text-slate-400">Merchant Rating</span>
+                        <div class="text-base font-bold text-amber-400 mt-0.5">4.99 / 5.0</div>
                     </div>
                 </div>
 
-                <!-- My Ads Table -->
                 <div class="space-y-3">
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Your Active Advertisements</h3>
+                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">Active Advertisements</h3>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-900 text-slate-400 text-xs border-b border-slate-800">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-900 text-slate-400 text-[11px] border-b border-slate-800">
                                 <tr>
                                     <th class="p-3">Type</th>
-                                    <th class="p-3">Asset / Fiat</th>
-                                    <th class="p-3">Exchange Rate</th>
-                                    <th class="p-3">Available / Limits</th>
-                                    <th class="p-3">Payment Methods</th>
+                                    <th class="p-3">Asset/Fiat</th>
+                                    <th class="p-3">Rate</th>
+                                    <th class="p-3">Limits</th>
                                     <th class="p-3">Status</th>
-                                    <th class="p-3 text-right">Actions</th>
+                                    <th class="p-3 text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800/60">
                                 <tr class="hover:bg-slate-900/40">
                                     <td class="p-3 font-bold text-emerald-400">SELL USDT</td>
                                     <td class="p-3">USDT / KES</td>
-                                    <td class="p-3 font-bold text-white">129.50 KES <span class="text-[10px] text-slate-500 font-normal">(Margin +1.2%)</span></td>
-                                    <td class="p-3 text-xs">
-                                        <div class="font-bold text-slate-200">2,500 USDT</div>
-                                        <div class="text-slate-400">1,000 - 100,000 KES</div>
-                                    </td>
-                                    <td class="p-3 text-xs text-slate-300">M-PESA Express</td>
-                                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs font-bold">Online</span></td>
-                                    <td class="p-3 text-right space-x-2">
-                                        <button class="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300"><i data-lucide="pause-circle" class="w-4 h-4"></i></button>
-                                        <button class="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                                    <td class="p-3 font-bold text-white">129.50 KES</td>
+                                    <td class="p-3 text-[11px]">1,000 - 100,000 KES</td>
+                                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">Online</span></td>
+                                    <td class="p-3 text-right space-x-1">
+                                        <button class="p-1.5 rounded bg-slate-800 text-slate-300 hover:text-white"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -561,68 +444,212 @@
             </div>
         </div>
 
+        <!-- VIEW 4: PUBLIC MERCHANT PROFILE -->
+        <div id="view-merchant-profile" class="hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
+                <!-- Profile Header -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center font-bold text-2xl text-white shadow-xl">
+                            EX
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h2 class="text-xl font-extrabold text-white">ExpressP2P_Global</h2>
+                                <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> VIP PRO
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Joined January 2024 • Verified Identity & Business Entity</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 flex items-center gap-1.5">
+                            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Follow Merchant
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400">Total Trades</span>
+                        <div class="text-lg font-bold text-white mt-1">3,420 Trades</div>
+                    </div>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400">Completion Rate</span>
+                        <div class="text-lg font-bold text-emerald-400 mt-1">99.7%</div>
+                    </div>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400">Avg Release Speed</span>
+                        <div class="text-lg font-bold text-indigo-400 mt-1">1.8 Minutes</div>
+                    </div>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400">Positive Feedback</span>
+                        <div class="text-lg font-bold text-amber-400 mt-1">99.8% (1,240)</div>
+                    </div>
+                </div>
+
+                <!-- Terms & Bio -->
+                <div class="p-4 rounded-xl bg-slate-900/40 border border-slate-800 space-y-2 text-xs">
+                    <h4 class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">Merchant Terms of Trade</h4>
+                    <p class="text-slate-400 leading-relaxed">
+                        1. Automated 24/7 M-PESA Release. Ensure account holder name matches your Nexa verification name.<br>
+                        2. No third-party payments allowed under any circumstances.<br>
+                        3. Type order ID in payment reference for instantaneous release.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 5: SECURITY & KYC CENTER -->
+        <div id="view-security-center" class="hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold text-white">KYC & Account Security Center</h2>
+                    <p class="text-xs text-slate-400 mt-1">Manage identity levels, 2FA hardware keys, and withdrawal whitelists.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Verification Tier 1 -->
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-emerald-500/30 relative space-y-3">
+                        <span class="absolute top-4 right-4 bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded">VERIFIED</span>
+                        <h3 class="font-bold text-white text-sm">Level 1: Basic Identity</h3>
+                        <p class="text-xs text-slate-400">Government ID & Selfie check completed.</p>
+                        <div class="text-xs font-semibold text-slate-300 pt-2 border-t border-slate-800">Limit: $10,000 USD / Day</div>
+                    </div>
+
+                    <!-- Verification Tier 2 -->
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-indigo-500/30 relative space-y-3">
+                        <span class="absolute top-4 right-4 bg-indigo-500/20 text-indigo-400 text-[10px] font-bold px-2 py-0.5 rounded">IN REVIEW</span>
+                        <h3 class="font-bold text-white text-sm">Level 2: Proof of Address</h3>
+                        <p class="text-xs text-slate-400">Bank Statement & Utility Bill submitted.</p>
+                        <div class="text-xs font-semibold text-slate-300 pt-2 border-t border-slate-800">Limit: $100,000 USD / Day</div>
+                    </div>
+
+                    <!-- Verification Tier 3 -->
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 relative space-y-3 opacity-60">
+                        <span class="absolute top-4 right-4 bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded">LOCKED</span>
+                        <h3 class="font-bold text-white text-sm">Level 3: Merchant VIP</h3>
+                        <p class="text-xs text-slate-400">Corporate verification & security deposit.</p>
+                        <div class="text-xs font-semibold text-slate-300 pt-2 border-t border-slate-800">Limit: Unlimited</div>
+                    </div>
+                </div>
+
+                <!-- 2FA & Controls -->
+                <div class="space-y-3 border-t border-slate-800 pt-4">
+                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">Security Controls</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div>
+                                <span class="font-bold text-white block">Authenticator App (2FA)</span>
+                                <span class="text-slate-400 text-[11px]">Required for P2P releases & withdrawals</span>
+                            </div>
+                            <span class="text-emerald-400 font-bold">Enabled</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <div>
+                                <span class="font-bold text-white block">Anti-Phishing Code</span>
+                                <span class="text-slate-400 text-[11px]">Protects email communication</span>
+                            </div>
+                            <button class="text-indigo-400 hover:underline font-bold">Configure</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 6: ADMIN DISPUTE RESOLUTION PANEL -->
+        <div id="view-admin-panel" class="hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl border border-amber-500/20 space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+                            <i data-lucide="shield-alert" class="w-5 h-5"></i> Admin Escrow Dispute Operations
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Platform arbitration console for locked escrow contracts.</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/30 text-xs font-bold">1 Active Dispute</span>
+                </div>
+
+                <!-- Active Dispute Console -->
+                <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs border-b border-slate-800 pb-3">
+                        <div>
+                            <span class="text-slate-400">Dispute ID: <strong class="text-white">DSP-99201</strong></span>
+                            <span class="mx-2">•</span>
+                            <span class="text-slate-400">Order ID: <strong class="text-white">NX-8894210</strong></span>
+                        </div>
+                        <span class="text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded">Escrow Locked: 150.00 USDT</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                            <span class="font-bold text-indigo-400 uppercase tracking-wider text-[10px]">Buyer Claim (User_992)</span>
+                            <p class="text-slate-300">"Paid KES 19,425 via M-PESA Till 882910. Merchant has not released crypto after 30 minutes."</p>
+                            <span class="text-[10px] text-emerald-400 block font-mono">Attachment: mpesa_receipt_882910.pdf</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                            <span class="font-bold text-amber-400 uppercase tracking-wider text-[10px]">Merchant Claim (ExpressP2P)</span>
+                            <p class="text-slate-300">"Payment notification not received in statement yet. Awaiting bank sync."</p>
+                        </div>
+                    </div>
+
+                    <!-- Admin Arbitration Buttons -->
+                    <div class="flex items-center justify-end space-x-3 pt-2">
+                        <button onclick="alert('Escrow force-refunded to buyer.')" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-600/20">
+                            Force Release to Buyer
+                        </button>
+                        <button onclick="alert('Escrow released to seller.')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20">
+                            Force Release to Merchant
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    <!-- MODAL 1: TRADE EXECUTION WINDOW (ESCROW BUY/SELL) -->
+    <!-- MODAL 1: TRADE EXECUTION WINDOW -->
     <div id="tradeModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden">
-        <div class="glass-panel max-w-lg w-full mx-4 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl relative">
-            <!-- Modal Header -->
-            <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+        <div class="glass-panel max-w-md w-full mx-4 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl relative">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
                 <div>
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2">
                         Buy USDT from <span id="modal-merchant-name" class="text-indigo-400">Merchant</span>
                     </h3>
-                    <p class="text-xs text-slate-400">Funds locked safely in automated Nexa Escrow</p>
+                    <p class="text-[11px] text-slate-400">Automated Nexa Escrow Contract Protection</p>
                 </div>
-                <button onclick="closeModal('tradeModal')" class="p-2 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                <button onclick="closeModal('tradeModal')" class="p-1.5 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
 
-            <!-- Modal Content Form -->
-            <div class="p-6 space-y-4">
-                <!-- Unit Price Bar -->
+            <div class="p-5 space-y-4">
                 <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs">
                     <span class="text-slate-400">Unit Price</span>
-                    <span class="font-extrabold text-emerald-400 text-base" id="modal-unit-price">129.50 KES</span>
+                    <span class="font-extrabold text-emerald-400 text-sm" id="modal-unit-price">129.50 KES</span>
                 </div>
 
-                <!-- Input Fields -->
-                <div class="space-y-3">
+                <div class="space-y-3 text-xs">
                     <div>
-                        <label class="text-xs text-slate-400 font-semibold block mb-1">I Want To Pay</label>
+                        <label class="text-slate-400 font-semibold block mb-1">Pay Amount</label>
                         <div class="relative">
-                            <input type="number" id="trade-pay-amount" oninput="calculateTrade()" placeholder="1,000 - 500,000" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-sm font-bold text-white focus:outline-none focus:border-indigo-500 pr-16">
-                            <span class="absolute right-3 top-3 text-xs text-slate-400 font-bold">KES</span>
+                            <input type="number" id="trade-pay-amount" oninput="calculateTrade()" placeholder="1,000 - 500,000" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold focus:outline-none focus:border-indigo-500 pr-12">
+                            <span class="absolute right-3 top-2.5 text-[10px] text-slate-400 font-bold">KES</span>
                         </div>
                     </div>
 
                     <div>
-                        <label class="text-xs text-slate-400 font-semibold block mb-1">I Will Receive (Approx.)</label>
+                        <label class="text-slate-400 font-semibold block mb-1">Receive (Approx.)</label>
                         <div class="relative">
-                            <input type="number" id="trade-receive-amount" readonly placeholder="0.00" class="w-full bg-slate-900/60 border border-slate-800/80 rounded-xl px-3 py-2.5 text-sm font-bold text-emerald-400 focus:outline-none pr-16">
-                            <span class="absolute right-3 top-3 text-xs text-slate-400 font-bold">USDT</span>
+                            <input type="number" id="trade-receive-amount" readonly placeholder="0.00" class="w-full bg-slate-900/60 border border-slate-800 rounded-xl px-3 py-2 text-emerald-400 font-bold focus:outline-none pr-12">
+                            <span class="absolute right-3 top-2.5 text-[10px] text-slate-400 font-bold">USDT</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Payment Method Selection -->
-                <div>
-                    <label class="text-xs text-slate-400 font-semibold block mb-1">Select Payment Method</label>
-                    <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
-                        <option value="mpesa">M-PESA Express (Instant)</option>
-                        <option value="bank">Bank Transfer</option>
-                    </select>
-                </div>
-
-                <!-- Important Disclaimer -->
-                <div class="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300 space-y-1">
-                    <div class="font-bold flex items-center gap-1"><i data-lucide="shield" class="w-3.5 h-3.5"></i> Escrow Protection Active</div>
-                    <p class="text-slate-400">Once you click Initiate, seller crypto will be locked in escrow. You will have 15 minutes to pay.</p>
-                </div>
-
-                <!-- Submit Button -->
-                <button onclick="submitOrder()" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-sm shadow-xl shadow-emerald-500/20 transition-all">
+                <button onclick="submitOrder()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-xs shadow-xl shadow-emerald-500/20">
                     Initiate Escrow Trade
                 </button>
             </div>
@@ -631,98 +658,207 @@
 
     <!-- MODAL 2: LIVE CHAT WINDOW -->
     <div id="chatModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden">
-        <div class="glass-panel max-w-md w-full mx-4 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl flex flex-col h-[520px]">
-            <!-- Chat Header -->
-            <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
-                <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-white text-sm">
+        <div class="glass-panel max-w-md w-full mx-4 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl flex flex-col h-[500px]">
+            <div class="p-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-white text-xs">
                         M
                     </div>
                     <div>
-                        <h4 class="font-bold text-sm text-white" id="chat-merchant-name">Merchant</h4>
-                        <span class="text-[10px] text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> Online & Fast Response</span>
+                        <h4 class="font-bold text-xs text-white" id="chat-merchant-name">Merchant</h4>
+                        <span class="text-[9px] text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> Online</span>
                     </div>
                 </div>
-                <button onclick="closeModal('chatModal')" class="p-1.5 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                <button onclick="closeModal('chatModal')" class="p-1 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
 
-            <!-- Chat Messages Box -->
             <div class="flex-grow p-4 space-y-3 overflow-y-auto text-xs custom-scrollbar bg-slate-950/40" id="chat-box">
-                <div class="text-center text-slate-500 text-[10px] my-2">-- Escrow Order NX-8894210 Started --</div>
-                
-                <!-- Merchant Message -->
+                <div class="text-center text-slate-500 text-[10px] my-1">-- Order Chat Session Established --</div>
                 <div class="flex items-start space-x-2">
-                    <div class="bg-slate-800 p-3 rounded-2xl rounded-tl-none max-w-[80%] text-slate-200">
-                        Hello! I am online. Please send payment to M-PESA Till: <strong>882910</strong> and upload receipt. Release is automated!
-                    </div>
-                </div>
-
-                <!-- User Message Mock -->
-                <div class="flex items-end justify-end space-x-2">
-                    <div class="bg-indigo-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%]">
-                        Okay, making payment now via M-PESA.
+                    <div class="bg-slate-800 p-2.5 rounded-2xl rounded-tl-none max-w-[80%] text-slate-200">
+                        Hello! Send payment to M-PESA Till: <strong>882910</strong>. Release is automated once receipt is verified.
                     </div>
                 </div>
             </div>
 
-            <!-- Chat Input Footer -->
-            <div class="p-3 border-t border-slate-800 bg-slate-900 flex items-center space-x-2">
-                <button class="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white"><i data-lucide="paperclip" class="w-4 h-4"></i></button>
-                <input type="text" id="chat-input" placeholder="Type message to merchant..." class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-                <button onclick="sendChatMessage()" class="p-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-500"><i data-lucide="send" class="w-4 h-4"></i></button>
+            <div class="p-2.5 border-t border-slate-800 bg-slate-900 flex items-center space-x-2">
+                <input type="text" id="chat-input" placeholder="Type message..." class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <button onclick="sendChatMessage()" class="p-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-500"><i data-lucide="send" class="w-3.5 h-3.5"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Interactions & Logic -->
+    <!-- MODAL 3: BECOME A MERCHANT MODAL -->
+    <div id="becomeMerchantModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden">
+        <div class="glass-panel max-w-md w-full mx-4 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl relative">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i data-lucide="award" class="w-4 h-4 text-amber-400"></i> Apply for Merchant Status
+                </h3>
+                <button onclick="closeModal('becomeMerchantModal')" class="p-1 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="p-5 space-y-4 text-xs">
+                <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300">
+                    Merchant status allows you to post custom Buy/Sell advertisements and access lower trade fees.
+                </div>
+                <div class="space-y-2">
+                    <label class="text-slate-400 font-semibold block">Security Deposit (USDT)</label>
+                    <input type="number" value="500" readonly class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold">
+                    <span class="text-[10px] text-slate-500 block">Locked in escrow vault while merchant status is active.</span>
+                </div>
+                <button onclick="alert('Application submitted for admin review!'); closeModal('becomeMerchantModal');" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-xs shadow-lg shadow-orange-500/20">
+                    Submit Application & Stake Deposit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CREATE ADVERTISEMENT MODAL -->
+    <div id="createAdModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden">
+        <div class="glass-panel max-w-lg w-full mx-4 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl relative">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-indigo-400"></i> Post Trade Advertisement
+                </h3>
+                <button onclick="closeModal('createAdModal')" class="p-1 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="p-5 space-y-3 text-xs">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-slate-400 font-semibold block mb-1">Ad Type</label>
+                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold">
+                            <option value="SELL">SELL (I want to sell crypto)</option>
+                            <option value="BUY">BUY (I want to buy crypto)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-slate-400 font-semibold block mb-1">Asset</label>
+                        <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold">
+                            <option value="USDT">USDT</option>
+                            <option value="BTC">BTC</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-slate-400 font-semibold block mb-1">Exchange Rate (KES)</label>
+                        <input type="number" placeholder="129.50" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 font-semibold block mb-1">Total Trading Stock</label>
+                        <input type="number" placeholder="1000" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold">
+                    </div>
+                </div>
+                <button onclick="alert('Advertisement published live!'); closeModal('createAdModal');" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30">
+                    Publish Advertisement
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: DISPUTE SUBMISSION MODAL -->
+    <div id="disputeModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden">
+        <div class="glass-panel max-w-md w-full mx-4 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl relative">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+                <h3 class="text-base font-bold text-rose-400 flex items-center gap-2">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i> Raise Escrow Dispute
+                </h3>
+                <button onclick="closeModal('disputeModal')" class="p-1 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="p-5 space-y-3 text-xs">
+                <p class="text-slate-400">Submit proof of transaction. A Nexa escrow officer will join the chat within 5 minutes.</p>
+                <div>
+                    <label class="text-slate-400 font-semibold block mb-1">Reason for Dispute</label>
+                    <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold">
+                        <option>Payment made but seller not releasing</option>
+                        <option>Incorrect payment amount received</option>
+                        <option>Unresponsive counterparty</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-slate-400 font-semibold block mb-1">Upload Payment Evidence</label>
+                    <input type="file" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2 text-slate-400">
+                </div>
+                <button onclick="alert('Dispute submitted to admin desk.'); closeModal('disputeModal'); switchTab('admin-panel');" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-600/20">
+                    Submit to Escrow Admin
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Navigation & UI Logic -->
     <script>
-        // Initialize Icons
+        // Initialize Lucide Icons
         lucide.createIcons();
 
-        // State Management Variables
         let currentSide = 'BUY';
         let activeUnitPrice = 129.50;
 
-        // View Tab Switching Logic
+        // View Switcher Strategy
         function switchTab(tabName) {
-            const views = ['marketplace', 'orders', 'merchant-dashboard'];
+            const views = ['marketplace', 'orders', 'merchant-dashboard', 'merchant-profile', 'security-center', 'admin-panel'];
+            
             views.forEach(v => {
                 const el = document.getElementById(`view-${v}`);
                 const tabBtn = document.getElementById(`tab-${v}`);
+                const mobTabBtn = document.getElementById(`mob-tab-${v}`);
+
                 if (el) el.classList.add('hidden');
+                
                 if (tabBtn) {
-                    tabBtn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
-                    tabBtn.classList.add('text-slate-400');
+                    if (v === 'admin-panel') {
+                        tabBtn.className = "px-3.5 py-2 rounded-lg text-xs font-bold text-amber-400/80 hover:text-amber-300 transition-all";
+                    } else {
+                        tabBtn.className = "px-3.5 py-2 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all";
+                    }
+                }
+                if (mobTabBtn) {
+                    mobTabBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 text-slate-400";
                 }
             });
 
             const targetView = document.getElementById(`view-${tabName}`);
             const targetTab = document.getElementById(`tab-${tabName}`);
+            const targetMobTab = document.getElementById(`mob-tab-${tabName}`);
+
             if (targetView) targetView.classList.remove('hidden');
+            
             if (targetTab) {
-                targetTab.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
-                targetTab.classList.remove('text-slate-400');
+                if (tabName === 'admin-panel') {
+                    targetTab.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition-all text-slate-950 bg-amber-400 shadow-md";
+                } else {
+                    targetTab.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition-all text-white bg-indigo-600 shadow-md";
+                }
+            }
+            if (targetMobTab) {
+                targetMobTab.className = "px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 text-white bg-indigo-600";
             }
         }
 
-        // Side Toggle (Buy vs Sell)
+        // Side Toggle Switch (Buy / Sell)
         function setSide(side) {
             currentSide = side;
             const buyBtn = document.getElementById('btn-side-buy');
             const sellBtn = document.getElementById('btn-side-sell');
 
             if (side === 'BUY') {
-                buyBtn.className = "px-6 py-2 rounded-lg font-bold text-sm bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2";
-                sellBtn.className = "px-6 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-white transition-all flex items-center gap-2";
+                buyBtn.className = "px-5 py-2 rounded-lg font-bold text-xs bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2";
+                sellBtn.className = "px-5 py-2 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition-all flex items-center gap-2";
             } else {
-                sellBtn.className = "px-6 py-2 rounded-lg font-bold text-sm bg-rose-500 text-white shadow-lg shadow-rose-500/20 transition-all flex items-center gap-2";
-                buyBtn.className = "px-6 py-2 rounded-lg font-bold text-sm text-slate-400 hover:text-white transition-all flex items-center gap-2";
+                sellBtn.className = "px-5 py-2 rounded-lg font-bold text-xs bg-rose-500 text-white shadow-lg shadow-rose-500/20 transition-all flex items-center gap-2";
+                buyBtn.className = "px-5 py-2 rounded-lg font-bold text-xs text-slate-400 hover:text-white transition-all flex items-center gap-2";
             }
         }
 
-        // Modal Controls
+        // Modal Helpers
         function openModal(modalId) {
             document.getElementById(modalId)?.classList.remove('hidden');
         }
@@ -731,7 +867,7 @@
             document.getElementById(modalId)?.classList.add('hidden');
         }
 
-        // Trade Modal Opener & Calculator
+        // Calculation Logic
         function openTradeModal(merchantName, price, action) {
             document.getElementById('modal-merchant-name').innerText = merchantName;
             document.getElementById('modal-unit-price').innerText = `${price} KES`;
@@ -752,7 +888,7 @@
             switchTab('orders');
         }
 
-        // Chat Modal Opener
+        // Interactive Live Chat
         function openChatModal(merchantName) {
             document.getElementById('chat-merchant-name').innerText = merchantName;
             openModal('chatModal');
@@ -764,7 +900,7 @@
             if (input.value.trim() !== '') {
                 const msgDiv = document.createElement('div');
                 msgDiv.className = "flex items-end justify-end space-x-2";
-                msgDiv.innerHTML = `<div class="bg-indigo-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%]">${input.value}</div>`;
+                msgDiv.innerHTML = `<div class="bg-indigo-600 text-white p-2.5 rounded-2xl rounded-tr-none max-w-[80%]">${input.value}</div>`;
                 chatBox.appendChild(msgDiv);
                 input.value = '';
                 chatBox.scrollTop = chatBox.scrollHeight;
