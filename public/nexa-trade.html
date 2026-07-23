@@ -115,9 +115,22 @@
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
         .feature-card { background: var(--bg-dark); border: 1px solid var(--border); padding: 15px; border-radius: 6px; text-decoration: none; color: var(--text-main); }
         .feature-card:hover { border-color: var(--yellow); }
+
+        /* Status Indicator Pill */
+        #admin-status-banner {
+            display: none;
+            background: #ff1744;
+            color: #fff;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px;
+        }
     </style>
 </head>
 <body>
+
+    <div id="admin-status-banner">⚠️ TRADING SYSTEM SUSPENDED BY ADMIN CONTROL CENTER</div>
 
     <!-- Header Navigation Bar -->
     <header>
@@ -170,21 +183,21 @@
                 <a href="analytics.html" style="color:var(--yellow); font-size:10px; text-decoration:none;">View All</a>
             </div>
             <ul class="ticker-list">
-                <li class="ticker-item active" onclick="switchPair('BTC/USDT', 64250)">
+                <li class="ticker-item active" id="ticker-BTC" onclick="switchPair('BTC/USDT', 64250)">
                     <span>BTC/USDT</span>
-                    <span class="text-green">$64,250.00</span>
+                    <span class="text-green" id="price-BTC">$64,250.00</span>
                 </li>
-                <li class="ticker-item" onclick="switchPair('ETH/USDT', 3480)">
+                <li class="ticker-item" id="ticker-ETH" onclick="switchPair('ETH/USDT', 3480)">
                     <span>ETH/USDT</span>
-                    <span class="text-green">$3,480.00</span>
+                    <span class="text-green" id="price-ETH">$3,480.00</span>
                 </li>
-                <li class="ticker-item" onclick="switchPair('SOL/USDT', 145)">
+                <li class="ticker-item" id="ticker-SOL" onclick="switchPair('SOL/USDT', 145)">
                     <span>SOL/USDT</span>
-                    <span class="text-red">$145.20</span>
+                    <span class="text-red" id="price-SOL">$145.20</span>
                 </li>
-                <li class="ticker-item" onclick="switchPair('BNB/USDT', 580)">
+                <li class="ticker-item" id="ticker-BNB" onclick="switchPair('BNB/USDT', 580)">
                     <span>BNB/USDT</span>
-                    <span class="text-green">$580.50</span>
+                    <span class="text-green" id="price-BNB">$580.50</span>
                 </li>
             </ul>
         </div>
@@ -308,6 +321,10 @@
         let currentPrice = 64250;
         let currentSide = "BUY";
         let chartInstance = null;
+        let isTradingHalted = false;
+
+        // Remote Broadcast Channel for Cross-Tab Admin Control
+        const adminChannel = new BroadcastChannel('nexa_admin_control');
 
         function initChart() {
             const ctx = document.getElementById('nexaChart').getContext('2d');
@@ -343,6 +360,13 @@
             document.getElementById('stat-price').innerText = '$' + price.toFixed(2);
             document.getElementById('chart-header').innerText = pair + ' Price Movement';
             document.getElementById('trade-price').value = price;
+            
+            // Highlight active market item
+            document.querySelectorAll('.ticker-item').forEach(el => el.classList.remove('active'));
+            let activeSymbol = pair.split('/')[0];
+            let tickerEl = document.getElementById('ticker-' + activeSymbol);
+            if(tickerEl) tickerEl.classList.add('active');
+
             chartInstance.data.datasets[0].data = [price - 50, price - 20, price - 35, price + 10, price - 5, price];
             chartInstance.update();
         }
@@ -372,10 +396,17 @@
             document.getElementById('trade-total').value = (p * a).toFixed(2);
         }
 
-        function executeInternalTrade() {
-            let amount = document.getElementById('trade-amount').value;
-            let price = document.getElementById('trade-price').value;
-            let type = document.getElementById('order-type').value;
+        function executeInternalTrade(tradeOverride = null) {
+            if (isTradingHalted) {
+                alert('Trading is currently halted by remote administration.');
+                return;
+            }
+
+            let amount = tradeOverride ? tradeOverride.amount : document.getElementById('trade-amount').value;
+            let price = tradeOverride ? tradeOverride.price : document.getElementById('trade-price').value;
+            let type = tradeOverride ? tradeOverride.type : document.getElementById('order-type').value;
+            let side = tradeOverride ? tradeOverride.side : currentSide;
+            let pair = tradeOverride ? tradeOverride.pair : currentPair;
 
             if(!amount || amount <= 0) {
                 alert('Enter valid order amount.');
@@ -387,8 +418,8 @@
 
             let row = `<tr>
                 <td>${now}</td>
-                <td>${currentPair}</td>
-                <td class="${currentSide === 'BUY' ? 'text-green' : 'text-red'}">${currentSide}</td>
+                <td>${pair}</td>
+                <td class="${side === 'BUY' ? 'text-green' : 'text-red'}">${side}</td>
                 <td>${type}</td>
                 <td>${price}</td>
                 <td>${amount}</td>
@@ -396,10 +427,54 @@
             </tr>`;
 
             historyTable.innerHTML = row + historyTable.innerHTML;
-            document.getElementById('trade-amount').value = '';
-            document.getElementById('trade-total').value = '';
-            alert(`${type} ${currentSide} order executed successfully!`);
+            
+            if (!tradeOverride) {
+                document.getElementById('trade-amount').value = '';
+                document.getElementById('trade-total').value = '';
+                alert(`${type} ${side} order executed successfully!`);
+            }
         }
+
+        /* Remote Control Listener Logic */
+        adminChannel.onmessage = function(event) {
+            const data = event.data;
+            if(!data || !data.action) return;
+
+            switch(data.action) {
+                case 'TOGGLE_TRADING':
+                    isTradingHalted = data.halted;
+                    document.getElementById('admin-status-banner').style.display = isTradingHalted ? 'block' : 'none';
+                    break;
+                case 'UPDATE_PRICE':
+                    if (data.pair === currentPair) {
+                        currentPrice = parseFloat(data.price);
+                        document.getElementById('stat-price').innerText = '$' + currentPrice.toFixed(2);
+                        document.getElementById('trade-price').value = currentPrice;
+                        chartInstance.data.datasets[0].data.shift();
+                        chartInstance.data.datasets[0].data.push(currentPrice);
+                        chartInstance.update();
+                    }
+                    let coin = data.pair.split('/')[0];
+                    let priceEl = document.getElementById('price-' + coin);
+                    if(priceEl) priceEl.innerText = '$' + parseFloat(data.price).toFixed(2);
+                    break;
+                case 'REMOTE_EXECUTE_TRADE':
+                    executeInternalTrade(data.trade);
+                    break;
+                case 'CLEAR_LOGS':
+                    document.getElementById('trade-history').innerHTML = '';
+                    break;
+            }
+        };
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'nexa_admin_command') {
+                try {
+                    const command = JSON.parse(e.newValue);
+                    if(command) adminChannel.postMessage(command);
+                } catch(err){}
+            }
+        });
 
         function openModal(id) { document.getElementById(id).style.display = "block"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
