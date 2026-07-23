@@ -41,12 +41,19 @@
                 <a href="express-trade.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3 text-amber-400"></i> Express Trade</a>
                 <a href="orders.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white">My Orders</a>
                 <a href="merchant-dashboard.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white">My Ads</a>
-                <a href="merchant-dashboard.html" class="px-3 py-1.5 rounded-lg text-amber-400 hover:text-amber-300">Become a Merchant</a>
+                <a href="merchant-verification.html" class="px-3 py-1.5 rounded-lg text-emerald-400 hover:text-emerald-300 flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20">
+                    <i data-lucide="badge-check" class="w-3.5 h-3.5 text-emerald-400"></i> Verify Merchant
+                </a>
                 <a href="trade-history.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white">Trade History</a>
                 <a href="help.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white">Help Center</a>
             </nav>
 
             <div class="flex items-center space-x-2 text-xs font-bold">
+                <!-- Action button to Merchant Verification Page -->
+                <a href="merchant-verification.html" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 transition-all" title="Merchant Verification">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-indigo-400"></i>
+                    <span>Verify Account</span>
+                </a>
                 <a href="security.html" class="p-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800" title="Security & KYC"><i data-lucide="shield" class="w-4 h-4"></i></a>
                 <a href="admin.html" class="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20" title="Admin Panel"><i data-lucide="lock" class="w-4 h-4"></i></a>
                 <div class="text-right hidden md:block border-l border-slate-800 pl-3">
@@ -171,7 +178,7 @@
             </div>
         </section>
 
-        <!-- Merchant List Cards (Showing ALL 21 requested fields) -->
+        <!-- Merchant List Cards -->
         <section class="space-y-4">
 
             <!-- Card 1 -->
@@ -181,31 +188,24 @@
                     <!-- Profile & Merchant Identity Info -->
                     <div class="flex items-start space-x-3 min-w-[300px]">
                         <div class="relative">
-                            <!-- 1. Profile photo -->
                             <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center font-bold text-white text-lg shadow-lg">
                                 EX
                             </div>
-                            <!-- 10. Online/Offline status -->
                             <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full" title="Online Now"></span>
                         </div>
                         <div class="space-y-1">
                             <div class="flex items-center space-x-2">
-                                <!-- 2. Merchant name -->
                                 <a href="merchant-profile.html" class="font-extrabold text-white text-sm hover:text-indigo-400">ExpressP2P_Global</a>
-                                <!-- 3. Verified badge & 4. Gold/VIP badge -->
                                 <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-extrabold px-2 py-0.5 rounded flex items-center gap-1">
                                     <i data-lucide="shield-check" class="w-3 h-3"></i> GOLD VIP
                                 </span>
                             </div>
 
                             <div class="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
-                                <!-- 5. Merchant level -->
                                 <span class="text-indigo-400 font-bold">Level 3 Merchant</span>
                                 <span>•</span>
-                                <!-- 6. Years on platform -->
                                 <span>2.5 Years Active</span>
                                 <span>•</span>
-                                <!-- 16. Number of followers -->
                                 <span>1,240 Followers</span>
                             </div>
                         </div>
@@ -215,22 +215,18 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full lg:w-auto text-xs bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
                         <div>
                             <span class="text-slate-400 text-[10px] block">Trades & Completion</span>
-                            <!-- 7. Total completed trades & 8. Completion rate (%) -->
                             <span class="font-bold text-white">3,420 Trades <span class="text-emerald-400">(99.7%)</span></span>
                         </div>
                         <div>
                             <span class="text-slate-400 text-[10px] block">Speed & Response</span>
-                            <!-- 9. Average release time & 17. Merchant response time -->
                             <span class="font-bold text-slate-200">1.4 min <span class="text-slate-400 font-normal">(&lt;1m resp)</span></span>
                         </div>
                         <div>
                             <span class="text-slate-400 text-[10px] block">Trust & Last Active</span>
-                            <!-- 18. Trust score & 19. Last active -->
                             <span class="font-bold text-amber-400">99.8% Score <span class="text-slate-400 font-normal">(Just now)</span></span>
                         </div>
                         <div>
                             <span class="text-slate-400 text-[10px] block">Available Balance</span>
-                            <!-- 11. Available balance -->
                             <span class="font-extrabold text-indigo-400">45,000 USDT</span>
                         </div>
                     </div>
@@ -241,17 +237,14 @@
                     <div class="flex flex-wrap items-center gap-6">
                         <div>
                             <span class="text-slate-400 block text-[10px]">Current Price</span>
-                            <!-- 14. Current price -->
                             <span class="text-xl font-black text-emerald-400">129.50 <span class="text-xs text-slate-300 font-normal">KES</span></span>
                         </div>
                         <div>
                             <span class="text-slate-400 block text-[10px]">Order Limits</span>
-                            <!-- 12. Minimum order & 13. Maximum order -->
                             <span class="font-bold text-slate-200">1,000 KES - 500,000 KES</span>
                         </div>
                         <div>
                             <span class="text-slate-400 block text-[10px] mb-1">Supported Payment Methods</span>
-                            <!-- 15. Supported payment methods -->
                             <div class="flex items-center gap-1.5">
                                 <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">M-PESA Express</span>
                                 <span class="px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold">Airtel Money</span>
@@ -262,15 +255,12 @@
 
                     <!-- Action Buttons -->
                     <div class="flex items-center space-x-2 w-full lg:w-auto justify-end">
-                        <!-- 21. View profile -->
                         <a href="merchant-profile.html" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" title="View Full Profile">
                             <i data-lucide="user" class="w-4 h-4"></i>
                         </a>
-                        <!-- 20. Chat button -->
                         <a href="trade.html?action=chat" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" title="Live Chat">
                             <i data-lucide="message-square" class="w-4 h-4"></i>
                         </a>
-                        <!-- 19. Buy button -->
                         <a href="trade.html?merchant=ExpressP2P_Global&price=129.50" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black shadow-lg shadow-emerald-500/20 flex items-center gap-1.5">
                             <span>Buy USDT</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
