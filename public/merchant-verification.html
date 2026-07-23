@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merchant Trader Verification</title>
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #111827;
+      --card-inner: #0b0f19;
+      --border-color: #1f293d;
+      --accent-green: #10b981;
+      --accent-green-hover: #059669;
+      --accent-amber: #f59e0b;
+      --accent-blue: #3b82f6;
+      --text-white: #f9fafb;
+      --text-muted: #9ca3af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--accent-amber);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Stepper */
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .step-item.active {
+      color: var(--accent-green);
+    }
+
+    .step-item.active .step-number {
+      background: var(--accent-green);
+      color: #000;
+      border-color: var(--accent-green);
+    }
+
+    /* Card Box */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+
+    .step-content {
+      display: none;
+    }
+
+    .step-content.active {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    /* Requirements Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+    }
+
+    .req-box {
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .req-box i {
+      color: var(--accent-green);
+      font-size: 18px;
+      margin-top: 2px;
+    }
+
+    .req-box h4 {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .req-box p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Deposit Tiers */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .tier-card {
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tier-card:hover, .tier-card.selected {
+      border-color: var(--accent-green);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+    }
+
+    .tier-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .tier-price {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 10px 0;
+    }
+
+    .tier-price span {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .tier-features {
+      list-style: none;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: var(--text-white);
+      outline: none;
+      font-size: 14px;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-green);
+    }
+
+    /* Payment Items List */
+    .payment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .payment-item {
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .payment-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .payment-info i {
+      color: var(--accent-blue);
+      font-size: 18px;
+    }
+
+    .delete-btn {
+      color: #ef4444;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Action Buttons */
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn-secondary:hover {
+      color: var(--text-white);
+    }
+
+    .btn-primary {
+      background: var(--accent-green);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-green-hover);
+    }
+
+    /* Upload Box */
+    .upload-box {
+      border: 1px dashed var(--border-color);
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      background: var(--card-inner);
+    }
+
+    .upload-box i {
+      font-size: 24px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    /* Success Screen */
+    .success-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- Page Header -->
+  <div class="header">
+    <div class="badge"><i class="fa-solid fa-shield-halved"></i> Merchant Application</div>
+    <h1>Become a Verified Merchant Trader</h1>
+    <p>Unlock merchant badging, gain higher transaction limits, and configure automated payment methods.</p>
+  </div>
+
+  <!-- Stepper Navigation -->
+  <div class="stepper">
+    <div class="step-item active" id="step-btn-1">
+      <div class="step-number">1</div> <span>Eligibility</span>
+    </div>
+    <div class="step-item" id="step-btn-2">
+      <div class="step-number">2</div> <span>Escrow Security</span>
+    </div>
+    <div class="step-item" id="step-btn-3">
+      <div class="step-number">3</div> <span>Payment Methods</span>
+    </div>
+    <div class="step-item" id="step-btn-4">
+      <div class="step-number">4</div> <span>Submit File</span>
+    </div>
+  </div>
+
+  <!-- Main Box -->
+  <div class="card">
+
+    <!-- STEP 1: ELIGIBILITY CHECK -->
+    <div class="step-content active" id="step-1">
+      <div class="section-title"><i class="fa-solid fa-circle-check" style="color:var(--accent-green)"></i> Account Prerequisites</div>
+      <div class="section-desc">Ensure your account satisfies the minimum security threshold before applying.</div>
+
+      <div class="grid-2">
+        <div class="req-box">
+          <i class="fa-solid fa-circle-check"></i>
+          <div>
+            <h4>Phone & 2FA Bound</h4>
+            <p>Phone number verified for incoming trade notifications.</p>
+          </div>
+        </div>
+        <div class="req-box">
+          <i class="fa-solid fa-circle-check"></i>
+          <div>
+            <h4>Identity Verified (KYC Level 2)</h4>
+            <p>Government ID document and face liveness verified.</p>
+          </div>
+        </div>
+        <div class="req-box">
+          <i class="fa-solid fa-circle-check"></i>
+          <div>
+            <h4>Minimum Trade Count</h4>
+            <p>Completed 18 peer-to-peer orders (Required: 10).</p>
+          </div>
+        </div>
+        <div class="req-box">
+          <i class="fa-solid fa-circle-check"></i>
+          <div>
+            <h4>30-Day Completion Rate</h4>
+            <p>98.5% completion score (Required: >90%).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="justify-content: flex-end;">
+        <button class="btn btn-primary" onclick="goToStep(2)">Proceed to Security Deposit <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- STEP 2: ESCROW DEPOSIT -->
+    <div class="step-content" id="step-2">
+      <div class="section-title"><i class="fa-solid fa-lock" style="color:var(--accent-amber)"></i> Select Escrow Deposit Tier</div>
+      <div class="section-desc">Select the security deposit level to lock in platform escrow to back your merchant ads.</div>
+
+      <div class="grid-3">
+        <div class="tier-card" onclick="selectTier(this)">
+          <div class="tier-title">Starter Merchant</div>
+          <div class="tier-price">100 USDT <span>Escrow</span></div>
+          <ul class="tier-features">
+            <li>• Standard Merchant Badge</li>
+            <li>• Max $2,000 / trade limit</li>
+            <li>• 3 Active Buy/Sell Ads</li>
+          </ul>
+        </div>
+
+        <div class="tier-card selected" onclick="selectTier(this)">
+          <div class="tier-title">Pro Merchant</div>
+          <div class="tier-price">500 USDT <span>Escrow</span></div>
+          <ul class="tier-features">
+            <li>• Gold Merchant Badge</li>
+            <li>• Max $15,000 / trade limit</li>
+            <li>• 12 Active Buy/Sell Ads</li>
+            <li>• Priority Support</li>
+          </ul>
+        </div>
+
+        <div class="tier-card" onclick="selectTier(this)">
+          <div class="tier-title">VIP Block Trader</div>
+          <div class="tier-price">2,000 USDT <span>Escrow</span></div>
+          <ul class="tier-features">
+            <li>• VIP Crown Badge</li>
+            <li>• Unlimited Trade Volume</li>
+            <li>• Unlimited Ads</li>
+            <li>• Dedicated Account Lead</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">Configure Payment Methods <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- STEP 3: PAYMENT METHODS -->
+    <div class="step-content" id="step-3">
+      <div class="section-title"><i class="fa-solid fa-credit-card" style="color:var(--accent-blue)"></i> Connect Merchant Payment Methods</div>
+      <div class="section-desc">Add active payment receiving accounts that buyers will send funds to.</div>
+
+      <!-- Configured List -->
+      <div class="payment-list" id="payment-list-container">
+        <div class="payment-item">
+          <div class="payment-info">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            <div>
+              <div style="font-weight: 700; font-size: 14px;">M-PESA Express / Till</div>
+              <div style="font-size: 12px; color: var(--text-muted);">0712345678 • John Doe</div>
+            </div>
+          </div>
+          <button class="delete-btn" onclick="removePayment(this)"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>
+
+      <!-- Add New Method Box -->
+      <div style="background: var(--card-inner); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px;">
+        <h4 style="font-size: 14px; margin-bottom: 15px;"><i class="fa-solid fa-plus" style="color:var(--accent-green)"></i> Add Merchant Receiving Method</h4>
+        
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Payment Channel Type</label>
+            <select class="form-control" id="pm-type">
+              <option value="M-PESA">M-PESA Express / Paybill / Till</option>
+              <option value="Bank Transfer">Bank Transfer (RTGS / Local)</option>
+              <option value="PayPal">PayPal Business Account</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Account Label / Name</label>
+            <input type="text" class="form-control" id="pm-label" placeholder="e.g. Primary Till / Equity Bank">
+          </div>
+
+          <div class="form-group">
+            <label>Account Number / Phone</label>
+            <input type="text" class="form-control" id="pm-number" placeholder="e.g. 07XXXXXXXX or Account No.">
+          </div>
+
+          <div class="form-group">
+            <label>Account Holder Name</label>
+            <input type="text" class="form-control" id="pm-holder" placeholder="Must match registered KYC name">
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top: 10px; font-size: 12px;" onclick="addPaymentMethod()">Add Account</button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(2)">Back</button>
+        <button class="btn btn-primary" onclick="goToStep(4)">Proceed to Upload Proof <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- STEP 4: SUBMIT & VERIFY -->
+    <div class="step-content" id="step-4">
+      <div class="section-title"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--accent-amber)"></i> Commercial Verification File</div>
+      <div class="section-desc">Attach commercial bank statements and agree to platform merchant trading policies.</div>
+
+      <div class="grid-2" style="margin-bottom: 20px;">
+        <div class="upload-box">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <h5 style="font-size: 13px;">Upload 3-Month Bank/M-PESA Statement</h5>
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">PDF or PNG under 10MB</p>
+          <input type="file" style="margin-top: 10px; font-size: 11px;">
+        </div>
+
+        <div class="upload-box">
+          <i class="fa-solid fa-house-chimney"></i>
+          <h5 style="font-size: 13px;">Upload Proof of Business / Address</h5>
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Issued within last 90 days</p>
+          <input type="file" style="margin-top: 10px; font-size: 11px;">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Telegram / WhatsApp Contact for Fast Escalation</label>
+        <input type="text" class="form-control" placeholder="@username or mobile number">
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: flex-start; background: var(--card-inner); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 15px;">
+        <input type="checkbox" id="terms-check" style="margin-top: 2px;">
+        <label for="terms-check" style="font-size: 12px; color: var(--text-muted); cursor: pointer;">
+          I agree to the Merchant Rules & Terms of Service. I acknowledge that fraudulent behavior or trade disputes will result in forfeiture of the locked escrow deposit.
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(3)">Back</button>
+        <button class="btn btn-primary" onclick="submitApplication()">Lock Escrow & Submit Application</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS SCREEN -->
+    <div class="step-content" id="step-success">
+      <div class="success-screen">
+        <div class="success-icon"><i class="fa-solid fa-clock"></i></div>
+        <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 8px;">Application Under Review</h2>
+        <p style="color: var(--text-muted); font-size: 14px; max-width: 450px; margin: 0 auto 20px;">
+          Your merchant profile and payment configuration file have been received. Our compliance team will inspect your documentation within 24 hours.
+        </p>
+
+        <button class="btn btn-primary" onclick="location.reload()">Return to Dashboard</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Step Navigation Logic
+  function goToStep(stepNumber) {
+    // Hide all step contents
+    document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.step-item').forEach(el => el.classList.remove('active'));
+
+    // Show selected step
+    document.getElementById('step-' + stepNumber).classList.add('active');
+    document.getElementById('step-btn-' + stepNumber).classList.add('active');
+  }
+
+  // Tier Selector Logic
+  function selectTier(element) {
+    document.querySelectorAll('.tier-card').forEach(card => card.classList.remove('selected'));
+    element.classList.add('selected');
+  }
+
+  // Add Dynamic Payment Method
+  function addPaymentMethod() {
+    const type = document.getElementById('pm-type').value;
+    const label = document.getElementById('pm-label').value || type;
+    const number = document.getElementById('pm-number').value;
+    const holder = document.getElementById('pm-holder').value;
+
+    if (!number || !holder) {
+      alert("Please fill in both the account number/phone and the account holder's name.");
+      return;
+    }
+
+    const container = document.getElementById('payment-list-container');
+    
+    const newElement = document.createElement('div');
+    newElement.className = 'payment-item';
+    newElement.innerHTML = `
+      <div class="payment-info">
+        <i class="fa-solid ${type === 'M-PESA' ? 'fa-mobile-screen-button' : 'fa-building-columns'}"></i>
+        <div>
+          <div style="font-weight: 700; font-size: 14px;">${label}</div>
+          <div style="font-size: 12px; color: var(--text-muted);">${number} • ${holder}</div>
+        </div>
+      </div>
+      <button class="delete-btn" onclick="removePayment(this)"><i class="fa-solid fa-trash"></i></button>
+    `;
+
+    container.appendChild(newElement);
+
+    // Reset input fields
+    document.getElementById('pm-label').value = '';
+    document.getElementById('pm-number').value = '';
+    document.getElementById('pm-holder').value = '';
+  }
+
+  // Remove Payment Method
+  function removePayment(btn) {
+    btn.closest('.payment-item').remove();
+  }
+
+  // Submit Application Form
+  function submitApplication() {
+    const terms = document.getElementById('terms-check').checked;
+    if (!terms) {
+      alert("Please accept the merchant trading terms and conditions.");
+      return;
+    }
+
+    // Hide steps and show success
+    document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+    document.getElementById('step-success').classList.add('active');
+  }
+</script>
+
+</body>
+</html>
