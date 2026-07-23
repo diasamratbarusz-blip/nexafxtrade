@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa | Merchant Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { nexa: { dark: '#0a0d14', card: '#121824', border: '#1e293b' } } } }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>.glass-panel { background: rgba(18, 24, 36, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }</style>
+</head>
+<body class="bg-nexa-dark text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center font-bold text-xl text-white">N</div>
+                <span class="text-xl font-extrabold tracking-wider text-white">NEXA</span>
+            </a>
+            <a href="index.html" class="text-xs text-slate-400 hover:text-white">Exit Portal</a>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+
+        <div class="glass-panel p-6 rounded-3xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-black text-white">Merchant Operational Portal</h1>
+                <p class="text-xs text-slate-400 mt-0.5">Configure exchange listings, auto-pricing, and local payout rails.</p>
+            </div>
+            <button onclick="document.getElementById('adModal').classList.remove('hidden')" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Create Advertisement
+            </button>
+        </div>
+
+        <!-- Merchant Financial Controls & Limits -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+            <div class="glass-panel p-4 rounded-2xl">
+                <span class="text-slate-400 block">Available Balance</span>
+                <span class="text-xl font-bold text-emerald-400 mt-1 block">45,000.00 USDT</span>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl">
+                <span class="text-slate-400 block">Freeze Balance (Escrow)</span>
+                <span class="text-xl font-bold text-amber-400 mt-1 block">1,500.00 USDT</span>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl">
+                <span class="text-slate-400 block">Daily Trading Limit</span>
+                <span class="text-xl font-bold text-white mt-1 block">$100,000 USD</span>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl">
+                <span class="text-slate-400 block">Profit Report (30d)</span>
+                <span class="text-xl font-bold text-indigo-400 mt-1 block">+12.4% Profit Margin</span>
+            </div>
+        </div>
+
+        <!-- Manage Payment Methods (M-PESA & Bank Details) -->
+        <div class="glass-panel p-6 rounded-3xl space-y-4">
+            <h2 class="text-sm font-bold text-white uppercase tracking-wider">Configured Payment Methods & Accounts</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 flex justify-between items-center">
+                    <div>
+                        <span class="font-bold text-emerald-400 block">M-PESA Paybill / Till</span>
+                        <span class="text-slate-300">Till: 882910 (ExpressP2P Vault)</span>
+                    </div>
+                    <button class="text-slate-400 hover:text-white"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 flex justify-between items-center">
+                    <div>
+                        <span class="font-bold text-indigo-400 block">KCB Bank Account</span>
+                        <span class="text-slate-300">Acc: 1102938491 (Express Trades Ltd)</span>
+                    </div>
+                    <button class="text-slate-400 hover:text-white"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Create / Edit Ad Modal -->
+    <div id="adModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden">
+        <div class="glass-panel max-w-md w-full mx-4 rounded-3xl p-6 space-y-4 border border-slate-800 text-xs">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-white text-sm">Create / Edit Advertisement</h3>
+                <button onclick="document.getElementById('adModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-slate-400 block mb-1">Exchange Rate Engine</label>
+                    <select class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white">
+                        <option>Auto Pricing (Dynamic Spot Margin)</option>
+                        <option>Fixed Exchange Rate</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-slate-400 block mb-1">Price Margin (%)</label>
+                    <input type="number" value="1.2" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-slate-400 block mb-1">Minimum Order</label>
+                        <input type="number" placeholder="1000" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-1">Maximum Order</label>
+                        <input type="number" placeholder="500000" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white">
+                    </div>
+                </div>
+                <button onclick="alert('Advertisement Saved!'); document.getElementById('adModal').classList.add('hidden')" class="w-full py-3 rounded-xl bg-indigo-600 text-white font-bold">
+                    Publish Advertisement
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>
