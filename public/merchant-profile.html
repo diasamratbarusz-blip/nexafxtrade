@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa | Merchant Profile - ExpressP2P_Global</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { nexa: { dark: '#0a0d14', card: '#121824', border: '#1e293b' } } } }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>.glass-panel { background: rgba(18, 24, 36, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }</style>
+</head>
+<body class="bg-nexa-dark text-slate-100 font-sans min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center font-bold text-xl text-white">N</div>
+                <span class="text-xl font-extrabold tracking-wider text-white">NEXA</span>
+            </a>
+            <a href="index.html" class="text-xs text-slate-400 hover:text-white flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4"></i> Marketplace</a>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+
+        <!-- Merchant Banner & Profile Header -->
+        <div class="glass-panel p-6 rounded-3xl space-y-6">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                <div class="flex items-center space-x-4">
+                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center font-black text-2xl text-white shadow-xl">
+                        EX
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex items-center space-x-2">
+                            <h1 class="text-2xl font-black text-white">ExpressP2P_Global</h1>
+                            <!-- Verification status -->
+                            <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Identity Verified
+                            </span>
+                            <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                                <i data-lucide="building" class="w-3.5 h-3.5"></i> Business Verified
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-400">Languages: <strong class="text-slate-200">English, Swahili</strong> • Joined November 2023</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <button onclick="alert('Added to favorite merchants!')" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-slate-300 hover:text-white flex items-center gap-1.5">
+                        <i data-lucide="heart" class="w-4 h-4 text-rose-500"></i> Favorite
+                    </button>
+                    <button onclick="alert('Merchant Followed!')" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold flex items-center gap-1.5">
+                        <i data-lucide="user-plus" class="w-4 h-4"></i> Follow (1,240)
+                    </button>
+                    <button onclick="alert('Opening direct support channel...')" class="px-4 py-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold flex items-center gap-1.5">
+                        <i data-lucide="headphones" class="w-4 h-4"></i> Contact Support
+                    </button>
+                </div>
+            </div>
+
+            <!-- Trade Statistics Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 text-xs">
+                <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <span class="text-slate-400 block text-[11px]">Total Trading Volume</span>
+                    <span class="text-lg font-extrabold text-white mt-1 block">$1,850,200</span>
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <span class="text-slate-400 block text-[11px]">Monthly Volume</span>
+                    <span class="text-lg font-extrabold text-indigo-400 mt-1 block">$240,000</span>
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <span class="text-slate-400 block text-[11px]">Reviews & Ratings</span>
+                    <span class="text-lg font-extrabold text-amber-400 mt-1 block">4.98 ★ <span class="text-xs text-slate-400">(850)</span></span>
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <span class="text-slate-400 block text-[11px]">Supported Rails</span>
+                    <span class="text-xs font-bold text-slate-200 mt-2 block">M-PESA, Airtel, Bank</span>
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <span class="text-slate-400 block text-[11px]">Trading Limits</span>
+                    <span class="text-xs font-bold text-slate-200 mt-2 block">1K - 500K KES</span>
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                    <span class="text-slate-400 block text-[11px]">Trust Rating</span>
+                    <span class="text-lg font-extrabold text-emerald-400 mt-1 block">99.8%</span>
+                </div>
+            </div>
+
+            <!-- Terms of Trade & Public Advertisements -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 space-y-4">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider">Available Advertisements</h2>
+                    <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs">
+                        <div>
+                            <span class="font-bold text-emerald-400">SELL USDT</span>
+                            <div class="text-slate-300 font-extrabold text-base mt-1">129.50 KES</div>
+                            <span class="text-slate-400 text-[11px]">Limit: 1,000 - 500,000 KES</span>
+                        </div>
+                        <a href="trade.html?merchant=ExpressP2P_Global" class="px-5 py-2 rounded-xl bg-emerald-500 text-slate-950 font-extrabold">Trade</a>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs space-y-2">
+                    <h2 class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">Terms of Trade</h2>
+                    <p class="text-slate-400 leading-relaxed">
+                        1. Automated 24/7 M-PESA & Bank Transfers.<br>
+                        2. No third-party payments. Name on account must match Nexa KYC.<br>
+                        3. Always state Order ID in receipt upload.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>
