@@ -36,7 +36,7 @@
                         EX
                     </div>
                     <div class="space-y-1">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-2 flex-wrap gap-y-1">
                             <h1 class="text-2xl font-black text-white">ExpressP2P_Global</h1>
                             <!-- Verification status -->
                             <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
@@ -45,19 +45,23 @@
                             <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
                                 <i data-lucide="building" class="w-3.5 h-3.5"></i> Business Verified
                             </span>
+                            <!-- Vault Security Deposit Badge -->
+                            <span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Vault Staked (5,000 USDT)
+                            </span>
                         </div>
                         <p class="text-xs text-slate-400">Languages: <strong class="text-slate-200">English, Swahili</strong> • Joined November 2023</p>
                     </div>
                 </div>
 
                 <div class="flex items-center space-x-2">
-                    <button onclick="alert('Added to favorite merchants!')" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-slate-300 hover:text-white flex items-center gap-1.5">
+                    <button onclick="alert('Added to favorite merchants!')" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-slate-300 hover:text-white flex items-center gap-1.5 transition">
                         <i data-lucide="heart" class="w-4 h-4 text-rose-500"></i> Favorite
                     </button>
-                    <button onclick="alert('Merchant Followed!')" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold flex items-center gap-1.5">
+                    <button onclick="alert('Merchant Followed!')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 transition">
                         <i data-lucide="user-plus" class="w-4 h-4"></i> Follow (1,240)
                     </button>
-                    <button onclick="alert('Opening direct support channel...')" class="px-4 py-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-bold flex items-center gap-1.5">
+                    <button onclick="alert('Opening direct support channel...')" class="px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 text-xs font-bold flex items-center gap-1.5 transition">
                         <i data-lucide="headphones" class="w-4 h-4"></i> Contact Support
                     </button>
                 </div>
@@ -94,30 +98,57 @@
             <!-- Terms of Trade & Public Advertisements -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 space-y-4">
-                    <h2 class="text-sm font-bold text-white uppercase tracking-wider">Available Advertisements</h2>
-                    <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-bold text-white uppercase tracking-wider">Available Advertisements</h2>
+                        <span class="text-xs text-emerald-400 font-medium">Auto-Escrow Enabled</span>
+                    </div>
+
+                    <!-- Buy/Sell Listing 1 -->
+                    <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs hover:border-slate-700 transition">
                         <div>
-                            <span class="font-bold text-emerald-400">SELL USDT</span>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-emerald-400 uppercase">SELL USDT</span>
+                                <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">Stock: 1,500 USDT</span>
+                            </div>
                             <div class="text-slate-300 font-extrabold text-base mt-1">129.50 KES</div>
                             <span class="text-slate-400 text-[11px]">Limit: 1,000 - 500,000 KES</span>
                         </div>
-                        <a href="trade.html?merchant=ExpressP2P_Global" class="px-5 py-2 rounded-xl bg-emerald-500 text-slate-950 font-extrabold">Trade</a>
+                        <a href="trade.html?merchant=ExpressP2P_Global" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold transition shadow-lg shadow-emerald-500/10">Trade</a>
+                    </div>
+
+                    <!-- Buy/Sell Listing 2 -->
+                    <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs hover:border-slate-700 transition">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-indigo-400 uppercase">BUY USDT</span>
+                                <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">Stock: Unlimited</span>
+                            </div>
+                            <div class="text-slate-300 font-extrabold text-base mt-1">128.20 KES</div>
+                            <span class="text-slate-400 text-[11px]">Limit: 2,000 - 300,000 KES</span>
+                        </div>
+                        <a href="trade.html?merchant=ExpressP2P_Global&type=sell" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold transition shadow-lg shadow-indigo-600/10">Sell Crypto</a>
                     </div>
                 </div>
 
-                <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs space-y-2">
+                <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs space-y-3">
                     <h2 class="font-bold text-slate-200 uppercase tracking-wider text-[11px]">Terms of Trade</h2>
                     <p class="text-slate-400 leading-relaxed">
                         1. Automated 24/7 M-PESA & Bank Transfers.<br>
                         2. No third-party payments. Name on account must match Nexa KYC.<br>
                         3. Always state Order ID in receipt upload.
                     </p>
+                    <div class="pt-2 border-t border-slate-800/80">
+                        <span class="text-[10px] text-slate-500 block uppercase font-bold">Average Release Time</span>
+                        <span class="text-slate-300 font-semibold text-xs">Instant (Automated Webhook)</span>
+                    </div>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
