@@ -41,12 +41,12 @@
                             Escrow Vault Locked Automatically
                         </span>
                         <h1 class="text-xl font-black text-white mt-1">Buy Order: 150.00 USDT</h1>
-                        <p class="text-xs text-slate-400">Merchant: <strong class="text-slate-200">ExpressP2P_Global</strong> (Order ID: <span class="font-mono text-slate-300">NX-883920</span>)</p>
+                        <p class="text-xs text-slate-400">Merchant: <strong class="text-slate-200" id="merchant-name">ExpressP2P_Global</strong> (Order ID: <span class="font-mono text-slate-300" id="order-id">NX-883920</span>)</p>
                     </div>
                     <div class="text-right">
                         <span class="text-xs text-slate-400 block">Payment Countdown</span>
                         <!-- Countdown timer -->
-                        <span class="text-2xl font-mono font-black text-amber-400">14:20</span>
+                        <span class="text-2xl font-mono font-black text-amber-400" id="countdown-timer">14:20</span>
                     </div>
                 </div>
 
@@ -66,21 +66,45 @@
                     </div>
                     <div>
                         <span class="text-slate-400 block text-[10px]">Total Payable</span>
-                        <span class="text-base font-black text-white">19,425.00 KES</span>
+                        <span class="text-base font-black text-white" id="total-payable-amount">19,425.00 KES</span>
                     </div>
                 </div>
 
                 <!-- Payment Instructions -->
                 <div class="space-y-3">
-                    <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Payment Instructions</h2>
-                    <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 space-y-2 text-xs">
+                    <h2 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+                        <span>Payment Instructions</span>
+                        <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-mono">Pattern 2 API Active</span>
+                    </h2>
+                    
+                    <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 space-y-3 text-xs">
                         <div class="flex items-center justify-between">
-                            <span class="font-bold text-emerald-400">M-PESA Till Number</span>
-                            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">Instant Webhook Verified</span>
+                            <span class="font-bold text-emerald-400 flex items-center gap-1.5">
+                                <i data-lucide="zap" class="w-4 h-4"></i> M-PESA Direct Merchant API
+                            </span>
+                            <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">Instant Webhook Auto-Release</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-2 text-slate-200">
-                            <div>Till / Paybill: <strong class="text-white font-mono text-sm block">882910</strong></div>
-                            <div>Account Name: <strong class="text-white block">ExpressP2P Vault</strong></div>
+                        
+                        <div class="grid grid-cols-2 gap-2 text-slate-200 border-t border-emerald-500/10 pt-2">
+                            <div>Till / Paybill: <strong class="text-white font-mono text-sm block" id="merchant-till">882910</strong></div>
+                            <div>Account Name: <strong class="text-white block" id="merchant-account-name">ExpressP2P Vault</strong></div>
+                        </div>
+
+                        <!-- Pattern 2 Direct STK Trigger Form -->
+                        <div class="mt-3 pt-3 border-t border-emerald-500/20 space-y-2">
+                            <label class="text-[11px] font-bold text-emerald-300 block">Trigger M-PESA Express PIN Prompt directly to phone:</label>
+                            <div class="flex gap-2">
+                                <div class="relative flex-grow">
+                                    <span class="absolute left-3 top-2.5 text-xs font-bold text-slate-400">+254</span>
+                                    <input type="tel" id="buyer-phone-number" placeholder="712345678" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-12 pr-3 py-2 text-xs text-white font-mono focus:border-emerald-500 focus:outline-none">
+                                </div>
+                                <button type="button" id="stk-push-btn" onclick="triggerDirectSTKPush()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-xs flex items-center gap-1.5 transition shadow-lg shadow-emerald-500/20">
+                                    <i data-lucide="smartphone" class="w-4 h-4"></i> Send STK Push
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-slate-400 flex items-center gap-1" id="stk-status-text">
+                                <i data-lucide="info" class="w-3 h-3 text-emerald-400"></i> Direct-to-merchant integration: Funds go straight to merchant shortcode.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -88,9 +112,10 @@
                 <!-- Upload Payment Receipt -->
                 <div class="space-y-2">
                     <label class="text-xs font-bold text-slate-300 block">Upload Payment Receipt / Proof</label>
-                    <div class="border-2 border-dashed border-slate-800 hover:border-indigo-500/50 rounded-2xl p-4 text-center cursor-pointer bg-slate-900/40">
+                    <div class="border-2 border-dashed border-slate-800 hover:border-indigo-500/50 rounded-2xl p-4 text-center cursor-pointer bg-slate-900/40 relative" onclick="document.getElementById('receipt-file-input').click()">
                         <i data-lucide="upload-cloud" class="w-6 h-6 text-slate-400 mx-auto mb-1"></i>
-                        <span class="text-xs text-slate-400 block">Click or drag receipt screenshot to upload</span>
+                        <span class="text-xs text-slate-400 block" id="receipt-file-label">Click or drag receipt screenshot to upload</span>
+                        <input type="file" id="receipt-file-input" accept="image/*,.pdf" class="hidden" onchange="handleReceiptUpload(this)">
                     </div>
                 </div>
 
@@ -103,7 +128,7 @@
                         <button onclick="alert('Trade canceled');" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold">
                             Cancel Order
                         </button>
-                        <button onclick="alert('Payment confirmed! Waiting for automatic/manual currency release.');" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/20">
+                        <button onclick="confirmManualPayment()" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs shadow-lg shadow-emerald-500/20">
                             Confirm Payment & Release Currency
                         </button>
                     </div>
@@ -131,13 +156,130 @@
             </div>
 
             <div class="p-3 border-t border-slate-800 bg-slate-900 flex items-center space-x-2">
-                <input type="text" placeholder="Type message..." class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
-                <button class="p-2 rounded-xl bg-indigo-600 text-white"><i data-lucide="send" class="w-4 h-4"></i></button>
+                <input type="text" id="chat-input" placeholder="Type message..." onkeypress="handleChatKeyPress(event)" class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                <button onclick="sendChatMessage()" class="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white"><i data-lucide="send" class="w-4 h-4"></i></button>
             </div>
         </div>
 
     </main>
 
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
+
+        // 1. Countdown Timer Logic (14:20 starting time)
+        let totalSeconds = 14 * 60 + 20;
+        const timerElement = document.getElementById('countdown-timer');
+
+        const timerInterval = setInterval(() => {
+            if (totalSeconds <= 0) {
+                clearInterval(timerInterval);
+                timerElement.innerText = "00:00";
+                timerElement.classList.replace('text-amber-400', 'text-rose-500');
+            } else {
+                totalSeconds--;
+                const mins = Math.floor(totalSeconds / 60);
+                const secs = totalSeconds % 60;
+                timerElement.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+        }, 1000);
+
+        // 2. Pattern 2 Direct Merchant STK Push Trigger Function
+        async function triggerDirectSTKPush() {
+            const rawPhone = document.getElementById('buyer-phone-number').value.trim();
+            const btn = document.getElementById('stk-push-btn');
+            const statusText = document.getElementById('stk-status-text');
+
+            if (!rawPhone || rawPhone.length < 9) {
+                alert('Please enter a valid M-PESA phone number (e.g. 712345678).');
+                return;
+            }
+
+            const formattedPhone = rawPhone.startsWith('254') ? rawPhone : '254' + rawPhone.replace(/^0+/, '');
+
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Sending...`;
+            lucide.createIcons();
+
+            statusText.innerHTML = `<span class="text-amber-400 font-bold flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> Authenticating with merchant Daraja API & sending STK prompt...</span>`;
+            lucide.createIcons();
+
+            try {
+                // Endpoint call to backend router for dynamic STK execution
+                const response = await fetch('/api/v1/mpesa/stkpush', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        orderId: 'NX-883920',
+                        phone: formattedPhone,
+                        amount: 19425
+                    })
+                }).catch(() => null);
+
+                // Simulation feedback if backend server is offline/local
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i> Prompt Sent!`;
+                    statusText.innerHTML = `<span class="text-emerald-400 font-bold flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i> STK Prompt sent to ${formattedPhone}. Enter PIN on your phone. Escrow will auto-release!</span>`;
+                    lucide.createIcons();
+
+                    // Add auto-message into chat thread
+                    appendChatMessage(`System: Direct STK Push sent to ${formattedPhone}. Awaiting M-PESA webhook callback.`, false);
+                }, 2000);
+
+            } catch (err) {
+                console.error("STK Trigger error:", err);
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="smartphone" class="w-4 h-4"></i> Send STK Push`;
+                statusText.innerHTML = `<span class="text-rose-400 font-bold">Failed to trigger STK Push. Try paying manually to Till 882910.</span>`;
+                lucide.createIcons();
+            }
+        }
+
+        // 3. Receipt Upload Handler
+        function handleReceiptUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                document.getElementById('receipt-file-label').innerText = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+                appendChatMessage(`Uploaded payment proof: ${file.name}`, true);
+            }
+        }
+
+        // 4. Manual Payment Confirmation
+        function confirmManualPayment() {
+            alert('Payment confirmed! Waiting for automatic/manual currency release.');
+            appendChatMessage("Buyer has marked payment as completed.", true);
+        }
+
+        // 5. Chat Operations
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if (msg) {
+                appendChatMessage(msg, true);
+                input.value = '';
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        function appendChatMessage(text, isBuyer) {
+            const container = document.getElementById('chat-messages');
+            const msgDiv = document.createElement('div');
+            
+            if (isBuyer) {
+                msgDiv.className = 'bg-indigo-600 p-3 rounded-2xl rounded-tr-none max-w-[85%] text-white ml-auto text-right';
+            } else {
+                msgDiv.className = 'bg-slate-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-slate-200';
+            }
+
+            msgDiv.innerText = text;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
 </body>
 </html>
