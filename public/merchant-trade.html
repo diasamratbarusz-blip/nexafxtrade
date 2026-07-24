@@ -104,7 +104,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 text-xs">
                 <div>
                     <label class="text-slate-400 block mb-1">Amount</label>
-                    <input type="number" placeholder="Enter amount..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500">
+                    <input type="number" id="filter-amount-input" oninput="renderMerchantList()" placeholder="Enter amount..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-indigo-500">
                 </div>
                 <div>
                     <label class="text-slate-400 block mb-1">Fiat Currency</label>
@@ -178,100 +178,187 @@
             </div>
         </section>
 
-        <!-- Merchant List Cards -->
-        <section class="space-y-4">
-
-            <!-- Card 1 -->
-            <div class="glass-card p-5 rounded-3xl border border-slate-800 space-y-4">
-                <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-                    
-                    <!-- Profile & Merchant Identity Info -->
-                    <div class="flex items-start space-x-3 min-w-[300px]">
-                        <div class="relative">
-                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center font-bold text-white text-lg shadow-lg">
-                                EX
-                            </div>
-                            <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full" title="Online Now"></span>
-                        </div>
-                        <div class="space-y-1">
-                            <div class="flex items-center space-x-2">
-                                <a href="merchant-profile.html" class="font-extrabold text-white text-sm hover:text-indigo-400">ExpressP2P_Global</a>
-                                <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-extrabold px-2 py-0.5 rounded flex items-center gap-1">
-                                    <i data-lucide="shield-check" class="w-3 h-3"></i> GOLD VIP
-                                </span>
-                            </div>
-
-                            <div class="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
-                                <span class="text-indigo-400 font-bold">Level 3 Merchant</span>
-                                <span>•</span>
-                                <span>2.5 Years Active</span>
-                                <span>•</span>
-                                <span>1,240 Followers</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Performance Stats -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full lg:w-auto text-xs bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
-                        <div>
-                            <span class="text-slate-400 text-[10px] block">Trades & Completion</span>
-                            <span class="font-bold text-white">3,420 Trades <span class="text-emerald-400">(99.7%)</span></span>
-                        </div>
-                        <div>
-                            <span class="text-slate-400 text-[10px] block">Speed & Response</span>
-                            <span class="font-bold text-slate-200">1.4 min <span class="text-slate-400 font-normal">(&lt;1m resp)</span></span>
-                        </div>
-                        <div>
-                            <span class="text-slate-400 text-[10px] block">Trust & Last Active</span>
-                            <span class="font-bold text-amber-400">99.8% Score <span class="text-slate-400 font-normal">(Just now)</span></span>
-                        </div>
-                        <div>
-                            <span class="text-slate-400 text-[10px] block">Available Balance</span>
-                            <span class="font-extrabold text-indigo-400">45,000 USDT</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Price, Payment Methods & Limits -->
-                <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between border-t border-slate-800/80 pt-3 gap-3 text-xs">
-                    <div class="flex flex-wrap items-center gap-6">
-                        <div>
-                            <span class="text-slate-400 block text-[10px]">Current Price</span>
-                            <span class="text-xl font-black text-emerald-400">129.50 <span class="text-xs text-slate-300 font-normal">KES</span></span>
-                        </div>
-                        <div>
-                            <span class="text-slate-400 block text-[10px]">Order Limits</span>
-                            <span class="font-bold text-slate-200">1,000 KES - 500,000 KES</span>
-                        </div>
-                        <div>
-                            <span class="text-slate-400 block text-[10px] mb-1">Supported Payment Methods</span>
-                            <div class="flex items-center gap-1.5">
-                                <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">M-PESA Express</span>
-                                <span class="px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold">Airtel Money</span>
-                                <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-bold">Bank Transfer</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="flex items-center space-x-2 w-full lg:w-auto justify-end">
-                        <a href="merchant-profile.html" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" title="View Full Profile">
-                            <i data-lucide="user" class="w-4 h-4"></i>
-                        </a>
-                        <a href="trade.html?action=chat" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" title="Live Chat">
-                            <i data-lucide="message-square" class="w-4 h-4"></i>
-                        </a>
-                        <a href="trade.html?merchant=ExpressP2P_Global&price=129.50" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black shadow-lg shadow-emerald-500/20 flex items-center gap-1.5">
-                            <span>Buy USDT</span>
-                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Merchant List Cards Container -->
+        <section class="space-y-4" id="merchant-list-container">
+            <!-- Dynamic JavaScript Content Injected Here -->
         </section>
     </main>
 
-    <script>lucide.createIcons();</script>
+    <script>
+        // Array of Active Merchants with Vault Balances
+        const merchantsData = [
+            {
+                username: "ExpressP2P_Global",
+                initials: "EX",
+                badge: "GOLD VIP",
+                badgeColor: "amber",
+                level: "Level 3 Merchant",
+                experience: "2.5 Years Active",
+                followers: "1,240",
+                trades: "3,420 Trades",
+                completion: "99.7%",
+                speed: "1.4 min",
+                trustScore: "99.8%",
+                vaultBalance: 45000.00, // Pre-funded Vault Balance
+                price: "129.50",
+                minLimit: "1,000",
+                maxLimit: "500,000",
+                isOnline: true
+            },
+            {
+                username: "Nairobi_Crypto_Desk",
+                initials: "NC",
+                badge: "PRO TIER",
+                badgeColor: "indigo",
+                level: "Level 2 Merchant",
+                experience: "1.1 Years Active",
+                followers: "530",
+                trades: "1,180 Trades",
+                completion: "98.9%",
+                speed: "2.1 min",
+                trustScore: "98.5%",
+                vaultBalance: 0.00, // Out of Stock (0 USDT Vault Balance) -> BLOCKED
+                price: "129.30",
+                minLimit: "500",
+                maxLimit: "100,000",
+                isOnline: true
+            },
+            {
+                username: "Wholesale_Liquidity_Hub",
+                initials: "WL",
+                badge: "LIQUIDITY PROVIDER",
+                badgeColor: "emerald",
+                level: "Wholesale Merchant",
+                experience: "3.8 Years Active",
+                followers: "3,100",
+                trades: "8,950 Trades",
+                completion: "100.0%",
+                speed: "0.8 min",
+                trustScore: "99.9%",
+                vaultBalance: 250000.00, // Large Vault (Inter-Merchant Wholesale Seller)
+                price: "129.10",
+                minLimit: "50,000",
+                maxLimit: "5,000,000",
+                isOnline: true
+            }
+        ];
+
+        function renderMerchantList() {
+            const container = document.getElementById('merchant-list-container');
+            container.innerHTML = '';
+
+            merchantsData.forEach(m => {
+                const isFunded = m.vaultBalance > 0;
+                
+                const cardHTML = `
+                <div class="glass-card p-5 rounded-3xl border ${isFunded ? 'border-slate-800' : 'border-rose-500/30 bg-rose-950/10'} space-y-4">
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                        
+                        <!-- Profile & Merchant Identity Info -->
+                        <div class="flex items-start space-x-3 min-w-[300px]">
+                            <div class="relative">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-${m.badgeColor}-500 to-indigo-600 flex items-center justify-center font-bold text-white text-lg shadow-lg">
+                                    ${m.initials}
+                                </div>
+                                <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full" title="Online Now"></span>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <a href="merchant-profile.html" class="font-extrabold text-white text-sm hover:text-indigo-400">${m.username}</a>
+                                    <span class="bg-${m.badgeColor}-500/20 text-${m.badgeColor}-300 border border-${m.badgeColor}-500/30 text-[10px] font-extrabold px-2 py-0.5 rounded flex items-center gap-1">
+                                        <i data-lucide="shield-check" class="w-3 h-3"></i> ${m.badge}
+                                    </span>
+                                </div>
+
+                                <div class="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+                                    <span class="text-indigo-400 font-bold">${m.level}</span>
+                                    <span>•</span>
+                                    <span>${m.experience}</span>
+                                    <span>•</span>
+                                    <span>${m.followers} Followers</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance Stats -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full lg:w-auto text-xs bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+                            <div>
+                                <span class="text-slate-400 text-[10px] block">Trades & Completion</span>
+                                <span class="font-bold text-white">${m.trades} <span class="text-emerald-400">(${m.completion})</span></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 text-[10px] block">Speed & Response</span>
+                                <span class="font-bold text-slate-200">${m.speed} <span class="text-slate-400 font-normal">(&lt;1m resp)</span></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 text-[10px] block">Trust & Last Active</span>
+                                <span class="font-bold text-amber-400">${m.trustScore} Score <span class="text-slate-400 font-normal">(Just now)</span></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 text-[10px] block">Escrow Vault Balance</span>
+                                ${isFunded 
+                                    ? `<span class="font-extrabold text-indigo-400">${m.vaultBalance.toLocaleString()} USDT</span>` 
+                                    : `<span class="font-extrabold text-rose-400 flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> 0.00 USDT (Out of Stock)</span>`}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price, Payment Methods & Limits -->
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between border-t border-slate-800/80 pt-3 gap-3 text-xs">
+                        <div class="flex flex-wrap items-center gap-6">
+                            <div>
+                                <span class="text-slate-400 block text-[10px]">Current Price</span>
+                                <span class="text-xl font-black text-emerald-400">${m.price} <span class="text-xs text-slate-300 font-normal">KES</span></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block text-[10px]">Order Limits</span>
+                                <span class="font-bold text-slate-200">${m.minLimit} KES - ${m.maxLimit} KES</span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block text-[10px] mb-1">Supported Payment Methods</span>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">M-PESA Express</span>
+                                    <span class="px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-bold">Airtel Money</span>
+                                    <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-bold">Bank Transfer</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex items-center space-x-2 w-full lg:w-auto justify-end">
+                            <a href="merchant-profile.html" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" title="View Full Profile">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </a>
+                            <a href="trade.html?action=chat" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800" title="Live Chat">
+                                <i data-lucide="message-square" class="w-4 h-4"></i>
+                            </a>
+                            ${isFunded ? `
+                                <a href="trade.html?merchant=${encodeURIComponent(m.username)}&price=${m.price}" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black shadow-lg shadow-emerald-500/20 flex items-center gap-1.5">
+                                    <span>Buy USDT</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                            ` : `
+                                <div class="flex items-center gap-2">
+                                    <button disabled class="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-500 font-bold border border-slate-700/50 cursor-not-allowed flex items-center gap-1">
+                                        <i data-lucide="ban" class="w-4 h-4"></i> Out of Stock
+                                    </button>
+                                    <a href="index.html" class="px-3 py-2.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 text-[11px] font-bold">
+                                        Restock from Wholesale
+                                    </a>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Initialize Render
+        document.addEventListener("DOMContentLoaded", renderMerchantList);
+    </script>
 </body>
 </html>
